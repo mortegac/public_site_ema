@@ -36,10 +36,15 @@ const HomePage = () => {
       />
            
       <Notice />
+      
       <Features />
+      
       <Pricing />
+      
       <Footer />
+      
       <ScrollToTop />
+      
     </PageContainer>
   );
 };

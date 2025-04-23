@@ -34,9 +34,6 @@ const HomePage = () => {
         
         imageSrc="/images/headers/faqs.png" 
       />
-      {/* <Notice />
-      <Features />
-      <Pricing /> */}
       
       <Footer />
       <ScrollToTop />

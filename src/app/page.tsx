@@ -35,16 +35,11 @@ const HomePage = () => {
         imageSrc="/images/headers/cargador-electrico.png" 
       />
            
-      <Notice />
-      
+      <Notice />      
       <Features />
-      
-      <Pricing />
-      
+          <Pricing />  
       <Footer />
-      
       <ScrollToTop />
-      
     </PageContainer>
   );
 };

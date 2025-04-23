@@ -21,10 +21,22 @@ const HomePage = () => {
       <HeaderAlert />
       <HpHeader /> 
       
-      <Banner />
-      <Notice />
+      <Banner 
+        titleOne="Instalación de " 
+        titleTwo="Cargadores para vehículos eléctricos" 
+        description="Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio."
+        
+        buttonText="Agenda tu visita" 
+        buttonURI="/agenda" 
+        
+        buttonTextTwo="Simula el costo de la instalación" 
+        buttonURITwo="/cotizador" 
+        
+        imageSrc="/images/headers/cargador-electrico.png" 
+      />
+      {/* <Notice />
       <Features />
-      <Pricing />
+      <Pricing /> */}
       {/* 
       <DefendFocus />
       <Leadership />

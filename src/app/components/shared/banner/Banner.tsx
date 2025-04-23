@@ -12,7 +12,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 
 const Banner = (props:any) => {
-  const { titleOne, titleTwo, buttonText, buttonTextTwo, description} = props;
+  const { titleOne, titleTwo, buttonText, buttonURI, buttonTextTwo, buttonURITwo, description, imageSrc} = props;
   //   sidebar
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
 
@@ -63,7 +63,6 @@ const Banner = (props:any) => {
                 color="primary.main"
               >
                   {titleTwo} {" "} <br/>
-                {/* Cargadores para <br/>vehículos eléctricos */}
               </Typography>{" "}
             </Typography>
             <Typography
@@ -77,8 +76,6 @@ const Banner = (props:any) => {
                         component="span"
             >
               {description}
-              
-            {/* Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio. */}
             </Typography>
             <Stack
               my={3}
@@ -100,22 +97,19 @@ const Banner = (props:any) => {
                 color="primary"
                 size="large"
                 variant="contained"
-                href="/auth/auth1/login"
+                href={buttonURI}
               >
                 {buttonText}
-                
-                {/* Agenda tu visita */}
               </Button>}
               
-              <Button
+              {buttonTextTwo && <Button
                 color="primary"
                 size="large"
                 variant="outlined"
-                href="/auth/auth1/login"
+                href={buttonURITwo}
               >
                  {buttonTextTwo}
-                {/* Simula el costo de la instalación */}
-              </Button>
+              </Button>}
             
             </Stack>
             <Stack
@@ -144,7 +138,7 @@ const Banner = (props:any) => {
               }}
             >
               <Image
-                src="/images/headers/cargador-electrico.png"
+                src={imageSrc}
                 alt="Cargador eléctrico"
                 width={500}
                 height={300}

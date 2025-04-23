@@ -20,12 +20,20 @@ const HomePage = () => {
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
       <HeaderAlert />
       <HpHeader /> 
+     
+      
       <Banner 
         titleOne="Agenda tú " 
         titleTwo="Visita técnica" 
         description="Agenda tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."
-        buttonText="" 
-        buttonTextTwo="Simula el costo de la instalación" 
+        
+        buttonText="Simula aquí, el costo de la instalación" 
+        buttonURI="/cotizador" 
+        
+        buttonTextTwo="" 
+        buttonURITwo="/" 
+        
+        imageSrc="/images/headers/agenda-tu-visita.png" 
       />
       {/*
       <Notice />

@@ -48,7 +48,7 @@ const HpHeader = (props: any) => {
   };
 
   return (
-    <AppBarStyled position="sticky" elevation={0}>
+    <AppBarStyled position="sticky" elevation={1}>
       <Container
         sx={{
           maxWidth: "1400px !important",

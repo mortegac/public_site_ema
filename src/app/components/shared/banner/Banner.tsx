@@ -11,7 +11,8 @@ import {
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 
-const Banner = () => {
+const Banner = (props:any) => {
+  const { titleOne, titleTwo, buttonText, buttonTextTwo, description} = props;
   //   sidebar
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
 
@@ -46,7 +47,8 @@ const Banner = () => {
                 },
               }}
             >
-             Instalación de {" "}<br/>
+             {/* Instalación de {" "} */}
+             {titleOne} {" "} <br/>
               <Typography
                 variant="h1"
                 sx={{
@@ -60,7 +62,8 @@ const Banner = () => {
                 component="span"
                 color="primary.main"
               >
-                Cargadores para <br/>vehículos eléctricos
+                  {titleTwo} {" "} <br/>
+                {/* Cargadores para <br/>vehículos eléctricos */}
               </Typography>{" "}
             </Typography>
             <Typography
@@ -73,7 +76,9 @@ const Banner = () => {
                         }}
                         component="span"
             >
-            Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio.
+              {description}
+              
+            {/* Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio. */}
             </Typography>
             <Stack
               my={3}
@@ -90,21 +95,26 @@ const Banner = () => {
               mb={4}
               justifyContent="left"
             >
-              <Button
+              
+             { buttonText && <Button
                 color="primary"
                 size="large"
                 variant="contained"
                 href="/auth/auth1/login"
               >
-                Agenda tu visita
-              </Button>
+                {buttonText}
+                
+                {/* Agenda tu visita */}
+              </Button>}
+              
               <Button
                 color="primary"
                 size="large"
                 variant="outlined"
                 href="/auth/auth1/login"
               >
-                Simula el costo de la instalación
+                 {buttonTextTwo}
+                {/* Simula el costo de la instalación */}
               </Button>
             
             </Stack>

@@ -22,22 +22,16 @@ const HomePage = () => {
       <HpHeader /> 
       
       <Banner 
-        titleOne="Instalación de " 
-        titleTwo="Cargadores para vehículos eléctricos" 
-        description="Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio."
-        buttonText="Agenda tu visita" 
-        buttonTextTwo="Simula el costo de la instalación" 
+        titleOne="Cotiza tú " 
+        titleTwo="Instalación" 
+        description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación"
+        buttonText="" 
+        buttonTextTwo="Agenda tu visita" 
       />
-      <Notice />
+      {/* <Notice />
       <Features />
       <Pricing />
-      {/* 
-      <DefendFocus />
-      <Leadership />
-      <Reviews />
-      <ExceptionalFeature />
-      <FAQ />
-      <C2a /> */}
+    */}
       <Footer />
       <ScrollToTop />
     </PageContainer>

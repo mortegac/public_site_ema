@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+
+Para enviar commit a vercel
+```
+git commit --author="Manuel Ortega <mortega@apgca.cl>" -m "tu mensaje de commit"
+```
+
+
 ## Getting Started
 
 First, run the development server:

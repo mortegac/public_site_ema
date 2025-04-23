@@ -17,27 +17,21 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 
 const HomePage = () => {
   return (
-    <PageContainer title="Homepage" description="Instalación de Cargadores para vehículos eléctricos">
+    <PageContainer title="Agenda" description="Agenda tú Visita técnica">
       <HeaderAlert />
       <HpHeader /> 
-      
       <Banner 
-        titleOne="Instalación de " 
-        titleTwo="Cargadores para vehículos eléctricos" 
-        description="Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio."
-        buttonText="Agenda tu visita" 
+        titleOne="Agenda tú " 
+        titleTwo="Visita técnica" 
+        description="Agenda tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."
+        buttonText="" 
         buttonTextTwo="Simula el costo de la instalación" 
       />
+      {/*
       <Notice />
       <Features />
-      <Pricing />
-      {/* 
-      <DefendFocus />
-      <Leadership />
-      <Reviews />
-      <ExceptionalFeature />
-      <FAQ />
-      <C2a /> */}
+      <Pricing /> */}
+     
       <Footer />
       <ScrollToTop />
     </PageContainer>

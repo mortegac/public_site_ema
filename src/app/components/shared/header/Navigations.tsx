@@ -15,12 +15,8 @@ export const NavLinks = [
     href: "/",
   },
   {
-    title: "Cotizador",
-    href: "/frontend-pages/blog",
-  },
-  {
     title: "Agenda",
-    href: "/frontend-pages/portfolio",
+    href: "/agenda",
   },
   {
     title: "Cotizador",

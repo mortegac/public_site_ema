@@ -21,7 +21,19 @@ const HomePage = () => {
       <HeaderAlert />
       <HpHeader /> 
       
-      <Banner />
+      <Banner 
+        titleOne="Aclara tus dudas, conoce nuestras condiciones y " 
+        titleTwo="aprende más sobre la electromovilidad" 
+        description="Explora nuestro contenido para conocer de nuestros servicios y saber más sobre tópicos de electromovilidad"
+        
+        buttonText="Agenda tu visita" 
+        buttonURI="/agenda" 
+        
+        buttonTextTwo="Simula el costo de la instalación" 
+        buttonURITwo="/cotizador" 
+        
+        imageSrc="/images/headers/faqs.png" 
+      />
       {/* <Notice />
       <Features />
       <Pricing /> */}

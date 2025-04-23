@@ -17,21 +17,22 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 
 const HomePage = () => {
   return (
-    <PageContainer title="Homepage" description="Instalación de Cargadores para vehículos eléctricos">
+    <PageContainer title="Cotiza tú Instalación" description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación">
       <HeaderAlert />
       <HpHeader /> 
-      
       <Banner 
         titleOne="Cotiza tú " 
         titleTwo="Instalación" 
         description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación"
-        buttonText="" 
-        buttonTextTwo="Agenda tu visita" 
+               
+        buttonText="Agenda tu visita" 
+        buttonURI="/agenda" 
+        
+        buttonTextTwo="" 
+        buttonURITwo="" 
+        imageSrc="/images/headers/cotiza-tu-instalacion.png" 
       />
-      {/* <Notice />
-      <Features />
-      <Pricing />
-    */}
+   
       <Footer />
       <ScrollToTop />
     </PageContainer>

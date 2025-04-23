@@ -19,8 +19,7 @@ const HomePage = () => {
   return (
     <PageContainer title="Instalación de Cargadores para vehículos eléctricos" description="Instalación de Cargadores para vehículos eléctricos">
       <HeaderAlert />
-      <HpHeader /> 
-      
+      <HpHeader />       
       <Banner 
         titleOne="Instalación de " 
         titleTwo="Cargadores para vehículos eléctricos" 

@@ -5,7 +5,9 @@ Para enviar commit a vercel
 ```
 git commit --author="energicasgc-gmailcom <energicasgc@gmail.com>" -m "tu mensaje de commit"
 ```
-
+```
+git commit --author="Manuel Ortega <mortega@apgca.cl>" -m "tu mensaje de commit"
+```
 
 ## Getting Started
 

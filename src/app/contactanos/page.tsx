@@ -17,14 +17,14 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 
 const HomePage = () => {
   return (
-    <PageContainer title="Homepage" description="Instalación de Cargadores para vehículos eléctricos">
+    <PageContainer title="¡Hablemos!" description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible.">
       <HeaderAlert />
       <HpHeader /> 
       
       <Banner 
-        titleOne="Instalación de " 
-        titleTwo="Cargadores para vehículos eléctricos" 
-        description="Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio."
+        titleOne="" 
+        titleTwo="¡Hablemos!" 
+        description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible."
         
         buttonText="Agenda tu visita" 
         buttonURI="/agenda" 
@@ -32,7 +32,7 @@ const HomePage = () => {
         buttonTextTwo="Simula el costo de la instalación" 
         buttonURITwo="/cotizador" 
         
-        imageSrc="/images/headers/cargador-electrico.png" 
+        imageSrc="/images/headers/contacto-energica.png" 
       />
       {/* <Notice />
       <Features />

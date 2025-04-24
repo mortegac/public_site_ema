@@ -22,7 +22,7 @@ const Licenses = [
         id: 1,
         type: 'Instalación cargador 7kW',
         isPopular: false,
-        typeText: 'Use for single end product which end users can’t be charged for.',
+        typeText: 'Use for single end product which end users cant be charged for.',
         price: '529.900',
         fullSourceCode: true,
         isDoc: true,
@@ -35,7 +35,7 @@ const Licenses = [
         id: 2,
         type: 'Instalación cargador 7kW',
         isPopular: false,
-        typeText: 'Use for unlimited end products end users can’t be charged for.',
+        typeText: 'Use for unlimited end products end users cant be charged for.',
         price: '779.900',
         fullSourceCode: true,
         isDoc: true,
@@ -50,13 +50,43 @@ const Licenses = [
 const PricingCard = () => {
     return (
         <>
-            <Grid container spacing={3} bgcolor={"pink"}>
+            <Grid container spacing={3} sx={{ 
+                height: '100%', 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                padding: '24px',
+                width: '100%'
+            }}>
                 {Licenses.map((license, i) => (
                     <Grid item 
-                        xs={12} lg={3} sm={6} 
-                        key={i}  bgcolor={"green"}>
-                        <BlankCard>
-                            <CardContent sx={{ p: '32px' }}>
+                        xs={12} lg={4} sm={6} 
+                        key={i}  
+                        sx={{ 
+                            height: '100%',
+                            flex: 1,
+                            minWidth: { xs: '100%', sm: 'calc(33.333% - 16px)', lg: 'calc(31% - 16px)' },
+                            maxWidth: { xs: '100%', sm: 'calc(33.333% - 16px)', lg: 'calc(31% - 16px)' },
+                            padding: '0 !important',
+                            ...(i === 1 && { margin: '0 6px' })
+                        }}>
+                        <BlankCard sx={{ 
+                            height: '100%', 
+                            display: 'flex', 
+                            flexDirection: 'column',
+                            minHeight: '800px',
+                            maxHeight: '800px'
+                        }}>
+                            <CardContent sx={{ 
+                                p: '32px', 
+                                height: '100%', 
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                flex: 1,
+                                '& .MuiTypography-root': {
+                                    wordBreak: 'break-word',
+                                    whiteSpace: 'normal'
+                                }
+                            }}>
                                 <Box display="flex" alignItems="center" mb={2}>
                                     <Typography variant="h4" fontSize="20px" fontWeight={600}>{license.type}</Typography>
                                     {/* {license.isPopular ?
@@ -78,64 +108,50 @@ const PricingCard = () => {
                                 <Stack my={4} gap="12px">
                                     <Box display="flex" alignItems="center" gap="8px">
                                         {license.fullSourceCode ?
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-check.svg" alt="circle" width={20} height={20} />
                                             :
-                                            <Image src="/images/frontend-pages/icons/icon-close.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-close.svg" alt="circle" width={20} height={20} />
                                         }
-                                        <Typography fontSize="14px" fontWeight={500}>Full source code</Typography>
+                                        <Typography fontSize="14px" fontWeight={500}>Ideal para Cargadores Portátiles</Typography>
 
                                     </Box>
                                     <Box display="flex" alignItems="center" gap="8px">
                                         {license.isDoc ?
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-check.svg" alt="circle" width={20} height={20} />
                                             :
-                                            <Image src="/images/frontend-pages/icons/icon-close.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-close.svg" alt="circle" width={20} height={20} />
                                         }
-                                        <Typography fontSize="14px" fontWeight={500}>Documentation</Typography>
+                                        <Typography fontSize="14px" fontWeight={500}>Valor Estimado para 10 metros de Cableado</Typography>
                                     </Box>
                                     <Box display="flex" alignItems="center" gap="8px">
                                         {license.isSass ?
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-check.svg" alt="circle" width={20} height={20} />
                                             :
-                                            <Image src="/images/frontend-pages/icons/icon-close.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-close.svg" alt="circle" width={20} height={20} />
                                         }
                                         <Typography fontSize="14px" sx={{
                                             color: `${license.isSass ? 'text.primary' : '#99AABA'}`,
                                             fontWeight: `${license.isSass ? '500' : '400'}`,
-                                        }}>Use in SaaS app</Typography>
+                                        }}>Instalación de Cargador o Toma en Muralla</Typography>
                                     </Box>
                                     <Box display="flex" alignItems="center" gap="8px">
                                         {license.isSingleProject ?
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-check.svg" alt="circle" width={20} height={20} />
                                             :
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
+                                            <Image src="/images/icons/icon-check.svg" alt="circle" width={20} height={20} />
                                         }
                                         <Typography fontSize="14px" whiteSpace="nowrap" gap="2px" fontWeight={500} display="flex">
-                                            <Box fontWeight={700} component="span" whiteSpace="nowrap"> {license.isSingleProject ? "One" : "Unlimited"} </Box>
-                                            Project
+                                            
+                                            Obtén un 10% de descuento si eres miembro del Club Tesla Chile*
                                         </Typography>
                                     </Box>
-                                    {/* <Box display="flex" alignItems="center" gap="8px">
-                                        {license.isSupport ?
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
-                                            :
-                                            <Image src="/images/frontend-pages/icons/icon-close.svg" alt="circle" width={20} height={20} />
-                                        }
-                                        <Typography fontSize="14px" whiteSpace="nowrap" gap="2px" fontWeight={500} display="flex"><Box fontWeight={700} component="span" whiteSpace="nowrap">One Year</Box> Technical Support</Typography>
-                                    </Box>
-                                    <Box display="flex" alignItems="center" gap="8px">
-                                        {license.isUpdate ?
-                                            <Image src="/images/frontend-pages/icons/icon-check.svg" alt="circle" width={20} height={20} />
-                                            :
-                                            <Image src="/images/frontend-pages/icons/icon-close.svg" alt="circle" width={20} height={20} />
-                                        }
-                                        <Typography fontSize="14px" whiteSpace="nowrap" gap="2px" fontWeight={500} display="flex"><Box fontWeight={700} component="span" whiteSpace="nowrap">One Year</Box> Free Updates</Typography>
-                                    </Box> */}
                                 </Stack>
-                                <Button fullWidth variant="contained" size="large">Purchase Now</Button>
+                                <Button fullWidth variant="contained" size="large">Agenda tu visita</Button>
                             </CardContent>
                         </BlankCard>
-                    </Grid>
+                        </Grid>
+                        
+                    
                 ))}
 
             </Grid>

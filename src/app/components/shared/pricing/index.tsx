@@ -33,7 +33,7 @@ const Pricing = () => {
                             <Typography textAlign="center"
                                 variant="h4" lineHeight={1.4}
                                 mb={6} 
-                                // fontWeight={700}
+                                fontWeight={300}
                                 sx={{
                                     fontSize: {
                                         lg: '18px',

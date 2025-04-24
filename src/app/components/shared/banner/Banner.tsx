@@ -132,8 +132,6 @@ const Banner = (props:any) => {
                 '& img': {
                   width: '100%',
                   height: 'auto',
-                  // borderRadius: '16px',
-                  // boxShadow: '0px 6px 12px rgba(127, 145, 156, 0.12)',
                 }
               }}
             >
@@ -143,6 +141,11 @@ const Banner = (props:any) => {
                 width={500}
                 height={300}
                 priority
+                unoptimized
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                }}
               />
             </Box>
           </Grid>

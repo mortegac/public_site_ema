@@ -18,118 +18,125 @@ const footerLinks = [
       children: [
           {
               title: true,
-              titleText: 'Applications',
+              titleText: '',
           },
           {
               title: false,
-              titleText: 'Kanban',
-              link: 'https://modernize-nextjs.adminmart.com/apps/kanban',
+              titleText: 'Inicio',
+              link: '/',
           },
           {
               title: false,
-              titleText: 'Invoice List',
-              link: 'https://modernize-nextjs.adminmart.com/apps/invoice/list',
+              titleText: 'Agenda',
+              link: '/agenda',
           },
           {
               title: false,
-              titleText: 'eCommerce',
-              link: 'https://modernize-nextjs.adminmart.com/apps/ecommerce/shop',
+              titleText: 'Cotizador',
+              link: '/cotizador',
           },
           {
               title: false,
-              titleText: 'Chat',
-              link: 'https://modernize-nextjs.adminmart.com/apps/chats',
+              titleText: 'FAQs',
+              link: '/faqs',
           },
           {
               title: false,
-              titleText: 'Tickets',
-              link: 'https://modernize-nextjs.adminmart.com/apps/tickets',
-          },
-          {
-              title: false,
-              titleText: 'Blog',
-              link: 'https://modernize-nextjs.adminmart.com/apps/blog/posts',
-          },
+              titleText: 'Contactanos',
+              link: '/contactanos',
+          }
       ],
   },
-  {
-      id: 2,
-      children: [
-          {
-              title: true,
-              titleText: 'Forms',
-          },
-          {
-              title: false,
-              titleText: 'Form Layout',
-              link: 'https://modernize-nextjs.adminmart.com/forms/form-layouts',
-          },
-          {
-              title: false,
-              titleText: 'Form Horizontal',
-              link: 'https://modernize-nextjs.adminmart.com/forms/form-horizontal',
-          },
-          {
-              title: false,
-              titleText: 'Form Wizard',
-              link: 'https://modernize-nextjs.adminmart.com/forms/form-wizard',
-          },
-          {
-              title: false,
-              titleText: 'Form Validation',
-              link: 'https://modernize-nextjs.adminmart.com/forms/form-validation',
-          },
-          {
-              title: false,
-              titleText: 'Quill Editor',
-              link: 'https://modernize-nextjs.adminmart.com/forms/quill-editor',
-          },
-      ],
-  },
-  {
-      id: 3,
-      children: [
-          {
-              title: true,
-              titleText: 'Tables',
-          },
-          {
-              title: false,
-              titleText: 'Basic Table',
-              link: 'https://modernize-nextjs.adminmart.com/tables/basic',
-          },
-          {
-              title: false,
-              titleText: 'Fixed Header',
-              link: 'https://modernize-nextjs.adminmart.com/tables/fixed-header',
-          },
-          {
-              title: false,
-              titleText: 'Pagination Table',
-              link: 'https://modernize-nextjs.adminmart.com/tables/pagination',
-          },
-          {
-              title: false,
-              titleText: 'React Dense Table',
-              link: 'https://modernize-nextjs.adminmart.com/react-tables/dense',
-          },
-          {
-              title: false,
-              titleText: 'Row Selection Table',
-              link: 'https://modernize-nextjs.adminmart.com/react-tables/row-selection',
-          },
-          {
-              title: false,
-              titleText: 'Drag n Drop Table',
-              link: 'https://modernize-nextjs.adminmart.com/react-tables/drag-drop',
-          },
-      ],
-  },
+  // {
+  //     id: 2,
+  //     children: [
+  //         {
+  //             title: true,
+  //             titleText: 'Forms',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Form Layout',
+  //             link: 'https://modernize-nextjs.adminmart.com/forms/form-layouts',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Form Horizontal',
+  //             link: 'https://modernize-nextjs.adminmart.com/forms/form-horizontal',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Form Wizard',
+  //             link: 'https://modernize-nextjs.adminmart.com/forms/form-wizard',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Form Validation',
+  //             link: 'https://modernize-nextjs.adminmart.com/forms/form-validation',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Quill Editor',
+  //             link: 'https://modernize-nextjs.adminmart.com/forms/quill-editor',
+  //         },
+  //     ],
+  // },
+  // {
+  //     id: 3,
+  //     children: [
+  //         {
+  //             title: true,
+  //             titleText: 'Tables',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Basic Table',
+  //             link: 'https://modernize-nextjs.adminmart.com/tables/basic',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Fixed Header',
+  //             link: 'https://modernize-nextjs.adminmart.com/tables/fixed-header',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Pagination Table',
+  //             link: 'https://modernize-nextjs.adminmart.com/tables/pagination',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'React Dense Table',
+  //             link: 'https://modernize-nextjs.adminmart.com/react-tables/dense',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Row Selection Table',
+  //             link: 'https://modernize-nextjs.adminmart.com/react-tables/row-selection',
+  //         },
+  //         {
+  //             title: false,
+  //             titleText: 'Drag n Drop Table',
+  //             link: 'https://modernize-nextjs.adminmart.com/react-tables/drag-drop',
+  //         },
+  //     ],
+  // },
 ];
 
 const Footer = () => {
   return (
     <>
+    <Box
+      // bgcolor="#4BBFD9"
+      sx={{
+        background: '#f0f4f6'
+      }}
+      borderRadius={0}
+      textAlign="center"
+      py="14px"
+      mt={5}
+      position="relative"
+    >
+      {/* //  */}
       <Container
         maxWidth="lg"
         sx={{
@@ -155,6 +162,7 @@ const Footer = () => {
                           display: "block",
                           padding: "10px 0",
                           fontSize: "15px",
+                          textAlign:"left",
                           color: (theme) => theme.palette.text.primary,
                           "&:hover": {
                             color: (theme) => theme.palette.primary.main,
@@ -171,35 +179,26 @@ const Footer = () => {
             </Grid>
           ))}
           <Grid item xs={6} sm={6} lg={2}>
-            <Typography fontSize="17px" fontWeight="600" mb="22px">
-              Follow us
+            <Typography fontSize="17px" fontWeight="600" mb="22px" textAlign={"left"}>
+              Redes sociales
             </Typography>
 
             <Stack direction="row" gap="20px">
               <Tooltip title="Facebook">
                 <Link href="#">
                   <Image
-                    src="/images/frontend-pages/icons/icon-facebook.svg"
+                    src="/images/icons/icon-facebook.svg"
                     alt="facebook"
                     width={22}
                     height={22}
                   />
                 </Link>
               </Tooltip>
-              <Tooltip title="Twitter">
-                <Link href="#">
-                  <Image
-                    src="/images/frontend-pages/icons/icon-twitter.svg"
-                    alt="twitter"
-                    width={22}
-                    height={22}
-                  />
-                </Link>
-              </Tooltip>
+               
               <Tooltip title="Instagram">
                 <Link href="#">
                   <Image
-                    src="/images/frontend-pages/icons/icon-instagram.svg"
+                    src="/images/icons/icon-instagram.svg"
                     alt="instagram"
                     width={22}
                     height={22}
@@ -220,24 +219,28 @@ const Footer = () => {
         >
           <Stack direction="row" gap={1} alignItems="center">
             <Image
-              src="/images/logos/logoIcon.svg"
+              src="/images/logos/energica.png"
               width={20}
               height={20}
               alt="logo"
             />
             <Typography variant="body1" fontSize="15px">
-              All rights reserved by Modernize.{" "}
+            {" "} Copyright © 2024
             </Typography>
           </Stack>
           <Typography variant="body1" fontSize="15px">
-            Produced by{" "}
-            <Typography component={Link} color="primary.main" href="https://adminmart.com/">
-              AdminMart
+          
+            <Typography component={Link} color="primary.main" href="/privacidad">
+             Política de privacidad
+            </Typography>
+            <Typography component={Link} color="primary.main" href="/terminos-condiciones">
+            {" "}|{" "}Términos y Condiciones
             </Typography>
             .
           </Typography>
         </Box>
       </Container>
+      </Box>
     </>
   );
 };

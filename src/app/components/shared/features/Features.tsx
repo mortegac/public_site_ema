@@ -24,7 +24,13 @@ const Features = () => {
                                 </Stack>
                             </Box>
                         </Box>
-                        <Box textAlign="center" mb={3} bgcolor="secondary.light" borderRadius="24px">
+                        <Box textAlign="center" mb={3} bgcolor="secondary.light" borderRadius="24px" sx={{
+                            backgroundImage: 'url("/images/backgrounds/bg-features-01.png")',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            minHeight:"267px",
+                        }}>
                             <Box px={4} py="50px">
                                 <Stack direction="column" spacing={2} textAlign="center">
 {/* IMAGEN */}
@@ -43,9 +49,12 @@ const Features = () => {
                             xs: 3, lg: 2
                         }
                     }}>
-                        <Box textAlign="center" mb={3} bgcolor="primary.light" borderRadius="24px">
+                        <Box textAlign="center" mb={3} bgcolor="primary.light" borderRadius="24px"
+                        sx={{
+                            minHeight:"515px",
+                        }}
+                        >
                             <Box pt="65px" pb="40px" px={5}>
-                                {/* <Image src="/images/logos/logoIcon.svg" alt="logo" height="50" width="50" /> */}
                                 <Typography variant="h2" fontWeight="700" mt={4} sx={{
                                     fontSize: {
                                         lg: '40px',
@@ -59,9 +68,9 @@ const Features = () => {
                                 competitivos y total transparencia.
                                 </Typography>
                                 
-                                <Box mt={5} mb={2}>
+                                {/* <Box mt={5} mb={2}>
                                     <Image src="/images/frontend-pages/homepage/screen1.png" alt="icon1" width={405} height={245} style={{ width: '100%', height: 'auto' }} />
-                                </Box>
+                                </Box> */}
                             </Box>
                         </Box>
                     </Grid>
@@ -70,11 +79,18 @@ const Features = () => {
                             xs: 2, lg: 3
                         }
                     }}>
-                        <Box textAlign="center" mb={3} bgcolor="success.light" borderRadius="24px">
+                        {/* <Box textAlign="center" mb={3} bgcolor="success.light" borderRadius="24px"> */}
+                        <Box textAlign="center" mb={3} bgcolor="secondary.light" borderRadius="24px" sx={{
+                            backgroundImage: 'url("/images/backgrounds/bg-features-02.png")',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            minHeight:"267px",
+                        }}>
                             <Box px={4} py="65px">
                                 <Stack direction="column" spacing={2} textAlign="center">
 {/* IMAGEN */}
-<Image src="/images/svgs/icon-speech-bubble.svg" alt="icon1" width={40} height={40} />
+
                                     {/* <Box textAlign="center">
                                     </Box>
                                     <Typography variant="h6" fontWeight={700}>Code Improvements</Typography>
@@ -82,7 +98,11 @@ const Features = () => {
                                 </Stack>
                             </Box>
                         </Box>
-                        <Box textAlign="center" mb={3} bgcolor="error.light" borderRadius="24px">
+                        <Box textAlign="center" mb={3} bgcolor="error.light" borderRadius="24px"
+                         sx={{
+                            minHeight:"225px",
+                        }}
+                        >
                             <Box px={4} py="65px">
                                 <Stack direction="column" spacing={2} textAlign="center">
                                     {/* <Box textAlign="center">

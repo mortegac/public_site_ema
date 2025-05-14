@@ -1,5 +1,5 @@
 import { Card } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { AppState } from '@/store/store';
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
 };
 
 const AppCard = ({ children }: Props) => {
-  const customizer = useSelector((state: AppState) => state.customizer);
+  const customizer = useAppSelector((state: AppState) => state.customizer);
 
   return (
     <Card

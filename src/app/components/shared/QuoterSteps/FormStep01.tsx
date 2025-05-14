@@ -28,10 +28,7 @@ const CenteredSVGContainer = styled(Box)(({ theme }) => ({
   height: '100%', // Asegura que ocupe toda la altura del contenedor padre
 }));
 
-
-
 export const FormStep01 = (props:any) => {
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -78,62 +75,50 @@ export const FormStep01 = (props:any) => {
             position: "relative",
           }}
         >
+          <Box sx={{ display: 'flex', width: '100%', height: 'auto', minHeight: '400px' }}>
+            {/* Área izquierda para el formulario */}
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <form onSubmit={handleSubmit} style={{ width: '80%' }}>
+                <VerticalForm>
+                  <Typography variant="h6" gutterBottom>
+                    Información de contacto
+                  </Typography>
+                  <TextField
+                    required
+                    id="name"
+                    label="Nombre"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    fullWidth
+                  />
+                  <TextField
+                    required
+                    id="email"
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    fullWidth
+                  />
+                  <TextField
+                    id="phone"
+                    label="Teléfono"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    fullWidth
+                  />
+                </VerticalForm>
+              </form>
+            </Box>
             
-        
-            <Box sx={{ display: 'flex', width: '100%', height: 'auto', minHeight: '400px' }}>
-        {/* Área izquierda para el SVG */}
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <VerticalForm
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{
-              width: '80%', // Ajusta el ancho del formulario según necesites
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-            Información de contacto
-            </Typography>
-            <TextField
-              required
-              id="name"
-              label="Nombre"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              fullWidth
-            />
-            <TextField
-              required
-              id="email"
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              fullWidth
-            />
-            <TextField
-              id="phone"
-              label="Teléfono"
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              fullWidth
-            />
-            {/* <Button type="submit" variant="contained" color="primary">
-              Siguiente
-            </Button> */}
-          </VerticalForm>
-        </Box>
-        
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <CenteredSVGContainer>
-            <MiSVG />
-          </CenteredSVGContainer>
-        </Box>
-
-        {/* Área derecha para el formulario vertical */}
-        
-      </Box>
-              
+            {/* Área derecha para el SVG */}
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <CenteredSVGContainer>
+                <MiSVG />
+              </CenteredSVGContainer>
+            </Box>
+          </Box>
         </Container>
       </Box>
       <Box bgcolor="#ffffff" width={"100%"} mt={1} 
@@ -147,12 +132,10 @@ export const FormStep01 = (props:any) => {
           width: "50%",
           padding: "10px",
         }}>
-              Siguiente
+          Siguiente
         </Button>
-        
       </Box>
     </>
-    
   );
 };
 

@@ -12,7 +12,8 @@ import {
   } from "@mui/material";
   
 import { styled } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { AppState } from '@/store/store';
 // import { incrementByAmount } from '@/store/features/counter/counterSlice';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -126,9 +127,10 @@ const StepSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const CotizadorWizard = () => {
-  const dispatch = useDispatch();
-  const vehicle = useSelector((state: any) => state.vehicle);
-  const hasEdition = useSelector((state: any) => state.hasEdition);
+  const customizer = useAppSelector((state: AppState) => state.customizer);
+  const dispatch = useAppDispatch();
+  const vehicle = useAppSelector((state: any) => state.vehicle);
+  const hasEdition = useAppSelector((state: any) => state.hasEdition);
 
   const steps = [
     { number: 1, title: 'Información de contacto', subtitle: '', step: 1 },

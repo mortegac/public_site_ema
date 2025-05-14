@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, Typography, Stack, Box } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { AppState } from '@/store/store';
 
 type Props = {
@@ -26,7 +26,7 @@ const DashboardCard = ({
   headsubtitle,
   middlecontent,
 }: Props) => {
-  const customizer = useSelector((state: AppState) => state.customizer);
+  const customizer = useAppSelector((state: AppState) => state.customizer);
 
   const theme = useTheme();
   const borderColor = theme.palette.divider;

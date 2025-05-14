@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Card, CardHeader, CardContent, Divider, Box } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { AppState } from '@/store/store';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const ParentCard = ({ title, children, footer }: Props) => {
-  const customizer = useSelector((state: AppState) => state.customizer);
+  const customizer = useAppSelector((state: AppState) => state.customizer);
 
   const theme = useTheme();
   const borderColor = theme.palette.divider;

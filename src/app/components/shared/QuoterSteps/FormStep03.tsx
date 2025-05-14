@@ -108,32 +108,27 @@ export const FormStep03 = (props:any) => {
             <Typography variant="h6" gutterBottom>Indique la distancia existente entre su tablero eléctrico  y donde quiere instalar el cargador
           </Typography>
           
-          <VerticalForm
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{
-              width: '80%', // Ajusta el ancho del formulario según necesites
-            }}
-          >
-          <Typography variant="caption" gutterBottom 
-            sx={{
-              width: "150px",
-              fontSize: "16px"
-            }}>
-          Distancia en metros
-          </Typography>
-          <TextField
-            required
-            id="name"
-            label=""
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            
-          />
-          <Typography variant="caption" gutterBottom>
-          mts
-          </Typography>
-        </VerticalForm>          
+          <form onSubmit={handleSubmit} style={{ width: '80%' }}>
+            <VerticalForm>
+              <Typography variant="caption" gutterBottom 
+                sx={{
+                  width: "150px",
+                  fontSize: "16px"
+                }}>
+                Distancia en metros
+              </Typography>
+              <TextField
+                required
+                id="name"
+                label=""
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Typography variant="caption" gutterBottom>
+                mts
+              </Typography>
+            </VerticalForm>
+          </form>
           
           {/* <FullWidthButtonWithIcons variant="contained" color="primary">
             <BoxLeft>

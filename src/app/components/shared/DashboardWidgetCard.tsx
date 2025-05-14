@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, Typography, Box, Stack } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { AppState } from '@/store/store';
 import { IconGridDots } from '@tabler/icons-react';
 
@@ -23,7 +23,7 @@ const DashboardWidgetCard = ({
   dataLabel2,
   dataItem2,
 }: Props) => {
-  const customizer = useSelector((state: AppState) => state.customizer);
+  const customizer = useAppSelector((state: AppState) => state.customizer);
 
   const theme = useTheme();
   const borderColor = theme.palette.grey[100];

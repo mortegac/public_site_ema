@@ -1,7 +1,10 @@
 import PageContainer from '@/app/components/container/PageContainer';
 import Banner from '@/app/components/shared/banner/Banner';
+import QuoterSteps from '@/app/components/shared/QuoterSteps';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
+import CotizadorWizard from '@/app/components/CotizadorWizard';
+import Steps from '@/app/components/CotizadorWizard/Steps';
 import Features from '@/app/components/shared/features/Features';
 import Notice from '@/app/components/shared/notice/Notice';
 import Pricing from '@/app/components/shared/pricing';
@@ -15,7 +18,10 @@ import Pricing from '@/app/components/shared/pricing';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 
-const HomePage = () => {
+
+
+
+const QuoterPage = () => {
   return (
     <PageContainer title="Cotiza tú Instalación" description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación">
       <HeaderAlert />
@@ -32,11 +38,13 @@ const HomePage = () => {
         buttonURITwo="" 
         imageSrc="/images/headers/cotiza-tu-instalacion.png" 
       />
-   
+      <Steps/>
+      {/* <CotizadorWizard/> */}
+      <QuoterSteps/>
       <Footer />
       <ScrollToTop />
     </PageContainer>
   );
 };
 
-export default HomePage;
+export default QuoterPage;

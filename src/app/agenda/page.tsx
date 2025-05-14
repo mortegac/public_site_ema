@@ -5,6 +5,7 @@ import HpHeader from '@/app/components/shared/header/HpHeader';
 import Features from '@/app/components/shared/features/Features';
 import Notice from '@/app/components/shared/notice/Notice';
 import Pricing from '@/app/components/shared/pricing';
+import CalendarGoogle from '@/app/components/shared/calendarGoogle';
 // import DefendFocus from '../../components/frontend-pages/homepage/defend-focus';
 // import Leadership from '../../components/frontend-pages/shared/leadership';
 // import PowerfulDozens from '@/app/components/shared/powerful-dozens';
@@ -35,6 +36,7 @@ const HomePage = () => {
         
         imageSrc="/images/headers/agenda-tu-visita.png" 
       />
+      <CalendarGoogle/>
       {/*
       <Notice />
       <Features />

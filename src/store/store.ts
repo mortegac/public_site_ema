@@ -3,25 +3,27 @@ import { combineReducers } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import CustomizerReducer from "./customizer/CustomizerSlice";
+import wizardReducer from './wizard/wizardSlice';
 
 
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ['customizer', 'wizard'],
 };
 
+const rootReducer = combineReducers({
+  customizer: CustomizerReducer,
+  wizard: wizardReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    customizer: persistReducer<any>(persistConfig, CustomizerReducer),
-  },
+  reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }),
-});
-
-const rootReducer = combineReducers({
- customizer: CustomizerReducer,
 });
 
 export const persistor = persistStore(store);

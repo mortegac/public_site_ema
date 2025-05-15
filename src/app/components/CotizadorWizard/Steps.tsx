@@ -13,14 +13,29 @@ import {
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-// import Butt graphy from '@mui/material/Typography';
 
-const steps = ['Información de contacto', 'Tipo de cargador', 'Información  técnica', "Resumen cotización"];
+
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { increment, setStep, decrement, selectClientForms } from "@/store/ClientForms/slice";
+
+
+const steps = [
+  "Información de contacto", 
+  "Tipo de cargador", 
+  "Información  técnica", 
+  "Resumen cotización"
+];
 
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
+  const dispatch = useAppDispatch();
+  const { 
+    currentStep,
+    currentForm,
+  } = useAppSelector(selectClientForms);
+  
   const isStepOptional = (step: number) => {
     return step === 1;
   };
@@ -72,8 +87,10 @@ export default function HorizontalLinearStepper() {
           position: "relative",
         }}
       >
+        {/* <pre>currentStep = {JSON.stringify(currentStep)}</pre>
+        <pre>activeStep = {JSON.stringify(activeStep)}</pre> */}
       <Stepper 
-        activeStep={activeStep}
+        activeStep={currentStep}
         sx={{
           '& .MuiStepLabel-root': {
             display: 'flex',
@@ -111,49 +128,59 @@ export default function HorizontalLinearStepper() {
             optional?: React.ReactNode;
             onClick?: () => void;
           } = {
-            onClick: () => setActiveStep(index)
+            onClick:() => dispatch(setStep(index))
           };
           return (
             <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
+              {/* <pre>currentStep {currentStep} = {index+1}</pre> */}
+              <StepLabel 
+                {...labelProps}
+                sx={{
+                  '& .MuiStepIcon-root': {
+                    color: Number(currentStep) === Number(index+1) ? '#E81A68' : '#b9b9b9'
+                  }
+                }}
+              >
+                {label}
+              </StepLabel>
             </Step>
           );
         })}
       </Stepper>
-      {activeStep === steps.length ? (
+      {/* {activeStep === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
             Proceso finalizado
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            {/* <Button onClick={handleReset}>Reset</Button> */}
+            <Button onClick={handleReset}>Reset</Button>
           </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
+          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            {/* <Button
+            <Button
               color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
               sx={{ mr: 1 }}
             >
               Back
-            </Button> */}
+            </Button>
             <Box sx={{ flex: '1 1 auto' }} />
-            {/* {isStepOptional(activeStep) && (
+            {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                 Skip
               </Button>
-            )} */}
-            {/* <Button onClick={handleNext}>
+            )}
+            <Button onClick={handleNext}>
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button> */}
+            </Button>
           </Box>
         </React.Fragment>
-      )}
+      )} */}
       </Container>
     </Box>
   );

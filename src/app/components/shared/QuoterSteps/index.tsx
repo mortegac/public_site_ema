@@ -8,8 +8,12 @@ import {
   Grid,
   Button,
 } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Image from "next/image";
+// import useMediaQuery from "@mui/material/useMediaQuery";
+
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
+
+  
 
 
 import {FormStep01} from "./FormStep01";
@@ -28,14 +32,40 @@ const typeOfForm: any = {
 
 
 const QuoterSteps = (props:any) => {
-  const { titleOne, titleTwo, buttonText, buttonURI, buttonTextTwo, buttonURITwo, description, imageSrc} = props;
+  const { 
+    currentStep,
+    // currentForm,
+  } = useAppSelector(selectClientForms);
+  const dispatch = useAppDispatch();
+  
+  
+  // const { titleOne, titleTwo, buttonText, buttonURI, buttonTextTwo, buttonURITwo, description, imageSrc} = props;
   //   sidebar
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
+  // const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
 
-  const [step, setStep] = React.useState(0);
+  // const [step, setStep] = React.useState(0);
 
-  const FormStep = typeOfForm[String(step)] || typeOfForm[0];
+  const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
 
+  
+  const onChangeSetStore = async (e: any) => {
+    let valueForm: any;
+    if (e.target.type === "checkbox") {
+      valueForm = Boolean(e.target.checked);
+    } else if (e.target.type === "number") {
+      valueForm = Number(e.target.value);
+    } else {
+      valueForm = String(e.target.value);
+    }
+    e.preventDefault();
+
+    dispatch(
+      setDataForm({
+        key: e.target.name,
+        value: valueForm,
+      })
+    );
+  };
 
   return (
     <Box bgcolor="#ffffff" pt={7} pb={7}>
@@ -50,34 +80,20 @@ const QuoterSteps = (props:any) => {
             align="left"
                         sx={{
                           display: "block",
-                          padding: "30px 0",
+                          paddingBottom: "30px",
                           fontSize: "18px",
-                          lineHeight: '2',
+                          lineHeight: "2",
+                          marginTop: "0",
                           color: (theme) => theme.palette.text.primary
                         }}
                         component="span"
             >
               Complete el siguiente formulario para obtener un precio aproximado para la instalación eléctrica de su cargador de vehículo eléctrico. Con solo unos pocos datos, podremos ofrecerle una estimación personalizada que se ajuste a sus necesidades específicas. Todos los campos marcados con * son obligatorios para poder realizar el cálculo correctamente.
             </Typography>
-        <Button
-          color="primary"
-          size="large"
-          variant="contained"
-          href={buttonURI}
-          sx={{ marginRight: '16px' }}
-          onClick={()=>setStep(Number(step)-1)}
-        >{"<"}</Button>
-        <Button
-          color="primary"
-          size="large"
-          variant="contained"
-          href={buttonURI}
-          onClick={()=>setStep(Number(step)+1)}
-          className="ml-4"
-        >{">"}</Button>
-            {step}
-            
-            <FormStep />
+      
+            <FormStep 
+              onChangeSetStore={onChangeSetStore}
+            />
             
       </Container>
     </Box>

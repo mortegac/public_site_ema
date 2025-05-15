@@ -10,6 +10,11 @@ import {
   styled
 } from "@mui/material";
 
+
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
+
+
 const FullWidthButtonWithIcons = styled(Button)(({ theme }) => ({
   width: '100%',
   boxSizing: 'border-box',
@@ -23,7 +28,6 @@ const FullWidthButtonWithIcons = styled(Button)(({ theme }) => ({
   padding: theme.spacing(3, 4), // Ajusta el padding general
   
 }));
-
 // Estilo para el SVG pequeño de la izquierda
 const SmallLeftIcon = styled(Box)(({ theme }) => ({
   width: theme.spacing(3), // Ajusta el tamaño según necesites
@@ -35,7 +39,6 @@ const BoxLeft = styled(Box)(({ theme }) => ({
   justifyContent: 'center', // Espacia el grupo izquierdo y el icono derecho
   alignItems: 'center',
 }));
-
 // Estilo para el SVG grande de la derecha
 const LargeRightIcon = styled(Box)(({ theme }) => ({
   width: theme.spacing(6), // Ajusta el tamaño según necesites
@@ -126,7 +129,12 @@ const LargeSVGFour = () => (
 );
 
 export const FormStep02 = (props:any) => {
-
+  const { 
+    currentStep,
+    // currentForm,
+  } = useAppSelector(selectClientForms);
+  
+  const dispatch = useAppDispatch();
 
   return (  
     <>
@@ -241,7 +249,9 @@ export const FormStep02 = (props:any) => {
         sx={{
           width: "50%",
           padding: "10px",
-        }}>
+        }}
+        onClick={ () => dispatch(setStep(2)) }
+        >
               Siguiente
         </Button>
         

@@ -8,6 +8,7 @@ import Steps from '@/app/components/CotizadorWizard/Steps';
 import Features from '@/app/components/shared/features/Features';
 import Notice from '@/app/components/shared/notice/Notice';
 import Pricing from '@/app/components/shared/pricing';
+import C2a from '@/app/components/shared/c2a';
 // import DefendFocus from '../../components/frontend-pages/homepage/defend-focus';
 // import Leadership from '../../components/frontend-pages/shared/leadership';
 // import PowerfulDozens from '@/app/components/shared/powerful-dozens';
@@ -26,7 +27,7 @@ const QuoterPage = () => {
     <PageContainer title="Cotiza tú Instalación" description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación">
       <HeaderAlert />
       <HpHeader /> 
-      <Banner 
+      {/* <Banner 
         titleOne="Cotiza tú " 
         titleTwo="Instalación" 
         description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación"
@@ -37,10 +38,13 @@ const QuoterPage = () => {
         buttonTextTwo="" 
         buttonURITwo="" 
         imageSrc="/images/headers/cotiza-tu-instalacion.png" 
-      />
+      /> */}
       <Steps/>
       {/* <CotizadorWizard/> */}
       <QuoterSteps/>
+      
+      <C2a/>
+      
       <Footer />
       <ScrollToTop />
     </PageContainer>

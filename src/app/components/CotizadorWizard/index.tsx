@@ -12,8 +12,15 @@ import {
   } from "@mui/material";
   
 import { styled } from '@mui/material/styles';
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { AppState } from '@/store/store';
+// import { useAppSelector, useAppDispatch } from '@/store/hooks';
+// import { AppState } from '@/store/store';
+// import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
+// const { 
+//     currentStep,
+//     currentForm,
+//   } = useAppSelector(selectClientForms);
+  
+
 // import { incrementByAmount } from '@/store/features/counter/counterSlice';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -127,10 +134,12 @@ const StepSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const CotizadorWizard = () => {
-  const customizer = useAppSelector((state: AppState) => state.customizer);
-  const dispatch = useAppDispatch();
-  const vehicle = useAppSelector((state: any) => state.vehicle);
-  const hasEdition = useAppSelector((state: any) => state.hasEdition);
+  
+    
+//   const customizer = useAppSelector((state: AppState) => state.customizer);
+//   const dispatch = useAppDispatch();
+//   const vehicle = useAppSelector((state: any) => state.vehicle);
+//   const hasEdition = useAppSelector((state: any) => state.hasEdition);
 
   const steps = [
     { number: 1, title: 'Información de contacto', subtitle: '', step: 1 },
@@ -149,6 +158,7 @@ const CotizadorWizard = () => {
         }}
       >
         <StyledBox sx={{ '&::before': { bgcolor: hasEdition ? 'warning.light' : 'grey.100' } }}>
+        {/* <StyledBox sx={{ '&::before': 'grey.100'  }}> */}
         <StepContainer>
             {steps.map((step) => (
             <StepItem key={step.number}>

@@ -6,6 +6,7 @@ import Features from '@/app/components/shared/features/Features';
 import Notice from '@/app/components/shared/notice/Notice';
 import Pricing from '@/app/components/shared/pricing';
 import CalendarGoogle from '@/app/components/shared/calendarGoogle';
+import C2a from '@/app/components/shared/c2a';
 // import DefendFocus from '../../components/frontend-pages/homepage/defend-focus';
 // import Leadership from '../../components/frontend-pages/shared/leadership';
 // import PowerfulDozens from '@/app/components/shared/powerful-dozens';
@@ -23,7 +24,7 @@ const HomePage = () => {
       <HpHeader /> 
      
       
-      <Banner 
+      {/* <Banner 
         titleOne="Agenda tú " 
         titleTwo="Visita técnica" 
         description="Agenda tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."
@@ -35,8 +36,10 @@ const HomePage = () => {
         buttonURITwo="/" 
         
         imageSrc="/images/headers/agenda-tu-visita.png" 
-      />
+      /> */}
       <CalendarGoogle/>
+      
+      <C2a/>
       {/*
       <Notice />
       <Features />

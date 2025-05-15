@@ -12,6 +12,10 @@ import {
 
 import { styled } from '@mui/material/styles';
 
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
+
+
 // Componente para el formulario vertical
 const VerticalForm = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -29,16 +33,26 @@ const CenteredSVGContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const FormStep01 = (props:any) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const { onChangeSetStore } = props;
+  
+  const { 
+    currentStep,
+    // currentForm,
+    currentForm
+  } = useAppSelector(selectClientForms);
+  
+  const dispatch = useAppDispatch();
+  
+  // const [name, setName] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [phone, setPhone] = useState('');
 
   const handleSubmit = (event:any) => {
     event.preventDefault();
-    console.log('Formulario enviado:', { name, email, phone });
-    setName('');
-    setEmail('');
-    setPhone('');
+    // console.log('Formulario enviado:', { name, email, phone });
+    // setName('');
+    // setEmail('');
+    // setPhone('');
   };
   
   const MiSVG = () => (
@@ -83,12 +97,15 @@ export const FormStep01 = (props:any) => {
                   <Typography variant="h6" gutterBottom>
                     Información de contacto
                   </Typography>
+  
                   <TextField
                     required
                     id="name"
                     label="Nombre"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    name="name"
+                    value={currentForm?.name}
+                    // onChange={(e) => setName(e.target.value)}
+                    onChange={onChangeSetStore}
                     fullWidth
                   />
                   <TextField
@@ -96,16 +113,19 @@ export const FormStep01 = (props:any) => {
                     id="email"
                     label="Email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    name="email"
+                    value={currentForm?.email}
+                    onChange={onChangeSetStore}
+                    // onChange={(e) => setEmail(e.target.value)}
                     fullWidth
                   />
                   <TextField
                     id="phone"
                     label="Teléfono"
                     type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    name="phone"
+                    value={currentForm?.phone}
+                    onChange={onChangeSetStore}
                     fullWidth
                   />
                 </VerticalForm>
@@ -131,10 +151,20 @@ export const FormStep01 = (props:any) => {
         sx={{
           width: "50%",
           padding: "10px",
-        }}>
+        }}
+        onClick={ () => {
+          if (currentForm?.phone && currentForm?.email && currentForm?.name) {
+            dispatch(setStep(1));
+          } else {
+            alert('Por favor complete todos los campos requeridos');
+          }
+        } }
+        >
           Siguiente
         </Button>
       </Box>
+      
+      <pre>{JSON.stringify(currentForm, null, 2)}</pre>
     </>
   );
 };

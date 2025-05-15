@@ -4,17 +4,19 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import CustomizerReducer from "./customizer/CustomizerSlice";
 import wizardReducer from './wizard/wizardSlice';
+import clientFormsReducer from './ClientForms/slice';
 
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ['customizer', 'wizard'],
+  whitelist: ['customizer', 'wizard', 'clientForms'],
 };
 
 const rootReducer = combineReducers({
   customizer: CustomizerReducer,
   wizard: wizardReducer,
+  clientForms: clientFormsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

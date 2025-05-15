@@ -11,12 +11,14 @@ import {
   styled
 } from "@mui/material";
 
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
 
 
 const VerticalForm = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
-  gap: theme.spacing(2), // Espacio entre los campos
+  gap: theme.spacing(2),
   padding: theme.spacing(3),
 }));
 
@@ -28,38 +30,34 @@ const FullWidthButtonWithIcons = styled(Button)(({ theme }) => ({
   border: '1px solid #E81A68',
   borderRadius: '8px',
   display: 'flex',
-  justifyContent: 'space-between', // Espacia el grupo izquierdo y el icono derecho
+  justifyContent: 'space-between',
   alignItems: 'center',
-  padding: theme.spacing(3, 4), // Ajusta el padding general
-  
+  padding: theme.spacing(3, 4),
 }));
 
-// Estilo para el SVG pequeño de la izquierda
 const SmallLeftIcon = styled(Box)(({ theme }) => ({
-  width: theme.spacing(3), // Ajusta el tamaño según necesites
+  width: theme.spacing(3),
   height: theme.spacing(3),
   marginRight: theme.spacing(1),
 }));
+
 const BoxLeft = styled(Box)(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'center', // Espacia el grupo izquierdo y el icono derecho
+  justifyContent: 'center',
   alignItems: 'center',
 }));
 
-// Estilo para el SVG grande de la derecha
 const LargeRightIcon = styled(Box)(({ theme }) => ({
-  width: theme.spacing(6), // Ajusta el tamaño según necesites
+  width: theme.spacing(6),
   height: theme.spacing(6),
   marginLeft: theme.spacing(1),
 }));
 
-// Ejemplo de componente SVG pequeño
 const SmallSVG = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12 16.5C13.1935 16.5 14.3381 16.0259 15.182 15.182C16.0259 14.3381 16.5 13.1935 16.5 12C16.5 10.8065 16.0259 9.66193 15.182 8.81802C14.3381 7.97411 13.1935 7.5 12 7.5C10.8065 7.5 9.66193 7.97411 8.81802 8.81802C7.97411 9.66193 7.5 10.8065 7.5 12C7.5 13.1935 7.97411 14.3381 8.81802 15.182C9.66193 16.0259 10.8065 16.5 12 16.5ZM12 3C10.8181 3 9.64778 3.23279 8.55585 3.68508C7.46392 4.13738 6.47177 4.80031 5.63604 5.63604C4.80031 6.47177 4.13738 7.46392 3.68508 8.55585C3.23279 9.64778 3 10.8181 3 12C3 13.1819 3.23279 14.3522 3.68508 15.4442C4.13738 16.5361 4.80031 17.5282 5.63604 18.364C6.47177 19.1997 7.46392 19.8626 8.55585 20.3149C9.64778 20.7672 10.8181 21 12 21C14.3869 21 16.6761 20.0518 18.364 18.364C20.0518 16.6761 21 14.3869 21 12C21 9.61305 20.0518 7.32387 18.364 5.63604C16.6761 3.94821 14.3869 3 12 3ZM4.5 12C4.5 10.0109 5.29018 8.10322 6.6967 6.6967C8.10322 5.29018 10.0109 4.5 12 4.5C13.9891 4.5 15.8968 5.29018 17.3033 6.6967C18.7098 8.10322 19.5 10.0109 19.5 12C19.5 13.9891 18.7098 15.8968 17.3033 17.3033C15.8968 18.7098 13.9891 19.5 12 19.5C10.0109 19.5 8.10322 18.7098 6.6967 17.3033C5.29018 15.8968 4.5 13.9891 4.5 12Z" fill="#E81A68"/>
 </svg>
 );
-
 
 const LargeSVG = () => (
   <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,36 +77,61 @@ const LargeSVG = () => (
 );
 
 export const FormStep03 = (props:any) => {
+  const { 
+    currentStep,
+    // currentForm,
+  } = useAppSelector(selectClientForms);
+  const dispatch = useAppDispatch();
+  
+  const [distance, setDistance] = useState<string>('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-
-  const handleSubmit = (event:any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Formulario enviado:', { name, email, phone });
-    setName('');
-    setEmail('');
-    setPhone('');
+    // if (!termsAccepted) {
+    //   alert('Por favor acepte los términos y condiciones');
+    //   return;
+    // }
+    // const distanceNumber = parseFloat(distance);
+    // if (!isNaN(distanceNumber)) {
+    //   try {
+    //     await dispatch(updateDistance(distanceNumber)).unwrap();
+    //     setDistance(''); // Limpiar el campo después de enviar
+    //     // Aquí puedes agregar la lógica para avanzar al siguiente paso
+    //   } catch (error) {
+    //     alert('Error al guardar la distancia');
+    //   }
+    // } else {
+    //   alert('Por favor ingrese una distancia válida');
+    // }
   };
+
+  const handleDistanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      setDistance(value);
+    }
+  };
+
   return (
     <>
-    <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
-    sx={{
-      boxSizing: 'border-box',
-      border: '1px solid #EAEFF4',
-      borderRadius: '12px',
-    }}>
-      <Container
-        sx={{
-          maxWidth: "1400px !important",
-          position: "relative",
-        }}
-      >
-            <Typography variant="h6" gutterBottom>Indique la distancia existente entre su tablero eléctrico  y donde quiere instalar el cargador
-          </Typography>
-          
-          <form onSubmit={handleSubmit} style={{ width: '80%' }}>
+      <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
+      sx={{
+        boxSizing: 'border-box',
+        border: '1px solid #EAEFF4',
+        borderRadius: '12px',
+      }}>
+        <Container
+          sx={{
+            maxWidth: "1400px !important",
+            position: "relative",
+          }}
+        >
+          <form onSubmit={handleSubmit}>
+            <Typography variant="h6" gutterBottom>
+              Indique la distancia existente entre su tablero eléctrico y donde quiere instalar el cargador
+            </Typography>
+            
             <VerticalForm>
               <Typography variant="caption" gutterBottom 
                 sx={{
@@ -119,113 +142,78 @@ export const FormStep03 = (props:any) => {
               </Typography>
               <TextField
                 required
-                id="name"
+                id="distance"
+                type="text"
                 label=""
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={distance}
+                onChange={handleDistanceChange}
+                inputProps={{ min: 0 }}
               />
               <Typography variant="caption" gutterBottom>
                 mts
               </Typography>
             </VerticalForm>
+
+            <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
+            sx={{
+              boxSizing: 'border-box',
+              border: '1px solid #EAEFF4',
+              borderRadius: '12px',
+            }}>
+              <Container
+                sx={{
+                  maxWidth: "1400px !important",
+                  position: "relative",
+                }}
+              >
+                <FullWidthButtonWithIcons 
+                  variant="contained" 
+                  color="primary"
+                  onClick={() => setTermsAccepted(!termsAccepted)}
+                  sx={{
+                    backgroundColor: termsAccepted ? '#E81A68' : '#ECF2FF',
+                    color: termsAccepted ? '#FFFFFF' : '#2A3547',
+                  }}
+                >
+                  <BoxLeft>
+                    <SmallLeftIcon>
+                      <SmallSVG />
+                    </SmallLeftIcon>  
+                    <Typography variant="caption"
+                      sx={{
+                        fontSize:"18px",
+                      }}
+                    >
+                      Acepto términos y condiciones
+                    </Typography>
+                  </BoxLeft>
+                </FullWidthButtonWithIcons>
+              </Container>
+            </Box>
+
+            <Box bgcolor="#ffffff" width={"100%"} mt={1} 
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+              <Button 
+                type="submit" 
+                variant="contained" 
+                color="primary"
+                sx={{
+                  width: "50%",
+                  padding: "10px",
+                }}
+                onClick={ () => dispatch(setStep(3)) }
+              >
+                Generar Presupuesto
+              </Button>
+            </Box>
           </form>
-          
-          {/* <FullWidthButtonWithIcons variant="contained" color="primary">
-            <BoxLeft>
-                <Typography variant="caption"
-                  sx={{
-                  fontSize:"18px",
-                  color: "#2A3547",
-                  
-                  }}
-                  >Distancia en metros</Typography>
-                  <input/>
-                  <Typography variant="caption"
-                  sx={{
-                  fontSize:"18px",
-                  color: "#2A3547",
-                  
-                  }}
-                  >mts</Typography>
-            </BoxLeft>
-            
-            <LargeRightIcon>
-            <svg width="123" height="123" viewBox="0 0 123 123" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clip-path="url(#clip0_7061_20185)">
-              <path d="M101.066 1.99219H22.2695C20.9952 1.99219 19.7732 2.49839 18.8721 3.39945C17.9711 4.3005 17.4648 5.52259 17.4648 6.79688V104.812C17.4648 106.087 17.9711 107.309 18.8721 108.21C19.7732 109.111 20.9952 109.617 22.2695 109.617H101.066C101.697 109.617 102.322 109.493 102.905 109.252C103.488 109.01 104.018 108.657 104.464 108.21C104.91 107.764 105.264 107.234 105.506 106.651C105.747 106.068 105.871 105.444 105.871 104.812V6.79688C105.871 6.16586 105.747 5.54099 105.506 4.95798C105.264 4.37496 104.91 3.84522 104.464 3.39903C104.018 2.95283 103.488 2.59893 102.905 2.35754C102.322 2.11615 101.697 1.992 101.066 1.99219ZM100.105 63.4922H96.2617V100.008H27.0742V11.6016H96.2617V48.1172H100.105V63.4922Z" fill="#F2D2DE"/>
-              <path d="M48.2148 63.4922H75.1211V75.0234H48.2148V63.4922Z" fill="#F2D2DE"/>
-              <path d="M57.8242 51.9609L71.2773 36.5859H65.5117L67.4336 21.2109L52.0586 36.5859H57.8242V51.9609Z" fill="#F2D2DE"/>
-              <path d="M99.9375 46.125H98.0156V11.5312C98.0156 11.0215 97.8131 10.5327 97.4527 10.1723C97.0923 9.81186 96.6035 9.60938 96.0938 9.60938H26.9062C26.3965 9.60938 25.9077 9.81186 25.5473 10.1723C25.1869 10.5327 24.9844 11.0215 24.9844 11.5312V99.9375C24.9844 100.447 25.1869 100.936 25.5473 101.296C25.9077 101.657 26.3965 101.859 26.9062 101.859H96.0938C96.6035 101.859 97.0923 101.657 97.4527 101.296C97.8131 100.936 98.0156 100.447 98.0156 99.9375V65.3438H99.9375C100.447 65.3438 100.936 65.1413 101.296 64.7808C101.657 64.4204 101.859 63.9316 101.859 63.4219V48.0469C101.859 47.5372 101.657 47.0483 101.296 46.6879C100.936 46.3275 100.447 46.125 99.9375 46.125ZM94.1719 98.0156H28.8281V13.4531H94.1719V46.125H92.25C91.7403 46.125 91.2514 46.3275 90.891 46.6879C90.5306 47.0483 90.3281 47.5372 90.3281 48.0469V63.4219C90.3281 63.9316 90.5306 64.4204 90.891 64.7808C91.2514 65.1413 91.7403 65.3438 92.25 65.3438H94.1719V98.0156ZM98.0156 61.5H94.1719V49.9688H98.0156V61.5Z" fill="#E81A68"/>
-              <path d="M48.0469 76.875H74.9531C75.4628 76.875 75.9517 76.6725 76.3121 76.3121C76.6725 75.9517 76.875 75.4628 76.875 74.9531V63.4219C76.875 62.9122 76.6725 62.4233 76.3121 62.0629C75.9517 61.7025 75.4628 61.5 74.9531 61.5H48.0469C47.5372 61.5 47.0483 61.7025 46.6879 62.0629C46.3275 62.4233 46.125 62.9122 46.125 63.4219V74.9531C46.125 75.4628 46.3275 75.9517 46.6879 76.3121C47.0483 76.6725 47.5372 76.875 48.0469 76.875ZM49.9688 65.3438H73.0312V73.0312H49.9688V65.3438Z" fill="#E81A68"/>
-              <path d="M78.7969 80.7188H44.2031C43.6934 80.7188 43.2046 80.9212 42.8442 81.2817C42.4837 81.6421 42.2812 82.1309 42.2812 82.6406C42.2812 83.1503 42.4837 83.6392 42.8442 83.9996C43.2046 84.36 43.6934 84.5625 44.2031 84.5625H78.7969C79.3066 84.5625 79.7954 84.36 80.1558 83.9996C80.5163 83.6392 80.7188 83.1503 80.7188 82.6406C80.7188 82.1309 80.5163 81.6421 80.1558 81.2817C79.7954 80.9212 79.3066 80.7188 78.7969 80.7188Z" fill="#E81A68"/>
-              <path d="M71.1094 88.4062H51.8906C51.3809 88.4062 50.8921 88.6087 50.5317 88.9692C50.1712 89.3296 49.9688 89.8184 49.9688 90.3281C49.9688 90.8378 50.1712 91.3267 50.5317 91.6871C50.8921 92.0475 51.3809 92.25 51.8906 92.25H71.1094C71.6191 92.25 72.1079 92.0475 72.4683 91.6871C72.8288 91.3267 73.0312 90.8378 73.0312 90.3281C73.0312 89.8184 72.8288 89.3296 72.4683 88.9692C72.1079 88.6087 71.6191 88.4062 71.1094 88.4062Z" fill="#E81A68"/>
-              <path d="M111.469 28.8281C111.978 28.8281 112.467 28.6256 112.828 28.2652C113.188 27.9048 113.391 27.416 113.391 26.9062V11.5312C113.391 11.0215 113.188 10.5327 112.828 10.1723C112.467 9.81186 111.978 9.60938 111.469 9.60938H107.625V6.72656C107.623 4.94317 106.914 3.23339 105.653 1.97234C104.392 0.711294 102.682 0.0019712 100.898 0L22.1016 0C20.3182 0.0019712 18.6084 0.711294 17.3473 1.97234C16.0863 3.23339 15.377 4.94317 15.375 6.72656V9.60938H11.5312C11.0215 9.60938 10.5327 9.81186 10.1723 10.1723C9.81186 10.5327 9.60938 11.0215 9.60938 11.5312V26.9062C9.60938 27.416 9.81186 27.9048 10.1723 28.2652C10.5327 28.6256 11.0215 28.8281 11.5312 28.8281H15.375V82.6406H11.5312C11.0215 82.6406 10.5327 82.8431 10.1723 83.2035C9.81186 83.5639 9.60938 84.0528 9.60938 84.5625V99.9375C9.60938 100.447 9.81186 100.936 10.1723 101.296C10.5327 101.657 11.0215 101.859 11.5312 101.859H15.375V104.742C15.377 106.526 16.0863 108.235 17.3473 109.496C18.6084 110.757 20.3182 111.467 22.1016 111.469H32.6719V121.078C32.6719 121.588 32.8744 122.077 33.2348 122.437C33.5952 122.798 34.084 123 34.5938 123H42.2812C42.791 123 43.2798 122.798 43.6402 122.437C44.0006 122.077 44.2031 121.588 44.2031 121.078V111.469H55.7344V121.078C55.7344 121.588 55.9369 122.077 56.2973 122.437C56.6577 122.798 57.1465 123 57.6562 123H65.3438C65.8535 123 66.3423 122.798 66.7027 122.437C67.0631 122.077 67.2656 121.588 67.2656 121.078V111.469H78.7969V121.078C78.7969 121.588 78.9994 122.077 79.3598 122.437C79.7202 122.798 80.209 123 80.7188 123H88.4062C88.916 123 89.4048 122.798 89.7652 122.437C90.1256 122.077 90.3281 121.588 90.3281 121.078V111.469H100.898C102.682 111.467 104.392 110.757 105.653 109.496C106.914 108.235 107.623 106.526 107.625 104.742V101.859H111.469C111.978 101.859 112.467 101.657 112.828 101.296C113.188 100.936 113.391 100.447 113.391 99.9375V84.5625C113.391 84.0528 113.188 83.5639 112.828 83.2035C112.467 82.8431 111.978 82.6406 111.469 82.6406H107.625V28.8281H111.469ZM107.625 13.4531H109.547V24.9844H107.625V13.4531ZM15.375 98.0156H13.4531V86.4844H15.375V98.0156ZM15.375 24.9844H13.4531V13.4531H15.375V24.9844ZM40.3594 119.156H36.5156V111.469H40.3594V119.156ZM63.4219 119.156H59.5781V111.469H63.4219V119.156ZM86.4844 119.156H82.6406V111.469H86.4844V119.156ZM103.781 104.742C103.781 105.507 103.477 106.239 102.936 106.78C102.396 107.32 101.663 107.624 100.898 107.625H22.1016C21.3372 107.624 20.6043 107.32 20.0638 106.78C19.5233 106.239 19.2194 105.507 19.2188 104.742V6.72656C19.2194 5.96219 19.5233 5.2293 20.0638 4.68881C20.6043 4.14831 21.3372 3.84439 22.1016 3.84375H100.898C101.663 3.84439 102.396 4.14831 102.936 4.68881C103.477 5.2293 103.781 5.96219 103.781 6.72656V104.742ZM109.547 86.4844V98.0156H107.625V86.4844H109.547Z" fill="#E81A68"/>
-              <path d="M72.8607 35.7206C72.7075 35.3848 72.4609 35.1 72.1504 34.9003C71.8399 34.7005 71.4786 34.5942 71.1094 34.5939H67.5203L69.1731 21.3786C69.2232 20.981 69.1476 20.5776 68.9571 20.225C68.7666 19.8724 68.4706 19.5882 68.1105 19.4121C67.7505 19.2361 67.3444 19.177 66.9491 19.2432C66.5538 19.3093 66.1891 19.4974 65.9059 19.7811L50.5309 35.1561C50.2619 35.4249 50.0786 35.7675 50.0043 36.1405C49.93 36.5135 49.9681 36.9001 50.1137 37.2515C50.2593 37.6028 50.5058 37.9031 50.8221 38.1143C51.1385 38.3254 51.5103 38.438 51.8907 38.4377H55.7344V51.8908C55.7344 52.2818 55.8536 52.6636 56.0761 52.9851C56.2987 53.3066 56.6141 53.5525 56.9801 53.6901C57.3461 53.8277 57.7454 53.8503 58.1246 53.7551C58.5038 53.6598 58.845 53.4511 59.1025 53.1568L72.5556 37.7818C72.7988 37.5037 72.9568 37.1615 73.0109 36.7961C73.065 36.4306 73.0129 36.0573 72.8607 35.7206ZM59.5782 46.7762V36.5158C59.5782 36.0061 59.3757 35.5173 59.0153 35.1568C58.6548 34.7964 58.166 34.5939 57.6563 34.5939H56.5296L64.6639 26.4596L63.4363 36.278C63.4026 36.5484 63.4268 36.8229 63.5072 37.0832C63.5877 37.3436 63.7226 37.5838 63.903 37.7881C64.0833 37.9923 64.3051 38.1558 64.5535 38.2678C64.8019 38.3798 65.0713 38.4377 65.3438 38.4377H66.8741L59.5782 46.7762Z" fill="#E81A68"/>
-              </g>
-              <defs>
-              <clipPath id="clip0_7061_20185">
-              <rect width="123" height="123" fill="white"/>
-              </clipPath>
-              </defs>
-            </svg>
-
-              
-            </LargeRightIcon>
-          </FullWidthButtonWithIcons> */}
-      </Container>      
-    </Box>
-
-      
-    
-    <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
-    sx={{
-      boxSizing: 'border-box',
-      border: '1px solid #EAEFF4',
-      borderRadius: '12px',
-    }}>
-      <Container
-        sx={{
-          maxWidth: "1400px !important",
-          position: "relative",
-        }}
-      >
-            {/* <Typography variant="h6" gutterBottom>Aceptos términos y condiciones
-          </Typography> */}
-          <FullWidthButtonWithIcons variant="contained" color="primary">
-            <BoxLeft>
-              <SmallLeftIcon>
-                <SmallSVG />
-              </SmallLeftIcon>  
-                <Typography variant="caption"
-                  sx={{
-                  fontSize:"18px",
-                  color: "#2A3547",
-                  
-                  }}
-                  >Aceptos términos y condiciones</Typography>
-            </BoxLeft>
-            
-            {/* <LargeRightIcon><LargeSVG /></LargeRightIcon> */}
-          </FullWidthButtonWithIcons>
-      </Container>
-      
-    </Box>
-    <Box bgcolor="#ffffff" width={"100%"} mt={1} 
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
-        <Button type="submit" variant="contained" color="primary"
-        sx={{
-          width: "50%",
-          padding: "10px",
-        }}>
-              Generar Presupuesto
-        </Button>
-        
+        </Container>      
       </Box>
-  </>  
+    </>  
   );
 };
 

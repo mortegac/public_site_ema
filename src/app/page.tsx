@@ -15,14 +15,10 @@ import Pricing from '@/app/components/shared/pricing';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 const HomePage = async () => {
-  let recipe: any;
 
   return (
     <PageContainer title="Instalación de Cargadores para vehículos eléctricos" description="Instalación de Cargadores para vehículos eléctricos">
       <HeaderAlert />
-      <div>
-        {JSON.stringify(recipe)}
-      </div>
       <HpHeader />
       <Banner
         titleOne="Instalación de "

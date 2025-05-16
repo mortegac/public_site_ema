@@ -44,7 +44,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`${name} created successfully`);
 
-        return data;
+        return data as MainTypes[T]["type"];
     };
 
     const update: updateItemType = async (props) => {
@@ -60,7 +60,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`${name} updated successfully`);
 
-        return data;
+        return data as MainTypes[T]["type"];
     };
 
     const deleteItem: deleteItemType = async (props) => {
@@ -76,7 +76,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`${name} deleted successfully`);
 
-        return data;
+        return data as MainTypes[T]["type"];
     };
 
     const get: getItem = async (props) => {
@@ -98,7 +98,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
             throwError(`${name} were not found; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
-        return data;
+        return data as MainTypes[T]["type"][];
     };
 
     return {

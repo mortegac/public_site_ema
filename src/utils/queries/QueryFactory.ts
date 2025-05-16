@@ -29,17 +29,17 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
     const { name } = props;
 
+    const model = client.models[name] as any;
+
     const create: createItemType = async (props) => {
         const { input } = props;
 
         logger.info(`creating ${name} ${JSON.stringify(input)}`);
 
-        const model = client.models[name] as any;
-
         const { data, errors } = await model.create(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be created, ${errors !== undefined ? JSON.stringify(errors) : ""}`);
+            throwError(`${name} could not be created; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
         logger.info(`${name} created successfully`);
@@ -52,12 +52,10 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`updating ${name}  ${JSON.stringify(props.input)}`);
 
-        const model = client.models[name] as any;
-
-        const { data, errors } = await model.update(input as MainTypes[T]["updateType"]);
+        const { data, errors } = await model.update(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be updated ${errors !== undefined ? JSON.stringify(errors) : ""}`);
+            throwError(`${name} could not be updated; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
         logger.info(`${name} updated successfully`);
@@ -70,12 +68,10 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`deleting ${name}  ${JSON.stringify(props.input)}`);
 
-        const model = client.models[name] as any;
-
         const { data, errors } = await model.delete(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be deleted ${errors !== undefined ? JSON.stringify(errors) : ""}`);
+            throwError(`${name} could not be deleted; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
         logger.info(`${name} deleted successfully`);
@@ -86,26 +82,20 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
     const get: getItem = async (props) => {
         const { input } = props;
 
-        const model = client.models[name] as any;
-
         const { data, errors } = await model.get(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be found ${errors !== undefined ? JSON.stringify(errors) : ""}`);
+            throwError(`${name} could not be found; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
         return data;
     };
 
     const list: listItem = async ({ filter }) => {
-        const model = client.models[name] as any;
-
-        console.log(filter);
-
         const { data, errors } = await model.list({ filter });
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} were not found; ${errors !== undefined ? JSON.stringify(errors) : ""}`);
+            throwError(`${name} were not found; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
         return data;

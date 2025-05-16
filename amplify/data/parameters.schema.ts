@@ -1,5 +1,4 @@
 import { type ClientSchema, a } from "@aws-amplify/backend";
-import { processEstimate } from "../resolvers/ProcessEstimate/resource";
 
 export const ParameterSchema = a
     .schema({
@@ -34,8 +33,6 @@ export const ParameterSchema = a
         allow.guest(),
         allow.authenticated(),
         allow.publicApiKey(),
-        allow.resource(processEstimate),
-
     ]);
 
 export type ParameterTypes = ClientSchema<typeof ParameterSchema>;

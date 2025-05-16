@@ -1,12 +1,10 @@
 import { defineData } from "@aws-amplify/backend";
 import { MainSchema, type MainTypes } from "./main.schema";
 import { ParameterSchema, type ParameterTypes } from "./parameters.schema";
-import { ResolverSchema, type ResolversTypes } from "./resolvers.schema";
 
 export {
   MainTypes,
   ParameterTypes,
-  ResolversTypes
 };
 
 // export const data = defineData({

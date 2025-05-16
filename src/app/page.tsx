@@ -14,37 +14,40 @@ import Pricing from '@/app/components/shared/pricing';
 // import C2a from '../../components/frontend-pages/shared/c2a';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
+const HomePage = async () => {
+  let recipe: any;
 
-const HomePage = () => {
   return (
     <PageContainer title="Instalación de Cargadores para vehículos eléctricos" description="Instalación de Cargadores para vehículos eléctricos">
       <HeaderAlert />
-      <HpHeader />  
-           
-      <Banner 
-        titleOne="Instalación de " 
-        titleTwo="Cargadores para vehículos eléctricos" 
+      <div>
+        {JSON.stringify(recipe)}
+      </div>
+      <HpHeader />
+      <Banner
+        titleOne="Instalación de "
+        titleTwo="Cargadores para vehículos eléctricos"
         description="Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio."
-        
-        buttonText="Agenda tu visita" 
-        buttonURI="/agenda" 
-        
-        buttonTextTwo="Simula el costo de la instalación" 
-        buttonURITwo="/cotizador" 
-        
-        imageSrc="/images/headers/cargador-electrico.png" 
+
+        buttonText="Agenda tu visita"
+        buttonURI="/agenda"
+
+        buttonTextTwo="Simula el costo de la instalación"
+        buttonURITwo="/cotizador"
+
+        imageSrc="/images/headers/cargador-electrico.png"
       />
-           
-      <Notice /> 
-           
+
+      <Notice />
+
       <Features />
-      
-          <Pricing />  
-          
+
+      <Pricing />
+
       <Footer />
-      
+
       <ScrollToTop />
-      
+
     </PageContainer>
   );
 };

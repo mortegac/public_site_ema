@@ -11,7 +11,9 @@ import "@/utils/i18n";
 import "@/app/api/index";
 
 
-const MyApp = ({ children }: { children: React.ReactNode }) => {
+
+
+const MyApp = ({ children }: { children: React.ReactNode; }) => {
     const theme = ThemeSettings();
     const customizer = useAppSelector((state: AppState) => state.customizer);
 
@@ -20,8 +22,8 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
             <AppRouterCacheProvider options={{ enableCssLayer: true }}>
                 <ThemeProvider theme={theme}>
                     {/* <RTL direction={customizer.activeDir}> */}
-                        <CssBaseline />
-                        {children}
+                    <CssBaseline />
+                    {children}
                     {/* </RTL> */}
                 </ThemeProvider>
             </AppRouterCacheProvider>

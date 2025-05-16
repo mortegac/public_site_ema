@@ -1,12 +1,4 @@
 import { type ClientSchema, a } from "@aws-amplify/backend";
-import { preSignUp } from "../auth/preSignUp/resource";
-import { postConfirmation } from "../auth/postConfirmation/resource";
-import { processEstimate } from "../resolvers/ProcessEstimate/resource";
-import { removeEstimate } from "../resolvers/RemoveEstimate/resource";
-import { makeCart } from "../resolvers/MakeEstimateIntoCart/resource";
-import { webpayStart } from "../resolvers/webpayStart/resource";
-import { webpayCommit } from "../resolvers/webpayCommit/resource";
-import { webpayStatus } from "../resolvers/webpayStatus/resource";
 
 /**
  * estandares de creacion de entidades,
@@ -405,14 +397,6 @@ export const MainSchema = a
     allow.publicApiKey(),
     allow.authenticated(),
     allow.guest(),
-    allow.resource(preSignUp),
-    allow.resource(postConfirmation),
-    allow.resource(processEstimate),
-    allow.resource(removeEstimate),
-    allow.resource(makeCart),
-    allow.resource(webpayStart),
-    allow.resource(webpayCommit),
-    allow.resource(webpayStatus),
   ]);
 
 

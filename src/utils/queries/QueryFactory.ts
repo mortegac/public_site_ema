@@ -34,9 +34,9 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`creating ${name} ${JSON.stringify(input)}`);
 
-        const model = await client.models[name] as any;
+        const model = client.models[name] as any;
 
-        const { data, errors } = model.create(input);
+        const { data, errors } = await model.create(input);
 
         if (data === null || errors !== undefined) {
             throwError(`${name} could not be created, ${errors !== undefined ? JSON.stringify(errors) : ""}`);
@@ -52,7 +52,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`updating ${name}  ${JSON.stringify(props.input)}`);
 
-        const model = await client.models[name] as any;
+        const model = client.models[name] as any;
 
         const { data, errors } = await model.update(input as MainTypes[T]["updateType"]);
 
@@ -70,7 +70,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
         logger.info(`deleting ${name}  ${JSON.stringify(props.input)}`);
 
-        const model = await client.models[name] as any;
+        const model = client.models[name] as any;
 
         const { data, errors } = await model.delete(input);
 
@@ -86,7 +86,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
     const get: getItem = async (props) => {
         const { input } = props;
 
-        const model = await client.models[name] as any;
+        const model = client.models[name] as any;
 
         const { data, errors } = await model.get(input);
 
@@ -98,7 +98,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
     };
 
     const list: listItem = async ({ filter }) => {
-        const model = await client.models[name] as any;
+        const model = client.models[name] as any;
 
         console.log(filter);
 

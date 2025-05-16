@@ -88,7 +88,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
             throwError(`${name} could not be found; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
         }
 
-        return data;
+        return data as MainTypes[T]["type"];
     };
 
     const list: listItem = async ({ filter }) => {

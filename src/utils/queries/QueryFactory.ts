@@ -1,7 +1,8 @@
 import { logger } from "../log";
-import { MainTypes } from "@/data-schema";
+import { MainTypes } from "../../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../error";
+import { json } from "stream/consumers";
 
 const client = generateClient<MainTypes>();
 
@@ -28,7 +29,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
 
     const { name } = props;
 
-    const createItem: createItemType = async (props) => {
+    const create: createItemType = async (props) => {
         const { input } = props;
 
         logger.info(`creating ${name} ${JSON.stringify(input)}`);
@@ -38,7 +39,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         const { data, errors } = model.create(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be created, ${JSON.stringify(input)}`);
+            throwError(`${name} could not be created, ${errors !== undefined ? JSON.stringify(errors) : ""}`);
         }
 
         logger.info(`${name} created successfully`);
@@ -46,17 +47,17 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         return data;
     };
 
-    const updateItem: updateItemType = async (props) => {
+    const update: updateItemType = async (props) => {
         const { input } = props;
 
         logger.info(`updating ${name}  ${JSON.stringify(props.input)}`);
 
         const model = await client.models[name] as any;
 
-        const { data, errors } = await model.update(input);
+        const { data, errors } = await model.update(input as MainTypes[T]["updateType"]);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be updated`);
+            throwError(`${name} could not be updated ${errors !== undefined ? JSON.stringify(errors) : ""}`);
         }
 
         logger.info(`${name} updated successfully`);
@@ -74,7 +75,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         const { data, errors } = await model.delete(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be deleted`);
+            throwError(`${name} could not be deleted ${errors !== undefined ? JSON.stringify(errors) : ""}`);
         }
 
         logger.info(`${name} deleted successfully`);
@@ -82,7 +83,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         return data;
     };
 
-    const getItem: getItem = async (props) => {
+    const get: getItem = async (props) => {
         const { input } = props;
 
         const model = await client.models[name] as any;
@@ -90,30 +91,32 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         const { data, errors } = await model.get(input);
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} could not be found`);
+            throwError(`${name} could not be found ${errors !== undefined ? JSON.stringify(errors) : ""}`);
         }
 
         return data;
     };
 
-    const listItem: listItem = async (filter) => {
+    const list: listItem = async ({ filter }) => {
         const model = await client.models[name] as any;
+
+        console.log(filter);
 
         const { data, errors } = await model.list({ filter });
 
         if (data === null || errors !== undefined) {
-            throwError(`${name} were not found`);
+            throwError(`${name} were not found; ${errors !== undefined ? JSON.stringify(errors) : ""}`);
         }
 
         return data;
     };
 
     return {
-        createItem,
-        updateItem,
-        deleteItem,
-        getItem,
-        listItem
+        create,
+        update,
+        delete: deleteItem,
+        get,
+        list
     };
 }
 

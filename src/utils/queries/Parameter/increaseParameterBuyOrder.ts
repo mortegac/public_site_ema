@@ -1,4 +1,4 @@
-import { ParameterTypes } from "../../../data/parameters.schema";
+import { ParameterTypes } from "../../../../amplify/data/resource";
 import { generateClient, type Client } from "aws-amplify/data";
 import { throwError } from "../../error";
 

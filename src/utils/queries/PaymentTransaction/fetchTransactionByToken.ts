@@ -1,4 +1,4 @@
-import { MainTypes } from "../../../data/main.schema";
+import { MainTypes } from "../../../../amplify/data/resource";
 import type { SelectionSet, } from "aws-amplify/data";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../../error";

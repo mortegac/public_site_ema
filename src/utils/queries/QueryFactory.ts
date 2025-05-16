@@ -50,7 +50,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
     const update: updateItemType = async (props) => {
         const { input } = props;
 
-        logger.info(`updating ${name}  ${JSON.stringify(props.input)}`);
+        logger.info(`updating ${name} ${JSON.stringify(input)}`);
 
         const { data, errors } = await model.update(input);
 
@@ -66,7 +66,7 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
     const deleteItem: deleteItemType = async (props) => {
         const { input } = props;
 
-        logger.info(`deleting ${name}  ${JSON.stringify(props.input)}`);
+        logger.info(`deleting ${name} ${JSON.stringify(input)}`);
 
         const { data, errors } = await model.delete(input);
 

@@ -1,5 +1,5 @@
 import { logger } from "../log";
-import { MainTypes } from "../../data/main.schema";
+import { MainTypes } from "@/data-schema";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../error";
 

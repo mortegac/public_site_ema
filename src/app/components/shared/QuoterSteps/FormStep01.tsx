@@ -9,11 +9,17 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { styled } from '@mui/material/styles';
 
+
+
+import CustomTextField from './CustomTextField';
+import CustomFormLabel from './CustomFormLabel';
+
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
+import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
 
 
 // Componente para el formulario vertical
@@ -22,6 +28,11 @@ const VerticalForm = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: theme.spacing(2), // Espacio entre los campos
   padding: theme.spacing(3),
+  width: '100%',
+  '& .MuiTextField-root': {
+    width: '100%',
+    maxWidth: '800px'
+  }
 }));
 
 // Componente para el SVG centrado
@@ -31,6 +42,23 @@ const CenteredSVGContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   height: '100%', // Asegura que ocupe toda la altura del contenedor padre
 }));
+
+
+const validationSchema = yup.object({
+  name: yup
+    .string()
+    .min(2, 'Debe ingresar minimo 4 caracteres')
+    .max(50, 'Too Long!')
+    .required('El nombre is Requerido'),
+  email: yup
+    .string()
+    .matches(
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2}$/i,
+      'El email debe tener el formato: caracteres@dominio.com'
+    )
+    .required('Email es requerido'),
+  phone: yup.string().required('El teléfono es Requerido'),
+});
 
 export const FormStep01 = (props:any) => {
   const { onChangeSetStore } = props;
@@ -74,9 +102,44 @@ export const FormStep01 = (props:any) => {
 
   );
 
+     const formik = useFormik({
+      initialValues: {
+        name: '',
+        email: '',
+        phone: '',
+      },
+      validationSchema: validationSchema,
+      onSubmit: (values) => {
+        Promise.all([
+          dispatch(
+            setDataForm({
+              key: "name",
+              value: values?.name,
+            })
+          ),
+          dispatch(
+            setDataForm({
+              key: "email",
+              value: values?.email,
+            })
+          ),
+          dispatch(
+            setDataForm({
+              key: "phone",
+              value: values?.phone,
+            })
+          ),
+          dispatch(setStep(1)),
+        ]);
+        // dispatch(setStep(1));
+        
+      },
+    });
+    
   
   return (
     <>
+    <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
       <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
       sx={{
         boxSizing: 'border-box',
@@ -92,44 +155,43 @@ export const FormStep01 = (props:any) => {
           <Box sx={{ display: 'flex', width: '100%', height: 'auto', minHeight: '400px' }}>
             {/* Área izquierda para el formulario */}
             <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <form onSubmit={handleSubmit} style={{ width: '80%' }}>
+              {/* <form onSubmit={handleSubmit} style={{ width: '80%' }}> */}
+              
                 <VerticalForm>
                   <Typography variant="h6" gutterBottom>
                     Información de contacto
                   </Typography>
-  
-                  <TextField
-                    required
+                  <CustomFormLabel>Nombre</CustomFormLabel>
+                  <CustomTextField
+                    fullWidth
                     id="name"
-                    label="Nombre"
                     name="name"
-                    value={currentForm?.name}
-                    // onChange={(e) => setName(e.target.value)}
-                    onChange={onChangeSetStore}
-                    fullWidth
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name}
                   />
-                  <TextField
-                    required
+                  <CustomFormLabel>Email</CustomFormLabel>
+                  <CustomTextField
+                    fullWidth
                     id="email"
-                    label="Email"
-                    type="email"
                     name="email"
-                    value={currentForm?.email}
-                    onChange={onChangeSetStore}
-                    // onChange={(e) => setEmail(e.target.value)}
-                    fullWidth
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
                   />
-                  <TextField
-                    id="phone"
-                    label="Teléfono"
-                    type="tel"
-                    name="phone"
-                    value={currentForm?.phone}
-                    onChange={onChangeSetStore}
+                  <CustomFormLabel>Teléfono</CustomFormLabel>
+                  <CustomTextField
                     fullWidth
+                    id="phone"
+                    name="phone"
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}
+                    error={formik.touched.phone && Boolean(formik.errors.phone)}
+                    helperText={formik.touched.phone && formik.errors.phone}
                   />
                 </VerticalForm>
-              </form>
             </Box>
             
             {/* Área derecha para el SVG */}
@@ -142,29 +204,30 @@ export const FormStep01 = (props:any) => {
         </Container>
       </Box>
       <Box bgcolor="#ffffff" width={"100%"} mt={1} 
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
         <Button type="submit" variant="contained" color="primary"
-        sx={{
-          width: "50%",
-          padding: "10px",
-        }}
-        onClick={ () => {
-          if (currentForm?.phone && currentForm?.email && currentForm?.name) {
-            dispatch(setStep(1));
-          } else {
-            alert('Por favor complete todos los campos requeridos');
-          }
-        } }
+          sx={{
+            width: "50%",
+            padding: "10px",
+          }}
+          
+        // onClick={ () => {
+        //   if (currentForm?.phone && currentForm?.email && currentForm?.name) {
+        //     dispatch(setStep(1));
+        //   } else {
+        //     alert('Por favor complete todos los campos requeridos');
+        //   }
+        // } }
         >
           Siguiente
         </Button>
       </Box>
+       </form>
       
-      <pre>{JSON.stringify(currentForm, null, 2)}</pre>
     </>
   );
 };

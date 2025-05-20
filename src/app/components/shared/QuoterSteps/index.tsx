@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 // import useMediaQuery from "@mui/material/useMediaQuery";
 
+
+
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
 
@@ -31,10 +33,11 @@ const typeOfForm: any = {
 };
 
 
+
 const QuoterSteps = (props:any) => {
   const { 
     currentStep,
-    // currentForm,
+    currentForm,
   } = useAppSelector(selectClientForms);
   const dispatch = useAppDispatch();
   
@@ -94,7 +97,8 @@ const QuoterSteps = (props:any) => {
             <FormStep 
               onChangeSetStore={onChangeSetStore}
             />
-            
+            <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre>
+            <pre>{JSON.stringify(currentForm, null, 2)}</pre>
       </Container>
     </Box>
   );

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Stack,
@@ -12,14 +12,14 @@ import {
 
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
+import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
 
 
 const FullWidthButtonWithIcons = styled(Button)(({ theme }) => ({
   width: '100%',
   boxSizing: 'border-box',
   marginBottom:"12px",
-  background: '#ECF2FF',
+  // background: '#ECF2FF',
   border: '1px solid #E81A68',
   borderRadius: '8px',
   display: 'flex',
@@ -129,12 +129,53 @@ const LargeSVGFour = () => (
 );
 
 export const FormStep02 = (props:any) => {
+  const [ typeOf, setTypeOf] = useState({
+    typeOfCharger:"",
+    typeOfResidence:"",
+  })
   const { 
     currentStep,
     // currentForm,
   } = useAppSelector(selectClientForms);
   
   const dispatch = useAppDispatch();
+
+  
+  
+  function handlerNextStep(){
+    
+    
+    const isHouse: boolean = typeOf.typeOfResidence ==="HOUSE" && true
+    const isPortable: boolean = typeOf.typeOfCharger ==="PORTABLE" && true
+    const isWallbox: boolean = typeOf.typeOfCharger ==="WALLBOX" && true
+    
+    
+    
+    
+    
+    Promise.all([
+      dispatch(
+        setDataForm({
+          key: "isHouse",
+          value: isHouse
+        })
+      ),
+      dispatch(
+        setDataForm({
+          key: "isPortable",
+          value: isPortable
+        })
+      ),
+      dispatch(
+        setDataForm({
+          key: "isWallbox",
+          value: isWallbox
+        })
+      ),
+      dispatch(setStep(3))
+    ]);  
+    
+  }
 
   return (  
     <>
@@ -152,7 +193,13 @@ export const FormStep02 = (props:any) => {
         >
           <Typography variant="h6" pb={2} gutterBottom>Seleccione el tipo de cargador</Typography>
           
-          <FullWidthButtonWithIcons variant="contained" color="primary">
+          
+          <FullWidthButtonWithIcons variant="contained" 
+          sx={{
+            background:`${typeOf?.typeOfCharger === "PORTABLE" ? "#ECF2FF" : "#FFF"} `
+          }}
+          onClick={()=>setTypeOf({...typeOf, typeOfCharger:"PORTABLE" })}
+          >
             <BoxLeft>
               <SmallLeftIcon>
                 <SmallSVG />
@@ -169,7 +216,12 @@ export const FormStep02 = (props:any) => {
             <LargeRightIcon><LargeSVG /></LargeRightIcon>
           </FullWidthButtonWithIcons>
           
-          <FullWidthButtonWithIcons variant="contained" color="primary">
+          <FullWidthButtonWithIcons variant="contained" 
+          sx={{
+            background:`${typeOf?.typeOfCharger === "WALLBOX" ? "#ECF2FF" : "#FFF"} `
+          }}
+          onClick={()=>setTypeOf({...typeOf, typeOfCharger:"WALLBOX" })}
+          >
             <BoxLeft>
               <SmallLeftIcon>
                 <SmallSVG />
@@ -203,7 +255,14 @@ export const FormStep02 = (props:any) => {
         >
             <Typography variant="h6" gutterBottom>¿En que tipo de residencia quiere hacer la instalación?
             </Typography>
-            <FullWidthButtonWithIcons variant="contained" color="primary">
+            <FullWidthButtonWithIcons variant="contained" 
+              sx={{
+                background:`${typeOf?.typeOfResidence === "HOUSE" ? "#ECF2FF" : "#FFF"} `
+              }}
+              onClick={()=>setTypeOf({...typeOf, typeOfResidence:"HOUSE" })}
+            >
+            
+            
             <BoxLeft>
               <SmallLeftIcon>
                 <SmallSVG />
@@ -220,7 +279,12 @@ export const FormStep02 = (props:any) => {
             <LargeRightIcon><LargeSVGThree /></LargeRightIcon>
           </FullWidthButtonWithIcons>
           
-          <FullWidthButtonWithIcons variant="contained" color="primary">
+          <FullWidthButtonWithIcons variant="contained"
+           sx={{
+            background:`${typeOf?.typeOfResidence === "BUILDING" ? "#ECF2FF" : "#FFF"} `
+            }}
+            onClick={()=>setTypeOf({...typeOf, typeOfResidence:"BUILDING" })}
+          >
             <BoxLeft>
               <SmallLeftIcon>
                 <SmallSVG />
@@ -245,19 +309,22 @@ export const FormStep02 = (props:any) => {
         justifyContent: "center",
         alignItems: "center",
       }}>
-        <Button type="submit" variant="contained" color="primary"
-        sx={{
-          width: "50%",
-          padding: "10px",
-        }}
-        onClick={ () => dispatch(setStep(2)) }
+        <Button 
+          type="submit" 
+          variant="contained" 
+          color="primary"
+          sx={{
+            width: "50%",
+            padding: "10px",
+          }}
+          disabled={!typeOf?.typeOfCharger || !typeOf?.typeOfResidence}
+          onClick={() => handlerNextStep()}
         >
-              Siguiente
+          Siguiente
         </Button>
         
       </Box>
     </>      
   );
 };
-
 

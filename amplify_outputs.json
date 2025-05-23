@@ -1170,11 +1170,39 @@
         "CalendarVisit": {
           "name": "CalendarVisit",
           "fields": {
+            "id": {
+              "name": "id",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
             "calendarId": {
               "name": "calendarId",
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "summary": {
+              "name": "summary",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "location": {
+              "name": "location",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "description": {
+              "name": "description",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
               "attributes": []
             },
             "startDate": {
@@ -1188,6 +1216,13 @@
               "name": "endDate",
               "isArray": false,
               "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "timeZone": {
+              "name": "timeZone",
+              "isArray": false,
+              "type": "String",
               "isRequired": false,
               "attributes": []
             },
@@ -1276,8 +1311,11 @@
             {
               "type": "key",
               "properties": {
+                "name": "visitsByDate",
+                "queryField": "listCalendarVisitByCalendarIdAndStartDate",
                 "fields": [
-                  "calendarId"
+                  "calendarId",
+                  "startDate"
                 ]
               }
             },
@@ -1319,21 +1357,14 @@
             }
           ],
           "primaryKeyInfo": {
-            "isCustomPrimaryKey": true,
-            "primaryKeyFieldName": "calendarId",
+            "isCustomPrimaryKey": false,
+            "primaryKeyFieldName": "id",
             "sortKeyFieldNames": []
           }
         },
         "Customer": {
           "name": "Customer",
           "fields": {
-            "id": {
-              "name": "id",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
-            },
             "customerId": {
               "name": "customerId",
               "isArray": false,
@@ -1364,13 +1395,6 @@
             },
             "phone": {
               "name": "phone",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "email": {
-              "name": "email",
               "isArray": false,
               "type": "String",
               "isRequired": false,
@@ -1433,6 +1457,14 @@
               "properties": {}
             },
             {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "customerId"
+                ]
+              }
+            },
+            {
               "type": "auth",
               "properties": {
                 "rules": [
@@ -1470,8 +1502,8 @@
             }
           ],
           "primaryKeyInfo": {
-            "isCustomPrimaryKey": false,
-            "primaryKeyFieldName": "id",
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "customerId",
             "sortKeyFieldNames": []
           }
         },
@@ -4619,9 +4651,30 @@
             "service",
             "input"
           ]
+        },
+        "MakeEstimateIntoCartPaymentMethod": {
+          "name": "MakeEstimateIntoCartPaymentMethod",
+          "values": [
+            "transbank",
+            "bank_transfer",
+            "cash",
+            "on_site"
+          ]
         }
       },
       "nonModels": {
+        "ProcessCalendarReturnType": {
+          "name": "ProcessCalendarReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "WebpayStartReturnType": {
           "name": "WebpayStartReturnType",
           "fields": {
@@ -4641,6 +4694,27 @@
             },
             "url": {
               "name": "url",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "buy_order": {
+              "name": "buy_order",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "email": {
+              "name": "email",
               "isArray": false,
               "type": "String",
               "isRequired": false,
@@ -4779,6 +4853,44 @@
             }
           }
         },
+        "MakeEstimateIntoCart": {
+          "name": "MakeEstimateIntoCart",
+          "isArray": false,
+          "type": "String",
+          "isRequired": true,
+          "arguments": {
+            "estimateId": {
+              "name": "estimateId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "paymentMethod": {
+              "name": "paymentMethod",
+              "isArray": false,
+              "type": {
+                "enum": "MakeEstimateIntoCartPaymentMethod"
+              },
+              "isRequired": false
+            }
+          }
+        },
+        "processCalendar": {
+          "name": "processCalendar",
+          "isArray": false,
+          "type": {
+            "nonModel": "ProcessCalendarReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "token": {
+              "name": "token",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            }
+          }
+        },
         "webpayStart": {
           "name": "webpayStart",
           "isArray": false,
@@ -4787,6 +4899,12 @@
           },
           "isRequired": false,
           "arguments": {
+            "shoppingCartId": {
+              "name": "shoppingCartId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true
+            },
             "amount": {
               "name": "amount",
               "isArray": false,

@@ -2,11 +2,10 @@ import { logger } from "../log";
 import { MainTypes } from "../../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../error";
-import { json } from "stream/consumers";
 
 const client = generateClient<MainTypes>();
 
-export function QueryFactory<T extends keyof MainTypes>(props: {
+export const QueryFactory = function <T extends keyof MainTypes>(props: {
     name: keyof MainTypes;
 }) {
     type createItemType = (props: {
@@ -25,80 +24,123 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         input: MainTypes[T]["identifier"];
     }) => Promise<MainTypes[T]["type"]>;
 
-    type listItem = (filter: any) => Promise<MainTypes[T]["type"][]>;
+    type listItem = (props: { filter?: any, limit?: number; }) => Promise<MainTypes[T]["type"][]>;
 
     const { name } = props;
 
     const model = client.models[name] as any;
 
     const create: createItemType = async (props) => {
-        const { input } = props;
+        try {
+            // @ts-ignore
+            const input: unknown = props.input;
 
-        logger.info(`creating ${name} ${JSON.stringify(input)}`);
+            logger.info(`creating ${name}`);
+            // @ts-ignore
+            const { data, errors } = await model.create(input);
 
-        const { data, errors } = await model.create(input);
+            if (data === null) {
+                throw `data was not returned in ${JSON.stringify(input)}`;
+            }
 
-        if (data === null || errors !== undefined) {
-            throwError(`${name} could not be created; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
+            if (data === null || errors !== undefined) {
+                throw errors;
+            }
+
+            logger.info(`${name} created successfully`);
+
+            return data as MainTypes[T]["type"];
+        } catch (error) {
+            throw throwError(`${name} could not be created, ${JSON.stringify(error)}`);
         }
-
-        logger.info(`${name} created successfully`);
-
-        return data as MainTypes[T]["type"];
     };
 
     const update: updateItemType = async (props) => {
-        const { input } = props;
+        try {
+            // @ts-ignore
+            const input: unknown = props.input;
+            logger.info(`updating ${name}`);
+            // @ts-ignore
+            const { data, errors } = await model.update(input);
 
-        logger.info(`updating ${name} ${JSON.stringify(input)}`);
+            if (data === null) {
+                throw `data was not returned in ${JSON.stringify(input)}`;
+            }
 
-        const { data, errors } = await model.update(input);
+            if (errors !== undefined) {
+                throw errors;
+            }
 
-        if (data === null || errors !== undefined) {
-            throwError(`${name} could not be updated; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
+            logger.info(`${name} updated successfully`);
+
+            return data as MainTypes[T]["type"];
+        } catch (error) {
+            throw throwError(`${name} could not be updated; ${JSON.stringify(error)}`);
         }
-
-        logger.info(`${name} updated successfully`);
-
-        return data as MainTypes[T]["type"];
     };
 
     const deleteItem: deleteItemType = async (props) => {
-        const { input } = props;
+        try {
+            const input = props.input;
 
-        logger.info(`deleting ${name} ${JSON.stringify(input)}`);
+            logger.info(`deleting ${name}`);
 
-        const { data, errors } = await model.delete(input);
+            const { data, errors } = await model.delete(input);
 
-        if (data === null || errors !== undefined) {
-            throwError(`${name} could not be deleted; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
+            if (data === null) {
+                throw `data was not returned in ${JSON.stringify(input)}`;
+            }
+
+            if (errors !== undefined) {
+                throw errors;
+            }
+
+            logger.info(`${name} deleted successfully`);
+
+            return data as MainTypes[T]["type"];
+        } catch (error) {
+            throw throwError(`${name} could not be deleted; ${JSON.stringify(error)}`);
+
         }
-
-        logger.info(`${name} deleted successfully`);
-
-        return data as MainTypes[T]["type"];
     };
 
     const get: getItem = async (props) => {
-        const { input } = props;
+        try {
+            const input = props.input;
 
-        const { data, errors } = await model.get(input);
+            const { data, errors } = await model.get(input);
 
-        if (data === null || errors !== undefined) {
-            throwError(`${name} could not be found; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
+            if (data === null) {
+                throw `data was not returned in ${JSON.stringify(input)}`;
+            }
+
+            if (errors !== undefined) {
+                throw errors;
+            }
+
+            return data as MainTypes[T]["type"];
+        } catch (error) {
+            throw throwError(`${name} could not be found; ${JSON.stringify(error)}`);
         }
-
-        return data as MainTypes[T]["type"];
     };
 
-    const list: listItem = async ({ filter }) => {
-        const { data, errors } = await model.list({ filter });
+    const list: listItem = async ({ filter, limit }) => {
+        try {
+            const { data, errors } = await model.list({ filter, limit });
 
-        if (data === null || errors !== undefined) {
-            throwError(`${name} were not found; ${errors !== undefined ? `Errors: ${JSON.stringify(errors)}` : ""}`);
+
+            if (data === null) {
+                throw `data was not found`;
+            }
+
+            if (errors !== undefined) {
+                throw errors;
+            }
+
+            return data as MainTypes[T]["type"][];
+        } catch (error) {
+            throw throwError(`${name} could not be found; ${JSON.stringify(error)}`);
         }
-
-        return data as MainTypes[T]["type"][];
     };
 
     return {
@@ -108,6 +150,6 @@ export function QueryFactory<T extends keyof MainTypes>(props: {
         get,
         list
     };
-}
+};
 
 

@@ -12,9 +12,9 @@
 
 
 export type clientFormInput = {
-  // name?: string,
-  // email?: string,
-  // phone?: string,
+  name?: string,
+  email?: string,
+  phone?: string,
   customerId?: string | null,
   isHouse?: boolean,
   isPortable?: boolean,
@@ -37,9 +37,9 @@ export type ClientForm = {
   numberOfChargers?: number | null,
   // updatedAt: string,
   //extras
-  // name?: string,
-  // email?: string,
-  // phone?: string,
+  name?: string,
+  email?: string,
+  phone?: string,
 };
 
 

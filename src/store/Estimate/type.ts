@@ -44,6 +44,7 @@ export type Estimate = {
   formId: string;
 };
 
+
 export const emptyEstimate: Estimate = {
   estimateId: "",
   stateValidation: "automated",

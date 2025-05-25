@@ -16,8 +16,8 @@ import StepLabel from '@mui/material/StepLabel';
 
 
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { increment, setStep, decrement, selectClientForms } from "@/store/ClientForms/slice";
-
+import { setStep, selectClientForms } from "@/store/ClientForms/slice";
+import { selectEstimate } from "@/store/Estimate/slice";
 
 const steps = [
   "Información de contacto", 
@@ -31,6 +31,9 @@ export default function HorizontalLinearStepper() {
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const dispatch = useAppDispatch();
+  const { 
+    estimate
+  } = useAppSelector(selectEstimate);
   const { 
     currentStep,
     currentForm,
@@ -87,8 +90,6 @@ export default function HorizontalLinearStepper() {
           position: "relative",
         }}
       >
-        {/* <pre>currentStep = {JSON.stringify(currentStep)}</pre>
-        <pre>activeStep = {JSON.stringify(activeStep)}</pre> */}
       <Stepper 
         activeStep={currentStep}
         sx={{
@@ -111,9 +112,9 @@ export default function HorizontalLinearStepper() {
                 height: 34,
                 fontSize: '1.5rem',
                 cursor: 'pointer',
-                '&:hover': {
-                  color: 'primary.main'
-                }
+                // '&:hover': {
+                //   color: Number(currentStep) === 3 ? 'inherit' : 'primary.main'
+                // }
               },
               '& .MuiStepIcon-completed': {
                 color: '#b9b9b9 !important'
@@ -128,16 +129,20 @@ export default function HorizontalLinearStepper() {
             optional?: React.ReactNode;
             onClick?: () => void;
           } = {
-            onClick:() => dispatch(setStep(index))
+            // onClick:() => dispatch(setStep(index))
+            onClick: label === "Resumen cotización" && estimate?.estimateId === "" ? undefined : () => dispatch(setStep(index))
           };
           return (
             <Step key={label} {...stepProps}>
-              {/* <pre>currentStep {currentStep} = {index+1}</pre> */}
               <StepLabel 
                 {...labelProps}
+                className={label === "Resumen cotización" ? "no-hover" : ""}
                 sx={{
                   '& .MuiStepIcon-root': {
                     color: Number(currentStep) === Number(index+1) ? '#E81A68' : '#b9b9b9'
+                  },
+                  '&.no-hover .MuiStepIcon-root:hover': {
+                    color: 'inherit'
                   }
                 }}
               >
@@ -147,40 +152,6 @@ export default function HorizontalLinearStepper() {
           );
         })}
       </Stepper>
-      {/* {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            Proceso finalizado
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
-          </Box>
-        </React.Fragment>
-      )} */}
       </Container>
     </Box>
   );

@@ -3,7 +3,7 @@ import Banner from '@/app/components/shared/banner/Banner';
 import QuoterSteps from '@/app/components/shared/QuoterSteps';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
-import CotizadorWizard from '@/app/components/CotizadorWizard';
+// import CotizadorWizard from '@/app/components/CotizadorWizard';
 import Steps from '@/app/components/CotizadorWizard/Steps';
 import Features from '@/app/components/shared/features/Features';
 import Notice from '@/app/components/shared/notice/Notice';

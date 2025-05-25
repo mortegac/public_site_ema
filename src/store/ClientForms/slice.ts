@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyClientForm, InputForm, ClientForm } from './type';
+import { emptyClientForm, clientFormInput, ClientForm } from './type';
 import { RootState } from "../store";
-
+import { createClientForm } from './services';
 interface ClientFormsState {
   currentStep: number,
   status: "idle" | "loading" | "failed";
@@ -19,12 +19,11 @@ const initialState: ClientFormsState = {
   error: null,
 };
 
-
 export const setFormClient = createAsyncThunk(
-    "Enrollment/setFormClient ",
-    async (objFilter: InputForm) => {
+    "FORMCLIENT/createFormClient ",
+    async (objFilter: clientFormInput) => {
       try {
-        const response:any = await setFormClient({ ...objFilter });
+        const response:any = await createClientForm({ ...objFilter });
         return response;
       } catch (error) {
         console.error(">>>>ERROR FETCH setFormClient", error)
@@ -90,8 +89,13 @@ const clientFormsSlice = createSlice({
       })
       .addCase(setFormClient.fulfilled, (state, action) => {
         state.loading = false;
-        if (state.currentForm) {
-          state.currentForm.distance = action.payload;
+        console.log(">>> setFormClient >> action.payload >>", action.payload.data)
+        state.currentForm.formId = action?.payload?.data?.formId;
+        state.currentForm.customerId = action?.payload?.data?.customerId;
+        
+        
+        if (action?.payload?.data?.formId) {
+          
         }
       })
       .addCase(setFormClient.rejected, (state, action) => {

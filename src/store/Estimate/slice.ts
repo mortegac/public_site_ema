@@ -1,30 +1,32 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyCustomer, customerInput, Customer } from './type';
+import { emptyEstimate, estimateInput, Estimate } from './type';
 import { RootState } from "../store";
-import { createCustomer } from './services';
-interface CustomerState {
+import { createEstimate } from './services';
+
+
+interface EstimateState {
   status: "idle" | "loading" | "failed";
-  currentForm: Customer;
+  estimate: Estimate;
   loading: boolean;
   error: string | null;
 }
 
-const initialState: CustomerState = {
+const initialState: EstimateState = {
   status: "idle",
-  currentForm: emptyCustomer,
+  estimate: emptyEstimate,
   loading: false,
   error: null,
 };
 
-export const setCustomer = createAsyncThunk(
-    "CUSTOMER/createCustomer ",
-    async (objFilter: customerInput) => {
+export const setEstimate = createAsyncThunk(
+    "ESTIMATE/createEstimate ",
+    async (objFilter: estimateInput) => {
       try {
-        const response:any = await createCustomer({ ...objFilter });
+        const response:any = await createEstimate({ ...objFilter });
         return response;
       } catch (error) {
-        console.error(">>>>ERROR FETCH setCustomer", error)
+        console.error(">>>>ERROR FETCH setEstimate", error)
         return Promise.reject(error);
       }
     }
@@ -39,8 +41,8 @@ export const setCustomer = createAsyncThunk(
 //   }
 // );
 
-const customerSlice = createSlice({
-  name: 'customer',
+const estimateSlice = createSlice({
+  name: 'estimate',
   initialState,
   reducers: {
     // setLoading: (state, action: PayloadAction<boolean>) => {
@@ -52,19 +54,17 @@ const customerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    // setCustomer
-      .addCase(setCustomer.pending, (state) => {
+    // setEstimate
+      .addCase(setEstimate.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(setCustomer.fulfilled, (state, action) => {
+      .addCase(setEstimate.fulfilled, (state, action) => {
         state.loading = false;
         console.log(">>> action.payload >>", action.payload)
-        // state.currentForm.distance = action.payload;
-        // if (state.currentForm) {
-        // }
+        state.estimate = {...action.payload};
       })
-      .addCase(setCustomer.rejected, (state, action) => {
+      .addCase(setEstimate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la distancia';
       });
@@ -82,6 +82,6 @@ const customerSlice = createSlice({
 //     cleanData,
 //   } = clientFormsSlice.actions;
   
-export const selectCustomer = (state: RootState) => state.customer;
+export const selectEstimate = (state: RootState) => state.estimate;
 
-export default customerSlice.reducer;
+export default estimateSlice.reducer;

@@ -8,11 +8,109 @@ import {
   Grid,
   Button,
   TextField,
-  styled
+  styled,
+  keyframes
 } from "@mui/material";
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
+import { selectClientForms, setFormClient, setDataForm, setStep } from "@/store/ClientForms/slice";
+import { setEstimate, selectEstimate } from "@/store/Estimate/slice";
+
+
+//  BUTTON  PROGRESS
+
+
+// Animación de progreso
+const progressFill = keyframes`
+  0% { width: 0%; }
+  100% { width: 100%; }
+`;
+
+// Button estilizado
+const ProgressButton = styled(Button)(({ theme }) => ({
+  position: 'relative',
+  overflow: 'hidden',
+  minWidth: '200px',
+  height: '48px',
+  
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
+    width: '0%',
+    background: 'linear-gradient(90deg, #4bbfd9 0%, #00abd1 100%)',
+    zIndex: 1,
+  },
+  
+  '& .MuiButton-root, & > span': {
+    position: 'relative',
+    zIndex: 2,
+  }
+}));
+
+// Componente de uso
+const MyProgressButton = (props:any) => {
+  const { handleSubmit } = props;
+  
+  const [isProgressing, setIsProgressing] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const handleClick = async (e) => {
+    setIsProgressing(true);
+    
+    // Tu lógica aquí
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Esperar a que termine la animación
+    setTimeout(() => {
+      handleSubmit(e);
+      setIsProgressing(false);
+      setIsCompleted(true);
+      
+      // Volver al estado inicial
+      setTimeout(() => setIsCompleted(false), 2000);
+    }, 3000); // duración de la animación
+  };
+
+  return (
+    <ProgressButton
+      variant="contained"
+      onClick={handleClick}
+      disabled={isProgressing}
+      sx={{
+        width: "50%",
+        padding: "10px",
+        backgroundColor: isCompleted ? '#4bbfd9' : '#E81A68',
+        '&::before': {
+          width: isProgressing ? '100%' : '0%',
+          animation: isProgressing ? `${progressFill} 3000ms ease-out forwards` : 'none',
+        }
+      }}
+    >
+      {isProgressing ? 'Procesando...' : isCompleted ? '✓ Completado' : 'Generar Presupuesto'}
+    </ProgressButton>
+    
+    // <Button 
+    //             component="button"
+    //             type="submit" 
+    //             variant="contained" 
+    //             color="primary"
+    //             sx={{
+    //               width: "50%",
+    //               padding: "10px",
+    //             }}
+    //             onClick={(e) => handleSubmit(e)}
+    //           >
+    //             Generar Presupuesto
+    //           </Button>
+              
+              
+  );
+};
+//  BUTTON  PROGRESS
+
 
 
 const VerticalForm = styled(Box)(({ theme }) => ({
@@ -79,39 +177,49 @@ const LargeSVG = () => (
 export const FormStep03 = (props:any) => {
   const { 
     currentStep,
-    // currentForm,
+    currentForm,
   } = useAppSelector(selectClientForms);
   const dispatch = useAppDispatch();
   
-  const [distance, setDistance] = useState<string>('');
+  // const [distance, setDistance] = useState<string>('');
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // if (!termsAccepted) {
-    //   alert('Por favor acepte los términos y condiciones');
-    //   return;
-    // }
-    // const distanceNumber = parseFloat(distance);
-    // if (!isNaN(distanceNumber)) {
-    //   try {
-    //     await dispatch(updateDistance(distanceNumber)).unwrap();
-    //     setDistance(''); // Limpiar el campo después de enviar
-    //     // Aquí puedes agregar la lógica para avanzar al siguiente paso
-    //   } catch (error) {
-    //     alert('Error al guardar la distancia');
-    //   }
-    // } else {
-    //   alert('Por favor ingrese una distancia válida');
-    // }
-  };
+    
+    try {
+      await dispatch(
+        setFormClient({
+          isHouse: currentForm?.isHouse,
+          isPortable: currentForm?.isPortable,
+          isWallbox: currentForm?.isWallbox,
+          numberOfChargers: currentForm?.numberOfChargers || 1,
+          distance: currentForm?.distance,
+          customerId: currentForm?.customerId,
+        })
+      );
 
-  const handleDistanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      setDistance(value);
+      if (currentForm?.formId) {
+        console.log("--currentForm?.formId--", currentForm?.formId)
+        await dispatch(
+          setEstimate({
+            formId: currentForm.formId
+          })
+        );
+        
+        dispatch(setStep(3))
+      }
+    } catch (error) {
+      console.error('Error en handleSubmit:', error);
     }
   };
+
+  // const handleDistanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value;
+  //   if (value === '' || /^\d*\.?\d*$/.test(value)) {
+  //     setDistance(value);
+  //   }
+  // };
 
   return (
     <>
@@ -127,7 +235,9 @@ export const FormStep03 = (props:any) => {
             position: "relative",
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form 
+          // onSubmit={handleSubmit}
+          >
             <Typography variant="h6" gutterBottom>
               Indique la distancia existente entre su tablero eléctrico y donde quiere instalar el cargador
             </Typography>
@@ -143,11 +253,20 @@ export const FormStep03 = (props:any) => {
               <TextField
                 required
                 id="distance"
-                type="text"
+                type="number"
                 label=""
-                value={distance}
-                onChange={handleDistanceChange}
-                inputProps={{ min: 0 }}
+                value={currentForm?.distance}
+                onChange={(e)=>dispatch(
+                  setDataForm({
+                    key: "distance",
+                    value: e.target.value,
+                  })
+                )}
+                sx={{
+                  '& input[type=number]': {
+                    min: 0
+                  }
+                }}
               />
               <Typography variant="caption" gutterBottom>
                 mts
@@ -197,7 +316,8 @@ export const FormStep03 = (props:any) => {
               justifyContent: "center",
               alignItems: "center",
             }}>
-              <Button 
+              {/* <Button 
+                component="button"
                 type="submit" 
                 variant="contained" 
                 color="primary"
@@ -205,10 +325,11 @@ export const FormStep03 = (props:any) => {
                   width: "50%",
                   padding: "10px",
                 }}
-                onClick={ () => dispatch(setStep(3)) }
+                onClick={(e) => handleSubmit(e)}
               >
                 Generar Presupuesto
-              </Button>
+              </Button> */}
+              <MyProgressButton handleSubmit={handleSubmit}/>
             </Box>
           </form>
         </Container>      

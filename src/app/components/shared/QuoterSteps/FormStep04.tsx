@@ -9,12 +9,16 @@ import {
   Button,
 } from "@mui/material";
 
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { selectEstimate } from "@/store/Estimate/slice";
 
 export const FormStep04 = (props:any) => {
-
-
+  const { 
+    estimate
+  } = useAppSelector(selectEstimate);
   return (
     <>
+    <pre>{JSON.stringify(estimate, null, 2 )}</pre>
       <Box bgcolor="#ffffff" pt={7} pb={7}>
         <Container
           sx={{

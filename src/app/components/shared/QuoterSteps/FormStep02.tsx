@@ -12,7 +12,8 @@ import {
 
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
+import { setStep, selectClientForms, setDataForm, setFormClient } from "@/store/ClientForms/slice";
+
 
 
 const FullWidthButtonWithIcons = styled(Button)(({ theme }) => ({
@@ -135,7 +136,7 @@ export const FormStep02 = (props:any) => {
   })
   const { 
     currentStep,
-    // currentForm,
+    currentForm,
   } = useAppSelector(selectClientForms);
   
   const dispatch = useAppDispatch();
@@ -172,7 +173,10 @@ export const FormStep02 = (props:any) => {
           value: isWallbox
         })
       ),
-      dispatch(setStep(3))
+      
+      // CREAR EL ClientForm
+      
+      dispatch(setStep(2))
     ]);  
     
   }

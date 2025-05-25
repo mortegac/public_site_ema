@@ -12,8 +12,8 @@ import {
   } from "@mui/material";
   
 import { styled } from '@mui/material/styles';
-// import { useAppSelector, useAppDispatch } from '@/store/hooks';
-// import { AppState } from '@/store/store';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { AppState } from '@/store/store';
 // import { increment, setStep, decrement, selectClientForms, setDataEnroll } from "@/store/ClientForms/slice";
 // const { 
 //     currentStep,
@@ -134,12 +134,11 @@ const StepSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const CotizadorWizard = () => {
+  const hasEdition = useAppSelector((state: any) => state.hasEdition);
   
-    
 //   const customizer = useAppSelector((state: AppState) => state.customizer);
 //   const dispatch = useAppDispatch();
 //   const vehicle = useAppSelector((state: any) => state.vehicle);
-//   const hasEdition = useAppSelector((state: any) => state.hasEdition);
 
   const steps = [
     { number: 1, title: 'Información de contacto', subtitle: '', step: 1 },

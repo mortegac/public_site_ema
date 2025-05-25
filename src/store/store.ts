@@ -5,6 +5,8 @@ import storage from "redux-persist/lib/storage";
 import CustomizerReducer from "./customizer/CustomizerSlice";
 import wizardReducer from './wizard/wizardSlice';
 import clientFormsReducer from './ClientForms/slice';
+import customerReducer from './Customer/slice';
+import estimateReducer from './Estimate/slice';
 
 
 const persistConfig = {
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
   customizer: CustomizerReducer,
   wizard: wizardReducer,
   clientForms: clientFormsReducer,
+  customer: customerReducer,
+  estimate: estimateReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

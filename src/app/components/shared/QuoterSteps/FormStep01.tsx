@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Stack,
@@ -19,7 +19,8 @@ import CustomTextField from './CustomTextField';
 import CustomFormLabel from './CustomFormLabel';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
+import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
+import { setCustomer } from "@/store/Customer/slice";
 
 
 // Componente para el formulario vertical
@@ -53,9 +54,13 @@ const validationSchema = yup.object({
   email: yup
     .string()
     .matches(
-      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2}$/i,
-      'El email debe tener el formato: caracteres@dominio.com'
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      'El email debe tener el formato: email@dominio.com'
     )
+    .test('email-format', 'El email debe tener el formato: email@dominio.com', function(value) {
+      // console.log('Validando email:', value);
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value || "");
+    })
     .required('Email es requerido'),
   phone: yup.string().required('El teléfono es Requerido'),
 });
@@ -75,13 +80,13 @@ export const FormStep01 = (props:any) => {
   // const [email, setEmail] = useState('');
   // const [phone, setPhone] = useState('');
 
-  const handleSubmit = (event:any) => {
-    event.preventDefault();
+  // const handleSubmit = (event:any) => {
+  //   event.preventDefault();
     // console.log('Formulario enviado:', { name, email, phone });
     // setName('');
     // setEmail('');
     // setPhone('');
-  };
+  // };
   
   const MiSVG = () => (
     <svg width="123" height="123" viewBox="0 0 123 123" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,15 +107,33 @@ export const FormStep01 = (props:any) => {
 
   );
 
+  
      const formik = useFormik({
       initialValues: {
-        name: '',
-        email: '',
-        phone: '',
+        name: currentForm?.name || '',
+        email: currentForm?.email || '',
+        phone: currentForm?.phone || '',
       },
       validationSchema: validationSchema,
+      enableReinitialize: true, 
+      // onChange: (e) => {
+      //   const { name, value } = e.target;
+      //   // Primero actualizar formik
+      //   formik.handleChange(e);
+      //   // Luego sincronizar con Redux
+      //   dispatch(setDataForm({ key: name, value }));
+      // },
       onSubmit: (values) => {
         Promise.all([
+          dispatch(
+            setCustomer({
+              customerId: values?.email,
+              name: values?.name,
+              comune: "",
+              address: "",
+              phone: values?.phone,
+            })
+          ),
           dispatch(
             setDataForm({
               key: "name",
@@ -136,6 +159,29 @@ export const FormStep01 = (props:any) => {
       },
     });
     
+  // Sincronización de cada campo con Redux cuando cambian los valores
+  // useEffect(() => {
+  //   if (formik.values.name !== currentForm?.name) {
+  //     dispatch(setDataForm({ key: 'name', value: formik.values.name }));
+  //   }
+  // }, [formik.values.name, currentForm?.name, dispatch]);
+
+  // useEffect(() => {
+  //   if (formik.values.email !== currentForm?.email) {
+  //     dispatch(setDataForm({ key: 'email', value: formik.values.email }));
+  //   }
+  // }, [formik.values.email, currentForm?.email, dispatch]);
+
+  // useEffect(() => {
+  //   if (formik.values.phone !== currentForm?.phone) {
+  //     dispatch(setDataForm({ key: 'phone', value: formik.values.phone }));
+  //   }
+  // }, [formik.values.phone, currentForm?.phone, dispatch]);
+
+  const handleReset = () => {
+    dispatch(cleanData());
+    formik.resetForm();
+  };
   
   return (
     <>
@@ -168,6 +214,8 @@ export const FormStep01 = (props:any) => {
                     name="name"
                     value={formik.values.name}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="Juanin Jan Jarri"
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
                   />
@@ -178,6 +226,8 @@ export const FormStep01 = (props:any) => {
                     name="email"
                     value={formik.values.email}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="email@dominio.com"
                     error={formik.touched.email && Boolean(formik.errors.email)}
                     helperText={formik.touched.email && formik.errors.email}
                   />
@@ -188,6 +238,8 @@ export const FormStep01 = (props:any) => {
                     name="phone"
                     value={formik.values.phone}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="+56 9 99 22 999"
                     error={formik.touched.phone && Boolean(formik.errors.phone)}
                     helperText={formik.touched.phone && formik.errors.phone}
                   />
@@ -209,19 +261,22 @@ export const FormStep01 = (props:any) => {
             justifyContent: "center",
             alignItems: "center",
           }}>
+        <Button
+            type="button"
+            onClick={handleReset}
+            sx={{
+              width: "10%",
+              padding: "10px",
+              marginRight: "10px",
+            }}
+          >
+            Limpiar
+        </Button>
         <Button type="submit" variant="contained" color="primary"
           sx={{
             width: "50%",
             padding: "10px",
           }}
-          
-        // onClick={ () => {
-        //   if (currentForm?.phone && currentForm?.email && currentForm?.name) {
-        //     dispatch(setStep(1));
-        //   } else {
-        //     alert('Por favor complete todos los campos requeridos');
-        //   }
-        // } }
         >
           Siguiente
         </Button>

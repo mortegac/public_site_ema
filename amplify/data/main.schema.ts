@@ -112,26 +112,33 @@ export const MainSchema = a
 
     CalendarVisit: a.model({
       calendarId: a.id().required(),
+      summary: a.string(),
+      location: a.string(),
+      description: a.string(),
       startDate: a.datetime(),
       endDate: a.datetime(),
+      timeZone: a.string(),
       duration: a.integer(),
       amount: a.integer(),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
       userId: a.id(),
       User: a.belongsTo("User", "userId")
-    }).identifier(["calendarId"]),
-
+    })
+      .secondaryIndexes(index => [
+        index('calendarId').sortKeys(['startDate']).name("visitsByDate")
+      ])
+    ,
     Customer: a.model({
-      customerId: a.id().required(),
+      customerId: a.id().required(), //definido como el email
       name: a.string(),
       comune: a.string(),
       address: a.string(),
       phone: a.string(),
-      email: a.string(),
       ClientForm: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId")
-    }),
+    }).identifier(["customerId"])
+    ,
 
     ClientForm: a.model({
       formId: a.id().required(),

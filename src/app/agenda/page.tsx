@@ -1,29 +1,63 @@
+import {
+  Box,
+  Stack,
+  Typography,
+  Container,
+  Grid,
+  Button,
+} from "@mui/material";
+
 import PageContainer from '@/app/components/container/PageContainer';
 import Banner from '@/app/components/shared/banner/Banner';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
-import Features from '@/app/components/shared/features/Features';
-import Notice from '@/app/components/shared/notice/Notice';
-import Pricing from '@/app/components/shared/pricing';
-import CalendarGoogle from '@/app/components/shared/calendarGoogle';
+// import Calendar from "@/app/components/calendar";
+import CalendarSteps from '@/app/components/shared/CalendarSteps';
+import Steps from '@/app/components/AgendaWizard/Steps';
 import C2a from '@/app/components/shared/c2a';
-// import DefendFocus from '../../components/frontend-pages/homepage/defend-focus';
-// import Leadership from '../../components/frontend-pages/shared/leadership';
-// import PowerfulDozens from '@/app/components/shared/powerful-dozens';
-// import Reviews from '../../components/frontend-pages/shared/reviews';
-// import ExceptionalFeature from '../../components/frontend-pages/homepage/exceptional-feature';
-// import FAQ from '../../components/frontend-pages/homepage/faq';
-// import C2a from '../../components/frontend-pages/shared/c2a';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
-
 const HomePage = () => {
   return (
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
       <HeaderAlert />
       <HpHeader /> 
      
+     
+      <Grid container spacing={3} justifyContent="center" mb={4}>
+        <Grid item xs={12} lg={6} textAlign="left" sx={{marginTop:'48px'}}>
+        <Typography
+              variant="h2"
+              fontWeight={700}
+              lineHeight="1.2"
+              sx={{
+                fontSize: {
+                  xs: "32px",
+                  sm: "40px",
+                },
+              }}
+            >Agenda tú aquí visita técnica</Typography>
+          {/* <Typography
+                align="left"
+                            sx={{
+                              display: "block",
+                              padding: "30px 0",
+                              fontSize: "18px",
+                              // color: (theme) => theme.palette.text.primary
+                            }}
+                            component="span"
+                >
+                  {"Selecciona la fecha disponible para agendar tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."}
+                </Typography> */}
+        </Grid>
+      </Grid>
       
+      <Steps/>
+      <CalendarSteps/>
+      {/* <Calendar/> */}
+      
+      
+      <C2a/>
       {/* <Banner 
         titleOne="Agenda tú " 
         titleTwo="Visita técnica" 
@@ -36,10 +70,7 @@ const HomePage = () => {
         buttonURITwo="/" 
         
         imageSrc="/images/headers/agenda-tu-visita.png" 
-      /> */}
-      <CalendarGoogle/>
-      
-      <C2a/>
+        /> */}
       {/*
       <Notice />
       <Features />

@@ -7,6 +7,7 @@ import wizardReducer from './wizard/wizardSlice';
 import clientFormsReducer from './ClientForms/slice';
 import customerReducer from './Customer/slice';
 import estimateReducer from './Estimate/slice';
+import calendarVisitsReducer from './CalendarVisits//slice';
 
 
 const persistConfig = {
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   clientForms: clientFormsReducer,
   customer: customerReducer,
   estimate: estimateReducer,
+  calendarVisits: calendarVisitsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

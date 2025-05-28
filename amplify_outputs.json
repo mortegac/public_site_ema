@@ -1375,43 +1375,12 @@
               "isRequired": false,
               "attributes": []
             },
-            "travelTimeId": {
-              "name": "travelTimeId",
+            "dummy": {
+              "name": "dummy",
               "isArray": false,
-              "type": "ID",
+              "type": "String",
               "isRequired": false,
               "attributes": []
-            },
-            "TravelTimeOf": {
-              "name": "TravelTimeOf",
-              "isArray": false,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "travelTimeId"
-                ]
-              }
-            },
-            "OwnTravelTime": {
-              "name": "OwnTravelTime",
-              "isArray": true,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "travelTimeId"
-                ]
-              }
             },
             "customerId": {
               "name": "customerId",
@@ -1492,10 +1461,10 @@
             {
               "type": "key",
               "properties": {
-                "name": "calendarVisitsByStateAndStartDate",
-                "queryField": "CalendarVisitsByState",
+                "name": "visitsByDate",
+                "queryField": "listCalendarVisitByDummyAndStartDate",
                 "fields": [
-                  "state",
+                  "dummy",
                   "startDate"
                 ]
               }
@@ -5197,6 +5166,12 @@
             },
             "end": {
               "name": "end",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "timeZone": {
+              "name": "timeZone",
               "isArray": false,
               "type": "String",
               "isRequired": true

@@ -119,14 +119,16 @@ export const MainSchema = a
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
-      amount: a.integer(),
+      amount: a.integer(),//deprecated
+      dummy: a.string().default("dummy"),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
       userId: a.id(),
       User: a.belongsTo("User", "userId")
     })
+      .identifier(["calendarId"])
       .secondaryIndexes(index => [
-        index('calendarId').sortKeys(['startDate']).name("visitsByDate")
+        index('dummy').sortKeys(['startDate']).name("visitsByDate")
       ])
     ,
     Customer: a.model({

@@ -1,5 +1,5 @@
-export { CalendarVisit } from "./CalendarVisit";
-export { ClientForm } from "./ClientForm";
+export { CalendarVisit, fetchCalendarVisitByState } from "./CalendarVisit";
+export { ClientForm, fetchClientFormAndEstimates } from "./ClientForm";
 export { Company } from "./Company";
 export { Customer } from "./Customer";
 export { Discount } from "./Discount";
@@ -22,3 +22,4 @@ export { ShoppingCartDetail } from "./ShoppingCartDetail";
 export { SupportTicket } from "./SupportTicket";
 export { TicketComment } from "./TicketComment";
 export { Users } from "./Users";
+export { UserTimeSlot } from "./UserTimeSlot";

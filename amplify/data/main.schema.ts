@@ -18,6 +18,7 @@ export const MainSchema = a
         validated: a.boolean().default(false),
         roleId: a.id(),
         Role: a.belongsTo("Role", "roleId"),
+        TimeSlots: a.hasMany("UserTimeSlot", "userId"),
         RequestedTickets: a.hasMany("SupportTicket", "solicitantId"),
         ResolveTickest: a.hasMany("SupportTicket", "employeeId"),
         TicketComments: a.hasMany("TicketComment", "userId"),
@@ -26,6 +27,14 @@ export const MainSchema = a
         Company: a.belongsTo("Company", "companyId")
       })
       .identifier(["userId"]),
+
+    UserTimeSlot: a.model({
+      userTimeSlotId: a.id().required(),
+      day: a.enum(["monday", "tuesday", "wednesday", "thurday", "friday", "saturday", "sunday"]),
+      timeAvailable: a.time().array(), // hh:mm:ss.sss []
+      userId: a.id().required(),
+      User: a.belongsTo("User", "userId")
+    }).identifier(["userTimeSlotId"]),
 
     Company: a
       .model({
@@ -113,14 +122,22 @@ export const MainSchema = a
     CalendarVisit: a.model({
       calendarId: a.id().required(),
       summary: a.string(),
-      location: a.string(),
+      location: a.string(), //string libre
       description: a.string(),
       startDate: a.datetime(),
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
-      amount: a.integer(),//deprecated
-      dummy: a.string().default("dummy"),
+      state: a.enum([
+        "ocupied",
+        "available", //disponible
+        "reserved",  //reservada
+        "payed", // pagada
+        "travelTime", //ocupada x tiempo d viaje
+      ]),
+      travelTimeId: a.id(),
+      TravelTimeOf: a.belongsTo("CalendarVisit", "travelTimeId"),
+      OwnTravelTime: a.hasMany("CalendarVisit", "travelTimeId"),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
       userId: a.id(),
@@ -128,19 +145,24 @@ export const MainSchema = a
     })
       .identifier(["calendarId"])
       .secondaryIndexes(index => [
-        index('dummy').sortKeys(['startDate']).name("visitsByDate")
+        index('state').sortKeys(['startDate']).queryField("CalendarVisitsByState")
       ])
     ,
+
     Customer: a.model({
       customerId: a.id().required(), //definido como el email
-      name: a.string(),
-      comune: a.string(),
-      address: a.string(),
-      phone: a.string(),
+      name: a.string().required(),
+      phone: a.string().required(),
+      address: a.string().default(""),
+      city: a.string().default(""),
+      state: a.string().default(""),
+      zipCode: a.string().default(""),
+      lat: a.string().default(""),
+      long: a.string().default(""),
+      zoomLevel: a.string().default("15"),
       ClientForm: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId")
-    }).identifier(["customerId"])
-    ,
+    }).identifier(["customerId"]),
 
     ClientForm: a.model({
       formId: a.id().required(),
@@ -234,9 +256,9 @@ export const MainSchema = a
       unitPrice: a.integer(),
       unit: a.string(),
       quantity: a.float(),
-      estimateId: a.id(),
       type: a.string(),
       state: a.enum(["automated", "installerVerified", "installerModified",]),
+      estimateId: a.id(),
       Estimate: a.belongsTo("Estimate", "estimateId"),
       priceId: a.id(),
       Price: a.belongsTo("Price", "priceId"),

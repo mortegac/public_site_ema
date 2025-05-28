@@ -1375,12 +1375,43 @@
               "isRequired": false,
               "attributes": []
             },
-            "dummy": {
-              "name": "dummy",
+            "travelTimeId": {
+              "name": "travelTimeId",
               "isArray": false,
-              "type": "String",
+              "type": "ID",
               "isRequired": false,
               "attributes": []
+            },
+            "TravelTimeOf": {
+              "name": "TravelTimeOf",
+              "isArray": false,
+              "type": {
+                "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "travelTimeId"
+                ]
+              }
+            },
+            "OwnTravelTime": {
+              "name": "OwnTravelTime",
+              "isArray": true,
+              "type": {
+                "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "travelTimeId"
+                ]
+              }
             },
             "customerId": {
               "name": "customerId",
@@ -1461,10 +1492,10 @@
             {
               "type": "key",
               "properties": {
-                "name": "visitsByDate",
-                "queryField": "listCalendarVisitByDummyAndStartDate",
+                "name": "calendarVisitsByStateAndStartDate",
+                "queryField": "CalendarVisitsByState",
                 "fields": [
-                  "dummy",
+                  "state",
                   "startDate"
                 ]
               }

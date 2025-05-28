@@ -15,9 +15,6 @@ const selectionSet = [
     "timeZone",
     "duration",
     "state",
-    "travelTimeId",
-    "TravelTimeOf.*",
-    "OwnTravelTime.*",
     "customerId",
     "Customer.*",
     "userId",
@@ -31,13 +28,14 @@ export type FetchedCalendarVisit = SelectionSet<
 
 export const fetchCalendarVisitByState = async (
     props: {
-        state: "ocupied" | "available" | "reserved" | "payed" | "travelTime",
+        state: MainTypes["CalendarVisit"]["nestedTypes"]["state"],
         startDate: string,
         endDate: string;
         sortDirection: "DESC" | "ASC";
     }): Promise<FetchedCalendarVisit[]> => {
 
-    const { state,
+    const {
+        state: { type: state },
         startDate,
         endDate,
         sortDirection } = props;

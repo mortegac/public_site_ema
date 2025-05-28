@@ -1,5 +1,5 @@
 import { ParameterTypes } from "../../../../amplify/data/resource";
-import { generateClient, type Client } from "aws-amplify/data";
+import { generateClient } from "aws-amplify/data";
 import { throwError } from "../../error";
 
 const client = generateClient<ParameterTypes>();

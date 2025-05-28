@@ -28,10 +28,15 @@ export const MainSchema = a
       })
       .identifier(["userId"]),
 
+    TimeSlot: a.customType({
+      start: a.time(),
+      end: a.time(),
+    }),
+
     UserTimeSlot: a.model({
       userTimeSlotId: a.id().required(),
-      day: a.enum(["monday", "tuesday", "wednesday", "thurday", "friday", "saturday", "sunday"]),
-      timeAvailable: a.time().array(), // hh:mm:ss.sss []
+      day: a.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]), //1 - LUNES, 2 - MARTES ...
+      timeAvailable: a.ref("TimeSlot").array(), // {start: HH:mm:ss:sss, end: HH:mm:ss:ssss}[]
       userId: a.id().required(),
       User: a.belongsTo("User", "userId")
     }).identifier(["userTimeSlotId"]),
@@ -122,22 +127,21 @@ export const MainSchema = a
     CalendarVisit: a.model({
       calendarId: a.id().required(),
       summary: a.string(),
-      location: a.string(), //string libre
+      location: a.string(),
       description: a.string(),
       startDate: a.datetime(),
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
       state: a.enum([
-        "ocupied",
-        "available", //disponible
-        "reserved",  //reservada
-        "payed", // pagada
-        "travelTime", //ocupada x tiempo d viaje
+        "available", // disponible
+        "reserved", // reservada lo libera webpayStatus si falla
+        "payed", // pagada  
+        "payedAndAgended", // pagada y se genero en google calendar
+        "error", // fallo
+        "occupied", // no disponible
+        "stale" // paso la fecha 
       ]),
-      travelTimeId: a.id(),
-      TravelTimeOf: a.belongsTo("CalendarVisit", "travelTimeId"),
-      OwnTravelTime: a.hasMany("CalendarVisit", "travelTimeId"),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
       userId: a.id(),
@@ -146,11 +150,10 @@ export const MainSchema = a
       .identifier(["calendarId"])
       .secondaryIndexes(index => [
         index('state').sortKeys(['startDate']).queryField("CalendarVisitsByState")
-      ])
-    ,
+      ]),
 
     Customer: a.model({
-      customerId: a.id().required(), //definido como el email
+      customerId: a.id().required(), // definido como el email
       name: a.string().required(),
       phone: a.string().required(),
       address: a.string().default(""),
@@ -161,7 +164,8 @@ export const MainSchema = a
       long: a.string().default(""),
       zoomLevel: a.string().default("15"),
       ClientForm: a.hasMany("ClientForm", "customerId"),
-      CalendarVisits: a.hasMany("CalendarVisit", "customerId")
+      CalendarVisits: a.hasMany("CalendarVisit", "customerId"),
+      Customer: a.hasMany("ShoppingCart", "customerId"),
     }).identifier(["customerId"]),
 
     ClientForm: a.model({
@@ -356,23 +360,32 @@ export const MainSchema = a
 
     ShoppingCart: a.model({
       shoppingCartId: a.id().required(),
-      totalPrice: a.integer(),
-      vat: a.integer(), //iva, Value Added Tax,
-      paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]),
-      status: a.enum(["pending", "completed", "cancelled"]),
+      total: a.integer(), //precio
+      vat: a.integer(), //iva
+      paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]), //metodo de pago
+      status: a.enum(["pending", "completed", "cancelled"]), //status
+
+      ShoppingCartDetails: a.hasMany("ShoppingCartDetail", "shoppingCartId"), //detalles
+
+      customerId: a.id(),
+      Customer: a.belongsTo("Customer", "customerId"),
+
+      //cotizacion
       estimateId: a.id(),
       Estimate: a.belongsTo("Estimate", "estimateId"),
-      ShoppingCartDetails: a.hasMany("ShoppingCartDetail", "shoppingCartId"),
-      paymentTransactionId: a.id(),
-      PaymentTransaction: a.hasOne("PaymentTransaction", "shoppingCartId"),
-      Discounts: a.hasMany("DiscountShoppingCart", "shoppingCartId")
+
+      paymentTransactionId: a.id(), //transaction transbank
+      PaymentTransaction: a.hasMany("PaymentTransaction", "shoppingCartId"),
+
+      Discounts: a.hasMany("DiscountShoppingCart", "shoppingCartId") //descuentos
     }).identifier(["shoppingCartId"]),
 
     ShoppingCartDetail: a.model({
       shoppingCartDetailId: a.id().required(),
-      shoppingCartId: a.id(),
-      typeOfItem: a.enum(["product", "service", "input"]),
+      glosa: a.string(),
       price: a.integer(),
+      typeOfItem: a.enum(["product", "service", "input"]),
+      shoppingCartId: a.id(),
       ShoppingCart: a.belongsTo("ShoppingCart", "shoppingCartId"),
       priceId: a.id(),
       Price: a.belongsTo("Price", "priceId"),

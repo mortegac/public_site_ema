@@ -282,7 +282,9 @@
             "timeAvailable": {
               "name": "timeAvailable",
               "isArray": true,
-              "type": "AWSTime",
+              "type": {
+                "nonModel": "TimeSlot"
+              },
               "isRequired": false,
               "attributes": [],
               "isArrayNullable": true
@@ -1374,44 +1376,6 @@
               },
               "isRequired": false,
               "attributes": []
-            },
-            "travelTimeId": {
-              "name": "travelTimeId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
-            "TravelTimeOf": {
-              "name": "TravelTimeOf",
-              "isArray": false,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "travelTimeId"
-                ]
-              }
-            },
-            "OwnTravelTime": {
-              "name": "OwnTravelTime",
-              "isArray": true,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "travelTimeId"
-                ]
-              }
             },
             "customerId": {
               "name": "customerId",
@@ -4800,7 +4764,7 @@
             "monday",
             "tuesday",
             "wednesday",
-            "thurday",
+            "thursday",
             "friday",
             "saturday",
             "sunday"
@@ -4834,11 +4798,13 @@
         "CalendarVisitState": {
           "name": "CalendarVisitState",
           "values": [
-            "ocupied",
             "available",
             "reserved",
             "payed",
-            "travelTime"
+            "payedAndAgended",
+            "error",
+            "occupied",
+            "stale"
           ]
         },
         "EstimateStateValidation": {
@@ -4901,6 +4867,25 @@
         }
       },
       "nonModels": {
+        "TimeSlot": {
+          "name": "TimeSlot",
+          "fields": {
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "ProcessEstimateReturnType": {
           "name": "ProcessEstimateReturnType",
           "fields": {
@@ -4951,6 +4936,18 @@
         },
         "ClearInstallerScheduleReturnType": {
           "name": "ClearInstallerScheduleReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "GenerateTimeSLotsReturnType": {
+          "name": "GenerateTimeSLotsReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -5235,17 +5232,17 @@
               "type": "String",
               "isRequired": true
             },
+            "formId": {
+              "name": "formId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
             "duration": {
               "name": "duration",
               "isArray": false,
               "type": "String",
               "isRequired": false
-            },
-            "travelTime": {
-              "name": "travelTime",
-              "isArray": false,
-              "type": "Int",
-              "isRequired": true
             }
           }
         },
@@ -5282,13 +5279,35 @@
             "start": {
               "name": "start",
               "isArray": false,
-              "type": "String",
+              "type": "AWSDateTime",
               "isRequired": true
             },
             "end": {
               "name": "end",
               "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            }
+          }
+        },
+        "generateTimeSLots": {
+          "name": "generateTimeSLots",
+          "isArray": false,
+          "type": {
+            "nonModel": "GenerateTimeSLotsReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "userId": {
+              "name": "userId",
+              "isArray": false,
               "type": "String",
+              "isRequired": true
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDate",
               "isRequired": true
             }
           }

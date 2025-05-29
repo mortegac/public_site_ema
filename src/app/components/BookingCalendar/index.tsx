@@ -2,7 +2,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DateCalendar, PickersDay } from '@mui/x-date-pickers';
 import { Box, Grid, Typography, Button, Paper, Divider } from '@mui/material';
 import { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -116,9 +116,9 @@ export default function BookingCalendar() {
         (GMT-04:00) Hora de Chile
       </Typography>
 
-      <Grid container spacing={4}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' }, gap: 4 }}>
         {/* Sección del calendario */}
-        <Grid item xs={12} md={3}>
+        <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 3' } }}>
           <Paper elevation={3} sx={{ p: 2 }}>
             <DateCalendar
               // Ahora el DateCalendar usa calendarSelectedDay, que es el día exacto clicado
@@ -149,35 +149,25 @@ export default function BookingCalendar() {
                   const isWithinSelectedWeek = day.isBetween(startOfDisplayWeek, endOfDisplayWeek, null, '[]');
 
                   return (
-                    <div
+                    <PickersDay
                       {...props}
-                      style={{
+                      sx={{
                         backgroundColor: isWithinSelectedWeek ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
                         borderRadius: '8px',
-                        // Asegurarse de que el día seleccionado en el calendario no pierda su estilo principal
                         ...(props.selected && {
-                          backgroundColor: 'transparent', // Se manejará con Mui-selected por el `sx` prop
+                          backgroundColor: 'transparent',
                         }),
                       }}
-                    >
-                      {props.children}
-                    </div>
+                    />
                   );
                 },
               }}
-              localeText={{
-                dayPickerToolbarTitle: 'Selecciona fecha',
-                datePickerToolbarTitle: 'Selecciona fecha',
-                openDatePickerDialogue: 'Abre el selector de fecha',
-                todayButtonLabel: 'Hoy',
-                calendarWeekNumberHeaderText: 'Semana',
-              }}
             />
           </Paper>
-        </Grid>
+        </Box>
 
         {/* Sección de las franjas horarias por día de la semana */}
-        <Grid item xs={12} md={9}>
+        <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 9' } }}>
           <Paper elevation={3} sx={{ p: 2, display: 'flex', overflowX: 'auto' }}>
             {weekDays.map((day) => {
               const formattedDay = day.format('YYYY-MM-DD');
@@ -251,8 +241,8 @@ export default function BookingCalendar() {
               );
             })}
           </Paper>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
 }

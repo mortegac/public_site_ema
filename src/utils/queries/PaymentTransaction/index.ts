@@ -1,4 +1,4 @@
-import { MainTypes } from "../../../data/main.schema";
+import { MainTypes } from "../../../../amplify/data/main.schema";
 import { QueryFactory } from "../QueryFactory";
 import { fetchPaymentTransactionByToken } from "./fetchTransactionByToken";
 

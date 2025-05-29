@@ -188,27 +188,37 @@ export const FormStep03 = (props:any) => {
     event.preventDefault();
     
     try {
-      await dispatch(
-        setFormClient({
-          isHouse: currentForm?.isHouse,
-          isPortable: currentForm?.isPortable,
-          isWallbox: currentForm?.isWallbox,
-          numberOfChargers: currentForm?.numberOfChargers || 1,
-          distance: currentForm?.distance,
-          customerId: currentForm?.customerId,
-        })
-      );
-
-      if (currentForm?.formId) {
-        console.log("--currentForm?.formId--", currentForm?.formId)
+      
+      Promise.all([
+        await dispatch(
+          setFormClient({
+            isHouse: currentForm?.isHouse,
+            isPortable: currentForm?.isPortable,
+            isWallbox: currentForm?.isWallbox,
+            numberOfChargers: currentForm?.numberOfChargers || 1,
+            distance: currentForm?.distance,
+            customerId: currentForm?.email,
+          })
+        ),
         await dispatch(
           setEstimate({
             formId: currentForm.formId
+            // formId: "e510cb74-3ade-4829-a2c4-c0269ffe51e8" //currentForm.formId
           })
-        );
-        
+        ),
         dispatch(setStep(3))
-      }
+      ])
+
+      // if (currentForm?.formId) {
+      //   console.log("--currentForm?.formId--", currentForm?.formId)
+      //   await dispatch(
+      //     setEstimate({
+      //       formId: "e510cb74-3ade-4829-a2c4-c0269ffe51e8"//currentForm.formId
+      //     })
+      //   );
+        
+      //   dispatch(setStep(3))
+      // }
     } catch (error) {
       console.error('Error en handleSubmit:', error);
     }
@@ -223,6 +233,7 @@ export const FormStep03 = (props:any) => {
 
   return (
     <>
+    {/* <pre>{JSON.stringify(currentForm, null, 2)}</pre> */}
       <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
       sx={{
         boxSizing: 'border-box',

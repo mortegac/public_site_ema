@@ -50,8 +50,8 @@ const C2a = () => {
                     }
                 }}>
                     <Container maxWidth="lg">
-                        <Grid container spacing={3} alignItems="center">
-                            <Grid item xs={12} lg={6} sm={8}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(12, 1fr)', lg: 'repeat(12, 1fr)' }, gap: 3, alignItems: 'center' }}>
+                            <Box sx={{ gridColumn: { xs: '1 / -1', sm: 'span 8', lg: 'span 6' } }}>
                                 <Typography variant="h4" mb={3} fontWeight={700} fontSize="40px" lineHeight="1.4" sx={{
                                     fontSize: {
                                         lg: '40px',
@@ -63,8 +63,8 @@ const C2a = () => {
                                     {/* <Button variant="outlined" size="large" href="/auth/auth1/register">Register as Member</Button> */}
                                 </Stack>
                                 <Typography fontSize="14px">Si prefiere también nos puede enviar un email a <Box fontWeight={600} component="span">contacto@energica.city</Box> </Typography>
-                            </Grid>
-                        </Grid>
+                            </Box>
+                        </Box>
                     </Container>
 
                     {lgUp ?

@@ -21,7 +21,10 @@ export const createEstimate = async (input: estimateInput): Promise<any> => {
         const processResult:any = await client.graphql({
           query: `
             mutation ProcessEstimate($formId: String!) {
-              ProcessEstimate(formId: $formId)
+              ProcessEstimate(formId: $formId) {
+                estimateId
+                message
+              }
             }
           `,
           variables: { formId }
@@ -33,7 +36,7 @@ export const createEstimate = async (input: estimateInput): Promise<any> => {
         
         if ('data' in processResult && processResult.data?.ProcessEstimate) {
           const { data: estimate } = await client.models.Estimate.get({ 
-            estimateId: processResult.data.ProcessEstimate 
+            estimateId: processResult.data.ProcessEstimate.estimateId 
           });
           
           if (estimate) {

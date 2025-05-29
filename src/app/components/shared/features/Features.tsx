@@ -11,8 +11,8 @@ const Features = () => {
             <Container maxWidth="lg">
                 <FeatureTitle />
 
-                <Grid container spacing={3} mt={3}>
-                    <Grid item xs sm={6} lg>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(12, 1fr)', lg: 'repeat(12, 1fr)' }, gap: 3, mt: 3 }}>
+                    <Box sx={{ gridColumn: { xs: '1 / -1', sm: 'span 6', lg: 'span 4' } }}>
                         <Box mb={3} bgcolor="warning.light" borderRadius="24px">
                             <Box px={4} py="65px">
                                 <Stack direction="column" spacing={2} textAlign="center">
@@ -43,12 +43,8 @@ const Features = () => {
                                 <Image src="/images/frontend-pages/homepage/feature-apps.png" alt="icon1" width={250} height={70} />
                             </Box>
                         </Box>
-                    </Grid>
-                    <Grid item xs={12} lg={5} sx={{
-                        order: {
-                            xs: 3, lg: 2
-                        }
-                    }}>
+                    </Box>
+                    <Box sx={{ gridColumn: { xs: '1 / -1', lg: 'span 5' }, order: { xs: 3, lg: 2 } }}>
                         <Box textAlign="center" mb={3} bgcolor="primary.light" borderRadius="24px"
                         sx={{
                             minHeight:"515px",
@@ -73,12 +69,8 @@ const Features = () => {
                                 </Box> */}
                             </Box>
                         </Box>
-                    </Grid>
-                    <Grid item xs sm={6} lg sx={{
-                        order: {
-                            xs: 2, lg: 3
-                        }
-                    }}>
+                    </Box>
+                    <Box sx={{ gridColumn: { xs: '1 / -1', sm: 'span 6', lg: 'span 3' }, order: { xs: 2, lg: 3 } }}>
                         {/* <Box textAlign="center" mb={3} bgcolor="success.light" borderRadius="24px"> */}
                         <Box textAlign="center" mb={3} bgcolor="secondary.light" borderRadius="24px" sx={{
                             backgroundImage: 'url("/images/backgrounds/bg-features-02.png")',
@@ -113,8 +105,8 @@ const Features = () => {
                                 </Stack>
                             </Box>
                         </Box>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
             </Container>
         </Box>
     );

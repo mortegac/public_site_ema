@@ -50,16 +50,17 @@ const Licenses = [
 const PricingCard = () => {
     return (
         <>
-            <Grid container spacing={3} sx={{ 
+            <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+                gap: 3,
                 height: '100%', 
-                display: 'flex', 
                 justifyContent: 'space-between',
                 padding: '24px',
                 width: '100%'
             }}>
                 {Licenses.map((license, i) => (
-                    <Grid item 
-                        xs={12} lg={4} sm={6} 
+                    <Box 
                         key={i}  
                         sx={{ 
                             height: '100%',
@@ -149,12 +150,12 @@ const PricingCard = () => {
                                 <Button fullWidth variant="contained" size="large">Agenda tu visita</Button>
                             </CardContent>
                         </BlankCard>
-                        </Grid>
+                        </Box>
                         
                     
                 ))}
 
-            </Grid>
+            </Box>
         </>
     );
 };

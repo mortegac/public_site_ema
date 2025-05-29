@@ -10,6 +10,8 @@ import 'dayjs/locale/es'; // Importa el idioma español
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // Configura dayjs con los plugins necesarios
 dayjs.extend(utc);
@@ -18,9 +20,30 @@ dayjs.extend(updateLocale);
 dayjs.locale('es'); // Establece el idioma español
 dayjs.tz.setDefault('America/Santiago'); // Establece la zona horaria de Santiago
 
-// Configura la semana para que comience en lunes
+// Configura la semana para que comience en lunes y personaliza el idioma español
 dayjs.updateLocale('es', {
-  weekStart: 1
+  weekStart: 1,
+  months: [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ],
+  monthsShort: [
+    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+  ],
+  weekdays: [
+    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+  ],
+  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+  weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+  longDateFormat: {
+    LT: 'HH:mm',
+    LTS: 'HH:mm:ss',
+    L: 'DD/MM/YYYY',
+    LL: 'D [de] MMMM [de] YYYY',
+    LLL: 'D [de] MMMM [de] YYYY HH:mm',
+    LLLL: 'dddd, D [de] MMMM [de] YYYY HH:mm'
+  }
 });
 
 // Define un tipo para tus horas disponibles
@@ -35,31 +58,94 @@ import { setStep, selectCalendarVisits } from "@/store/CalendarVisits/slice";
 
 
 const mockAvailableTimes: { [key: string]: TimeSlot[] } = {
-  '2025-06-02': [{ time: '09:00', available: true }, { time: '11:00', available: true }], // Lunes
-  '2025-06-03': [{ time: '10:00', available: true }, { time: '14:00', available: true }], // Martes
-  '2025-06-04': [{ time: '09:30', available: true }, { time: '13:00', available: true }, { time: '16:00', available: false }], // Miércoles
-  '2025-06-05': [], // Jueves sin horas
+   // Martes
+  '2025-05-27': [
+    { time: '11:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+  
+   // Miercoles
+  '2025-05-28': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+   // Jueves
+  '2025-05-29': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+  
+   // Viernes
+  '2025-05-30': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true },
+  ],
+  
+   // Martes
+  '2025-06-03': [
+    { time: '11:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+  
+   // Miercoles
+  '2025-06-04': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+   // Jueves
+  '2025-06-05': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+  
+   // Viernes
   '2025-06-06': [
-    { time: '10:30', available: true },
-    { time: '12:30', available: true },
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
     { time: '15:00', available: true },
-    { time: '17:00', available: false },
-  ], // Viernes
-  '2025-06-07': [{ time: '09:00', available: false }], // Sábado (no disponible)
-  '2025-06-08': [], // Domingo sin horas
-  '2025-06-09': [{ time: '11:00', available: true }, { time: '15:00', available: true }], // Lunes siguiente
+  ],
+  
+   // Martes
   '2025-06-10': [
-    { time: '11:30', available: true },
-    { time: '15:00', available: true },
-    { time: '17:00', available: true },
-  ], // Martes siguiente
+    { time: '11:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+  
+   // Miercoles
   '2025-06-11': [
-    { time: '10:30', available: true },
-    { time: '12:30', available: true },
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+   // Jueves
+  '2025-06-12': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
+    { time: '15:00', available: true }, 
+    { time: '17:00', available: true }
+  ],
+  
+   // Viernes
+  '2025-06-13': [
+    { time: '10:30', available: true }, 
+    { time: '12:30', available: true }, 
     { time: '15:00', available: true },
-    { time: '17:00', available: true },
-  ], // Miércoles siguiente
-  '2025-06-12': [{ time: '10:00', available: true }],
+  ],
+  
+  
 };
 
 export default function BookingCalendar() {
@@ -131,7 +217,9 @@ export default function BookingCalendar() {
   
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
-      setSelectedDate(date.tz('America/Santiago').startOf('week'));
+      // Aseguramos que la fecha mantenga la configuración en español
+      const newDate = date.tz('America/Santiago').locale('es').startOf('week');
+      setSelectedDate(newDate);
     }
   };
 
@@ -151,49 +239,73 @@ export default function BookingCalendar() {
   };
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Selecciona un horario para la cita
-      </Typography>
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
-        (GMT-04:00) Hora de Chile
-      </Typography>
+    <Box sx={{ p: 0 }}>
+
+      <Typography
+        align="left"
+                    sx={{
+                      display: "block",
+                      paddingBottom: "30px",
+                      fontSize: "18px",
+                      lineHeight: "2",
+                      marginTop: "0",
+                      color: (theme) => theme.palette.text.primary
+                    }}
+                    component="span"
+        >
+          Seleccione una hora para continuar con el proceso de reserva de su visita técnica
+        </Typography>
 
       <Box sx={{ display: 'flex', gap: 4, height: '350px' }}>
         {/* Calendario mensual */}
         <Box sx={{ width: '30%', height: '100%' }}>
           <Paper elevation={3} sx={{ p: 2, height: '100%' }}>
-            <DateCalendar
-              value={selectedDate}
-              onChange={handleDateChange}
-              views={['month', 'day']}
-              disablePast={true}
-              sx={{
-                width: '100%',
-                height: '100%',
-                '.MuiPickersDay-root': {
-                  borderRadius: '8px',
-                  margin: '2px',
-                  width: '36px',
-                  height: '36px',
-                },
-                '.MuiPickersDay-root.Mui-selected': {
-                  backgroundColor: (theme) => theme.palette.primary.main,
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: (theme) => theme.palette.primary.dark,
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+              <DateCalendar
+                value={selectedDate}
+                onChange={handleDateChange}
+                views={['month', 'day']}
+                disablePast={true}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  '.MuiPickersDay-root': {
+                    borderRadius: '8px',
+                    margin: '2px',
+                    width: '36px',
+                    height: '36px',
                   },
-                },
-                '.MuiPickersCalendarHeader-label': {
-                  textTransform: 'capitalize',
-                  fontSize: '1.1rem',
-                  fontWeight: 500,
-                },
-                '.MuiPickersDay-root .MuiPickersDay-label': {
-                  textTransform: 'capitalize',
-                },
-              }}
-            />
+                  '.MuiPickersDay-root.Mui-selected': {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: (theme) => theme.palette.primary.dark,
+                    },
+                  },
+                  '.MuiPickersCalendarHeader-label': {
+                    textTransform: 'capitalize',
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                  },
+                  '.MuiPickersDay-root .MuiPickersDay-label': {
+                    textTransform: 'capitalize',
+                  },
+                  '.MuiPickersCalendarHeader-switchHeader': {
+                    textTransform: 'capitalize',
+                  },
+                  '.MuiPickersCalendarHeader-switchViewButton': {
+                    color: (theme) => theme.palette.primary.main,
+                  },
+                  '.MuiPickersDay-root.Mui-disabled': {
+                    color: (theme) => theme.palette.text.disabled,
+                  },
+                  '.MuiPickersDay-root.MuiPickersDay-today': {
+                    border: '2px solid',
+                    borderColor: (theme) => theme.palette.primary.main,
+                  },
+                }}
+              />
+            </LocalizationProvider>
           </Paper>
         </Box>
 
@@ -208,7 +320,7 @@ export default function BookingCalendar() {
               return (
                 <Box 
                   key={formattedDay} 
-                  sx={{ 
+                  sx={{
                     minWidth: 150, 
                     mr: 2, 
                     flexShrink: 0,
@@ -305,7 +417,7 @@ export default function BookingCalendar() {
                   <Grid container spacing={1}>
                     {availableTimes.map((slot, index) => (
                       <Grid item key={index}>
-                        <Button
+              <Button
                           variant={slot.available ? 'outlined' : 'text'}
                           disabled={!slot.available}
                           onClick={() => handleTimeSlotClick(slot)}
@@ -321,7 +433,7 @@ export default function BookingCalendar() {
                           }}
                         >
                           {slot.time}
-                        </Button>
+              </Button>
                       </Grid>
                     ))}
                   </Grid>

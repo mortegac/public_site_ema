@@ -48,7 +48,13 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
             comune: comune || '-',
             address: address || '-',
             phone: phone || '-',
-            email: input.email || '-'
+            email: input.email || '-',
+            city: "",
+            state: "",
+            zipCode: "",
+            lat: "",
+            long: "",
+            zoomLevel: "15",
         };
     
         console.log("--formData", formData)

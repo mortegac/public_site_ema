@@ -32,14 +32,17 @@ export const FormStep04 = (props:any) => {
   const theme = useTheme();
   const borderColor = theme.palette.divider;
   
-  useEffect(() => {
-    if (estimate?.estimateId === "") {
-      Promise.all([
-        dispatch(cleanData()),
-        dispatch(setStep(0)),
-      ]);
-    }
-  }, [estimate?.estimateId, dispatch]);
+  
+  // d0bdcab6-8c1d-4139-b0b0-e6ae0bfb1163'
+  
+  // useEffect(() => {
+  //   if (estimate?.estimateId === "") {
+  //     Promise.all([
+  //       dispatch(cleanData()),
+  //       dispatch(setStep(0)),
+  //     ]);
+  //   }
+  // }, [estimate?.estimateId, dispatch]);
   
   {/* <pre>{JSON.stringify(estimate, null, 2 )}</pre> */}
   return (

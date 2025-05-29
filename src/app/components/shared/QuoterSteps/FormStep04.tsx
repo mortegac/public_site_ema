@@ -32,14 +32,14 @@ export const FormStep04 = (props:any) => {
   const theme = useTheme();
   const borderColor = theme.palette.divider;
   
-  useEffect(() => {
-    if (estimate?.estimateId === "") {
-      Promise.all([
-        dispatch(cleanData()),
-        dispatch(setStep(0)),
-      ]);
-    }
-  }, [estimate?.estimateId, dispatch]);
+  // useEffect(() => {
+  //   if (estimate?.estimateId === "") {
+  //     Promise.all([
+  //       dispatch(cleanData()),
+  //       dispatch(setStep(0)),
+  //     ]);
+  //   }
+  // }, [estimate?.estimateId, dispatch]);
   
   {/* <pre>{JSON.stringify(estimate, null, 2 )}</pre> */}
   return (

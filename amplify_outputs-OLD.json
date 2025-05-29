@@ -83,22 +83,6 @@
                 ]
               }
             },
-            "TimeSlots": {
-              "name": "TimeSlots",
-              "isArray": true,
-              "type": {
-                "model": "UserTimeSlot"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "userId"
-                ]
-              }
-            },
             "RequestedTickets": {
               "name": "RequestedTickets",
               "isArray": true,
@@ -257,130 +241,6 @@
           "primaryKeyInfo": {
             "isCustomPrimaryKey": true,
             "primaryKeyFieldName": "userId",
-            "sortKeyFieldNames": []
-          }
-        },
-        "UserTimeSlot": {
-          "name": "UserTimeSlot",
-          "fields": {
-            "userTimeSlotId": {
-              "name": "userTimeSlotId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
-            },
-            "day": {
-              "name": "day",
-              "isArray": false,
-              "type": {
-                "enum": "UserTimeSlotDay"
-              },
-              "isRequired": false,
-              "attributes": []
-            },
-            "timeAvailable": {
-              "name": "timeAvailable",
-              "isArray": true,
-              "type": "AWSTime",
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true
-            },
-            "userId": {
-              "name": "userId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
-            },
-            "User": {
-              "name": "User",
-              "isArray": false,
-              "type": {
-                "model": "User"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "userId"
-                ]
-              }
-            },
-            "createdAt": {
-              "name": "createdAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
-            },
-            "updatedAt": {
-              "name": "updatedAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
-            }
-          },
-          "syncable": true,
-          "pluralName": "UserTimeSlots",
-          "attributes": [
-            {
-              "type": "model",
-              "properties": {}
-            },
-            {
-              "type": "key",
-              "properties": {
-                "fields": [
-                  "userTimeSlotId"
-                ]
-              }
-            },
-            {
-              "type": "auth",
-              "properties": {
-                "rules": [
-                  {
-                    "allow": "public",
-                    "provider": "apiKey",
-                    "operations": [
-                      "create",
-                      "update",
-                      "delete",
-                      "read"
-                    ]
-                  },
-                  {
-                    "allow": "private",
-                    "operations": [
-                      "create",
-                      "update",
-                      "delete",
-                      "read"
-                    ]
-                  },
-                  {
-                    "allow": "public",
-                    "provider": "iam",
-                    "operations": [
-                      "create",
-                      "update",
-                      "delete",
-                      "read"
-                    ]
-                  }
-                ]
-              }
-            }
-          ],
-          "primaryKeyInfo": {
-            "isCustomPrimaryKey": true,
-            "primaryKeyFieldName": "userTimeSlotId",
             "sortKeyFieldNames": []
           }
         },
@@ -1310,6 +1170,13 @@
         "CalendarVisit": {
           "name": "CalendarVisit",
           "fields": {
+            "id": {
+              "name": "id",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
             "calendarId": {
               "name": "calendarId",
               "isArray": false,
@@ -1366,52 +1233,12 @@
               "isRequired": false,
               "attributes": []
             },
-            "state": {
-              "name": "state",
+            "amount": {
+              "name": "amount",
               "isArray": false,
-              "type": {
-                "enum": "CalendarVisitState"
-              },
+              "type": "Int",
               "isRequired": false,
               "attributes": []
-            },
-            "travelTimeId": {
-              "name": "travelTimeId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
-            "TravelTimeOf": {
-              "name": "TravelTimeOf",
-              "isArray": false,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "travelTimeId"
-                ]
-              }
-            },
-            "OwnTravelTime": {
-              "name": "OwnTravelTime",
-              "isArray": true,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "travelTimeId"
-                ]
-              }
             },
             "customerId": {
               "name": "customerId",
@@ -1484,18 +1311,10 @@
             {
               "type": "key",
               "properties": {
+                "name": "visitsByDate",
+                "queryField": "listCalendarVisitByCalendarIdAndStartDate",
                 "fields": [
-                  "calendarId"
-                ]
-              }
-            },
-            {
-              "type": "key",
-              "properties": {
-                "name": "calendarVisitsByStateAndStartDate",
-                "queryField": "CalendarVisitsByState",
-                "fields": [
-                  "state",
+                  "calendarId",
                   "startDate"
                 ]
               }
@@ -1538,8 +1357,8 @@
             }
           ],
           "primaryKeyInfo": {
-            "isCustomPrimaryKey": true,
-            "primaryKeyFieldName": "calendarId",
+            "isCustomPrimaryKey": false,
+            "primaryKeyFieldName": "id",
             "sortKeyFieldNames": []
           }
         },
@@ -1557,14 +1376,14 @@
               "name": "name",
               "isArray": false,
               "type": "String",
-              "isRequired": true,
+              "isRequired": false,
               "attributes": []
             },
-            "phone": {
-              "name": "phone",
+            "comune": {
+              "name": "comune",
               "isArray": false,
               "type": "String",
-              "isRequired": true,
+              "isRequired": false,
               "attributes": []
             },
             "address": {
@@ -1574,43 +1393,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "city": {
-              "name": "city",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "state": {
-              "name": "state",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "zipCode": {
-              "name": "zipCode",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "lat": {
-              "name": "lat",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "long": {
-              "name": "long",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "zoomLevel": {
-              "name": "zoomLevel",
+            "phone": {
+              "name": "phone",
               "isArray": false,
               "type": "String",
               "isRequired": false,
@@ -2369,6 +2153,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "estimateId": {
+              "name": "estimateId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
             "type": {
               "name": "type",
               "isArray": false,
@@ -2382,13 +2173,6 @@
               "type": {
                 "enum": "EstimateDetailState"
               },
-              "isRequired": false,
-              "attributes": []
-            },
-            "estimateId": {
-              "name": "estimateId",
-              "isArray": false,
-              "type": "ID",
               "isRequired": false,
               "attributes": []
             },
@@ -4794,18 +4578,6 @@
         }
       },
       "enums": {
-        "UserTimeSlotDay": {
-          "name": "UserTimeSlotDay",
-          "values": [
-            "monday",
-            "tuesday",
-            "wednesday",
-            "thurday",
-            "friday",
-            "saturday",
-            "sunday"
-          ]
-        },
         "SupportTicketLevel": {
           "name": "SupportTicketLevel",
           "values": [
@@ -4829,16 +4601,6 @@
             "internal",
             "client",
             "test"
-          ]
-        },
-        "CalendarVisitState": {
-          "name": "CalendarVisitState",
-          "values": [
-            "ocupied",
-            "available",
-            "reserved",
-            "payed",
-            "travelTime"
           ]
         },
         "EstimateStateValidation": {
@@ -4901,56 +4663,8 @@
         }
       },
       "nonModels": {
-        "ProcessEstimateReturnType": {
-          "name": "ProcessEstimateReturnType",
-          "fields": {
-            "message": {
-              "name": "message",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            }
-          }
-        },
         "ProcessCalendarReturnType": {
           "name": "ProcessCalendarReturnType",
-          "fields": {
-            "message": {
-              "name": "message",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            }
-          }
-        },
-        "ReserveCalendarVisitReturnType": {
-          "name": "ReserveCalendarVisitReturnType",
-          "fields": {
-            "message": {
-              "name": "message",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            }
-          }
-        },
-        "ReleaseCalendarVisitReturnType": {
-          "name": "ReleaseCalendarVisitReturnType",
-          "fields": {
-            "message": {
-              "name": "message",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            }
-          }
-        },
-        "ClearInstallerScheduleReturnType": {
-          "name": "ClearInstallerScheduleReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -5114,10 +4828,8 @@
         "ProcessEstimate": {
           "name": "ProcessEstimate",
           "isArray": false,
-          "type": {
-            "nonModel": "ProcessEstimateReturnType"
-          },
-          "isRequired": false,
+          "type": "String",
+          "isRequired": true,
           "arguments": {
             "formId": {
               "name": "formId",
@@ -5171,130 +4883,16 @@
           },
           "isRequired": false,
           "arguments": {
-            "summary": {
-              "name": "summary",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "description": {
-              "name": "description",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "location": {
-              "name": "location",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "start": {
-              "name": "start",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "end": {
-              "name": "end",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "customerId": {
-              "name": "customerId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "userId": {
-              "name": "userId",
+            "token": {
+              "name": "token",
               "isArray": false,
               "type": "String",
               "isRequired": true
             }
           }
         },
-        "ReserveCalendarVisit": {
-          "name": "ReserveCalendarVisit",
-          "isArray": false,
-          "type": {
-            "nonModel": "ReserveCalendarVisitReturnType"
-          },
-          "isRequired": false,
-          "arguments": {
-            "calendarId": {
-              "name": "calendarId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "customerId": {
-              "name": "customerId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "duration": {
-              "name": "duration",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false
-            },
-            "travelTime": {
-              "name": "travelTime",
-              "isArray": false,
-              "type": "Int",
-              "isRequired": true
-            }
-          }
-        },
-        "ReleaseCalendarVisit": {
-          "name": "ReleaseCalendarVisit",
-          "isArray": false,
-          "type": {
-            "nonModel": "ReleaseCalendarVisitReturnType"
-          },
-          "isRequired": false,
-          "arguments": {
-            "calendarId": {
-              "name": "calendarId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            }
-          }
-        },
-        "ClearInstallerSchedule": {
-          "name": "ClearInstallerSchedule",
-          "isArray": false,
-          "type": {
-            "nonModel": "ClearInstallerScheduleReturnType"
-          },
-          "isRequired": false,
-          "arguments": {
-            "userId": {
-              "name": "userId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "start": {
-              "name": "start",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "end": {
-              "name": "end",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            }
-          }
-        },
-        "WebpayStart": {
-          "name": "WebpayStart",
+        "webpayStart": {
+          "name": "webpayStart",
           "isArray": false,
           "type": {
             "nonModel": "WebpayStartReturnType"
@@ -5327,8 +4925,8 @@
             }
           }
         },
-        "WebpayCommit": {
-          "name": "WebpayCommit",
+        "webpayCommit": {
+          "name": "webpayCommit",
           "isArray": false,
           "type": {
             "nonModel": "WebpayCommitReturnType"
@@ -5343,8 +4941,8 @@
             }
           }
         },
-        "WebpayStatus": {
-          "name": "WebpayStatus",
+        "webpayStatus": {
+          "name": "webpayStatus",
           "isArray": false,
           "type": {
             "nonModel": "WebpayStatusReturnType"

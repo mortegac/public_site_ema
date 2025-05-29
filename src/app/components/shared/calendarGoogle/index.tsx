@@ -28,8 +28,8 @@ const Calendar = (props:any) => {
         }}
       >
       <Container maxWidth="lg">
-          <Grid container spacing={3} alignItems="center" justifyContent="center">
-              <Grid item xs={12} lg={7}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(12, 1fr)' }, gap: 3, alignItems: 'center', justifyContent: 'center' }}>
+              <Box sx={{ gridColumn: { xs: '1 / -1', lg: 'span 7' } }}>
                   <Typography textAlign="center"
                       variant="h4" lineHeight={1.4}
                       mb={6} fontWeight={700}
@@ -58,8 +58,8 @@ const Calendar = (props:any) => {
                   <Typography>
                   VALOR VISITA TÉCNICA: $10.000* (Valor se reembolsa si se acepta propuesta de instalación generada por visita)
                   </Typography>
-              </Grid>
-          </Grid>
+              </Box>
+          </Box>
           <CardContent sx={{ position: 'relative', width:"100%", height:"500px"}}>
             <div dangerouslySetInnerHTML={{ __html: content }}></div>
           </CardContent>

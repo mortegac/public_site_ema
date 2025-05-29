@@ -5,12 +5,12 @@ import { Box, Grid, Typography, Link, Chip } from "@mui/material";
 
 const FeatureTitle = () => {
     return (
-        <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} lg={6} textAlign="center">
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(12, 1fr)' }, gap: 3, justifyContent: 'center' }}>
+            <Box sx={{ gridColumn: { xs: '1 / -1', lg: 'span 6' }, textAlign: 'center' }}>
                 <Typography variant="h2" fontWeight={700}>Ahorra tiempo y costos con nuestros instaladores.</Typography>
                 <Typography variant="subtitle1" mt="24px">Obtén una instalación segura y certificada para tu cargador, con precios competitivos y total transparencia.</Typography>
-            </Grid>
-        </Grid>
+            </Box>
+        </Box>
     );
 };
 

@@ -26,7 +26,23 @@ export default function FormStep02() {
   };
 
   return (
-    <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
+    <Box sx={{ p: 2 }}>
+      <Typography
+        align="left"
+        sx={{
+          display: "block",
+          paddingBottom: "30px",
+          fontSize: "18px",
+          lineHeight: "2",
+          marginTop: "0",
+          color: (theme) => theme.palette.text.primary
+        }}
+        component="span"
+      >
+        Para finalizar con la reserva de su visita técnica realice el pago
+      </Typography>
+      
+      <Box bgcolor="#ffffff" pt={4} pb={4} width={"100%"} mt={0}
       sx={{
         boxSizing: 'border-box',
         border: '1px solid #EAEFF4',
@@ -39,20 +55,7 @@ export default function FormStep02() {
           }}
         >
     {/* Cabecera superior con texto blanco */}
-        <Box
-          sx={{
-            p: 3,
-            backgroundColor: 'transparent', // Fondo transparente, el Paper ya tiene el color
-            color: theme.palette.text.primary, // Texto oscuro en esta sección
-          }}
-        >
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Realice el pago para reservar su visista
-          </Typography>
-          {/* <Typography variant="body2" color="text.secondary">
-            Email: {orderDetails.email}
-          </Typography> */}
-        </Box>
+     
 
         <Divider sx={{ mx: 3 }} /> {/* Separador con margen horizontal */}
 
@@ -74,6 +77,7 @@ export default function FormStep02() {
         <Box
           sx={{
             p: 3,
+            mt:20,
             backgroundColor: 'rgba(0, 0, 0, 0.05)', // Un fondo ligeramente más oscuro para el total (ajusta si quieres un color sólido)
             borderTop: `1px solid ${theme.palette.divider}`, // Borde superior para separar
           }}
@@ -138,6 +142,7 @@ export default function FormStep02() {
           </Box>
         </Box>
         </Container>
-        </Box>
+      </Box>
+    </Box>
   );
 }

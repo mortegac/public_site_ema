@@ -1,0 +1,80 @@
+// components/AddressInput.js
+import React, { useState } from 'react';
+import { TextField, Button, Box, Typography } from '@mui/material';
+
+function AddressInput() {
+  const [address, setAddress] = useState('');
+  const [validationResult, setValidationResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleValidateAddress = async () => {
+    setLoading(true);
+    setError(null);
+    setValidationResult(null);
+
+    try {
+      const response = await fetch('/api/validate-address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Something went wrong');
+      }
+
+      const data = await response.json();
+      setValidationResult(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box sx={{ p: 3 }}>
+      <TextField
+        label="Dirección"
+        variant="outlined"
+        fullWidth
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+      <Button
+        variant="contained"
+        onClick={handleValidateAddress}
+        disabled={loading || !address}
+      >
+        {loading ? 'Validando...' : 'Validar Dirección'}
+      </Button>
+
+      {validationResult && (
+        <Box sx={{ mt: 3, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}>
+          <Typography variant="h6">Resultado de la Validación:</Typography>
+          <Typography>
+            **Dirección Formateada:** {validationResult.result.address.formattedAddress}
+          </Typography>
+          <Typography>
+            **Calidad de la dirección:** {validationResult.result.verdict.addressCompleteness}
+          </Typography>
+          {/* Puedes mostrar más detalles de la validación aquí */}
+          <pre>{JSON.stringify(validationResult.result, null, 2)}</pre>
+        </Box>
+      )}
+
+      {error && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          Error: {error}
+        </Typography>
+      )}
+    </Box>
+  );
+}
+
+export default AddressInput;

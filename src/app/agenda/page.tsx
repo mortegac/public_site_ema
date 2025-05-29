@@ -24,9 +24,10 @@ const HomePage = () => {
       <HpHeader /> 
      
      
-      <Grid container spacing={3} justifyContent="center" mb={4}>
-        <Grid item xs={12} lg={6} textAlign="left" sx={{marginTop:'48px'}}>
-        <Typography
+      <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
+          <Box sx={{ textAlign: 'left', marginTop: '48px' }}>
+            <Typography
               variant="h2"
               fontWeight={700}
               lineHeight="1.2"
@@ -36,21 +37,12 @@ const HomePage = () => {
                   sm: "40px",
                 },
               }}
-            >Agenda tú aquí visita técnica</Typography>
-          {/* <Typography
-                align="left"
-                            sx={{
-                              display: "block",
-                              padding: "30px 0",
-                              fontSize: "18px",
-                              // color: (theme) => theme.palette.text.primary
-                            }}
-                            component="span"
-                >
-                  {"Selecciona la fecha disponible para agendar tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."}
-                </Typography> */}
-        </Grid>
-      </Grid>
+            >
+              Agenda tú aquí visita técnica
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
       
       <Steps/>
       <CalendarSteps/>

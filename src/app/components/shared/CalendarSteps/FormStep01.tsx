@@ -19,6 +19,8 @@ import { styled } from '@mui/material/styles';
 import CustomTextField from './CustomTextField';
 import CustomFormLabel from './CustomFormLabel';
 
+import AddressInput from '@/app/components/AddressInput2';
+
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { setCustomer } from "@/store/Customer/slice";
@@ -90,7 +92,8 @@ export const FormStep01 = (props:any) => {
       initialValues: {
         name: currentForm?.name || '',
         email: currentForm?.email || '',
-        address: currentForm?.address || '',
+        address: '',
+        // address: currentForm?.address || '',
         phone: currentForm?.phone || '',
       },
       validationSchema: validationSchema,
@@ -145,8 +148,24 @@ export const FormStep01 = (props:any) => {
   
   return (
     <>
+    <Box sx={{ p: 2 }}>
+      <Typography
+        align="left"
+                    sx={{
+                      display: "block",
+                      paddingBottom: "30px",
+                      fontSize: "18px",
+                      lineHeight: "2",
+                      marginTop: "0",
+                      color: (theme) => theme.palette.text.primary
+                    }}
+                    component="span"
+        >
+          Ingrese su información de contacto, incluyendo la dirección en donde se realizara la visita técnica
+        </Typography>
+        
     <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
-      <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
+      <Box bgcolor="#ffffff" pt={2} pb={4} width={"100%"} mt={0}
       sx={{
         boxSizing: 'border-box',
         border: '1px solid #EAEFF4',
@@ -158,20 +177,6 @@ export const FormStep01 = (props:any) => {
             position: "relative",
           }}
         >
-          {/* <Typography
-            align="left"
-                        sx={{
-                          display: "block",
-                          paddingBottom: "30px",
-                          fontSize: "18px",
-                          lineHeight: "2",
-                          marginTop: "0",
-                          color: (theme) => theme.palette.text.primary
-                        }}
-                        component="span"
-            >
-              Selecciona la fecha disponible para agendar tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados.
-            </Typography> */}
             
           <Box sx={{ display: 'flex', width: '100%', height: 'auto', minHeight: '200px' }}>
             {/* Área izquierda para el formulario */}
@@ -179,12 +184,6 @@ export const FormStep01 = (props:any) => {
               {/* <form onSubmit={handleSubmit} style={{ width: '80%' }}> */}
               
                 <VerticalForm>
-                  {/* <Typography variant="h6" gutterBottom>
-                    Información de contacto
-                  </Typography> */}
-                   <Typography variant="h6" gutterBottom sx={{marginBottom:"24px"}}>
-                    Ingrese su información de contacto, incluyendo la dirección en donde se realizara la visita técnica
-                  </Typography>
                   
                   {/* Nombre y Email en una línea */}
                   <Box sx={{ display: 'flex', gap: 2 }}>
@@ -222,16 +221,12 @@ export const FormStep01 = (props:any) => {
                     {/* Dirección */}
                     <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
-                      <CustomTextField
-                        fullWidth
-                        id="address"
-                        name="address"
-                        value={formik.values.address}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="Ingrese su dirección completa"
-                        error={formik.touched.address && Boolean(formik.errors.address)}
-                        helperText={formik.touched.address && formik.errors.address}
+                      <AddressInput 
+                        onSelectAddress={(addressDetails) => {
+                          if (addressDetails) {
+                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                          }
+                        }}
                       />
                     </Box>
                     
@@ -367,7 +362,9 @@ export const FormStep01 = (props:any) => {
           Siguiente
         </Button> */}
       </Box>
-       </form>
+    </form>
+        
+  </Box>
       
     </>
   );

@@ -34,8 +34,8 @@ const Banner = (props:any) => {
           position: "relative",
         }}
       >
-        <Grid container spacing={3} justifyContent="center" mb={4}>
-          <Grid item xs={12} lg={6} textAlign="left">
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
+          <Box sx={{ textAlign: 'left' }}>
             <Typography
               variant="h1"
               fontWeight={700}
@@ -121,8 +121,8 @@ const Banner = (props:any) => {
               justifyContent="center"
             >
             </Stack>
-          </Grid>
-          <Grid item xs={12} lg={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box
               sx={{
                 width: '100%',
@@ -148,8 +148,8 @@ const Banner = (props:any) => {
                 }}
               />
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

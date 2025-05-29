@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Script from 'next/script';
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 // import RTL from "@/app/(DashboardLayout)/layout/shared/customizer/RTL";
@@ -14,7 +15,7 @@ import { AppState } from "@/store/store";
 import "@/utils/i18n";
 import "@/app/api/index";
 
-
+const KEY = "AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ"
 
 
 const MyApp = ({ children }: { children: React.ReactNode; }) => {
@@ -23,6 +24,16 @@ const MyApp = ({ children }: { children: React.ReactNode; }) => {
 
     return (
         <>
+            <Script
+                src={`https://maps.googleapis.com/maps/api/js?key=${KEY}&libraries=places&loading=async`}
+                strategy="afterInteractive"
+                onLoad={() => {
+                    console.log('Google Maps script loaded');
+                }}
+                onError={(e) => {
+                    console.error('Error loading Google Maps script:', e);
+                }}
+            />
             <AppRouterCacheProvider options={{ enableCssLayer: true }}>
                 <ThemeProvider theme={theme}>
                     {/* <RTL direction={customizer.activeDir}> */}

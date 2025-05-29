@@ -146,9 +146,9 @@ const Footer = () => {
           },
         }}
       >
-        <Grid container spacing={3} justifyContent="space-between" mb={7}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)', lg: 'repeat(6, 1fr)' }, gap: 3, mb: 7 }}>
           {footerLinks.map((footerlink, i) => (
-            <Grid item xs={6} sm={4} lg={2} key={i}>
+            <Box key={i} sx={{ gridColumn: { xs: 'span 1', sm: 'span 1', lg: 'span 1' } }}>
               {footerlink.children.map((child, i) => (
                 <React.Fragment key={i}>
                   {child.title ? (
@@ -176,9 +176,9 @@ const Footer = () => {
                   )}
                 </React.Fragment>
               ))}
-            </Grid>
+            </Box>
           ))}
-          <Grid item xs={6} sm={6} lg={2}>
+          <Box sx={{ gridColumn: { xs: 'span 1', sm: 'span 2', lg: 'span 1' } }}>
             <Typography fontSize="17px" fontWeight="600" mb="22px" textAlign={"left"}>
               Redes sociales
             </Typography>
@@ -206,8 +206,8 @@ const Footer = () => {
                 </Link>
               </Tooltip>
             </Stack>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         <Divider />
 

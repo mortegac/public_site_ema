@@ -282,7 +282,9 @@
             "timeAvailable": {
               "name": "timeAvailable",
               "isArray": true,
-              "type": "AWSTime",
+              "type": {
+                "nonModel": "TimeSlot"
+              },
               "isRequired": false,
               "attributes": [],
               "isArrayNullable": true
@@ -1375,44 +1377,6 @@
               "isRequired": false,
               "attributes": []
             },
-            "travelTimeId": {
-              "name": "travelTimeId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
-            "TravelTimeOf": {
-              "name": "TravelTimeOf",
-              "isArray": false,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "travelTimeId"
-                ]
-              }
-            },
-            "OwnTravelTime": {
-              "name": "OwnTravelTime",
-              "isArray": true,
-              "type": {
-                "model": "CalendarVisit"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "travelTimeId"
-                ]
-              }
-            },
             "customerId": {
               "name": "customerId",
               "isArray": false,
@@ -1637,6 +1601,22 @@
               "isArray": true,
               "type": {
                 "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
+                ]
+              }
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": true,
+              "type": {
+                "model": "ShoppingCart"
               },
               "isRequired": false,
               "attributes": [],
@@ -3578,8 +3558,8 @@
               "isRequired": true,
               "attributes": []
             },
-            "totalPrice": {
-              "name": "totalPrice",
+            "total": {
+              "name": "total",
               "isArray": false,
               "type": "Int",
               "isRequired": false,
@@ -3610,6 +3590,44 @@
               "isRequired": false,
               "attributes": []
             },
+            "ShoppingCartDetails": {
+              "name": "ShoppingCartDetails",
+              "isArray": true,
+              "type": {
+                "model": "ShoppingCartDetail"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "shoppingCartId"
+                ]
+              }
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
+            },
             "estimateId": {
               "name": "estimateId",
               "isArray": false,
@@ -3632,22 +3650,6 @@
                 ]
               }
             },
-            "ShoppingCartDetails": {
-              "name": "ShoppingCartDetails",
-              "isArray": true,
-              "type": {
-                "model": "ShoppingCartDetail"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "shoppingCartId"
-                ]
-              }
-            },
             "paymentTransactionId": {
               "name": "paymentTransactionId",
               "isArray": false,
@@ -3657,18 +3659,18 @@
             },
             "PaymentTransaction": {
               "name": "PaymentTransaction",
-              "isArray": false,
+              "isArray": true,
               "type": {
                 "model": "PaymentTransaction"
               },
               "isRequired": false,
               "attributes": [],
+              "isArrayNullable": true,
               "association": {
-                "connectionType": "HAS_ONE",
+                "connectionType": "HAS_MANY",
                 "associatedWith": [
                   "shoppingCartId"
-                ],
-                "targetNames": []
+                ]
               }
             },
             "Discounts": {
@@ -3772,10 +3774,17 @@
               "isRequired": true,
               "attributes": []
             },
-            "shoppingCartId": {
-              "name": "shoppingCartId",
+            "glosa": {
+              "name": "glosa",
               "isArray": false,
-              "type": "ID",
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "price": {
+              "name": "price",
+              "isArray": false,
+              "type": "Int",
               "isRequired": false,
               "attributes": []
             },
@@ -3788,10 +3797,10 @@
               "isRequired": false,
               "attributes": []
             },
-            "price": {
-              "name": "price",
+            "shoppingCartId": {
+              "name": "shoppingCartId",
               "isArray": false,
-              "type": "Int",
+              "type": "ID",
               "isRequired": false,
               "attributes": []
             },
@@ -4800,7 +4809,7 @@
             "monday",
             "tuesday",
             "wednesday",
-            "thurday",
+            "thursday",
             "friday",
             "saturday",
             "sunday"
@@ -4834,11 +4843,13 @@
         "CalendarVisitState": {
           "name": "CalendarVisitState",
           "values": [
-            "ocupied",
             "available",
             "reserved",
             "payed",
-            "travelTime"
+            "payedAndAgended",
+            "error",
+            "occupied",
+            "stale"
           ]
         },
         "EstimateStateValidation": {
@@ -4901,6 +4912,25 @@
         }
       },
       "nonModels": {
+        "TimeSlot": {
+          "name": "TimeSlot",
+          "fields": {
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "ProcessEstimateReturnType": {
           "name": "ProcessEstimateReturnType",
           "fields": {
@@ -4913,33 +4943,16 @@
             }
           }
         },
-        "ProcessCalendarReturnType": {
-          "name": "ProcessCalendarReturnType",
+        "MakeReservationAndCartReturnType": {
+          "name": "MakeReservationAndCartReturnType",
           "fields": {
-            "message": {
-              "name": "message",
+            "cartId": {
+              "name": "cartId",
               "isArray": false,
               "type": "String",
               "isRequired": false,
               "attributes": []
-            }
-          }
-        },
-        "ReserveCalendarVisitReturnType": {
-          "name": "ReserveCalendarVisitReturnType",
-          "fields": {
-            "message": {
-              "name": "message",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            }
-          }
-        },
-        "ReleaseCalendarVisitReturnType": {
-          "name": "ReleaseCalendarVisitReturnType",
-          "fields": {
+            },
             "message": {
               "name": "message",
               "isArray": false,
@@ -5108,6 +5121,54 @@
               "attributes": []
             }
           }
+        },
+        "ProcessCalendarReturnType": {
+          "name": "ProcessCalendarReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "ReserveCalendarVisitReturnType": {
+          "name": "ReserveCalendarVisitReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "ReleaseCalendarVisitReturnType": {
+          "name": "ReleaseCalendarVisitReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "GenerateTimeSlotsReturnType": {
+          "name": "GenerateTimeSlotsReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
         }
       },
       "mutations": {
@@ -5163,6 +5224,116 @@
             }
           }
         },
+        "MakeReservationAndCart": {
+          "name": "MakeReservationAndCart",
+          "isArray": false,
+          "type": {
+            "nonModel": "MakeReservationAndCartReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "isHouse": {
+              "name": "isHouse",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": true
+            }
+          }
+        },
+        "ClearInstallerSchedule": {
+          "name": "ClearInstallerSchedule",
+          "isArray": false,
+          "type": {
+            "nonModel": "ClearInstallerScheduleReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            }
+          }
+        },
+        "WebpayStart": {
+          "name": "WebpayStart",
+          "isArray": false,
+          "type": {
+            "nonModel": "WebpayStartReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "shoppingCartId": {
+              "name": "shoppingCartId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true
+            },
+            "glosa": {
+              "name": "glosa",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            }
+          }
+        },
+        "WebpayCommit": {
+          "name": "WebpayCommit",
+          "isArray": false,
+          "type": {
+            "nonModel": "WebpayCommitReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "token": {
+              "name": "token",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            }
+          }
+        },
+        "WebpayStatus": {
+          "name": "WebpayStatus",
+          "isArray": false,
+          "type": {
+            "nonModel": "WebpayStatusReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "token": {
+              "name": "token",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            }
+          }
+        },
         "processCalendar": {
           "name": "processCalendar",
           "isArray": false,
@@ -5215,8 +5386,8 @@
             }
           }
         },
-        "ReserveCalendarVisit": {
-          "name": "ReserveCalendarVisit",
+        "reserveCalendarVisit": {
+          "name": "reserveCalendarVisit",
           "isArray": false,
           "type": {
             "nonModel": "ReserveCalendarVisitReturnType"
@@ -5235,22 +5406,22 @@
               "type": "String",
               "isRequired": true
             },
+            "formId": {
+              "name": "formId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
             "duration": {
               "name": "duration",
               "isArray": false,
               "type": "String",
               "isRequired": false
-            },
-            "travelTime": {
-              "name": "travelTime",
-              "isArray": false,
-              "type": "Int",
-              "isRequired": true
             }
           }
         },
-        "ReleaseCalendarVisit": {
-          "name": "ReleaseCalendarVisit",
+        "releaseCalendarVisit": {
+          "name": "releaseCalendarVisit",
           "isArray": false,
           "type": {
             "nonModel": "ReleaseCalendarVisitReturnType"
@@ -5265,11 +5436,11 @@
             }
           }
         },
-        "ClearInstallerSchedule": {
-          "name": "ClearInstallerSchedule",
+        "generateTimeSlots": {
+          "name": "generateTimeSlots",
           "isArray": false,
           "type": {
-            "nonModel": "ClearInstallerScheduleReturnType"
+            "nonModel": "GenerateTimeSlotsReturnType"
           },
           "isRequired": false,
           "arguments": {
@@ -5279,82 +5450,10 @@
               "type": "String",
               "isRequired": true
             },
-            "start": {
-              "name": "start",
+            "date": {
+              "name": "date",
               "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "end": {
-              "name": "end",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            }
-          }
-        },
-        "WebpayStart": {
-          "name": "WebpayStart",
-          "isArray": false,
-          "type": {
-            "nonModel": "WebpayStartReturnType"
-          },
-          "isRequired": false,
-          "arguments": {
-            "shoppingCartId": {
-              "name": "shoppingCartId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true
-            },
-            "amount": {
-              "name": "amount",
-              "isArray": false,
-              "type": "Int",
-              "isRequired": true
-            },
-            "glosa": {
-              "name": "glosa",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            },
-            "userId": {
-              "name": "userId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false
-            }
-          }
-        },
-        "WebpayCommit": {
-          "name": "WebpayCommit",
-          "isArray": false,
-          "type": {
-            "nonModel": "WebpayCommitReturnType"
-          },
-          "isRequired": false,
-          "arguments": {
-            "token": {
-              "name": "token",
-              "isArray": false,
-              "type": "String",
-              "isRequired": true
-            }
-          }
-        },
-        "WebpayStatus": {
-          "name": "WebpayStatus",
-          "isArray": false,
-          "type": {
-            "nonModel": "WebpayStatusReturnType"
-          },
-          "isRequired": false,
-          "arguments": {
-            "token": {
-              "name": "token",
-              "isArray": false,
-              "type": "String",
+              "type": "AWSDate",
               "isRequired": true
             }
           }

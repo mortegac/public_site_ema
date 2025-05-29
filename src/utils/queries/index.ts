@@ -1,5 +1,5 @@
-export { CalendarVisit } from "./CalendarVisit";
-export { ClientForm } from "./ClientForm";
+export { CalendarVisit, fetchCalendarVisitByState } from "./CalendarVisit";
+export { ClientForm, fetchClientFormAndEstimates } from "./ClientForm";
 export { Company } from "./Company";
 export { Customer } from "./Customer";
 export { Discount } from "./Discount";
@@ -14,7 +14,7 @@ export { Parameter } from "./Parameter";
 export { PaymentTransaction, fetchPaymentTransactionByToken } from "./PaymentTransaction";
 export { Permission } from "./Permission";
 export { PermissionPerRole } from "./PermissionPerRole";
-export { Price } from "./Price";
+export { Price, fetchLastPrice } from "./Price";
 export { Product } from "./Product";
 export { Role } from "./Role";
 export { ShoppingCart } from "./ShoppingCart";

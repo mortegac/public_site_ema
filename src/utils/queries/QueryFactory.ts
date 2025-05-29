@@ -5,8 +5,10 @@ import { throwError } from "../error";
 
 const client = generateClient<MainTypes>();
 
-export const QueryFactory = function <T extends keyof MainTypes>(props: {
-    name: keyof MainTypes;
+type MainTypesModels = Omit<MainTypes, "TimeSlot">;
+
+export const QueryFactory = function <T extends keyof MainTypesModels>(props: {
+    name: keyof MainTypesModels;
 }) {
     type createItemType = (props: {
         input: MainTypes[T]["createType"];

@@ -34,15 +34,16 @@ export const fetchCalendarVisitByState = async (
         sortDirection: "DESC" | "ASC";
     }): Promise<FetchedCalendarVisit[]> => {
 
-    const {
-        state: { type: state },
+    const { state: {
+        type
+    },
         startDate,
         endDate,
         sortDirection } = props;
 
     const { data, errors } = await client.models.CalendarVisit.CalendarVisitsByState
         ({
-            state,
+            state: type,
             startDate: {
                 between: [
                     startDate, endDate

@@ -52,101 +52,121 @@ interface TimeSlot {
   available: boolean;
 }
 
+interface CalendarVisit {
+  calendarId: string;
+  summary: string;
+  location: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  timeZone: string;
+  duration: number;
+  state: string;
+  customerId: string | null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CalendarVisitsResponse {
+  data: CalendarVisit[];
+  nextToken?: string;
+}
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, selectCalendarVisits } from "@/store/CalendarVisits/slice";
+import { setStep, getCalendarVisits, selectCalendarVisits } from "@/store/CalendarVisits/slice";
 
 
-const mockAvailableTimes: { [key: string]: TimeSlot[] } = {
-   // Martes
-  '2025-05-27': [
-    { time: '11:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
+// const mockAvailableTimes: { [key: string]: TimeSlot[] } = {
+//    // Martes
+//   '2025-05-27': [
+//     { time: '11:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
   
-   // Miercoles
-  '2025-05-28': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
-   // Jueves
-  '2025-05-29': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
+//    // Miercoles
+//   '2025-05-28': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
+//    // Jueves
+//   '2025-05-29': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
   
-   // Viernes
-  '2025-05-30': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true },
-  ],
+//    // Viernes
+//   '2025-05-30': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true },
+//   ],
   
-   // Martes
-  '2025-06-03': [
-    { time: '11:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
+//    // Martes
+//   '2025-06-03': [
+//     { time: '11:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
   
-   // Miercoles
-  '2025-06-04': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
-   // Jueves
-  '2025-06-05': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
+//    // Miercoles
+//   '2025-06-04': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
+//    // Jueves
+//   '2025-06-05': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
   
-   // Viernes
-  '2025-06-06': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true },
-  ],
+//    // Viernes
+//   '2025-06-06': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true },
+//   ],
   
-   // Martes
-  '2025-06-10': [
-    { time: '11:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
+//    // Martes
+//   '2025-06-10': [
+//     { time: '11:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
   
-   // Miercoles
-  '2025-06-11': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
-   // Jueves
-  '2025-06-12': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true }, 
-    { time: '17:00', available: true }
-  ],
+//    // Miercoles
+//   '2025-06-11': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
+//    // Jueves
+//   '2025-06-12': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true }, 
+//     { time: '17:00', available: true }
+//   ],
   
-   // Viernes
-  '2025-06-13': [
-    { time: '10:30', available: true }, 
-    { time: '12:30', available: true }, 
-    { time: '15:00', available: true },
-  ],
+//    // Viernes
+//   '2025-06-13': [
+//     { time: '10:30', available: true }, 
+//     { time: '12:30', available: true }, 
+//     { time: '15:00', available: true },
+//   ],
   
   
-};
+// };
 
 export default function BookingCalendar() {
   // const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs('2025-06-06')); // Inicializa con una fecha de ejemplo
@@ -157,28 +177,46 @@ export default function BookingCalendar() {
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
 
   
-  // const { 
-  //   setStep
-  // } = useAppSelector(selectCalendarVisits);
+  const { 
+    calendarVisits
+  } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
 
   
   
-  // useEffect(() => {
-  //   if (selectedDate) {
-  //     const formattedDate = selectedDate.format('YYYY-MM-DD');
-  //     // Simula la obtención de datos de una API
-  //     const times = mockAvailableTimes[formattedDate] || [];
-  //     setAvailableTimes(times);
-  //   } else {
-  //     setAvailableTimes([]);
-  //   }
-  // }, [selectedDate]);
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(getCalendarVisits({
+        startDate: "2025-05-26T00:00:00.000Z",
+        endDate: "2025-05-31T00:00:00.000Z",
+        userId: "francisco.novoa@energica.city",
+      }));
+    };
+    
+    fetchData();
+  }, []); // Array vacío para ejecutar solo al montar
   
+  // Efecto para cargar las visitas cuando cambia la fecha
+  useEffect(() => {
+    const fetchData = async () => {
+      const startOfWeek = selectedDate.startOf('week');
+      const endOfWeek = selectedDate.endOf('week');
+      
+      await dispatch(getCalendarVisits({
+        startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
+        endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
+        userId: "francisco.novoa@energica.city",
+      }));
+    };
+    
+    fetchData();
+  }, [selectedDate, dispatch]);
+
+  // Efecto para actualizar la vista semanal
   useEffect(() => {
     // Calcular los 7 días de la semana a partir de selectedDate
-    const startOfWeek = selectedDate.startOf('week'); // Ahora comenzará en lunes
+    const startOfWeek = selectedDate.startOf('week');
     const daysInWeek: Dayjs[] = [];
     for (let i = 0; i < 7; i++) {
       daysInWeek.push(startOfWeek.add(i, 'day'));
@@ -187,13 +225,22 @@ export default function BookingCalendar() {
 
     // Obtener las horas disponibles para cada día de la semana
     const newWeekAvailableTimes: { [key: string]: TimeSlot[] } = {};
+    
     daysInWeek.forEach(day => {
       const formattedDate = day.format('YYYY-MM-DD');
-      newWeekAvailableTimes[formattedDate] = mockAvailableTimes[formattedDate] || [];
-    });
-    setWeekAvailableTimes(newWeekAvailableTimes);
+      const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
+        const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
+        return visitDate === formattedDate;
+      }) || [];
 
-  }, [selectedDate]); // Se recalcula la semana cuando cambia la fecha seleccionada
+      newWeekAvailableTimes[formattedDate] = visitsForDay.map((visit: CalendarVisit) => ({
+        time: dayjs(visit.startDate).format('HH:mm'),
+        available: visit.state === 'available' && !visit.customerId
+      }));
+    });
+
+    setWeekAvailableTimes(newWeekAvailableTimes);
+  }, [selectedDate, calendarVisits]);
 
 
   // const handleDateChange = (date: Dayjs | null) => {
@@ -232,16 +279,20 @@ export default function BookingCalendar() {
     }
   };
 
-  // Función para deshabilitar días en el calendario si no tienen horas disponibles en mockAvailableTimes
+  // Función para deshabilitar días en el calendario si no tienen horas disponibles
   const shouldDisableDate = (day: Dayjs) => {
     const formattedDay = day.format('YYYY-MM-DD');
-    return !mockAvailableTimes[formattedDay] || mockAvailableTimes[formattedDay].length === 0;
+    const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
+      const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
+      return visitDate === formattedDay && visit.state === 'available' && !visit.customerId;
+    }) || [];
+    return visitsForDay.length === 0;
   };
 
   return (
     <Box sx={{ p: 0 }}>
-
-      <Typography
+      <pre>{JSON.stringify((calendarVisits as unknown as CalendarVisitsResponse)?.data?.[0], null, 2)}</pre>
+     <Typography
         align="left"
                     sx={{
                       display: "block",

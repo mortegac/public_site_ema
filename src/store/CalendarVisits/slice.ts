@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyClientForm, clientFormInput, ClientForm } from './type';
+import { emptyCalendarVisit, calendarVisitInput, CalendarVisit } from './type';
 import { RootState } from "../store";
-import { createClientForm } from './services';
+import { fetchCalendarVisitsByState } from './services';
 interface CalendarVisitsSliceState {
   currentStep: number,
   status: "idle" | "loading" | "failed";
-  currentForm: ClientForm;
+  calendarVisits: CalendarVisit;
   loading: boolean;
   error: string | null;
 }
@@ -14,19 +13,19 @@ interface CalendarVisitsSliceState {
 const initialState: CalendarVisitsSliceState = {
   currentStep: 0,
   status: "idle",
-  currentForm: emptyClientForm,
+  calendarVisits: emptyCalendarVisit,
   loading: false,
   error: null,
 };
 
-export const setCalendarVisits = createAsyncThunk(
-    "CalendarVisits/create ",
-    async (objFilter: clientFormInput) => {
+export const getCalendarVisits = createAsyncThunk(
+    "CalendarVisits/list ",
+    async (objFilter: calendarVisitInput) => {
       try {
-        const response:any = await createClientForm({ ...objFilter });
+        const response:any = await fetchCalendarVisitsByState({ ...objFilter });
         return response;
       } catch (error) {
-        console.error(">>>>ERROR FETCH setCalendarVisits", error)
+        console.error(">>>>ERROR FETCH getCalendarVisits", error)
         return Promise.reject(error);
       }
     }
@@ -82,31 +81,24 @@ const calendarVisitsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    // setCalendarVisits
-      .addCase(setCalendarVisits.pending, (state) => {
+    // getCalendarVisits
+      .addCase(getCalendarVisits.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(setCalendarVisits.fulfilled, (state, action) => {
+      .addCase(getCalendarVisits.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(">>> setCalendarVisits >> action.payload >>", action.payload.data)
-        state.currentForm.formId = action?.payload?.data?.formId;
-        state.currentForm.customerId = action?.payload?.data?.customerId;
+        console.log(">>> getCalendarVisits >> action.payload >>", action.payload.data)
+        state.calendarVisits = action?.payload
         
-        
-        if (action?.payload?.data?.formId) {
-          
-        }
       })
-      .addCase(setCalendarVisits.rejected, (state, action) => {
+      .addCase(getCalendarVisits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la distancia';
       });
   },
 });
 
-// export const { setLoading, setError } = clientFormsSlice.actions;
-// export default clientFormsSlice.reducer;
 
 export const {
     setStep,

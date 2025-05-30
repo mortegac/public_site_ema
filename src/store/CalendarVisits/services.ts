@@ -1,6 +1,6 @@
 import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
-import { clientFormInput } from './type';
+import { calendarVisitInput } from './type';
 
 
 import { Amplify } from "aws-amplify";
@@ -10,57 +10,33 @@ Amplify.configure(outputs);
 const client = generateClient<MAIN.MainTypes>();
 
 
-
-export const createClientForm = async (input: clientFormInput): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const {  
-            // name,
-            // email,
-            // phone,
-            isHouse,
-            isPortable,
-            isWallbox,
-            numberOfChargers,
-            distance,
-            customerId,
-            ...rest 
-        } = input;
-        
-        console.log("--createClientForm--", input)
-        const formData = {
-            formId: crypto.randomUUID(), // Genera un ID único
-            customerId: customerId,
-            isWallbox: isWallbox || false,
-            isPortable: isPortable || false,
-            isHouse: isHouse || false,
-            distance: distance || 0,
-            numberOfChargers: numberOfChargers || 1,
-            // name: name || '',
-            // email: email || '',
-            // phone: phone || '',
-            // ...rest
-        };
-    
-        const data = await client.models.ClientForm.create(formData);
-        // const { data, errors } = await client.models.ClientForm.create(formData);
-        
-        // if (errors) {
-        // console.log("--createClientForm--errors", errors)
-            
-        //   reject({
-        //     errorMessage: errors.map(e => e.message).join(', ')
-        //   });
-        //   return;
-        // }
-        console.log("--createClientForm--resolve", data)
-        resolve(data);
-          
-      } catch (err) {
-        console.log("--createClientForm--err", err)
-        reject({
-          errorMessage: JSON.stringify(err),
-        });
+export const fetchCalendarVisitsByState = async (objFilter: calendarVisitInput) => {
+  try {
+    const data = await client.models.CalendarVisit.list({
+      filter: {
+        state: { eq: "available" },
+        startDate: {
+          between: [
+            objFilter.startDate || "2025-05-26T00:00:00.000Z",
+            objFilter.endDate || "2025-05-28T00:00:00.000Z"
+          ]
+        },
+        userId: {
+          eq: objFilter.userId
+          // eq: "francisco.novoa@energica.city"
+        }
       }
     });
-  };
+
+    const sortedData = [...data.data].sort((a, b) => {
+      const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
+      const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
+      return dateA - dateB;
+    });
+
+    return { data: sortedData, nextToken: data.nextToken };
+  } catch (error) {
+    console.error("Error fetching calendar visits:", error);
+    throw error;
+  }
+};

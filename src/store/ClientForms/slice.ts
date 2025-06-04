@@ -75,9 +75,11 @@ const clientFormsSlice = createSlice({
         };
       },
       cleanData: (state) => {
-        state.currentForm = {
-          ...emptyClientForm
-        }
+        state.currentForm = emptyClientForm;
+        state.currentStep = 0;
+        state.status = "idle";
+        state.loading = false;
+        state.error = null;
       },
   },
   extraReducers: (builder) => {

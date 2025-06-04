@@ -17,6 +17,7 @@ import Steps from '@/app/components/AgendaWizard/Steps';
 import C2a from '@/app/components/shared/c2a';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
+
 const HomePage = () => {
   return (
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">

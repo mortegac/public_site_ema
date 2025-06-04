@@ -5,14 +5,14 @@ import { RootState } from "../store";
 import { createCustomer } from './services';
 interface CustomerState {
   status: "idle" | "loading" | "failed";
-  currentForm: Customer;
+  customer: Customer;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CustomerState = {
   status: "idle",
-  currentForm: emptyCustomer,
+  customer: emptyCustomer,
   loading: false,
   error: null,
 };
@@ -28,16 +28,8 @@ export const setCustomer = createAsyncThunk(
         return Promise.reject(error);
       }
     }
-  );
+);
 
-
-// export const updateDistance = createAsyncThunk(
-//   'clientForms/updateDistance',
-//   async (distance: number) => {
-//     // Aquí puedes agregar lógica asíncrona si es necesario
-//     return distance;
-//   }
-// );
 
 const customerSlice = createSlice({
   name: 'customer',
@@ -60,7 +52,7 @@ const customerSlice = createSlice({
       .addCase(setCustomer.fulfilled, (state, action) => {
         state.loading = false;
         console.log(">>> action.payload >>", action.payload)
-        // state.currentForm.distance = action.payload;
+        state.customer = {...action.payload};
         // if (state.currentForm) {
         // }
       })

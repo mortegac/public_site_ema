@@ -13,6 +13,7 @@ import {
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { styled } from '@mui/material/styles';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 
 
 
@@ -24,6 +25,12 @@ import AddressInput from '@/app/components/AddressInput2';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { setCustomer } from "@/store/Customer/slice";
+import { persistor } from '@/store/store';
+import { emptyClientForm } from '@/store/ClientForms/type';
+
+
+import 'react-phone-number-input/style.css'
+import './phone.css'
 
 interface ClientForm {
   name: string;
@@ -58,24 +65,35 @@ const validationSchema = yup.object({
   name: yup
     .string()
     .required('El nombre es requerido')
-    .min(3, 'El nombre debe tener al menos 3 caracteres'),
+    .min(3, 'El nombre debe tener al menos 3 caracteres')
+    .max(100, 'El nombre no puede exceder los 100 caracteres')
+    .trim(),
   email: yup
     .string()
     .email('Ingrese un email válido')
-    .required('El email es requerido'),
+    .required('El email es requerido')
+    .max(100, 'El email no puede exceder los 100 caracteres')
+    .trim(),
   address: yup
     .string()
     .required('La dirección es requerida')
-    .min(5, 'La dirección debe tener al menos 5 caracteres'),
+    .min(5, 'La dirección debe tener al menos 5 caracteres')
+    .max(200, 'La dirección no puede exceder los 200 caracteres')
+    .trim(),
   phone: yup
     .string()
     .required('El teléfono es requerido')
     .matches(/^\+56\s?\d{9}$/, 'El teléfono debe tener el formato +56 9XXXXXXXX')
+    .trim()
 });
 
 export const FormStep01 = (props:any) => {
   const theme = useTheme(); // Acceder al tema para los colores
   const { onChangeSetStore } = props;
+  
+  const [error, setError] = useState<any>(null);
+  const [phoneInput, setPhoneInput] = useState('+569');
+  const [isValid, setIsValid] = useState(false);
   
   const { 
     currentStep,
@@ -85,84 +103,157 @@ export const FormStep01 = (props:any) => {
   
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (!currentForm?.phone) {
+      formik.setFieldValue('phone', '+569');
+    } else {
+      // Asegurarse de que el número tenga el formato correcto
+      const phoneNumber = currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`;
+      formik.setFieldValue('phone', phoneNumber);
+    }
+  }, [currentForm?.phone]);
 
+  const formik = useFormik({
+    initialValues: {
+      name: currentForm?.name || '',
+      email: currentForm?.email || '',
+      address: '',
+      // address: currentForm?.address || '',
+      phone: currentForm?.phone ? (currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`) : '+569',
+    },
+    validationSchema: validationSchema,
+    enableReinitialize: true, 
 
-  
-     const formik = useFormik({
-      initialValues: {
-        name: currentForm?.name || '',
-        email: currentForm?.email || '',
-        address: '',
-        // address: currentForm?.address || '',
-        phone: currentForm?.phone || '',
-      },
-      validationSchema: validationSchema,
-      enableReinitialize: true, 
-  
-      onSubmit: (values) => {
-        Promise.all([
-          dispatch(
-            setCustomer({
-              customerId: values?.email,
-              name: values?.name,
-              comune: "",
-              address: values?.address,
-              phone: values?.phone,
-            })
-          ),
-          dispatch(
-            setDataForm({
-              key: "name",
-              value: values?.name,
-            })
-          ),
-          dispatch(
-            setDataForm({
-              key: "email",
-              value: values?.email,
-            })
-          ),
-          dispatch(
-            setDataForm({
-              key: "address",
-              value: values?.address,
-            })
-          ),
-          dispatch(
-            setDataForm({
-              key: "phone",
-              value: values?.phone,
-            })
-          ),
-          dispatch(setStep(1)),
-        ]);
-        // dispatch(setStep(1));
-        
-      },
-    });
+    onSubmit: (values) => {
+      Promise.all([
+        dispatch(
+          setCustomer({
+            customerId: values?.email,
+            name: values?.name,
+            comune: "",
+            address: values?.address,
+            phone: values?.phone,
+          })
+        ),
+        dispatch(
+          setDataForm({
+            key: "name",
+            value: values?.name,
+          })
+        ),
+        dispatch(
+          setDataForm({
+            key: "email",
+            value: values?.email,
+          })
+        ),
+        dispatch(
+          setDataForm({
+            key: "address",
+            value: values?.address,
+          })
+        ),
+        dispatch(
+          setDataForm({
+            key: "phone",
+            value: values?.phone,
+          })
+        ),
+        dispatch(setStep(1)),
+      ]);
+      // dispatch(setStep(1));
+      
+    },
+    }); 
     
   const handleReset = () => {
     dispatch(cleanData());
     formik.resetForm();
   };
+
+  const handleClearAllData = () => {
+    // Limpia el formulario
+    formik.resetForm();
+    // Limpia los datos del cliente
+    dispatch(cleanData());
+    // Limpia el estado del cliente
+    dispatch(setCustomer({
+      customerId: '',
+      name: '',
+      comune: '',
+      address: '',
+      phone: '',
+    }));
+    // Limpia el persistidor
+    persistor.purge();
+  };
+  
+  
+  const validatePhoneNumber = (value:any) => {
+    setPhoneInput(value);
+    
+    if (!value) {
+      setError('El número de teléfono es Required');
+      setIsValid(false);
+      return;
+    }
+
+    try {
+      if (isValidPhoneNumber(value)) {
+        setError('');
+        setIsValid(true);
+        
+        const event = {
+          target:{
+            name:"guardianPhone",
+            value:value,
+            type: "text",
+          },
+          preventDefault:()=>null,
+        }      
+        onChangeSetStore({...event})
+        
+      } else {
+        setError('Número de teléfono inválido');
+        setIsValid(false);
+      }
+    } catch (err) {
+      setError('Error al validar el número');
+      setIsValid(false);
+    }
+  };
   
   return (
     <>
     <Box sx={{ p: 2 }}>
-      <Typography
-        align="left"
-                    sx={{
-                      display: "block",
-                      paddingBottom: "30px",
-                      fontSize: "18px",
-                      lineHeight: "2",
-                      marginTop: "0",
-                      color: (theme) => theme.palette.text.primary
-                    }}
-                    component="span"
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography
+          align="left"
+          sx={{
+            display: "block",
+            paddingBottom: "30px",
+            fontSize: "18px",
+            lineHeight: "2",
+            marginTop: "0",
+            color: (theme) => theme.palette.text.primary
+          }}
+          component="span"
         >
           Ingrese su información de contacto, incluyendo la dirección en donde se realizara la visita técnica
         </Typography>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={handleClearAllData}
+          sx={{
+            borderRadius: '24px',
+            paddingX: 2,
+            paddingY: 1,
+          }}
+        >
+          Limpiar todos los datos
+        </Button>
+      </Box>
         
     <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
       <Box bgcolor="#ffffff" pt={2} pb={4} width={"100%"} mt={0}
@@ -233,7 +324,7 @@ export const FormStep01 = (props:any) => {
                     <Box sx={{ width: '50%' }}>
                       {/* Teléfono */}
                       <CustomFormLabel>Teléfono</CustomFormLabel>
-                      <CustomTextField
+                      {/* <CustomTextField
                         fullWidth
                         id="phone"
                         name="phone"
@@ -243,6 +334,22 @@ export const FormStep01 = (props:any) => {
                         placeholder="+56 9XXXXXXXX"
                         error={formik.touched.phone && Boolean(formik.errors.phone)}
                         helperText={formik.touched.phone && formik.errors.phone}
+                      /> */}
+                      <PhoneInput
+                        international
+                        defaultCountry="CL"
+                        countryCallingCodeEditable={true}
+                        name="phone"
+                        tabIndex={4} 
+                        value={formik.values.phone}
+                        onChange={(value) => {
+                          const formattedValue = value || '+569';
+                          formik.setFieldValue('phone', formattedValue);
+                          validatePhoneNumber(formattedValue);
+                        }}
+                        className="w-full"
+                        error={error}
+                        placeholder="Ingrese número de teléfono"
                       />
                     </Box>
                   </Box>
@@ -316,6 +423,7 @@ export const FormStep01 = (props:any) => {
           type="submit"
           color="primary"
           size="large"
+          disabled={!formik.isValid || formik.isSubmitting}
           endIcon={
             <Box
               component="span"
@@ -324,14 +432,13 @@ export const FormStep01 = (props:any) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                // Estilo para la flecha, puedes usar un icono de MUI si lo prefieres
                 width: '20px',
                 height: '20px',
                 borderRadius: '50%',
                 backgroundColor: 'rgba(255, 255, 255, 0.3)',
                 color: '#fff',
                 '&::after': {
-                  content: '"\\276F"', // Carácter de flecha derecha
+                  content: '"\\276F"',
                   fontSize: '16px',
                   lineHeight: 1,
                 },
@@ -341,13 +448,16 @@ export const FormStep01 = (props:any) => {
           sx={{
             paddingX: 4,
             paddingY: 1.5,
-            borderRadius: '24px', // Ya definido en el tema, pero se puede sobrescribir aquí
+            borderRadius: '24px',
             boxShadow: theme.shadows[3],
             '&:hover': {
               boxShadow: theme.shadows[6],
             },
+            '&.Mui-disabled': {
+              backgroundColor: 'rgba(0, 0, 0, 0.12)',
+              color: 'rgba(0, 0, 0, 0.26)',
+            }
           }}
-          onClick={() => dispatch(setStep(2))}
         >
           Continuar
         </Button>

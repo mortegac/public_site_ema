@@ -8,9 +8,15 @@ export type Customer = {
   customerId?: string | null,
   name?: string,
   comune?: string,
-  address?: string,
   phone?: string,
   email?: string,
+  address?: string,
+  city?: string,
+  state?: string,
+  zipCode?: string,
+  lat?: string,
+  long?: string,
+  zoomLevel?: string,
 };
 
 export const emptyCustomer: Customer = {
@@ -19,9 +25,15 @@ export const emptyCustomer: Customer = {
   customerId: "",
   name: "",
   comune: "",
-  address: "",
   phone: "",
   email: "",
+  address:"",
+  city:"",
+  state:"",
+  zipCode:"",
+  lat:"",
+  long:"",
+  zoomLevel:"",
 };
 
 
@@ -34,4 +46,10 @@ export type customerInput = {
   address?: string,
   phone?: string,
   email?: string,
+  city?: string,
+  state?: string,
+  zipCode?: string,
+  lat?: string,
+  long?: string,
+  zoomLevel?: string,
 };

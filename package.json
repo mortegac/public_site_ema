@@ -1,6 +1,6 @@
 {
-  "name": "modernize-next-starterkit",
-  "version": "7.0.0",
+  "name": "ema-public-site",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -34,6 +34,7 @@
     "emoji-picker-react": "^4.5.2",
     "formik": "2.2.9",
     "i18next": "^23.5.1",
+    "libphonenumber-js": "^1.12.8",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "15.0.2",
@@ -43,6 +44,7 @@
     "react-dom": "^19.0.0-rc-02c0e824-20241028",
     "react-i18next": "^13.2.2",
     "react-intersection-observer": "^9.5.2",
+    "react-phone-number-input": "^3.4.12",
     "react-redux": "^8.1.3",
     "react-spring": "^9.7.3",
     "redux-persist": "^6.0.0",

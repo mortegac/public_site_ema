@@ -12,8 +12,9 @@ import {
 
 
 
+
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
+import { increment, setStep, decrement, selectCalendarVisits, setDataForm } from "@/store/CalendarVisits/slice";
 
   
 
@@ -21,9 +22,10 @@ import Calendar from "@/app/components/calendar";
 
 import {FormStep01} from "./FormStep01";
 import FormStep02 from "./FormStep02";
-import {PersonalInfo} from "./PersonalInfo";
-import {FormStep03} from "./FormStep03";
+// import {PersonalInfo} from "./PersonalInfo";
+// import {FormStep03} from "./FormStep03";
 // import {FormStep04} from "./FormStep04";
+// import { Button } from '@mui/material';
 
 
 
@@ -39,16 +41,10 @@ const typeOfForm: any = {
 const QuoterSteps = (props:any) => {
   const { 
     currentStep,
-    currentForm,
-  } = useAppSelector(selectClientForms);
+    calendarVisits,
+  } = useAppSelector(selectCalendarVisits);
   const dispatch = useAppDispatch();
   
-  
-  // const { titleOne, titleTwo, buttonText, buttonURI, buttonTextTwo, buttonURITwo, description, imageSrc} = props;
-  //   sidebar
-  // const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
-
-  // const [step, setStep] = React.useState(0);
 
   const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
 
@@ -80,11 +76,14 @@ const QuoterSteps = (props:any) => {
           position: "relative",
         }}
       >
+        
+       
+
             <FormStep 
               onChangeSetStore={onChangeSetStore}
             />
             <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre>
-            <pre>{JSON.stringify(currentForm, null, 2)}</pre>
+            <pre>{JSON.stringify(calendarVisits, null, 2)}</pre>
       </Container>
     </Box>
   );

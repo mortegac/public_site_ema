@@ -20,6 +20,12 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
             comune,
             address,
             phone, 
+            city,
+            state,
+            zipCode,
+            lat,
+            long,
+            zoomLevel,
         } = input;
         
         console.log("--createCustomer--", input)
@@ -49,12 +55,13 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
             address: address || '-',
             phone: phone || '-',
             email: input.email || '-',
-            city: "",
-            state: "",
-            zipCode: "",
-            lat: "",
-            long: "",
-            zoomLevel: "15",
+
+            city: input.city || '-',
+            state: input.state || '-',
+            zipCode: input.zipCode || '-',
+            lat: input.lat || '-',
+            long: input.long || '-',
+            zoomLevel: input.zoomLevel || "15",
         };
     
         console.log("--formData", formData)

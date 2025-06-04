@@ -46,6 +46,8 @@ dayjs.updateLocale('es', {
   }
 });
 
+import LoadingIcon from "@/app/components/shared/LoadingIcon";
+
 // Define un tipo para tus horas disponibles
 interface TimeSlot {
   time: string;
@@ -75,101 +77,9 @@ interface CalendarVisitsResponse {
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { setStep, getCalendarVisits, selectCalendarVisits } from "@/store/CalendarVisits/slice";
-
-
-// const mockAvailableTimes: { [key: string]: TimeSlot[] } = {
-//    // Martes
-//   '2025-05-27': [
-//     { time: '11:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-  
-//    // Miercoles
-//   '2025-05-28': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-//    // Jueves
-//   '2025-05-29': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-  
-//    // Viernes
-//   '2025-05-30': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true },
-//   ],
-  
-//    // Martes
-//   '2025-06-03': [
-//     { time: '11:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-  
-//    // Miercoles
-//   '2025-06-04': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-//    // Jueves
-//   '2025-06-05': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-  
-//    // Viernes
-//   '2025-06-06': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true },
-//   ],
-  
-//    // Martes
-//   '2025-06-10': [
-//     { time: '11:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-  
-//    // Miercoles
-//   '2025-06-11': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-//    // Jueves
-//   '2025-06-12': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true }, 
-//     { time: '17:00', available: true }
-//   ],
-  
-//    // Viernes
-//   '2025-06-13': [
-//     { time: '10:30', available: true }, 
-//     { time: '12:30', available: true }, 
-//     { time: '15:00', available: true },
-//   ],
-  
-  
-// };
+import { setInstaller } from "@/store/CalendarVisits/slice";
 
 export default function BookingCalendar() {
-  // const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs('2025-06-06')); // Inicializa con una fecha de ejemplo
   const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
   
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
@@ -178,7 +88,9 @@ export default function BookingCalendar() {
 
   
   const { 
-    calendarVisits
+    calendarVisits, 
+    status,
+    installerId
   } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
@@ -188,9 +100,10 @@ export default function BookingCalendar() {
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(getCalendarVisits({
-        startDate: "2025-05-26T00:00:00.000Z",
-        endDate: "2025-05-31T00:00:00.000Z",
-        userId: "francisco.novoa@energica.city",
+        startDate: "2025-06-04T00:00:00.000Z",
+        endDate: "2025-06-15T00:00:00.000Z",
+        // userId: "francisco.novoa@energica.city",
+        userId: installerId, //"ariel.rivera@energica.city",
       }));
     };
     
@@ -206,7 +119,7 @@ export default function BookingCalendar() {
       await dispatch(getCalendarVisits({
         startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
         endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-        userId: "francisco.novoa@energica.city",
+        userId: installerId //"ariel.rivera@energica.city",
       }));
     };
     
@@ -243,6 +156,20 @@ export default function BookingCalendar() {
   }, [selectedDate, calendarVisits]);
 
 
+  const handleInstaller = async (installerId: string | "ariel.rivera@energica.city") => {
+    const startOfWeek = selectedDate.startOf('week');
+    const endOfWeek = selectedDate.endOf('week');
+    
+    Promise.all([
+      await dispatch(setInstaller(installerId)),
+      await dispatch(getCalendarVisits({
+        startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
+        endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
+        userId: installerId //"ariel.rivera@energica.city",
+      })),
+      
+    ])
+  };
   // const handleDateChange = (date: Dayjs | null) => {
   //   setSelectedDate(date);
   // };
@@ -274,24 +201,26 @@ export default function BookingCalendar() {
     if (timeSlot.available) {
       // alert(`Has seleccionado la hora: ${timeSlot.time} el día ${date.format('dddd, DD [de] MMMM')}`);
       dispatch(setStep(1))
+      
     } else {
       alert(`La hora ${timeSlot.time} no está disponible.`);
     }
   };
 
   // Función para deshabilitar días en el calendario si no tienen horas disponibles
-  const shouldDisableDate = (day: Dayjs) => {
-    const formattedDay = day.format('YYYY-MM-DD');
-    const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
-      const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
-      return visitDate === formattedDay && visit.state === 'available' && !visit.customerId;
-    }) || [];
-    return visitsForDay.length === 0;
-  };
+  // const shouldDisableDate = (day: Dayjs) => {
+  //   const formattedDay = day.format('YYYY-MM-DD');
+  //   const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
+  //     const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
+  //     return visitDate === formattedDay && visit.state === 'available' && !visit.customerId;
+  //   }) || [];
+  //   return visitsForDay.length === 0;
+  // };
 
   return (
     <Box sx={{ p: 0 }}>
-      <pre>{JSON.stringify((calendarVisits as unknown as CalendarVisitsResponse)?.data?.[0], null, 2)}</pre>
+      <pre>installerId = {JSON.stringify(installerId, null, 2)}</pre>
+      {/* <pre>{JSON.stringify((calendarVisits as unknown as CalendarVisitsResponse)?.data?.[0], null, 2)}</pre> */}
      <Typography
         align="left"
                     sx={{
@@ -312,6 +241,9 @@ export default function BookingCalendar() {
         <Box sx={{ width: '30%', height: '100%' }}>
           <Paper elevation={3} sx={{ p: 2, height: '100%' }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+
+
+
               <DateCalendar
                 value={selectedDate}
                 onChange={handleDateChange}
@@ -361,95 +293,113 @@ export default function BookingCalendar() {
         </Box>
 
         {/* Semana con horas disponibles */}
-        <Box sx={{ width: '70%', height: '100%' }}>
-          <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
-            {weekDays.map((day) => {
-              const formattedDay = day.format('YYYY-MM-DD');
-              const timesForDay = weekAvailableTimes[formattedDay] || [];
-              const isToday = day.isSame(dayjs(), 'day');
+        {status === "loading" ? (
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
+            <LoadingIcon icon="puff" color="rgb(86, 193, 0)" className="m-8 h-20"/>
+          </Box>
+        ) : (
+          <Box sx={{ width: '70%', height: '100%' }}>
+            <Box sx={{ marginBottom: 4 }}>
+              <Button sx={{ marginRight: 10}}
+                onClick={()=>handleInstaller("ariel.rivera@energica.city")
+                }
+              >ariel.rivera@energica.city</Button>
+              <Button
+              onClick={()=>handleInstaller("matias.vera@energica.city")}
+              >matias.vera@energica.city</Button>
+            </Box>
+            <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
+              {weekDays.map((day) => {
+                const formattedDay = day.format('YYYY-MM-DD');
+                const timesForDay = weekAvailableTimes[formattedDay] || [];
+                const isToday = day.isSame(dayjs(), 'day');
 
-              return (
-                <Box 
-                  key={formattedDay} 
-                  sx={{
-                    minWidth: 150, 
-                    mr: 2, 
-                    flexShrink: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%'
-                  }}
-                >
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    sx={{
-                      fontWeight: isToday ? 'bold' : 'normal',
-                      color: isToday ? (theme) => theme.palette.primary.main : 'inherit',
-                      pb: 1,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    {day.format('dddd').slice(0, 3).toUpperCase()}
-                    <br />
-                    <Typography variant="h6" component="span">
-                      {day.format('D')}
-                    </Typography>
-                  </Typography>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: 1,
-                    overflowY: 'auto',
-                    flex: 1,
-                    '&::-webkit-scrollbar': {
-                      width: '8px',
-                    },
-                    '&::-webkit-scrollbar-track': {
-                      background: '#f1f1f1',
-                      borderRadius: '4px',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                      background: '#888',
-                      borderRadius: '4px',
-                      '&:hover': {
-                        background: '#555',
-                      },
-                    },
-                  }}>
-                    {timesForDay.length > 0 ? (
-                      timesForDay.map((slot, index) => (
-                        <Button
-                          key={index}
-                          variant={slot.available ? 'outlined' : 'text'}
-                          disabled={!slot.available || day.isBefore(dayjs(), 'day')}
-                          onClick={() => handleTimeSlotClick(day, slot)}
+                return (
+                  <>
+                        <Box 
+                          key={formattedDay} 
                           sx={{
-                            minWidth: 'auto',
-                            width: '100%',
-                            border: slot.available ? '1px solid' : 'none',
-                            borderColor: (theme) => theme.palette.primary.main,
-                            color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
-                            '&.Mui-disabled': {
-                              borderColor: (theme) => theme.palette.action.disabledBackground,
-                              color: (theme) => theme.palette.text.disabled,
-                            },
+                            minWidth: 150, 
+                            mr: 2, 
+                            flexShrink: 0,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100%'
                           }}
                         >
-                          {slot.time}
-                        </Button>
-                      ))
-                    ) : (
-                      <Typography variant="body2" color="text.secondary" align="center">
-                        No hay horas disponibles
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-              );
-            })}
-          </Paper>
-        </Box>
+                          <Typography
+                            variant="subtitle1"
+                            align="center"
+                            sx={{
+                              fontWeight: isToday ? 'bold' : 'normal',
+                              color: isToday ? (theme) => theme.palette.primary.main : 'inherit',
+                              pb: 1,
+                              textTransform: 'capitalize',
+                            }}
+                          >
+                            {day.format('dddd').slice(0, 3).toUpperCase()}
+                            <br />
+                            <Typography variant="h6" component="span">
+                              {day.format('D')}
+                            </Typography>
+                          </Typography>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            gap: 1,
+                            overflowY: 'auto',
+                            flex: 1,
+                            '&::-webkit-scrollbar': {
+                              width: '8px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                              background: '#f1f1f1',
+                              borderRadius: '4px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                              background: '#888',
+                              borderRadius: '4px',
+                              '&:hover': {
+                                background: '#555',
+                              },
+                            },
+                          }}>
+                            {timesForDay.length > 0 ? (
+                              timesForDay.map((slot, index) => (
+                                <Button
+                                  key={index}
+                                  variant={slot.available ? 'outlined' : 'text'}
+                                  disabled={!slot.available || day.isBefore(dayjs(), 'day')}
+                                  onClick={() => handleTimeSlotClick(day, slot)}
+                                  sx={{
+                                    minWidth: 'auto',
+                                    width: '100%',
+                                    border: slot.available ? '1px solid' : 'none',
+                                    borderColor: (theme) => theme.palette.primary.main,
+                                    color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
+                                    '&.Mui-disabled': {
+                                      borderColor: (theme) => theme.palette.action.disabledBackground,
+                                      color: (theme) => theme.palette.text.disabled,
+                                    },
+                                  }}
+                                >
+                                  {slot.time}
+                                </Button>
+                              ))
+                            ) : (
+                              <Typography variant="body2" color="text.secondary" align="center">
+                                No hay horas disponibles
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                  </>
+                );
+              })}
+            </Paper>
+          </Box>
+        )}
+        
       </Box>
     </Box>
   );

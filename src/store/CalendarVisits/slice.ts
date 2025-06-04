@@ -5,6 +5,7 @@ import { fetchCalendarVisitsByState } from './services';
 interface CalendarVisitsSliceState {
   currentStep: number,
   status: "idle" | "loading" | "failed";
+  installerId: string;
   calendarVisits: CalendarVisit;
   loading: boolean;
   error: string | null;
@@ -13,6 +14,7 @@ interface CalendarVisitsSliceState {
 const initialState: CalendarVisitsSliceState = {
   currentStep: 0,
   status: "idle",
+  installerId: "",
   calendarVisits: emptyCalendarVisit,
   loading: false,
   error: null,
@@ -20,6 +22,19 @@ const initialState: CalendarVisitsSliceState = {
 
 export const getCalendarVisits = createAsyncThunk(
     "CalendarVisits/list ",
+    async (objFilter: calendarVisitInput) => {
+      try {
+        const response:any = await fetchCalendarVisitsByState({ ...objFilter });
+        return response;
+      } catch (error) {
+        console.log(">>>>ERROR FETCH getCalendarVisits", error)
+        return Promise.reject(error);
+      }
+    }
+  );
+  
+export const setCalendarVisits = createAsyncThunk(
+    "CalendarVisits/updateCalendarVisits ",
     async (objFilter: calendarVisitInput) => {
       try {
         const response:any = await fetchCalendarVisitsByState({ ...objFilter });
@@ -50,7 +65,10 @@ const calendarVisitsSlice = createSlice({
     // setError: (state, action: PayloadAction<string | null>) => {
     //   state.error = action.payload;
     // },
-    setStep: (state, action: PayloadAction<{}>) => {
+      setInstaller: (state, action: PayloadAction<{}>) => {
+        state.installerId = String(action.payload || "");
+      },
+      setStep: (state, action: PayloadAction<{}>) => {
         const objAction: any = action.payload;
         state.currentStep = objAction;
       },
@@ -102,6 +120,7 @@ const calendarVisitsSlice = createSlice({
 
 export const {
     setStep,
+    setInstaller,
     decrement,
     increment,
     setDataForm,

@@ -1,5 +1,5 @@
-import { MainTypes } from "../../../../amplify/data/resource";
-import type { SelectionSet, } from "aws-amplify/data";
+import { MainTypes } from "@types";
+import type { SelectionSet } from "aws-amplify/data";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../../error";
 
@@ -35,7 +35,7 @@ export const fetchCalendarVisitByState = async (
     }): Promise<FetchedCalendarVisit[]> => {
 
     const { state: {
-        type
+        type,
     },
         startDate,
         endDate,
@@ -46,16 +46,15 @@ export const fetchCalendarVisitByState = async (
             state: type,
             startDate: {
                 between: [
-                    startDate, endDate
-                ]
+                    startDate, endDate,
+                ],
             },
         }, {
             sortDirection,
-            selectionSet
+            selectionSet,
         });
 
     if (data === null) throw throwError(`CalendarVisit were not found`);
-
 
     if (errors !== undefined) throw throwError(`Error fetching CalendarVisit: ${JSON.stringify(errors)}`);
 

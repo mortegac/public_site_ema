@@ -1,5 +1,5 @@
-import { MainTypes } from "../../../../amplify/data/resource";
-import type { SelectionSet, } from "aws-amplify/data";
+import { MainTypes } from "@types";
+import type { SelectionSet } from "aws-amplify/data";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../../error";
 
@@ -31,7 +31,7 @@ export const fetchClientFormAndEstimates = async (
     const { formId } = props;
 
     const { data, errors } = await client.models.ClientForm.get({ formId }, {
-        selectionSet
+        selectionSet,
     });
 
     if (data === null) throw throwError(`ClientForm was not found`);

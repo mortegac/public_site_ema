@@ -1,4 +1,4 @@
-import { ParameterTypes } from "../../../../amplify/data/resource";
+import { ParameterTypes } from "@types";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../../error";
 
@@ -20,7 +20,7 @@ export const increaseParameterBuyOrder: () => Promise<string> = async () => {
         parameterId: "curr-buy-order-number",
         value: newValue.toString(),
     }, {
-        selectionSet: ["value", "parameterId"]
+        selectionSet: ["value", "parameterId"],
     });
 
     if (newErrors !== undefined || oldValue === null) {

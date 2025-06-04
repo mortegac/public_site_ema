@@ -14,6 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -21,7 +22,11 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@types": ["./amplify/data/resource"]
+      "@types": ["amplify/data/resource"],
+      "@queries": ["src/utils/queries/index.ts"],
+      "@client": ["src/app/init.ts"],
+      "@log": ["src/utils/log.ts"],
+      "@error": ["src/utils/error.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

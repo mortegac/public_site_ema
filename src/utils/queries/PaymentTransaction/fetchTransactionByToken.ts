@@ -1,5 +1,5 @@
-import { MainTypes } from "../../../../amplify/data/resource";
-import type { SelectionSet, } from "aws-amplify/data";
+import { MainTypes } from "@types";
+import type { SelectionSet } from "aws-amplify/data";
 import { generateClient } from "aws-amplify/data";
 import { throwError } from "../../error";
 
@@ -27,6 +27,7 @@ const selectionSet = [
     "vci",
     "glosa",
     "usersPaymentTransactionsId",
+    "shoppingCartId",
 ] as const;
 
 export type FetchedPaymentTransaction = SelectionSet<
@@ -42,7 +43,7 @@ export const fetchPaymentTransactionByToken = async (
     const { token } = props;
 
     const { data, errors } = await client.models.PaymentTransaction.listPaymentTransactionByToken({ token }, {
-        selectionSet
+        selectionSet,
     });
 
     if (data === null || errors !== undefined) {

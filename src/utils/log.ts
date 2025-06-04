@@ -1,4 +1,3 @@
-
 export enum LogLevel {
     NONE = 0,
     ERROR = 1,
@@ -8,12 +7,11 @@ export enum LogLevel {
 
 class Logger {
     private static instance: Logger;
-    private level: LogLevel = LogLevel.INFO; // Default level
-    // Make constructor private to enforce singleton pattern
+    private level: LogLevel = LogLevel.INFO;
+
     private constructor() {
     }
 
-    // Get the singleton instance
     public static getInstance(): Logger {
         if (!Logger.instance) {
             Logger.instance = new Logger();
@@ -21,58 +19,61 @@ class Logger {
         return Logger.instance;
     }
 
-    // Set the current log level
     public setLevel(level: LogLevel): void {
         this.level = level;
     }
 
-    // Get current log level
     public getLevel(): LogLevel {
         return this.level;
     }
 
-    // Get level name from enum
     public getLevelName(): string {
         return LogLevel[this.level];
     }
 
-    // Log methods for different levels
-    public error(message: any, ...optionalParams: any[]): void {
+    private stringifyArgs(...args: any[]): string[] {
+        return args.map(arg => {
+            try {
+                return typeof arg === 'string' ? arg : JSON.stringify(arg);
+            } catch (error) {
+                return String(arg);
+            }
+        });
+    }
+
+    public error(...args: any[]): void {
         if (this.level >= LogLevel.ERROR) {
-            console.error(JSON.stringify(`[ERROR] ${message}`, ...optionalParams));
+            const stringifiedArgs = this.stringifyArgs(`[ERROR]`, ...args);
+            console.error(...stringifiedArgs);
         }
     }
 
-    public warn(message: any, ...optionalParams: any[]): void {
+    public warn(...args: any[]): void {
         if (this.level >= LogLevel.WARN) {
-            console.warn(JSON.stringify(`[WARN] ${message}`, ...optionalParams));
+            const stringifiedArgs = this.stringifyArgs(`[WARN]`, ...args);
+            console.log(...stringifiedArgs);
         }
     }
 
-    public info(message: any, ...optionalParams: any[]): void {
+    public info(...args: any[]): void {
         if (this.level >= LogLevel.INFO) {
-            console.info(JSON.stringify(`[INFO] ${message}`, ...optionalParams));
+            const stringifiedArgs = this.stringifyArgs(`[INFO]`, ...args);
+            console.log(...stringifiedArgs);
         }
     }
 
-    // Raw log without level checking (always outputs)
-    public log(message: any, ...optionalParams: any[]): void {
-        console.log(message, ...optionalParams);
+    public log(...args: any[]): void {
+        const stringifiedArgs = this.stringifyArgs(...args);
+        console.log(...stringifiedArgs);
     }
 }
 
-// Export a singleton instance
 export const logger = Logger.getInstance();
-const logLevel = parseInt(process.env.LOG_LEVEL?.toString() || "3");
+let logLevel;
+try {
+    console.log(process);
+    logLevel = parseInt(process?.env?.LOG_LEVEL || "3");
+} catch (error) {
+    logLevel = 3;
+}
 logger.setLevel(logLevel as LogLevel);
-
-// Example usage:
-// import { logger, LogLevel } from './logger';
-//
-// // Set verbosity level
-// logger.setLevel(LogLevel.DEBUG);
-//
-// // Use the logger
-// logger.error('This is an error message');
-// logger.warn('This is a warning message');
-// logger.info('This is an info message');

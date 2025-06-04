@@ -1,5 +1,5 @@
 
-import { MainTypes } from "../../../../amplify/data/resource";
+import { MainTypes } from "@types";
 import { generateClient, type SelectionSet } from "aws-amplify/data";
 import { throwError } from "../../error";
 
@@ -7,7 +7,7 @@ const client = generateClient<MainTypes>();
 
 const selectionSet = [
     "priceId",
-    "cost"
+    "cost",
 ] as const;
 
 export type FetchedPricesType = SelectionSet<
@@ -23,15 +23,15 @@ type fetchLastPriceType = {
     type: "P";
 };
 
-export const fetchLastPrice = async (props: fetchLastPriceType,): Promise<FetchedPricesType> => {
+export const fetchLastPrice = async (props: fetchLastPriceType): Promise<FetchedPricesType> => {
     if (props.type == "II") {
         const { installationInputId } = props;
         const { data, errors } = await client.models.Price.listPriceByInstallationInputIdAndStartDate({
-            installationInputId: installationInputId
+            installationInputId: installationInputId,
         }, {
             selectionSet,
             sortDirection: "DESC",
-            limit: 1
+            limit: 1,
         });
 
         if (data === null || errors !== undefined) {
@@ -44,11 +44,11 @@ export const fetchLastPrice = async (props: fetchLastPriceType,): Promise<Fetche
         const { productId } = props;
 
         const { data, errors } = await client.models.Price.listPriceByProductIdAndStartDate({
-            productId: productId
+            productId: productId,
         }, {
             selectionSet,
             sortDirection: "DESC",
-            limit: 1
+            limit: 1,
         });
 
         if (data === null || errors !== undefined) {

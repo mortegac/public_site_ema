@@ -1,6 +1,6 @@
 import { logger } from "./log";
 
-export const throwError = (msg: string): never => {
-    logger.error(msg);
-    throw new Error(msg);
+export const throwError = (...args: any[]): never => {
+    logger.error(args);
+    throw new Error(JSON.stringify(args));
 };

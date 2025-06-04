@@ -5143,6 +5143,20 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "shoppingCartId": {
+              "name": "shoppingCartId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         },
@@ -5242,12 +5256,6 @@
               "name": "customerId",
               "isArray": false,
               "type": "String",
-              "isRequired": true
-            },
-            "isHouse": {
-              "name": "isHouse",
-              "isArray": false,
-              "type": "Boolean",
               "isRequired": true
             }
           }
@@ -5410,12 +5418,12 @@
               "name": "formId",
               "isArray": false,
               "type": "String",
-              "isRequired": true
+              "isRequired": false
             },
-            "duration": {
-              "name": "duration",
+            "isHouse": {
+              "name": "isHouse",
               "isArray": false,
-              "type": "String",
+              "type": "Boolean",
               "isRequired": false
             }
           }

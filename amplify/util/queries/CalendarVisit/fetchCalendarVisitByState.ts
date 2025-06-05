@@ -28,22 +28,20 @@ export type FetchedCalendarVisit = SelectionSet<
 
 export const fetchCalendarVisitByState = async (
     props: {
-        state: MainTypes["CalendarVisit"]["nestedTypes"]["state"],
+        state: MainTypes["CalendarVisit"]["nestedTypes"]["state"]["type"],
         startDate: string,
         endDate: string;
         sortDirection: "DESC" | "ASC";
     }): Promise<FetchedCalendarVisit[]> => {
 
-    const { state: {
-        type
-    },
+    const { state,
         startDate,
         endDate,
         sortDirection } = props;
 
     const { data, errors } = await client.models.CalendarVisit.CalendarVisitsByState
         ({
-            state: type,
+            state,
             startDate: {
                 between: [
                     startDate, endDate

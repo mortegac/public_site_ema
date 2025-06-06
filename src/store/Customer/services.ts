@@ -17,15 +17,16 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         const {  
             customerId,
             name,
-            comune,
+            // comune,
             address,
             phone, 
-            city,
-            state,
-            zipCode,
-            lat,
-            long,
-            zoomLevel,
+            // email,
+            // city,
+            // state,
+            // zipCode,
+            // lat,
+            // long,
+            // zoomLevel,
         } = input;
         
         console.log("--createCustomer--", input)
@@ -51,11 +52,8 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         const formData:any = {
             customerId: customerId || existingCustomer?.customerId || crypto.randomUUID(),
             name: name || '-',
-            comune: comune || '-',
             address: address || '-',
             phone: phone || '-',
-            email: input.email || '-',
-
             city: input.city || '-',
             state: input.state || '-',
             zipCode: input.zipCode || '-',

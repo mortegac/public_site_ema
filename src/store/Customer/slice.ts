@@ -24,7 +24,7 @@ export const setCustomer = createAsyncThunk(
         const response:any = await createCustomer({ ...objFilter });
         return response;
       } catch (error) {
-        console.error(">>>>ERROR FETCH setCustomer", error)
+        console.log(">>>>ERROR FETCH setCustomer", error)
         return Promise.reject(error);
       }
     }
@@ -41,6 +41,9 @@ const customerSlice = createSlice({
     // setError: (state, action: PayloadAction<string | null>) => {
     //   state.error = action.payload;
     // },
+    setCustomerData: (state, action: PayloadAction<Customer>) => {
+      state.customer = {...state.customer, ...action.payload};
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,12 +56,14 @@ const customerSlice = createSlice({
         state.loading = false;
         console.log(">>> action.payload >>", action.payload)
         state.customer = {...action.payload};
+        console.log(">>> state.customer >>", action.payload)
         // if (state.currentForm) {
         // }
       })
       .addCase(setCustomer.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Error al actualizar la distancia';
+        state.error = action.error.message || 'Error al actualizar el customer';
+        state.customer={...emptyCustomer}
       });
   },
 });
@@ -66,13 +71,9 @@ const customerSlice = createSlice({
 // export const { setLoading, setError } = clientFormsSlice.actions;
 // export default clientFormsSlice.reducer;
 
-// export const {
-//     setStep,
-//     decrement,
-//     increment,
-//     setDataForm,
-//     cleanData,
-//   } = clientFormsSlice.actions;
+export const {
+    setCustomerData
+  } = customerSlice.actions;
   
 export const selectCustomer = (state: RootState) => state.customer;
 

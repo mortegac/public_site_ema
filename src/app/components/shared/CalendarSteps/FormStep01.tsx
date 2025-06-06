@@ -24,7 +24,7 @@ import AddressInput from '@/app/components/AddressInput2';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
-import { setCustomer } from "@/store/Customer/slice";
+import { selectCustomer, setCustomer, setCustomerData } from "@/store/Customer/slice";
 import { persistor } from '@/store/store';
 import { emptyClientForm } from '@/store/ClientForms/type';
 
@@ -100,6 +100,9 @@ export const FormStep01 = (props:any) => {
     // currentForm,
     currentForm
   } = useAppSelector(selectClientForms);
+  const { 
+    customer
+  } = useAppSelector(selectCustomer);
   
   const dispatch = useAppDispatch();
 
@@ -115,11 +118,10 @@ export const FormStep01 = (props:any) => {
 
   const formik = useFormik({
     initialValues: {
-      name: currentForm?.name || '',
-      email: currentForm?.email || '',
-      address: '',
-      // address: currentForm?.address || '',
-      phone: currentForm?.phone ? (currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`) : '+569',
+      name: customer?.name || '',
+      email: customer?.customerId || '',
+      address: customer?.address,
+      phone: customer?.phone ? (customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`) : '+569',
     },
     validationSchema: validationSchema,
     enableReinitialize: true, 
@@ -128,40 +130,13 @@ export const FormStep01 = (props:any) => {
       Promise.all([
         dispatch(
           setCustomer({
+            ...customer,
             customerId: values?.email,
-            name: values?.name,
-            comune: "",
-            address: values?.address,
-            phone: values?.phone,
           })
         ),
-        dispatch(
-          setDataForm({
-            key: "name",
-            value: values?.name,
-          })
-        ),
-        dispatch(
-          setDataForm({
-            key: "email",
-            value: values?.email,
-          })
-        ),
-        dispatch(
-          setDataForm({
-            key: "address",
-            value: values?.address,
-          })
-        ),
-        dispatch(
-          setDataForm({
-            key: "phone",
-            value: values?.phone,
-          })
-        ),
-        dispatch(setStep(1)),
+        dispatch(setStep(2)),
       ]);
-      // dispatch(setStep(1));
+    
       
     },
     }); 
@@ -202,16 +177,9 @@ export const FormStep01 = (props:any) => {
       if (isValidPhoneNumber(value)) {
         setError('');
         setIsValid(true);
-        
-        const event = {
-          target:{
-            name:"guardianPhone",
-            value:value,
-            type: "text",
-          },
-          preventDefault:()=>null,
-        }      
-        onChangeSetStore({...event})
+        dispatch(setCustomerData({
+          phone: value
+      }))
         
       } else {
         setError('Número de teléfono inválido');
@@ -286,8 +254,13 @@ export const FormStep01 = (props:any) => {
                         name="name"
                         value={formik.values.name}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="Juanin Jan Jarri"
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                          formik.handleBlur;
+                          dispatch(setCustomerData({
+                            name: e.target.value
+                          }))
+                        }}
+                        placeholder="Vicente Perez"
                         error={formik.touched.name && Boolean(formik.errors.name)}
                         helperText={formik.touched.name && formik.errors.name}
                       />
@@ -299,15 +272,19 @@ export const FormStep01 = (props:any) => {
                         id="email"
                         name="email"
                         value={formik.values.email}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          formik.setFieldValue('email', e.target.value);
+                          dispatch(setCustomerData({
+                            customerId: e.target.value
+                          }))
+                        }}
                         placeholder="email@dominio.com"
                         error={formik.touched.email && Boolean(formik.errors.email)}
                         helperText={formik.touched.email && formik.errors.email}
                       />
                     </Box>
                   </Box>
-
+                  <pre>{JSON.stringify(customer, null, 2)}</pre>
                   <Box sx={{ display: 'flex', gap: 2 }}>
                     {/* Dirección */}
                     <Box sx={{ width: '50%' }}>
@@ -316,25 +293,26 @@ export const FormStep01 = (props:any) => {
                         onSelectAddress={(addressDetails) => {
                           if (addressDetails) {
                             formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldTouched('address', true);
+                            dispatch(setCustomerData({              
+                                address: addressDetails?.StreetAddress || "",
+                                city: addressDetails?.City || "",
+                                state: addressDetails?.State || "",
+                                zipCode: addressDetails?.ZipCode || "",
+                                lat: String(addressDetails?.Latitude || ""),
+                                long: String(addressDetails?.Longitude || ""),
+                                zoomLevel: "15"
+                            }))
                           }
                         }}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
                       />
                     </Box>
                     
                     <Box sx={{ width: '50%' }}>
                       {/* Teléfono */}
                       <CustomFormLabel>Teléfono</CustomFormLabel>
-                      {/* <CustomTextField
-                        fullWidth
-                        id="phone"
-                        name="phone"
-                        value={formik.values.phone}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="+56 9XXXXXXXX"
-                        error={formik.touched.phone && Boolean(formik.errors.phone)}
-                        helperText={formik.touched.phone && formik.errors.phone}
-                      /> */}
                       <PhoneInput
                         international
                         defaultCountry="CL"
@@ -345,12 +323,29 @@ export const FormStep01 = (props:any) => {
                         onChange={(value) => {
                           const formattedValue = value || '+569';
                           formik.setFieldValue('phone', formattedValue);
+                          formik.setFieldTouched('phone', true);
                           validatePhoneNumber(formattedValue);
                         }}
-                        className="w-full"
-                        error={error}
+                        onBlur={() => {
+                          formik.setFieldTouched('phone', true);
+                        }}
+                        className={`w-full ${formik.touched.phone && formik.errors.phone ? 'error' : ''}`}
                         placeholder="Ingrese número de teléfono"
                       />
+                      {formik.touched.phone && formik.errors.phone && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            display: 'block',
+                            marginTop: '4px',
+                            marginLeft: '14px',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {formik.errors.phone}
+                        </Typography>
+                      )}
                     </Box>
                   </Box>
                   {/* <CustomTextField
@@ -423,7 +418,7 @@ export const FormStep01 = (props:any) => {
           type="submit"
           color="primary"
           size="large"
-          disabled={!formik.isValid || formik.isSubmitting}
+          // disabled={!formik.isValid || formik.isSubmitting}
           endIcon={
             <Box
               component="span"

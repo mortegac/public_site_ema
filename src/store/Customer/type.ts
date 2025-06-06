@@ -3,13 +3,13 @@
 
 
 export type Customer = {     
-  __typename: "Customer",  
-  id?: string | null,
+  __typename?: "Customer",  
+  // id?: string | null,
   customerId?: string | null,
   name?: string,
-  comune?: string,
+  // comune?: string,
   phone?: string,
-  email?: string,
+  // email?: string,
   address?: string,
   city?: string,
   state?: string,
@@ -21,12 +21,12 @@ export type Customer = {
 
 export const emptyCustomer: Customer = {
   __typename: "Customer",
-  id: "",
+  // id: "",
   customerId: "",
   name: "",
-  comune: "",
+  // comune: "",
   phone: "",
-  email: "",
+  // email: "",
   address:"",
   city:"",
   state:"",

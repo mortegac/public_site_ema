@@ -4,9 +4,18 @@
 import React from 'react';
 import { Box, Container, Typography, Button, Paper, Divider, useTheme } from '@mui/material';
 
+
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { selectCustomer } from "@/store/Customer/slice";
+
+
 export default function FormStep02() {
   const theme = useTheme(); // Acceder al tema para los colores
 
+  const { 
+    customer
+  } = useAppSelector(selectCustomer);
+  
   // Datos de ejemplo, en una app real vendrían de props o un estado global
   const orderDetails = {
     email: 'email@hotmail.com',
@@ -40,6 +49,20 @@ export default function FormStep02() {
         component="span"
       >
         Para finalizar con la reserva de su visita técnica realice el pago
+      </Typography>
+      <Typography
+        align="left"
+        sx={{
+          display: "block",
+          paddingBottom: "30px",
+          fontSize: "18px",
+          lineHeight: "2",
+          marginTop: "0",
+          color: (theme) => theme.palette.text.primary
+        }}
+        component="span"
+      >
+        Email: {customer?.customerId}
       </Typography>
       
       <Box bgcolor="#ffffff" pt={4} pb={4} width={"100%"} mt={0}

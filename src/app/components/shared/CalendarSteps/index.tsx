@@ -22,6 +22,7 @@ import Calendar from "@/app/components/calendar";
 
 import {FormStep01} from "./FormStep01";
 import FormStep02 from "./FormStep02";
+import { selectCustomer } from "@/store/Customer/slice";
 // import {PersonalInfo} from "./PersonalInfo";
 // import {FormStep03} from "./FormStep03";
 // import {FormStep04} from "./FormStep04";
@@ -43,6 +44,9 @@ const QuoterSteps = (props:any) => {
     currentStep,
     calendarVisits,
   } = useAppSelector(selectCalendarVisits);
+  const { 
+    customer
+  } = useAppSelector(selectCustomer);
   const dispatch = useAppDispatch();
   
 
@@ -82,8 +86,9 @@ const QuoterSteps = (props:any) => {
             <FormStep 
               onChangeSetStore={onChangeSetStore}
             />
-            <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre>
-            <pre>{JSON.stringify(calendarVisits, null, 2)}</pre>
+            {/* <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre>
+            <pre>{JSON.stringify(calendarVisits, null, 2)}</pre> */}
+            {/* <pre>{JSON.stringify(customer, null, 2)}</pre> */}
       </Container>
     </Box>
   );

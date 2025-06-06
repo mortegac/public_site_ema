@@ -50,3 +50,15 @@
   border-color: #1976d2;
   box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
+
+.PhoneInput.error {
+  border-color: #d32f2f;
+}
+
+.PhoneInput.error .PhoneInputInput {
+  border-color: #d32f2f;
+}
+
+.PhoneInput.error .PhoneInputCountry {
+  border-color: #d32f2f;
+}

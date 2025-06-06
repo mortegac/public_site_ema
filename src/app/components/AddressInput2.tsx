@@ -26,6 +26,8 @@ interface Props {
     Latitude: number | null;
     Longitude: number | null;
   } | null) => void;
+  error?: boolean;
+  helperText?: string;
 }
 
 const KEY = "AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ";
@@ -67,7 +69,7 @@ const loadGoogleMapsScript = (): Promise<void> => {
   });
 };
 
-const AddressInput: React.FC<Props> = ({ onSelectAddress }) => {
+const AddressInput: React.FC<Props> = ({ onSelectAddress, error, helperText }) => {
   const [address, setAddress] = useState('');
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const autoCompleteRef = useRef<HTMLInputElement>(null);
@@ -102,12 +104,20 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress }) => {
 
           const stateComponent = place.address_components?.find((comp: AddressComponent) => comp.types.includes('administrative_area_level_1'));
           const cityComponent = place.address_components?.find((comp: AddressComponent) => comp.types.includes('locality'));
+          const countryComponent = place.address_components?.find((comp: AddressComponent) => comp.types.includes('country'));
           
-          if (stateComponent?.short_name === 'RM' && cityComponent?.long_name === 'Santiago') {
+          if (countryComponent?.short_name !== 'CL') {
+            setAddress('');
+            onSelectAddress(null);
+            alert('Por favor, selecciona una dirección en Chile.');
+            return;
+          }
+          
+          // if (stateComponent?.short_name === 'RM' && cityComponent?.long_name === 'Santiago') {
             const streetNumber = place.address_components?.find((comp: AddressComponent) => comp.types.includes('street_number'))?.long_name || null;
             const route = place.address_components?.find((comp: AddressComponent) => comp.types.includes('route'))?.long_name || null;
-            const city = cityComponent.long_name || null;
-            const state = stateComponent.short_name || null;
+            const city = cityComponent?.long_name || null;
+            const state = stateComponent?.short_name || null;
             const zipCode = place.address_components?.find((comp: AddressComponent) => comp.types.includes('postal_code'))?.long_name || null;
             const country = place.address_components?.find((comp: AddressComponent) => comp.types.includes('country'))?.long_name || null;
             const latitude = place.geometry?.location?.lat() || null;
@@ -126,12 +136,11 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress }) => {
           } else {
             setAddress('');
             onSelectAddress(null);
-            alert('Por favor, selecciona una dirección en Santiago de Chile.');
           }
-        } else {
-          setAddress('');
-          onSelectAddress(null);
-        }
+        // } else {
+        //   setAddress('');
+        //   onSelectAddress(null);
+        // }
       });
 
       setAutocomplete(newAutocomplete);
@@ -160,7 +169,7 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress }) => {
       position: 'relative',
       borderRadius: '7px',
       border: '1px solid',
-      borderColor: '#e0e0e0'
+      borderColor: error ? '#d32f2f' : '#e0e0e0'
     }}>
       <input
         ref={autoCompleteRef}
@@ -194,6 +203,20 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress }) => {
           padding: '12px 14px'
         }}
       />
+      {error && helperText && (
+        <Typography
+          variant="caption"
+          color="error"
+          sx={{
+            position: 'absolute',
+            bottom: '-20px',
+            left: '14px',
+            fontSize: '0.75rem'
+          }}
+        >
+          {helperText}
+        </Typography>
+      )}
     </div>
   );
 };

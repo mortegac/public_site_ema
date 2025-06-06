@@ -1,7 +1,7 @@
 "use client";
 
 // components/BookingCalendar.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 import { Dayjs } from 'dayjs';
@@ -86,7 +86,7 @@ export default function BookingCalendar() {
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
 
-  
+  const UUID = useId();
   const { 
     calendarVisits, 
     status,
@@ -218,10 +218,10 @@ export default function BookingCalendar() {
   // };
 
   return (
-    <Box sx={{ p: 0 }}>
-      <pre>installerId = {JSON.stringify(installerId, null, 2)}</pre>
+    <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
+      {/* <pre>installerId = {JSON.stringify(installerId, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify((calendarVisits as unknown as CalendarVisitsResponse)?.data?.[0], null, 2)}</pre> */}
-     <Typography
+      <Typography
         align="left"
                     sx={{
                       display: "block",
@@ -234,7 +234,7 @@ export default function BookingCalendar() {
                     component="span"
         >
           Seleccione una hora para continuar con el proceso de reserva de su visita técnica
-        </Typography>
+      </Typography>
 
       <Box sx={{ display: 'flex', gap: 4, height: '350px' }}>
         {/* Calendario mensual */}
@@ -309,91 +309,89 @@ export default function BookingCalendar() {
               >matias.vera@energica.city</Button>
             </Box>
             <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
-              {weekDays.map((day) => {
+              {weekDays.map((day, i) => {
                 const formattedDay = day.format('YYYY-MM-DD');
                 const timesForDay = weekAvailableTimes[formattedDay] || [];
                 const isToday = day.isSame(dayjs(), 'day');
 
                 return (
-                  <>
-                        <Box 
-                          key={formattedDay} 
-                          sx={{
-                            minWidth: 150, 
-                            mr: 2, 
-                            flexShrink: 0,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: '100%'
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            align="center"
+                  <Box 
+                    key={`${formattedDay}-${i}`} 
+                    sx={{
+                      minWidth: 150, 
+                      mr: 2, 
+                      flexShrink: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      align="center"
+                      sx={{
+                        fontWeight: isToday ? 'bold' : 'normal',
+                        color: isToday ? (theme) => theme.palette.primary.main : 'inherit',
+                        pb: 1,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {day.format('dddd').slice(0, 3).toUpperCase()}
+                      <br />
+                      <Typography variant="h6" component="span">
+                        {day.format('D')}
+                      </Typography>
+                    </Typography>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: 1,
+                      overflowY: 'auto',
+                      flex: 1,
+                      '&::-webkit-scrollbar': {
+                        width: '8px',
+                      },
+                      '&::-webkit-scrollbar-track': {
+                        background: '#f1f1f1',
+                        borderRadius: '4px',
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        background: '#888',
+                        borderRadius: '4px',
+                        '&:hover': {
+                          background: '#555',
+                        },
+                      },
+                    }}>
+                      {timesForDay.length > 0 ? (
+                        timesForDay.map((slot, index) => (
+                          <Button
+                            key={`${formattedDay}-${slot.time}-${index}`}
+                            variant={slot.available ? 'outlined' : 'text'}
+                            disabled={!slot.available || day.isBefore(dayjs(), 'day')}
+                            onClick={() => handleTimeSlotClick(day, slot)}
                             sx={{
-                              fontWeight: isToday ? 'bold' : 'normal',
-                              color: isToday ? (theme) => theme.palette.primary.main : 'inherit',
-                              pb: 1,
-                              textTransform: 'capitalize',
+                              minWidth: 'auto',
+                              width: '100%',
+                              border: slot.available ? '1px solid' : 'none',
+                              borderColor: (theme) => theme.palette.primary.main,
+                              color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
+                              '&.Mui-disabled': {
+                                borderColor: (theme) => theme.palette.action.disabledBackground,
+                                color: (theme) => theme.palette.text.disabled,
+                              },
                             }}
                           >
-                            {day.format('dddd').slice(0, 3).toUpperCase()}
-                            <br />
-                            <Typography variant="h6" component="span">
-                              {day.format('D')}
-                            </Typography>
-                          </Typography>
-                          <Box sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            gap: 1,
-                            overflowY: 'auto',
-                            flex: 1,
-                            '&::-webkit-scrollbar': {
-                              width: '8px',
-                            },
-                            '&::-webkit-scrollbar-track': {
-                              background: '#f1f1f1',
-                              borderRadius: '4px',
-                            },
-                            '&::-webkit-scrollbar-thumb': {
-                              background: '#888',
-                              borderRadius: '4px',
-                              '&:hover': {
-                                background: '#555',
-                              },
-                            },
-                          }}>
-                            {timesForDay.length > 0 ? (
-                              timesForDay.map((slot, index) => (
-                                <Button
-                                  key={index}
-                                  variant={slot.available ? 'outlined' : 'text'}
-                                  disabled={!slot.available || day.isBefore(dayjs(), 'day')}
-                                  onClick={() => handleTimeSlotClick(day, slot)}
-                                  sx={{
-                                    minWidth: 'auto',
-                                    width: '100%',
-                                    border: slot.available ? '1px solid' : 'none',
-                                    borderColor: (theme) => theme.palette.primary.main,
-                                    color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
-                                    '&.Mui-disabled': {
-                                      borderColor: (theme) => theme.palette.action.disabledBackground,
-                                      color: (theme) => theme.palette.text.disabled,
-                                    },
-                                  }}
-                                >
-                                  {slot.time}
-                                </Button>
-                              ))
-                            ) : (
-                              <Typography variant="body2" color="text.secondary" align="center">
-                                No hay horas disponibles
-                              </Typography>
-                            )}
-                          </Box>
-                        </Box>
-                  </>
+                            {slot.time}
+                          </Button>
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary" align="center">
+                          No hay horas disponibles
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
                 );
               })}
             </Paper>

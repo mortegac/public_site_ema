@@ -86,15 +86,15 @@ const calendarVisitsSlice = createSlice({
       setDataForm: (state, action: PayloadAction<{}>) => {
         const objAction: any = action.payload;
         // console.log(">> objAction >>", objAction)
-        // state.currentForm = {
-        //   ...state.currentForm,
-        //   [objAction.key]: objAction.value,
-        // };
+        state.calendarVisits = {
+          ...state.calendarVisits,
+          [objAction.key]: objAction.value,
+        };
       },
       cleanData: (state) => {
-        // state.currentForm = {
-        //   ...emptyClientForm
-        // }
+        state.calendarVisits = {
+          ...emptyCalendarVisit
+        }
       },
   },
   extraReducers: (builder) => {

@@ -6,6 +6,7 @@ export type calendarVisitInput = {
 
 export type CalendarVisit = {
   calendarId?: string,
+  userId: string,
   summary?: string,
   location?: string,
   description?: string,
@@ -15,7 +16,6 @@ export type CalendarVisit = {
   duration: number,
   state: string,
   customerId: string,
-  userId: string,
 };
 
 export const emptyCalendarVisit: CalendarVisit = {

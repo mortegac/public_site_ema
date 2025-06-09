@@ -1,7 +1,7 @@
 "use client";
 
 // components/BookingCalendar.tsx
-import React, { useState, useEffect, useId } from 'react';
+import React, { useState, useEffect, useId, useMemo } from 'react';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 import { Dayjs } from 'dayjs';
@@ -52,6 +52,7 @@ import LoadingIcon from "@/app/components/shared/LoadingIcon";
 interface TimeSlot {
   time: string;
   available: boolean;
+  calendarId: string;
 }
 
 interface CalendarVisit {
@@ -76,15 +77,15 @@ interface CalendarVisitsResponse {
 }
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, getCalendarVisits, selectCalendarVisits } from "@/store/CalendarVisits/slice";
+import { setStep, setDataForm, getCalendarVisits, selectCalendarVisits } from "@/store/CalendarVisits/slice";
 import { setInstaller } from "@/store/CalendarVisits/slice";
 
 export default function BookingCalendar() {
   const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
-  
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const UUID = useId();
   const { 
@@ -95,36 +96,38 @@ export default function BookingCalendar() {
   
   const dispatch = useAppDispatch();
 
-  
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getCalendarVisits({
-        startDate: "2025-06-04T00:00:00.000Z",
-        endDate: "2025-06-15T00:00:00.000Z",
-        // userId: "francisco.novoa@energica.city",
-        userId: installerId, //"ariel.rivera@energica.city",
-      }));
+  // Memoizamos las fechas de inicio y fin de semana
+  const weekDates = useMemo(() => {
+    const startOfWeek = selectedDate.startOf('week');
+    const endOfWeek = selectedDate.endOf('week');
+    return {
+      startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
+      endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]')
     };
-    
-    fetchData();
-  }, []); // Array vacío para ejecutar solo al montar
-  
-  // Efecto para cargar las visitas cuando cambia la fecha
+  }, [selectedDate]);
+
+  // Efecto para cargar las visitas iniciales y cuando cambia el instalador
   useEffect(() => {
     const fetchData = async () => {
-      const startOfWeek = selectedDate.startOf('week');
-      const endOfWeek = selectedDate.endOf('week');
+      if (!installerId) return;
       
       await dispatch(getCalendarVisits({
-        startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-        endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-        userId: installerId //"ariel.rivera@energica.city",
+        startDate: weekDates.startDate,
+        endDate: weekDates.endDate,
+        userId: installerId
       }));
     };
     
     fetchData();
-  }, [selectedDate, dispatch]);
+  }, [installerId, weekDates.startDate, weekDates.endDate, dispatch]);
+
+  // Efecto para la carga inicial
+  useEffect(() => {
+    if (initialLoad) {
+      handleInstaller("ariel.rivera@energica.city");
+      setInitialLoad(false);
+    }
+  }, [initialLoad]);
 
   // Efecto para actualizar la vista semanal
   useEffect(() => {
@@ -148,79 +151,47 @@ export default function BookingCalendar() {
 
       newWeekAvailableTimes[formattedDate] = visitsForDay.map((visit: CalendarVisit) => ({
         time: dayjs(visit.startDate).format('HH:mm'),
-        available: visit.state === 'available' && !visit.customerId
+        available: visit.state === 'available' && !visit.customerId,
+        calendarId: visit.calendarId
       }));
     });
 
     setWeekAvailableTimes(newWeekAvailableTimes);
   }, [selectedDate, calendarVisits]);
 
-
-  const handleInstaller = async (installerId: string | "ariel.rivera@energica.city") => {
-    const startOfWeek = selectedDate.startOf('week');
-    const endOfWeek = selectedDate.endOf('week');
-    
-    Promise.all([
-      await dispatch(setInstaller(installerId)),
-      await dispatch(getCalendarVisits({
-        startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-        endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-        userId: installerId //"ariel.rivera@energica.city",
-      })),
-      
-    ])
+  const handleInstaller = async (installerId: string) => {
+    await dispatch(setInstaller(installerId));
   };
-  // const handleDateChange = (date: Dayjs | null) => {
-  //   setSelectedDate(date);
-  // };
 
-  // const handleTimeSlotClick = (timeSlot: TimeSlot) => {
-  //   if (timeSlot.available) {
-  //     alert(`Has seleccionado la hora: ${timeSlot.time} el día ${selectedDate?.format('DD-MM-YYYY')}`);
-  //     // Aquí puedes añadir la lógica para reservar la cita
-  //   } else {
-  //     alert(`La hora ${timeSlot.time} no está disponible.`);
-  //   }
-  // };
-
-  // // Función para deshabilitar días que no tienen horas disponibles (opcional)
-  // const shouldDisableDate = (day: Dayjs) => {
-  //   const formattedDay = day.format('YYYY-MM-DD');
-  //   return !mockAvailableTimes[formattedDay] || mockAvailableTimes[formattedDay].length === 0;
-  // };
-  
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
-      // Aseguramos que la fecha mantenga la configuración en español
       const newDate = date.tz('America/Santiago').locale('es').startOf('week');
       setSelectedDate(newDate);
     }
   };
 
-  const handleTimeSlotClick = (date: Dayjs, timeSlot: TimeSlot) => {
+  const handleTimeSlotClick = async (date: Dayjs, timeSlot: TimeSlot) => {
+    
+    console.log("--timeSlot--", timeSlot)
+    
     if (timeSlot.available) {
-      // alert(`Has seleccionado la hora: ${timeSlot.time} el día ${date.format('dddd, DD [de] MMMM')}`);
-      dispatch(setStep(1))
-      
+      // alert(`Has seleccionado la hora: ${timeSlot.time} el día ${date.format('dddd, DD [de] MMMM')} con ID: ${timeSlot.calendarId}`);
+      Promise.all([
+        await dispatch(setDataForm({
+          key:"calendarId", value:timeSlot?.calendarId
+        })),
+        dispatch(setStep(1))
+      ])
+      // userId: "",
     } else {
       alert(`La hora ${timeSlot.time} no está disponible.`);
     }
   };
 
-  // Función para deshabilitar días en el calendario si no tienen horas disponibles
-  // const shouldDisableDate = (day: Dayjs) => {
-  //   const formattedDay = day.format('YYYY-MM-DD');
-  //   const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
-  //     const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
-  //     return visitDate === formattedDay && visit.state === 'available' && !visit.customerId;
-  //   }) || [];
-  //   return visitsForDay.length === 0;
-  // };
-
   return (
     <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
       {/* <pre>installerId = {JSON.stringify(installerId, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify((calendarVisits as unknown as CalendarVisitsResponse)?.data?.[0], null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
       <Typography
         align="left"
                     sx={{
@@ -309,6 +280,7 @@ export default function BookingCalendar() {
               >matias.vera@energica.city</Button>
             </Box>
             <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
+              {/* <pre>{JSON.stringify(weekDays, null, 2 )}</pre> */}
               {weekDays.map((day, i) => {
                 const formattedDay = day.format('YYYY-MM-DD');
                 const timesForDay = weekAvailableTimes[formattedDay] || [];

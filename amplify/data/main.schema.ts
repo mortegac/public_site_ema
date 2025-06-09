@@ -10,7 +10,7 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  */
 
 export const MainSchema = a
-  .schema({
+   .schema({
     User: a
       .model({
         userId: a.id().required(),
@@ -141,7 +141,8 @@ export const MainSchema = a
         "error", // fallo
         "occupied", // no disponible
         "stale", // paso la fecha  
-        "timedOut" //expiro
+        "timedOut", //expiro
+        "waiting", //la transaccion inicio pero no ha terminado; espera a q la transaccion termine asi no es limpiada automaticamente
       ]),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),

@@ -7,7 +7,6 @@ import utc from 'dayjs/plugin/utc';
 
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
-import { fetchCalendarVisitByState } from '../../../../ema-back/amplify/util/queries/CalendarVisit/fetchCalendarVisitByState';
 Amplify.configure(outputs);
 
 const client = generateClient<MAIN.MainTypes>();

@@ -22,7 +22,7 @@ interface LoadingIconProps extends React.ComponentPropsWithoutRef<"span"> {
 function LoadingIcon(props: LoadingIconProps) {
   // const darkMode = useAppSelector(selectDarkMode);
   const iconColor = useMemo(() => {
-    return "#56c100";
+    return props?.color || "#E81A68";
   }, []);
   const { icon, color, ...computedProps } = props;
   return (
@@ -31,7 +31,7 @@ function LoadingIcon(props: LoadingIconProps) {
         if (icon == "audio") {
           return (
             <svg
-              width="15"
+              // width="50"
               viewBox="0 0 55 80"
               xmlns="http://www.w3.org/2000/svg"
               fill={iconColor}
@@ -455,7 +455,7 @@ function LoadingIcon(props: LoadingIconProps) {
         } else if (icon == "puff") {
           return (
             <svg
-              width="25"
+              // width="25"
               viewBox="0 0 44 44"
               xmlns="http://www.w3.org/2000/svg"
               stroke={iconColor}

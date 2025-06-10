@@ -23,21 +23,23 @@ import CustomFormLabel from './CustomFormLabel';
 import AddressInput from '@/app/components/AddressInput2';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
+// import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { selectCustomer, setCustomer, setCustomerData } from "@/store/Customer/slice";
+import { selectCalendarVisits, setStep, setCalendarVisits } from "@/store/CalendarVisits/slice";
 import { persistor } from '@/store/store';
-import { emptyClientForm } from '@/store/ClientForms/type';
+// import { emptyClientForm } from '@/store/ClientForms/type';
 
 
 import 'react-phone-number-input/style.css'
 import './phone.css'
+// import { makeReservation } from '@/store/CalendarVisits/services';
 
-interface ClientForm {
-  name: string;
-  email: string;
-  address: string;
-  phone: string;
-}
+// interface ClientForm {
+//   name: string;
+//   email: string;
+//   address: string;
+//   phone: string;
+// }
 
 // Componente para el formulario vertical
 const VerticalForm = styled(Box)(({ theme }) => ({
@@ -53,12 +55,12 @@ const VerticalForm = styled(Box)(({ theme }) => ({
 }));
 
 // Componente para el SVG centrado
-const CenteredSVGContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '100%', // Asegura que ocupe toda la altura del contenedor padre
-}));
+// const CenteredSVGContainer = styled(Box)(({ theme }) => ({
+//   display: 'flex',
+//   justifyContent: 'center',
+//   alignItems: 'center',
+//   height: '100%', // Asegura que ocupe toda la altura del contenedor padre
+// }));
 
 
 const validationSchema = yup.object({
@@ -83,38 +85,32 @@ const validationSchema = yup.object({
   phone: yup
     .string()
     .required('El teléfono es requerido')
-    .matches(/^\+56\s?\d{9}$/, 'El teléfono debe tener el formato +56 9XXXXXXXX')
+    .matches(/^\+56\s?\d{9}$/, 'El teléfono debe tener el formato +56 9XX XXX XXX')
     .trim()
 });
 
 export const FormStep01 = (props:any) => {
   const theme = useTheme(); // Acceder al tema para los colores
-  const { onChangeSetStore } = props;
+  // const { onChangeSetStore } = props;
   
   const [error, setError] = useState<any>(null);
   const [phoneInput, setPhoneInput] = useState('+569');
   const [isValid, setIsValid] = useState(false);
   
-  const { 
-    currentStep,
-    // currentForm,
-    currentForm
-  } = useAppSelector(selectClientForms);
-  const { 
-    customer
-  } = useAppSelector(selectCustomer);
+  const {  customer } = useAppSelector(selectCustomer);
+  const { installerId, calendarVisits } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!currentForm?.phone) {
+    if (!customer?.phone) {
       formik.setFieldValue('phone', '+569');
     } else {
       // Asegurarse de que el número tenga el formato correcto
-      const phoneNumber = currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`;
+      const phoneNumber = customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`;
       formik.setFieldValue('phone', phoneNumber);
     }
-  }, [currentForm?.phone]);
+  }, [customer?.phone]);
 
   const formik = useFormik({
     initialValues: {
@@ -126,14 +122,26 @@ export const FormStep01 = (props:any) => {
     validationSchema: validationSchema,
     enableReinitialize: true, 
 
-    onSubmit: (values) => {
+    onSubmit: async (values:any) => {
+      
+      
+      // calendarVisits?.calendarId
+      // customer?.customerId
+      
       Promise.all([
-        dispatch(
+        await dispatch(
           setCustomer({
             ...customer,
             customerId: values?.email,
           })
         ),
+        customer?.customerId && 
+        calendarVisits?.calendarId && 
+          await dispatch(setCalendarVisits({
+            customerId: customer?.customerId ,
+            calendarId: calendarVisits?.calendarId,
+          })),
+        
         dispatch(setStep(2)),
       ]);
     
@@ -141,16 +149,16 @@ export const FormStep01 = (props:any) => {
     },
     }); 
     
-  const handleReset = () => {
-    dispatch(cleanData());
-    formik.resetForm();
-  };
+  // const handleReset = () => {
+  //   dispatch(cleanData());
+  //   formik.resetForm();
+  // };
 
   const handleClearAllData = () => {
     // Limpia el formulario
     formik.resetForm();
     // Limpia los datos del cliente
-    dispatch(cleanData());
+    // dispatch(cleanData());
     // Limpia el estado del cliente
     dispatch(setCustomer({
       customerId: '',
@@ -246,6 +254,8 @@ export const FormStep01 = (props:any) => {
                   
                   {/* Nombre y Email en una línea */}
                   <Box sx={{ display: 'flex', gap: 2 }}>
+                    
+                    {/* Nombre*/}
                     <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Nombre</CustomFormLabel>
                       <CustomTextField
@@ -265,6 +275,7 @@ export const FormStep01 = (props:any) => {
                         helperText={formik.touched.name && formik.errors.name}
                       />
                     </Box>
+                     {/* Email*/}
                     <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Email</CustomFormLabel>
                       <CustomTextField
@@ -283,35 +294,13 @@ export const FormStep01 = (props:any) => {
                         helperText={formik.touched.email && formik.errors.email}
                       />
                     </Box>
-                  </Box>
-                  <pre>{JSON.stringify(customer, null, 2)}</pre>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    {/* Dirección */}
-                    <Box sx={{ width: '50%' }}>
-                      <CustomFormLabel>Dirección</CustomFormLabel>
-                      <AddressInput 
-                        onSelectAddress={(addressDetails) => {
-                          if (addressDetails) {
-                            formik.setFieldValue('address', addressDetails.StreetAddress);
-                            formik.setFieldTouched('address', true);
-                            dispatch(setCustomerData({              
-                                address: addressDetails?.StreetAddress || "",
-                                city: addressDetails?.City || "",
-                                state: addressDetails?.State || "",
-                                zipCode: addressDetails?.ZipCode || "",
-                                lat: String(addressDetails?.Latitude || ""),
-                                long: String(addressDetails?.Longitude || ""),
-                                zoomLevel: "15"
-                            }))
-                          }
-                        }}
-                        error={formik.touched.address && Boolean(formik.errors.address)}
-                        helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
-                      />
-                    </Box>
                     
-                    <Box sx={{ width: '50%' }}>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+
+                    
                       {/* Teléfono */}
+                    <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Teléfono</CustomFormLabel>
                       <PhoneInput
                         international
@@ -343,24 +332,44 @@ export const FormStep01 = (props:any) => {
                             fontSize: '0.75rem'
                           }}
                         >
-                          {formik.errors.phone}
+                          {String(formik.errors.phone)}
                         </Typography>
                       )}
                     </Box>
+                    
+                     {/* Dirección */}
+                     <Box sx={{ width: '50%' }}>
+                      <CustomFormLabel>Dirección</CustomFormLabel>
+                      <AddressInput 
+                        onSelectAddress={(addressDetails) => {
+                          if (addressDetails) {
+                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldTouched('address', true);
+                            dispatch(setCustomerData({              
+                                address: addressDetails?.StreetAddress || "",
+                                city: addressDetails?.City || "",
+                                state: addressDetails?.State || "",
+                                zipCode: addressDetails?.ZipCode || "",
+                                lat: String(addressDetails?.Latitude || ""),
+                                long: String(addressDetails?.Longitude || ""),
+                                zoomLevel: "15"
+                            }))
+                          }
+                        }}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
+                      />
+                    </Box>s
                   </Box>
-                  {/* <CustomTextField
-                    fullWidth
-                    id="address"
-                    name="address"
-                    value={formik.values.address}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="Ingrese su dirección completa"
-                    error={formik.touched.address && Boolean(formik.errors.address)}
-                    helperText={formik.touched.address && formik.errors.address}
-                    multiline
-                    rows={2}
-                  /> */}
+                  
+                  
+                  {/* <pre>{JSON.stringify(customer, null, 2)}</pre> */}
+                  {/* <pre>
+                    InstallerId = {JSON.stringify(installerId, null, 2)}
+                    <br/>calendarId = {JSON.stringify(calendarVisits?.calendarId, null, 2)}
+                    <br/>customerId = {JSON.stringify(customer?.customerId, null, 2)}
+                  </pre> */}
+                  
 
                   
                 </VerticalForm>

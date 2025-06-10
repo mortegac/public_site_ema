@@ -1,3 +1,5 @@
+import { Box } from '@mui/material';
+
 type Props = {
   description?: string;
   children: React.ReactNode;
@@ -5,11 +7,11 @@ type Props = {
 };
 
 const PageContainer = ({ title, description, children }: Props) => (
-  <div>
+  <Box sx={{background:"pink"}}>
     <title>{title}</title>
     <meta name="description" content={description} />
     {children}
-  </div>
+  </Box>
 );
 
 export default PageContainer;

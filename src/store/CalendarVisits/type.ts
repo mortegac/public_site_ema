@@ -1,7 +1,9 @@
 export type calendarVisitInput = {
     startDate?: string,
     endDate?: string,
-    userId: string,
+    userId?: string,
+    customerId?: string,
+    calendarId?: string,
 };  
 
 export type CalendarVisit = {

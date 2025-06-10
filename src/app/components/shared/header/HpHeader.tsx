@@ -18,7 +18,8 @@ const HpHeader = (props: any) => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     justifyContent: "center",
     [theme.breakpoints.up("lg")]: {
-      minHeight: "100px",
+      minHeight: "81px",
+      background: "#4dbfd9",
     },
     backgroundColor: "#fcfcfc",
     // backgroundColor: theme.palette.primary.light,
@@ -31,6 +32,7 @@ const HpHeader = (props: any) => {
     color: theme.palette.text.secondary,
     justifyContent: "space-between",
     shadow: 1,
+    // background: "#4dbfd9",
   }));
 
   //   sidebar
@@ -52,6 +54,7 @@ const HpHeader = (props: any) => {
       <Container
         sx={{
           maxWidth: "1400px !important",
+          background: "#4dbfd9",
         }}
       >
         <ToolbarStyled>

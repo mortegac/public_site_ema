@@ -11,7 +11,11 @@ const Logo = () => {
     height: customizer.TopbarHeight,
     width: customizer.isCollapse ? "40px" : "180px",
     overflow: "hidden",
-    display: "block",
+    display: "flex",
+    justifyContent:"center",
+    alignItems:"center",
+    // display: "block",
+    
   }));
 
   if (customizer.activeDir === "ltr") {
@@ -19,18 +23,20 @@ const Logo = () => {
       <LinkStyled href="/">
         {customizer.activeMode === "dark" ? (
           <Image
-            src="/images/logos/light-logo.svg"
-            alt="logo"
-            height={customizer.TopbarHeight}
-            width={174}
+            src="/images/logos/logo.png"
+            alt="Energica city"
+            // height={customizer.TopbarHeight}
+            width={175}
+            height={28}
             priority
           />
         ) : (
           <Image
-            src={"/images/logos/dark-logo.svg"}
-            alt="logo"
-            height={customizer.TopbarHeight}
-            width={174}
+            src={"/images/logos/logo.png"}
+            alt="Energica city"
+            // height={customizer.TopbarHeight}
+            width={175}
+            height={28}
             priority
           />
         )}

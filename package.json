@@ -31,6 +31,7 @@
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.13",
+    "emailjs-com": "^3.2.0",
     "emoji-picker-react": "^4.5.2",
     "formik": "2.2.9",
     "i18next": "^23.5.1",

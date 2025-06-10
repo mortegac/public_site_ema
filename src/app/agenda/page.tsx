@@ -21,7 +21,7 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 const HomePage = () => {
   return (
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
-      <HeaderAlert />
+      {/* <HeaderAlert /> */}
       <HpHeader /> 
      
      

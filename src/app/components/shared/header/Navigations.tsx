@@ -11,22 +11,34 @@ import { useEffect, useState } from "react";
 
 export const NavLinks = [
   {
-    title: "Inicio",
-    href: "/",
+    title: "Home",
+    href: "https://energica.city/",
   },
   {
-    title: "Agenda",
-    href: "/agenda",
+    title: "Quienes Somos",
+    href: "https://energica.city/que-es-energica-city",
   },
   {
-    title: "Cotizador",
-    // new: true,
-    href: "/cotizador",
+    title: "Servicios",
+    href: "https://energica.city/instalacion_cargadores",
   },
   {
-    title: "FAQs",
-    href: "/faqs",
+    title: "¿Dudas?",
+    href: "https://energica.city/faq-y-tc",
   },
+  // {
+  //   title: "Agenda",
+  //   href: "/agenda",
+  // },
+  // {
+  //   title: "Cotizador",
+  //   // new: true,
+  //   href: "/cotizador",
+  // },
+  // {
+  //   title: "FAQs",
+  //   href: "/faqs",
+  // },
   // {
   //   title: "Contact",
   //   href: "/frontend-pages/contact",

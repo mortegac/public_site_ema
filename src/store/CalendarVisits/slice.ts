@@ -1,7 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { emptyCalendarVisit, calendarVisitInput, CalendarVisit } from './type';
 import { RootState } from "../store";
-import { fetchCalendarVisitsByState } from './services';
+import { fetchCalendarVisitsByState, makeReservation } from './services';
+import { getShoppingCart } from '../ShoppingCart/slice';
+import { getWebpayStart } from '../Webpay/slice';
+
 interface CalendarVisitsSliceState {
   currentStep: number,
   status: "idle" | "loading" | "failed";
@@ -9,6 +12,8 @@ interface CalendarVisitsSliceState {
   calendarVisits: CalendarVisit;
   loading: boolean;
   error: string | null;
+  message: string;
+  cartId: string;
 }
 
 const initialState: CalendarVisitsSliceState = {
@@ -18,6 +23,8 @@ const initialState: CalendarVisitsSliceState = {
   calendarVisits: emptyCalendarVisit,
   loading: false,
   error: null,
+  message: "",
+  cartId: "",
 };
 
 export const getCalendarVisits = createAsyncThunk(
@@ -35,16 +42,28 @@ export const getCalendarVisits = createAsyncThunk(
   
 export const setCalendarVisits = createAsyncThunk(
     "CalendarVisits/updateCalendarVisits ",
-    async (objFilter: calendarVisitInput) => {
+    async (objFilter: calendarVisitInput, { dispatch }) => {
       try {
-        const response:any = await fetchCalendarVisitsByState({ ...objFilter });
+        const response:any = await makeReservation({ ...objFilter });
+        
+        if (response && response.cartId) {
+          Promise.all([
+            dispatch(getShoppingCart({ shoppingCartId: response.cartId })),
+            dispatch(getWebpayStart({ 
+              shoppingCartId: response.cartId,
+              glosa: "Visita técnica", 
+             }))
+          ])
+          // await dispatch(getShoppingCart({ shoppingCartId: response.cartId }));
+        }
+        
         return response;
       } catch (error) {
         console.error(">>>>ERROR FETCH getCalendarVisits", error)
         return Promise.reject(error);
       }
     }
-  );
+);
 
 
 // export const updateDistance = createAsyncThunk(
@@ -111,6 +130,27 @@ const calendarVisitsSlice = createSlice({
         
       })
       .addCase(getCalendarVisits.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error al actualizar la distancia';
+      })
+      
+      
+    // getCalendarVisits
+      .addCase(setCalendarVisits.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(setCalendarVisits.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(">>> setCalendarVisits >> action.payload >>", action.payload.data)
+        state.calendarVisits = action?.payload
+        state.message = action?.payload?.message
+        state.cartId = action?.payload?.cartId
+        //  "message": "visita agendada exitosamente",
+        //   "cartId": "b7fddb24-b4d4-42fb-9bc4-e46cfbbe0442"
+        
+      })
+      .addCase(setCalendarVisits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la distancia';
       });

@@ -86,6 +86,7 @@ export default function BookingCalendar() {
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
   const [initialLoad, setInitialLoad] = useState(true);
+  const [selectedInstaller, setSelectedInstaller] = useState<string>("");
 
   const UUID = useId();
   const { 
@@ -160,6 +161,7 @@ export default function BookingCalendar() {
   }, [selectedDate, calendarVisits]);
 
   const handleInstaller = async (installerId: string) => {
+    setSelectedInstaller(installerId);
     await dispatch(setInstaller(installerId));
   };
 
@@ -271,13 +273,53 @@ export default function BookingCalendar() {
         ) : (
           <Box sx={{ width: '70%', height: '100%' }}>
             <Box sx={{ marginBottom: 4 }}>
-              <Button sx={{ marginRight: 10}}
-                onClick={()=>handleInstaller("ariel.rivera@energica.city")
-                }
-              >ariel.rivera@energica.city</Button>
+              <Button 
+                sx={{ 
+                  marginRight: 5,
+                  backgroundColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#f5f5f5',
+                  color: selectedInstaller === "ariel.rivera@energica.city" ? 'white' : 'inherit',
+                  border: '1px solid',
+                  borderColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#e8e4e4',
+                  '&:hover': {
+                    backgroundColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#e0e0e0',
+                    borderColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#e8e4e4',
+                  }
+                }}
+                onClick={() => handleInstaller("ariel.rivera@energica.city")}
+              >
+                Instalador 1
+              </Button>
               <Button
-              onClick={()=>handleInstaller("matias.vera@energica.city")}
-              >matias.vera@energica.city</Button>
+                sx={{ 
+                  marginRight: 5,
+                  backgroundColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#f5f5f5',
+                  color: selectedInstaller === "matias.vera@energica.city" ? 'white' : 'inherit',
+                  border: '1px solid',
+                  borderColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#e8e4e4',
+                  '&:hover': {
+                    backgroundColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#e0e0e0',
+                    borderColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#e8e4e4',
+                  }
+                }}
+                onClick={() => handleInstaller("matias.vera@energica.city")}
+              >
+                Instalador 2
+              </Button>
+              <Button
+                sx={{ 
+                  backgroundColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#f5f5f5',
+                  color: selectedInstaller === "fj.novoap@gmail.com" ? 'white' : 'inherit',
+                  border: '1px solid',
+                  borderColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#e8e4e4',
+                  '&:hover': {
+                    backgroundColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#e0e0e0',
+                    borderColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#e8e4e4',
+                  }
+                }}
+                onClick={() => handleInstaller("fj.novoap@gmail.com")}
+              >
+                Instalador 3
+              </Button>
             </Box>
             <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
               {/* <pre>{JSON.stringify(weekDays, null, 2 )}</pre> */}

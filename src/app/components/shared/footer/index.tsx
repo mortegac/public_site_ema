@@ -16,10 +16,10 @@ const footerLinks = [
   {
       id: 1,
       children: [
-          {
-              title: true,
-              titleText: '',
-          },
+          // {
+          //     title: true,
+          //     titleText: '',
+          // },
           {
               title: false,
               titleText: 'Inicio',
@@ -35,16 +35,16 @@ const footerLinks = [
               titleText: 'Cotizador',
               link: '/cotizador',
           },
-          {
-              title: false,
-              titleText: 'FAQs',
-              link: '/faqs',
-          },
-          {
-              title: false,
-              titleText: 'Contactanos',
-              link: '/contactanos',
-          }
+          // {
+          //     title: false,
+          //     titleText: 'FAQs',
+          //     link: '/faqs',
+          // },
+          // {
+          //     title: false,
+          //     titleText: 'Contactanos',
+          //     link: '/contactanos',
+          // }
       ],
   },
   // {

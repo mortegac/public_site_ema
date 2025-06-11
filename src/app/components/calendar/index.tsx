@@ -307,16 +307,16 @@ export default function BookingCalendar() {
               </Button>
               <Button
                 sx={{ 
-                  backgroundColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#f5f5f5',
-                  color: selectedInstaller === "fj.novoap@gmail.com" ? 'white' : 'inherit',
+                  backgroundColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#f5f5f5',
+                  color: selectedInstaller === "francisco.novoa@energica.city" ? 'white' : 'inherit',
                   border: '1px solid',
-                  borderColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#e8e4e4',
+                  borderColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#e8e4e4',
                   '&:hover': {
-                    backgroundColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#e0e0e0',
-                    borderColor: selectedInstaller === "fj.novoap@gmail.com" ? 'black' : '#e8e4e4',
+                    backgroundColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#e0e0e0',
+                    borderColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#e8e4e4',
                   }
                 }}
-                onClick={() => handleInstaller("fj.novoap@gmail.com")}
+                onClick={() => handleInstaller("francisco.novoa@energica.city")}
               >
                 Instalador 3
               </Button>

@@ -10,7 +10,7 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  */
 
 export const MainSchema = a
-   .schema({
+  .schema({
     User: a
       .model({
         userId: a.id().required(),
@@ -135,14 +135,14 @@ export const MainSchema = a
       duration: a.integer(),
       state: a.enum([
         "available", // disponible
-        "reserved", // reservada lo libera webpayStatus si falla
+        "reserved", // reservada lo libera webpayStatus si falla 15m
         "payed", // pagada  
         "payedAndAgended", // pagada y se genero en google calendar
         "error", // fallo
         "occupied", // no disponible
         "stale", // paso la fecha  
         "timedOut", //expiro
-        "waiting", //la transaccion inicio pero no ha terminado; espera a q la transaccion termine asi no es limpiada automaticamente
+        "waiting", //la transaccion inicio pero no ha terminado; espera a q la transaccion termine asi no es limpiada automaticamente 15m
       ]),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
@@ -165,6 +165,7 @@ export const MainSchema = a
       zipCode: a.string().default(""),
       lat: a.string().default(""),
       long: a.string().default(""),
+      referenceAddress: a.string().default(""),
       zoomLevel: a.string().default("15"),
       ClientForm: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId"),

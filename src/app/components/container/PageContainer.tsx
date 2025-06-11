@@ -7,7 +7,7 @@ type Props = {
 };
 
 const PageContainer = ({ title, description, children }: Props) => (
-  <Box sx={{background:"pink"}}>
+  <Box>
     <title>{title}</title>
     <meta name="description" content={description} />
     {children}

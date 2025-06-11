@@ -1421,6 +1421,22 @@
                 ]
               }
             },
+            "ShoppingCartDetail": {
+              "name": "ShoppingCartDetail",
+              "isArray": false,
+              "type": {
+                "model": "ShoppingCartDetail"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "HAS_ONE",
+                "associatedWith": [
+                  "calendarId"
+                ],
+                "targetNames": []
+              }
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -1568,6 +1584,13 @@
             },
             "long": {
               "name": "long",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "referenceAddress": {
+              "name": "referenceAddress",
               "isArray": false,
               "type": "String",
               "isRequired": false,
@@ -3863,6 +3886,28 @@
                 ]
               }
             },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "CalendarVisit": {
+              "name": "CalendarVisit",
+              "isArray": false,
+              "type": {
+                "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "calendarId"
+                ]
+              }
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -4849,7 +4894,9 @@
             "payedAndAgended",
             "error",
             "occupied",
-            "stale"
+            "stale",
+            "timedOut",
+            "waiting"
           ]
         },
         "EstimateStateValidation": {
@@ -5040,6 +5087,34 @@
             },
             "email": {
               "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "amount": {
+              "name": "amount",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "card": {
+              "name": "card",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "payment_type_code": {
+              "name": "payment_type_code",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "status": {
+              "name": "status",
               "isArray": false,
               "type": "String",
               "isRequired": false,
@@ -5441,6 +5516,12 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "reason": {
+              "name": "reason",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
             }
           }
         },

@@ -17,6 +17,7 @@ export type Customer = {
   lat?: string,
   long?: string,
   zoomLevel?: string,
+  residenceType?: string,
 };
 
 export const emptyCustomer: Customer = {
@@ -34,6 +35,7 @@ export const emptyCustomer: Customer = {
   lat:"",
   long:"",
   zoomLevel:"",
+  residenceType: "",
 };
 
 

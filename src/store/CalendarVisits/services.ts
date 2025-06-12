@@ -29,6 +29,23 @@ interface CalendarVisitsResponse {
   };
 }
 
+interface InstallerWithCalendar {
+  userId: string;
+  name: string;
+  CalendarVisits: {
+    items: Array<{
+      startDate: string;
+      state: string;
+    }>;
+  };
+}
+
+interface ListUsersResponse {
+  listUsers: {
+    items: InstallerWithCalendar[];
+  };
+}
+
 export const fetchCalendarVisitsByState = async (objFilter: calendarVisitInput) => {
   try {
     const response = await client.graphql<CalendarVisitsResponse>({
@@ -80,7 +97,55 @@ export const fetchCalendarVisitsByState = async (objFilter: calendarVisitInput) 
   }
 };
 
+export const fetchLastScheduleInstallers = async () => {
+  try {
+    const startDate = dayjs().utc().startOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
+    const endDate = dayjs().utc().add(30, 'days').endOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
 
+    const response = await client.graphql<ListUsersResponse>({
+      query: `
+        query LIST_USERS($startDate: String!, $endDate: String!) {
+          listUsers(
+            filter: {
+              roleId: {eq: "installer"}
+            }
+          ) {
+            items {
+              userId
+              name
+              CalendarVisits(
+                filter: {
+                  startDate: {
+                    between: [$startDate, $endDate]
+                  },
+                  state: {eq: available}
+                }
+                sortDirection: ASC
+                limit: 1
+              ) {
+                items {
+                  startDate
+                  state
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        startDate: startDate,
+        endDate: endDate
+      }
+    }) as GraphQLResult<ListUsersResponse>;
+    
+    console.log("response.data", response.data)
+
+    return response.data?.listUsers?.items || [];
+  } catch (error) {
+    console.log("Error fetching calendar visits:", error);
+    throw error;
+  }
+};
 
 export const makeReservation = async (objFilter: calendarVisitInput) => {
   try {

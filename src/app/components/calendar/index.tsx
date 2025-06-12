@@ -77,11 +77,22 @@ interface CalendarVisitsResponse {
 }
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, setDataForm, getCalendarVisits, selectCalendarVisits } from "@/store/CalendarVisits/slice";
+import { setStep, setDataForm, getCalendarVisits, getLastScheduleInstallers, selectCalendarVisits } from "@/store/CalendarVisits/slice";
 import { setInstaller } from "@/store/CalendarVisits/slice";
 
+interface InstallerWithCalendar {
+  userId: string;
+  name: string;
+  CalendarVisits: {
+    items: Array<{
+      startDate: string;
+      state: string;
+    }>;
+  };
+}
+
 export default function BookingCalendar() {
-  const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
+  // const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
@@ -91,8 +102,10 @@ export default function BookingCalendar() {
   const UUID = useId();
   const { 
     calendarVisits, 
+    lastScheduleInstallers,
     status,
     installerId
+    
   } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
@@ -126,6 +139,7 @@ export default function BookingCalendar() {
   useEffect(() => {
     if (initialLoad) {
       handleInstaller("ariel.rivera@energica.city");
+      dispatch(getLastScheduleInstallers())
       setInitialLoad(false);
     }
   }, [initialLoad]);
@@ -135,7 +149,8 @@ export default function BookingCalendar() {
     // Calcular los 7 días de la semana a partir de selectedDate
     const startOfWeek = selectedDate.startOf('week');
     const daysInWeek: Dayjs[] = [];
-    for (let i = 0; i < 7; i++) {
+    // for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 5; i++) {
       daysInWeek.push(startOfWeek.add(i, 'day'));
     }
     setWeekDays(daysInWeek);
@@ -174,7 +189,7 @@ export default function BookingCalendar() {
 
   const handleTimeSlotClick = async (date: Dayjs, timeSlot: TimeSlot) => {
     
-    console.log("--timeSlot--", timeSlot)
+    // console.log("--timeSlot--", timeSlot)
     
     if (timeSlot.available) {
       // alert(`Has seleccionado la hora: ${timeSlot.time} el día ${date.format('dddd, DD [de] MMMM')} con ID: ${timeSlot.calendarId}`);
@@ -192,7 +207,7 @@ export default function BookingCalendar() {
 
   return (
     <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
-      {/* <pre>installerId = {JSON.stringify(installerId, null, 2)}</pre> */}
+      {/* <pre>installerId = {JSON.stringify(lastScheduleInstallers, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
       <Typography
         align="left"
@@ -214,14 +229,14 @@ export default function BookingCalendar() {
         <Box sx={{ width: '30%', height: '100%' }}>
           <Paper elevation={3} sx={{ p: 2, height: '100%' }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-
-
-
               <DateCalendar
                 value={selectedDate}
                 onChange={handleDateChange}
                 views={['month', 'day']}
                 disablePast={true}
+                shouldDisableDate={(date) => {
+                  return date.isSame(dayjs(), 'day');
+                }}
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -254,10 +269,12 @@ export default function BookingCalendar() {
                   },
                   '.MuiPickersDay-root.Mui-disabled': {
                     color: (theme) => theme.palette.text.disabled,
+                    textDecoration: 'line-through',
                   },
                   '.MuiPickersDay-root.MuiPickersDay-today': {
                     border: '2px solid',
                     borderColor: (theme) => theme.palette.primary.main,
+                    textDecoration: 'line-through',
                   },
                 }}
               />
@@ -271,55 +288,62 @@ export default function BookingCalendar() {
             <LoadingIcon icon="puff" color="rgb(86, 193, 0)" className="m-8 h-20"/>
           </Box>
         ) : (
-          <Box sx={{ width: '70%', height: '100%' }}>
-            <Box sx={{ marginBottom: 4 }}>
-              <Button 
-                sx={{ 
-                  marginRight: 5,
-                  backgroundColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#f5f5f5',
-                  color: selectedInstaller === "ariel.rivera@energica.city" ? 'white' : 'inherit',
-                  border: '1px solid',
-                  borderColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#e8e4e4',
-                  '&:hover': {
-                    backgroundColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#e0e0e0',
-                    borderColor: selectedInstaller === "ariel.rivera@energica.city" ? 'black' : '#e8e4e4',
-                  }
-                }}
-                onClick={() => handleInstaller("ariel.rivera@energica.city")}
-              >
-                Instalador 1
-              </Button>
-              <Button
-                sx={{ 
-                  marginRight: 5,
-                  backgroundColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#f5f5f5',
-                  color: selectedInstaller === "matias.vera@energica.city" ? 'white' : 'inherit',
-                  border: '1px solid',
-                  borderColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#e8e4e4',
-                  '&:hover': {
-                    backgroundColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#e0e0e0',
-                    borderColor: selectedInstaller === "matias.vera@energica.city" ? 'black' : '#e8e4e4',
-                  }
-                }}
-                onClick={() => handleInstaller("matias.vera@energica.city")}
-              >
-                Instalador 2
-              </Button>
-              <Button
-                sx={{ 
-                  backgroundColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#f5f5f5',
-                  color: selectedInstaller === "francisco.novoa@energica.city" ? 'white' : 'inherit',
-                  border: '1px solid',
-                  borderColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#e8e4e4',
-                  '&:hover': {
-                    backgroundColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#e0e0e0',
-                    borderColor: selectedInstaller === "francisco.novoa@energica.city" ? 'black' : '#e8e4e4',
-                  }
-                }}
-                onClick={() => handleInstaller("francisco.novoa@energica.city")}
-              >
-                Instalador 3
-              </Button>
+          <Box sx={{ width: '70%', height: '80%' }}>
+            <Box sx={{ 
+              marginBottom: 4,
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 2,
+              flexWrap: 'wrap'
+            }}>
+              {lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
+                <Box
+                sx={{
+                      minWidth: 160, 
+                      mr: 2, 
+                      flexShrink: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%'
+                    }}
+                >
+                  <Button 
+                    key={installer.userId}
+                    sx={{ 
+                      backgroundColor: selectedInstaller === installer.userId ? 'black' : '#f5f5f5',
+                      color: selectedInstaller === installer.userId ? 'white' : 'inherit',
+                      border: '1px solid',
+                      borderColor: selectedInstaller === installer.userId ? 'black' : '#e8e4e4',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      minWidth: '160px',
+                      '&:hover': {
+                        backgroundColor: selectedInstaller === installer.userId ? 'black' : '#e0e0e0',
+                        borderColor: selectedInstaller === installer.userId ? 'black' : '#e8e4e4',
+                      }
+                    }}
+                    onClick={() => handleInstaller(installer.userId)}
+                  >
+                    {/* {installer.userId} */}
+                    {`Instalador ${++index}`}
+                    {/* {installer.CalendarVisits.items[0] && (
+                      <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
+                        {dayjs(installer.CalendarVisits.items[0].startDate).format('DD/MM/YYYY')}
+                      </Typography>
+                    )} */}
+                  </Button>
+                  {/* <span> */}
+                  {installer.CalendarVisits.items[0] && (
+                      <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
+                        Proxima fecha <b>{dayjs(installer.CalendarVisits.items[0].startDate).format('D [de] MMMM')}</b>
+                      </Typography>
+                    )}
+                  {/* </span> */}
+                </Box>
+              ))}
             </Box>
             <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
               {/* <pre>{JSON.stringify(weekDays, null, 2 )}</pre> */}
@@ -332,7 +356,7 @@ export default function BookingCalendar() {
                   <Box 
                     key={`${formattedDay}-${i}`} 
                     sx={{
-                      minWidth: 150, 
+                      minWidth: 160, 
                       mr: 2, 
                       flexShrink: 0,
                       display: 'flex',
@@ -401,7 +425,7 @@ export default function BookingCalendar() {
                         ))
                       ) : (
                         <Typography variant="body2" color="text.secondary" align="center">
-                          No hay horas disponibles
+                          Sin <br/> disponibilidad
                         </Typography>
                       )}
                     </Box>

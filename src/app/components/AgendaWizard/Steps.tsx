@@ -44,7 +44,7 @@ export default function HorizontalLinearStepper() {
   };
 
   return (
-    <Box bgcolor="#ffffff" pt={7} pb={7}>
+    <Box bgcolor="#ffffff" pt={7} pb={2}>
       <Container
         sx={{
           maxWidth: "1400px !important",

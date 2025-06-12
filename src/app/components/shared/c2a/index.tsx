@@ -59,10 +59,10 @@ const C2a = () => {
                                     }
                                 }}>¿Necesita su visita técnica en región?</Typography>
                                 <Stack spacing={{ xs: 1, sm: 2 }} direction="row"  flexWrap="wrap" mb={3}>
-                                    <Button variant="contained" size="large" href="https://api.whatsapp.com/send?phone=56111223333">Hablemos por whatsapp</Button>
+                                    <Button variant="contained" size="large" href="https://api.whatsapp.com/send?phone=56967666652">Hablemos por whatsapp</Button>
                                     {/* <Button variant="outlined" size="large" href="/auth/auth1/register">Register as Member</Button> */}
                                 </Stack>
-                                <Typography fontSize="14px">Si prefiere también nos puede enviar un email a <Box fontWeight={600} component="span">contacto@energica.city</Box> </Typography>
+                                <Typography fontSize="14px">Si prefiere también nos puede enviar un email a <Box fontWeight={600} component="span"><Box component="a" href="mailto:contacto@energica.city" sx={{ color:"#2A3547", textDecoration: 'none' }}>contacto@energica.city</Box></Box> </Typography>
                             </Box>
                         </Box>
                     </Container>

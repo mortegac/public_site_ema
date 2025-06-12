@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { emptyCalendarVisit, calendarVisitInput, CalendarVisit } from './type';
 import { RootState } from "../store";
-import { fetchCalendarVisitsByState, makeReservation } from './services';
+import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, makeReservation } from './services';
 import { getShoppingCart } from '../ShoppingCart/slice';
 import { getWebpayStart } from '../Webpay/slice';
+import { AnyARecord } from 'node:dns';
 
 interface CalendarVisitsSliceState {
   currentStep: number,
   status: "idle" | "loading" | "failed";
   installerId: string;
+  lastScheduleInstallers: any;
   calendarVisits: CalendarVisit;
   loading: boolean;
   error: string | null;
@@ -20,6 +22,7 @@ const initialState: CalendarVisitsSliceState = {
   currentStep: 0,
   status: "idle",
   installerId: "",
+  lastScheduleInstallers: [],
   calendarVisits: emptyCalendarVisit,
   loading: false,
   error: null,
@@ -39,6 +42,19 @@ export const getCalendarVisits = createAsyncThunk(
       }
     }
   );
+
+export const getLastScheduleInstallers = createAsyncThunk(
+  "CalendarVisits/listLastScheduleInstaller ",
+  async () => {
+    try {
+      const response = await fetchLastScheduleInstallers();
+      return response;
+    } catch (error) {
+      console.log(">>>>ERROR FETCH getCalendarVisits", error)
+      return Promise.reject(error);
+    }
+  }
+); 
   
 export const setCalendarVisits = createAsyncThunk(
     "CalendarVisits/updateCalendarVisits ",
@@ -135,7 +151,25 @@ const calendarVisitsSlice = createSlice({
       })
       
       
-    // getCalendarVisits
+    // getLastScheduleInstallers
+      .addCase(getLastScheduleInstallers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLastScheduleInstallers.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(">>> getLastScheduleInstallers >> action.payload >>", action.payload)
+        state.lastScheduleInstallers = action?.payload
+        
+      })
+      .addCase(getLastScheduleInstallers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error al actualizar la distancia';
+      })
+      
+      
+      
+    // setCalendarVisits
       .addCase(setCalendarVisits.pending, (state) => {
         state.loading = true;
         state.error = null;

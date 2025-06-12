@@ -9,6 +9,9 @@ import {
   Button,
   TextField,
   useTheme,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -86,7 +89,10 @@ const validationSchema = yup.object({
     .string()
     .required('El teléfono es requerido')
     .matches(/^\+56\s?\d{9}$/, 'El teléfono debe tener el formato +56 9XX XXX XXX')
-    .trim()
+    .trim(),
+  residenceType: yup
+    .string()
+    .required('Debe seleccionar un tipo de residencia')
 });
 
 export const FormStep01 = (props:any) => {
@@ -118,6 +124,7 @@ export const FormStep01 = (props:any) => {
       email: customer?.customerId || '',
       address: customer?.address,
       phone: customer?.phone ? (customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`) : '+569',
+      residenceType: customer?.residenceType || '',
     },
     validationSchema: validationSchema,
     enableReinitialize: true, 
@@ -296,6 +303,8 @@ export const FormStep01 = (props:any) => {
                     </Box>
                     
                   </Box>
+                  
+                  
                   <Box sx={{ display: 'flex', gap: 2 }}>
 
                     
@@ -339,6 +348,44 @@ export const FormStep01 = (props:any) => {
                     
                      {/* Dirección */}
                      <Box sx={{ width: '50%' }}>
+                      <CustomFormLabel>Tipo de residencia</CustomFormLabel>
+                      <RadioGroup
+                        name="residenceType"
+                        value={formik.values.residenceType}
+                        onChange={(e) => {
+                          formik.setFieldValue('residenceType', e.target.value);
+                          dispatch(setCustomerData({
+                            residenceType: e.target.value
+                          }));
+                        }}
+                        row
+                      >
+                        <FormControlLabel value="casa" control={<Radio />} label="Casa" />
+                        <FormControlLabel value="edificio" control={<Radio />} label="Edificio" />
+                      </RadioGroup>
+                      {formik.touched.residenceType && formik.errors.residenceType && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            display: 'block',
+                            marginTop: '4px',
+                            marginLeft: '14px',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {String(formik.errors.residenceType)}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                  
+                  
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+
+                    
+                      {/* Teléfono */}
+                    <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
                       <AddressInput 
                         onSelectAddress={(addressDetails) => {
@@ -359,7 +406,28 @@ export const FormStep01 = (props:any) => {
                         error={formik.touched.address && Boolean(formik.errors.address)}
                         helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
                       />
-                    </Box>s
+                    </Box>
+                    
+                     {/* Dirección */}
+                     <Box sx={{ width: '50%' }}>
+                      <CustomFormLabel>Referencias</CustomFormLabel>
+                      <CustomTextField
+                        fullWidth
+                        id="AddressReference"
+                        AddressReference="AddressReference"
+                        value={formik.values.AddressReference}
+                        onChange={formik.handleChange}
+                        // onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                        //   formik.handleBlur;
+                        //   dispatch(setCustomerData({
+                        //     AddressReference: e.target.value
+                        //   }))
+                        // }}
+                        placeholder="Depto 524"
+                        // error={formik.touched.AddressReference && Boolean(formik.errors.AddressReference)}
+                        // helperText={formik.touched.AddressReference && formik.errors.AddressReference}
+                      />
+                    </Box>
                   </Box>
                   
                   

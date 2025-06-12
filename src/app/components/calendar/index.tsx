@@ -208,7 +208,7 @@ export default function BookingCalendar() {
 
   return (
     <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
-      <pre>installerId = {JSON.stringify(lastScheduleInstallers, null, 2)}</pre>
+      {/* <pre>installerId = {JSON.stringify(lastScheduleInstallers, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
       <Typography
         align="left"

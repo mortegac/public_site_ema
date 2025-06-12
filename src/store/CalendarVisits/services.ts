@@ -46,6 +46,61 @@ interface ListUsersResponse {
   };
 }
 
+interface ScheduleOneInstallerResponse {
+  CalendarVisitsByState: {
+    items: Array<{
+      calendarId: string;
+      startDate: string;
+      state: string;
+      userId: string;
+    }>;
+  };
+}
+export const fetchLastScheduleOneInstaller = async (userId: string) => {
+  try {
+    
+    const startDate = dayjs().utc().startOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
+    const endDate = dayjs().utc().add(60, 'days').endOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
+
+    
+    const response = await client.graphql<ScheduleOneInstallerResponse>({
+      query: `
+        query getLatestCalendarVisit($userId: ID!, $startDate: String!, $endDate: String!) {
+          CalendarVisitsByState(
+            state: available
+            startDate: {
+              between: [$startDate, $endDate]
+            }
+            filter: {
+              userId: {eq: $userId}
+            }
+            sortDirection: ASC
+          ) {
+            items {
+              calendarId
+              startDate
+              state
+              userId
+            }
+          }
+        }
+      `,
+      variables: {
+        userId: userId,
+        startDate: startDate || "",
+        endDate: endDate || "",
+      }
+    }) as GraphQLResult<ScheduleOneInstallerResponse>;
+    
+    // console.log("response.data", response.data?.CalendarVisitsByState?.items)
+
+    return response.data?.CalendarVisitsByState?.items || [];
+  } catch (error) {
+    console.log("Error fetching calendar visits:", error);
+    throw error;
+  }
+};
+
 export const fetchCalendarVisitsByState = async (objFilter: calendarVisitInput) => {
   try {
     const response = await client.graphql<CalendarVisitsResponse>({
@@ -88,7 +143,7 @@ export const fetchCalendarVisitsByState = async (objFilter: calendarVisitInput) 
       }
     }) as GraphQLResult<CalendarVisitsResponse>;
     
-    console.log("response.data", response.data)
+    // console.log("response.data", response.data)
 
     return { data: response.data?.CalendarVisitsByState?.items || [], nextToken: null };
   } catch (error) {
@@ -138,7 +193,7 @@ export const fetchLastScheduleInstallers = async () => {
       }
     }) as GraphQLResult<ListUsersResponse>;
     
-    console.log("response.data", response.data)
+    // console.log("response.data", response.data)
 
     return response.data?.listUsers?.items || [];
   } catch (error) {
@@ -167,7 +222,7 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
       }
     }) as GraphQLResult<MakeReservationResponse>;
     
-    console.log("response.data", response.data)
+    // console.log("response.data", response.data)
 
     return response.data?.MakeReservationAndCart;
     

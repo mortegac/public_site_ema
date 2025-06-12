@@ -83,12 +83,13 @@ import { setInstaller } from "@/store/CalendarVisits/slice";
 interface InstallerWithCalendar {
   userId: string;
   name: string;
-  CalendarVisits: {
-    items: Array<{
-      startDate: string;
-      state: string;
-    }>;
-  };
+  startDate: string;
+  // CalendarVisits: {
+  //   items: Array<{
+  //     startDate: string;
+  //     state: string;
+  //   }>;
+  // };
 }
 
 export default function BookingCalendar() {
@@ -207,7 +208,7 @@ export default function BookingCalendar() {
 
   return (
     <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
-      {/* <pre>installerId = {JSON.stringify(lastScheduleInstallers, null, 2)}</pre> */}
+      <pre>installerId = {JSON.stringify(lastScheduleInstallers, null, 2)}</pre>
       {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
       <Typography
         align="left"
@@ -296,8 +297,9 @@ export default function BookingCalendar() {
               gap: 2,
               flexWrap: 'wrap'
             }}>
-              {lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
+              {Array.isArray(lastScheduleInstallers) && lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
                 <Box
+                key={installer?.userId}
                 sx={{
                       minWidth: 160, 
                       mr: 2, 
@@ -327,21 +329,16 @@ export default function BookingCalendar() {
                     }}
                     onClick={() => handleInstaller(installer.userId)}
                   >
-                    {/* {installer.userId} */}
                     {`Instalador ${++index}`}
-                    {/* {installer.CalendarVisits.items[0] && (
-                      <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
-                        {dayjs(installer.CalendarVisits.items[0].startDate).format('DD/MM/YYYY')}
-                      </Typography>
-                    )} */}
+                    <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
+                    {installer?.userId}
+                    </Typography>
                   </Button>
-                  {/* <span> */}
-                  {installer.CalendarVisits.items[0] && (
-                      <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
-                        Proxima fecha <b>{dayjs(installer.CalendarVisits.items[0].startDate).format('D [de] MMMM')}</b>
-                      </Typography>
-                    )}
-                  {/* </span> */}
+                  {/* {installer.CalendarVisits.items[0] && (
+                    )} */}
+                    <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
+                      Proxima fecha <b>{dayjs(installer?.startDate).format('D [de] MMMM')}</b>
+                    </Typography>
                 </Box>
               ))}
             </Box>
@@ -440,49 +437,3 @@ export default function BookingCalendar() {
     </Box>
   );
 }
-
-
- {/* Sección de las franjas horarias */}
-        {/* <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2, minWidth: "100%" }}>
-            {selectedDate ? (
-              <>
-                <Typography variant="h6">
-                  Horas disponibles para el {selectedDate.format('dddd, DD [de] MMMM')}
-                </Typography>
-                {availableTimes.length > 0 ? (
-                  <Grid container spacing={1}>
-                    {availableTimes.map((slot, index) => (
-                      <Grid item key={index}>
-              <Button
-                          variant={slot.available ? 'outlined' : 'text'}
-                          disabled={!slot.available}
-                          onClick={() => handleTimeSlotClick(slot)}
-                          sx={{
-                            minWidth: 100, // Ajusta el ancho de los botones
-                            border: slot.available ? '1px solid' : 'none',
-                            borderColor: (theme) => theme.palette.primary.main,
-                            color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
-                            '&.Mui-disabled': {
-                              borderColor: (theme) => theme.palette.action.disabledBackground,
-                              color: (theme) => theme.palette.text.disabled,
-                            },
-                          }}
-                        >
-                          {slot.time}
-              </Button>
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Typography variant="body1">No hay horas disponibles para este día.</Typography>
-                )}
-              </>
-            ) : (
-              <Typography variant="body1">Selecciona una fecha para ver las horas disponibles.</Typography>
-            )}
-          </Paper>
-        </Grid> */}
-        
-        
-        

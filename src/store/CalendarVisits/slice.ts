@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { emptyCalendarVisit, calendarVisitInput, CalendarVisit } from './type';
 import { RootState } from "../store";
-import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, makeReservation } from './services';
+import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastScheduleOneInstaller,makeReservation } from './services';
 import { getShoppingCart } from '../ShoppingCart/slice';
 import { getWebpayStart } from '../Webpay/slice';
 import { AnyARecord } from 'node:dns';
+import dayjs from 'dayjs';
 
 interface CalendarVisitsSliceState {
   currentStep: number,
@@ -16,6 +17,7 @@ interface CalendarVisitsSliceState {
   error: string | null;
   message: string;
   cartId: string;
+  installersData: {[key: string]: string};
 }
 
 const initialState: CalendarVisitsSliceState = {
@@ -28,6 +30,7 @@ const initialState: CalendarVisitsSliceState = {
   error: null,
   message: "",
   cartId: "",
+  installersData: {},
 };
 
 export const getCalendarVisits = createAsyncThunk(
@@ -48,9 +51,73 @@ export const getLastScheduleInstallers = createAsyncThunk(
   async () => {
     try {
       const response = await fetchLastScheduleInstallers();
-      return response;
+      
+      
+      console.log(">>> 1.- response >>", response);
+      
+      const combinedData = await Promise.all(response.map(async (installer: any) => {
+        
+        const scheduleData:any = await fetchLastScheduleOneInstaller(installer.userId);
+        
+        
+        console.log(`>>> 2.- ${installer.userId} >>", ${JSON.stringify(scheduleData, null, 2)}`);
+        
+        if (Array.isArray(scheduleData) && scheduleData.length > 0) {
+          
+          
+          const now = dayjs();
+          const closestDate = scheduleData.reduce((closest: any, current: any) => {
+            const currentDate = dayjs(current.startDate);
+            const closestDate = dayjs(closest.startDate);
+            return currentDate.diff(now) < closestDate.diff(now) ? current : closest;
+          }, scheduleData[0]);
+
+          return {
+            userId: installer.userId,
+            name: installer.name,
+            startDate: closestDate.startDate,
+            state: closestDate.state
+          };
+        }
+        
+        return {
+          userId: installer.userId,
+          name: installer.name,
+          startDate: null,
+          state: null
+        };
+      }));
+      
+    
+      console.log(">>> combinedData >>", combinedData);
+      
+      return combinedData;
     } catch (error) {
       console.log(">>>>ERROR FETCH getCalendarVisits", error)
+      return Promise.reject(error);
+    }
+  }
+); 
+
+export const getScheduleInstaller = createAsyncThunk(
+  "CalendarVisits/getScheduleInstaller ",
+  async (userId: string) => {
+    try {
+      const response = await fetchLastScheduleOneInstaller(userId);
+      
+      const now = dayjs();
+      const closestDate = response.reduce((closest: any, current: any) => {
+        const currentDate = dayjs(current.startDate);
+        const closestDate = dayjs(closest.startDate);
+        
+        return currentDate.diff(now) < closestDate.diff(now) ? current : closest;
+      }, response[0]);
+      
+      // console.log(">>> getScheduleInstaller - closest date >>", closestDate);
+      
+      return closestDate;
+    } catch (error) {
+      console.log(">>>>ERROR FETCH getScheduleInstaller", error)
       return Promise.reject(error);
     }
   }

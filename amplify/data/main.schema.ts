@@ -10,7 +10,7 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  */
 
 export const MainSchema = a
-  .schema({
+   .schema({
     User: a
       .model({
         userId: a.id().required(),
@@ -167,6 +167,7 @@ export const MainSchema = a
       long: a.string().default(""),
       referenceAddress: a.string().default(""),
       zoomLevel: a.string().default("15"),
+      typeOfResidence: a.enum(["house", "appartment", "other"]),
       ClientForm: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId"),
       Customer: a.hasMany("ShoppingCart", "customerId"),

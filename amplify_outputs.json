@@ -1603,6 +1603,15 @@
               "isRequired": false,
               "attributes": []
             },
+            "typeOfResidence": {
+              "name": "typeOfResidence",
+              "isArray": false,
+              "type": {
+                "enum": "CustomerTypeOfResidence"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
             "ClientForm": {
               "name": "ClientForm",
               "isArray": true,
@@ -4899,6 +4908,14 @@
             "waiting"
           ]
         },
+        "CustomerTypeOfResidence": {
+          "name": "CustomerTypeOfResidence",
+          "values": [
+            "house",
+            "appartment",
+            "other"
+          ]
+        },
         "EstimateStateValidation": {
           "name": "EstimateStateValidation",
           "values": [
@@ -5494,12 +5511,6 @@
               "isArray": false,
               "type": "String",
               "isRequired": false
-            },
-            "isHouse": {
-              "name": "isHouse",
-              "isArray": false,
-              "type": "Boolean",
-              "isRequired": false
             }
           }
         },
@@ -5537,13 +5548,13 @@
               "name": "userId",
               "isArray": false,
               "type": "String",
-              "isRequired": true
+              "isRequired": false
             },
             "date": {
               "name": "date",
               "isArray": false,
               "type": "AWSDate",
-              "isRequired": true
+              "isRequired": false
             }
           }
         }

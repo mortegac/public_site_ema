@@ -80,6 +80,12 @@ const FormSupport: React.FC<SoporteProps> = (props) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSentEmail, setIsSentEmail] = useState({
+    sentEmail: false,
+    isFailure: false,
+    title: "Página no encontrada 😭",
+    text: "Parece que no podemos encontrar la página que estás buscando",
+  });
   
   const formik = useFormik({
     initialValues: {
@@ -107,14 +113,41 @@ const FormSupport: React.FC<SoporteProps> = (props) => {
 
   if (isSubmitted) {
     return (
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="h5" sx={{ mb: 2, color: 'success.main' }}>
-          ¡Gracias por contactarnos!
-        </Typography>
-        <Typography>
-          Hemos recibido su requerimiento y le hemos enviado un email con los detalles.
-        </Typography>
+      <>
+        <Box sx={{ p: 2, display:'flex', justifyContent:"center", alignItems:'center', flexDirection:'column',  textAlign: 'center', minHeight: '50vh' }}>
+          <Typography variant="h3" sx={{ mb: 6, color: 'success.primary' }}>
+            ¡Gracias por contactarnos! 🎉
+          </Typography>
+          <Typography variant="h6" >
+          Hemos recibido su requerimiento, pronto un ejecutivo se contactará
+          {/* , enviamos un email con el detalles. */}
+          </Typography>
+        </Box>
+        <Box width={"100%"} mt={0} 
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            // marginTop:"48px"
+          }}>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{
+            paddingX: 4,
+            paddingY: 1.5,
+            borderRadius: '24px',
+            background:"#FFFFFF",
+            color:"#E81A68",
+            border: "1px solid #E81A68",
+          }}
+          href="/agenda"
+        //   onClick={() => dispatch(setStep(0))}
+        >
+          Agendar otra visita
+        </Button>
       </Box>
+      </>
     );
   }
     

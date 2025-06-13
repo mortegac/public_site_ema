@@ -2,6 +2,9 @@ import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { supportTicketInput } from './type';
 
+import emailjs, { init } from "emailjs-com";
+init("lUerPXXiKXnrvLlVw");
+
 
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
@@ -50,6 +53,12 @@ export const createTicket = async (input: supportTicketInput): Promise<any> => {
         }
         console.log("--createTicket--resolve", data)
         resolve(data);
+
+        sendEmail({
+          to_email:email,
+          phone:phoneNumber,
+          description:description,
+        }); 
           
       } catch (err) {
         console.log("--createTicket--err", err)
@@ -59,3 +68,39 @@ export const createTicket = async (input: supportTicketInput): Promise<any> => {
       }
     });
   };
+  
+  
+  
+export const sendEmail = async (objEmail: any) => {
+
+    try {
+  
+        const SERVICE = "service_wkx5k4h";
+        const TEMPLATE = "template_ocmugt4";
+        init("HAIyMD2QIHEqXcHvd");
+        
+        await emailjs.send(SERVICE, TEMPLATE, { ...objEmail }).then(
+            function (response) {
+                console.log('EMail enviado', { ...objEmail })
+                // LogRocket.log("-Email enviado: ",response);
+                
+            }
+        )
+        return true
+  
+    } catch (error) {
+        console.log('Error: en el envio del Email: ', error)
+        // LogRocket.captureException(error, {
+          //   tags: {
+          //     // additional data to be grouped as "tags"
+          //     type: 'Error-envio-email',
+          //     objEmail:{ objEmail }
+          //   },
+          //   extra: {
+          //     // additional arbitrary data associated with the event
+          //     pageName: 'ProfileView',
+          //   },
+          // });
+        return false
+    }
+  }

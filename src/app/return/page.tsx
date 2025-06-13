@@ -10,7 +10,7 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
 import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 
-import {SvgFailed} from "./components/SvgFailed";
+// import {SvgFailed} from "./components/SvgFailed";
 // import {SvgSuccess} from "./components/SvgSuccess";
 // import {SentEmail} from "./components/SentEmail";
 
@@ -325,7 +325,7 @@ const ReturnPage = () => {
   return (
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
       <HpHeader />
-      <pre>{JSON.stringify(resTransaction, null, 2 )}</pre>
+      {/* <pre>{JSON.stringify(resTransaction, null, 2 )}</pre> */}
       <div 
         style={{ 
             // minHeight: '80vh', 

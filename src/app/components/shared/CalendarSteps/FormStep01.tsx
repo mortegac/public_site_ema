@@ -199,7 +199,7 @@ export const FormStep01 = (props:any) => {
   
   return (
     <>
-    <pre>{JSON.stringify(customer, null, 2 )}</pre>
+    {/* <pre>{JSON.stringify(customer, null, 2 )}</pre> */}
     <Box sx={{ p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography
@@ -216,7 +216,7 @@ export const FormStep01 = (props:any) => {
         >
           Ingrese su información de contacto, incluyendo la dirección en donde se realizara la visita técnica
         </Typography>
-        <Button
+        {/* <Button
           variant="outlined"
           color="error"
           onClick={handleClearAllData}
@@ -227,7 +227,7 @@ export const FormStep01 = (props:any) => {
           }}
         >
           Limpiar todos los datos
-        </Button>
+        </Button> */}
       </Box>
         
     <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>

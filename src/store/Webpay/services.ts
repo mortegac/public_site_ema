@@ -40,6 +40,12 @@ const client = generateClient<MAIN.MainTypes>();
       buy_order: string;
       email: string;
       status: string;
+      amount: string;
+      card_number: string;
+      payment_type_code: string;
+      paymentTransactionId: string;
+      glosa: string;
+      
     };
   }
 
@@ -122,10 +128,15 @@ export const fetchWebpayStatus= async (objFilter: webpayInput) => {
           WebpayStatus(
             token: $token
           ) {
-            message
-            buy_order
-            email
-            status
+              message
+              buy_order
+              email
+              amount
+              card_number
+              payment_type_code
+              paymentTransactionId
+              glosa
+              status
           }
         }
       `,

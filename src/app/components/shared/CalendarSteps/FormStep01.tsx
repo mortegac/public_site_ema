@@ -35,7 +35,6 @@ import { persistor } from '@/store/store';
 
 import 'react-phone-number-input/style.css'
 import './phone.css'
-// import { makeReservation } from '@/store/CalendarVisits/services';
 
 // interface ClientForm {
 //   name: string;
@@ -56,14 +55,6 @@ const VerticalForm = styled(Box)(({ theme }) => ({
     maxWidth: '800px'
   }
 }));
-
-// Componente para el SVG centrado
-// const CenteredSVGContainer = styled(Box)(({ theme }) => ({
-//   display: 'flex',
-//   justifyContent: 'center',
-//   alignItems: 'center',
-//   height: '100%', // Asegura que ocupe toda la altura del contenedor padre
-// }));
 
 
 const validationSchema = yup.object({
@@ -208,6 +199,7 @@ export const FormStep01 = (props:any) => {
   
   return (
     <>
+    <pre>{JSON.stringify(customer, null, 2 )}</pre>
     <Box sx={{ p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography
@@ -346,7 +338,7 @@ export const FormStep01 = (props:any) => {
                       )}
                     </Box>
                     
-                     {/* Dirección */}
+                     {/* Tipo de residencia */}
                      <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Tipo de residencia</CustomFormLabel>
                       <RadioGroup
@@ -355,13 +347,13 @@ export const FormStep01 = (props:any) => {
                         onChange={(e) => {
                           formik.setFieldValue('residenceType', e.target.value);
                           dispatch(setCustomerData({
-                            residenceType: e.target.value
+                            typeOfResidence: e.target.value
                           }));
                         }}
                         row
                       >
-                        <FormControlLabel value="casa" control={<Radio />} label="Casa" />
-                        <FormControlLabel value="edificio" control={<Radio />} label="Edificio" />
+                        <FormControlLabel value="house" control={<Radio />} label="casa" />
+                        <FormControlLabel value="appartment" control={<Radio />} label="edificio" />
                       </RadioGroup>
                       {formik.touched.residenceType && formik.errors.residenceType && (
                         <Typography
@@ -381,10 +373,14 @@ export const FormStep01 = (props:any) => {
                   </Box>
                   
                   
+                    
+  
+  
+                  
                   <Box sx={{ display: 'flex', gap: 2 }}>
 
                     
-                      {/* Teléfono */}
+                      {/* Direccion */}
                     <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
                       <AddressInput 
@@ -408,7 +404,7 @@ export const FormStep01 = (props:any) => {
                       />
                     </Box>
                     
-                     {/* Dirección */}
+                     {/* AddressReference */}
                      <Box sx={{ width: '50%' }}>
                       <CustomFormLabel>Referencias</CustomFormLabel>
                       <CustomTextField
@@ -417,12 +413,12 @@ export const FormStep01 = (props:any) => {
                         AddressReference="AddressReference"
                         value={formik.values.AddressReference}
                         onChange={formik.handleChange}
-                        // onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                        //   formik.handleBlur;
-                        //   dispatch(setCustomerData({
-                        //     AddressReference: e.target.value
-                        //   }))
-                        // }}
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                          formik.handleBlur;
+                          dispatch(setCustomerData({
+                            referenceAddress: e.target.value
+                          }))
+                        }}
                         placeholder="Depto 524"
                         // error={formik.touched.AddressReference && Boolean(formik.errors.AddressReference)}
                         // helperText={formik.touched.AddressReference && formik.errors.AddressReference}

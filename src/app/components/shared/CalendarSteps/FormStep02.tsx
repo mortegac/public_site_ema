@@ -11,6 +11,8 @@ import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
 import { selectShoppingCart, getShoppingCart} from "@/store/ShoppingCart/slice";
 import { selectWebpay} from "@/store/Webpay/slice";
 
+import { formatCurrency } from "@/utils/currency";
+
 export default function FormStep02() {
   const theme = useTheme(); // Acceder al tema para los colores
 
@@ -32,14 +34,14 @@ export default function FormStep02() {
   // };
 
   // Formato para el dinero (ej. para Chile, sin decimales y con separador de miles)
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
+  // const formatCurrency = (amount: number) => {
+  //   return new Intl.NumberFormat('es-CL', {
+  //     style: 'currency',
+  //     currency: 'CLP',
+  //     minimumFractionDigits: 0,
+  //     maximumFractionDigits: 0,
+  //   }).format(amount);
+  // };
   
 
   useEffect(() => {

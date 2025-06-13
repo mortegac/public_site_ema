@@ -11,7 +11,7 @@ import LoadingIcon from "@/app/components/shared/LoadingIcon";
 import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 
 import {SvgFailed} from "./components/SvgFailed";
-import {SvgSuccess} from "./components/SvgSuccess";
+// import {SvgSuccess} from "./components/SvgSuccess";
 // import {SentEmail} from "./components/SentEmail";
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
@@ -22,6 +22,14 @@ import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentT
 // import { selectWebpay, getWebpayStart, getWebpayCommit, getWebpayStatus} from "@/store/Webpay/slice";
 import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
   
+
+import Invoice from './components/Invoice';
+import RetryTransaction from './components/RetryTransaction';
+
+
+
+
+
 const ReturnPage = () => {
   const dispatch = useAppDispatch();
   const isFirstRender = useRef(true);
@@ -34,7 +42,13 @@ const ReturnPage = () => {
         tbk_token: '',
         status: '',
         apiError: false,
-        msg: ''
+        msg: '',
+        glosa: '',
+        total: '',
+        order: '',
+        card: '',
+        typePay: '',
+        to_email: '',
     }
     );
     const { paymentTransaction, status } = useAppSelector(selectPaymentTransaction);
@@ -101,18 +115,22 @@ const ReturnPage = () => {
     
                   setResTransaction(prev => ({
                       ...prev,
-                      status: statusResponse?.status
+                      status: statusResponse?.status,
+                      glosa: statusResponse?.glosa,
+                      total: statusResponse?.amount,
+                      order: statusResponse?.buy_order,
+                      card: statusResponse?.card_number,
+                      typePay: statusResponse?.payment_type_code,
+                      to_email: statusResponse?.email,
                   }));
                   
-                  /* TODO: @francisco deve devolver el status 
-                  */
                   if (commitResponse?.status === "AUTHORIZED" ) {
                       const objEmail = {
                           "glosa": statusResponse?.message,
-                          // "total": statusResponse?.amount,
+                          "total": statusResponse?.amount,
                           "order": statusResponse?.buy_order,
-                          // "card": statusResponse?.card,
-                          // "typePay": statusResponse?.payment_type_code,
+                          "card": statusResponse?.card_number,
+                          "typePay": statusResponse?.payment_type_code,
                           "to_email": statusResponse?.email,
                       }
       
@@ -162,10 +180,20 @@ const ReturnPage = () => {
                   const statusResponse = await fetchWebpayStatus({ token:tbkToken });
                   // const statusResponse = await fetchWPStatus(tbkToken);
                   if (statusResponse?.status) {
-                      setResTransaction(prev => ({
-                          ...prev,
-                          status: statusResponse.status
-                      }));
+                    //   setResTransaction(prev => ({
+                    //       ...prev,
+                    //       status: statusResponse.status
+                    //   }));
+                    setResTransaction(prev => ({
+                        ...prev,
+                        status: statusResponse.status,
+                        glosa: statusResponse?.glosa,
+                        total: statusResponse?.amount,
+                        order: statusResponse?.buy_order,
+                        card: statusResponse?.card_number,
+                        typePay: statusResponse?.payment_type_code,
+                        to_email: statusResponse?.email,
+                    }));
                   }
     
                   return true;
@@ -296,41 +324,53 @@ const ReturnPage = () => {
   
   return (
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
-      {/* <HeaderAlert /> */}
       <HpHeader />
+      <pre>{JSON.stringify(resTransaction, null, 2 )}</pre>
       <div 
-      style={{ 
-        minHeight: '50vh', 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        padding: '2rem'
-      }}
+        style={{ 
+            // minHeight: '80vh', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            padding: '2rem',
+            backgroundColor: '#f8fafc'
+        }}
       >
-        {/* <h1>Procesando el pago...</h1>
-        <p>
-        <pre>{JSON.stringify(resTransaction, null, 2 )}</pre>
-        </p> */}
-        {/* <Box sx={{ width: '100%', display: 'flex', flex:1, justifyContent: 'center', alignItems: 'center', height: '350px' }}>
-          <pre>
-            {JSON.stringify(resTransaction, null, 2 )}
-            token_ws={JSON.stringify(resTransaction?.token_ws, null, 2 )}
-            </pre>  
-        </Box> */}
-        
-        
-        {/* {status === "loading" && */}
+          {/* <pre>{JSON.stringify(resTransaction, null, 2 )}</pre> */}
         {resTransaction?.status === "" &&
           <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
             <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
           </Box>
         }
        
-       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
-          { resTransaction?.status === "AUTHORIZED" && status === "idle" && <SvgSuccess /> }
+       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          { resTransaction?.status === "AUTHORIZED" 
+            && status === "idle" 
+            && <>
+            <Invoice
+                glosa={resTransaction?.glosa}
+                total={resTransaction?.total}
+                order={resTransaction?.order}
+                card={`xxxx xxxx xxxx ${resTransaction?.card}`}
+                typePay={resTransaction?.typePay}
+                email={resTransaction?.to_email}
+            />
+          </>
+          }
           {/* { dataEmail[0]?.status === "AUTHORIZED" && statusPay === "idle" && <SentEmail data={dataEmail[0]}/> } */}
           
-          { resTransaction?.status !== "AUTHORIZED" && resTransaction?.status !== "" && status === "idle" && <SvgFailed /> }
+            { resTransaction?.status !== "AUTHORIZED" 
+                && resTransaction?.status !== "" 
+                && status === "idle" 
+                && <>
+                    <RetryTransaction 
+                     glosa={resTransaction?.glosa}
+                     total={resTransaction?.total}
+                     order={resTransaction?.order}
+                     email={resTransaction?.to_email}
+                    /> 
+                </>
+            }
        </Box>
         
              

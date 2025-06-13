@@ -18,6 +18,9 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
             customerId,
             name,
             // comune,
+            typeOfResidence,
+            referenceAddress,
+            
             address,
             phone, 
             // email,
@@ -31,6 +34,22 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         
         console.log("--createCustomer--", input)
     
+        const formData:any = {
+          customerId: customerId || crypto.randomUUID(),
+          // customerId: customerId || existingCustomer?.customerId || crypto.randomUUID(),
+          name: name || '-',
+          typeOfResidence: typeOfResidence || '-',
+          referenceAddress: referenceAddress || '-',
+          address: address || '-',
+          phone: phone || '-',
+          city: input.city || '-',
+          state: input.state || '-',
+          zipCode: input.zipCode || '-',
+          lat: input.lat || '-',
+          long: input.long || '-',
+          zoomLevel: input.zoomLevel || "15",
+      };
+      
         // Primero verificamos si existe el customer
         let existingCustomer: any = null;
         if (customerId) {
@@ -43,24 +62,25 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         console.log("--existingCustomer--", existingCustomer)
             if (existingCustomer) {
                 console.log("--createCustomer--exists", existingCustomer);
-                resolve(existingCustomer);
+                
+                const { data, errors } = await client.models.Customer.update(formData);
+                if (errors) {
+                  console.log("--updateCustomer--errors", errors)
+                  reject({
+                    errorMessage: errors.map(e => e.message).join(', ')
+                  });
+                  return;
+                }
+                console.log("--updateCustomer--resolve", data)
+                resolve(data);
                 return;
+                
+                // resolve(existingCustomer);
             }
         }
 
         
-        const formData:any = {
-            customerId: customerId || existingCustomer?.customerId || crypto.randomUUID(),
-            name: name || '-',
-            address: address || '-',
-            phone: phone || '-',
-            city: input.city || '-',
-            state: input.state || '-',
-            zipCode: input.zipCode || '-',
-            lat: input.lat || '-',
-            long: input.long || '-',
-            zoomLevel: input.zoomLevel || "15",
-        };
+    
     
         console.log("--formData", formData)
         const { data, errors } = await client.models.Customer.create(formData);

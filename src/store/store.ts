@@ -11,6 +11,7 @@ import calendarVisitsReducer from './CalendarVisits//slice';
 import shoppingCartReducer from './ShoppingCart/slice';
 import webpayReducer from './Webpay/slice';
 import paymentTransactionReducer from './PaymentTransaction/slice';
+import supportTicketReducer from './SupportTicket/slice';
 
 const persistConfig = {
   key: "root",
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   shoppingCart: shoppingCartReducer,
   webpay: webpayReducer,
   paymentTransaction: paymentTransactionReducer,
+  supportTicket: supportTicketReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -2,16 +2,22 @@
 
 // components/BookingCalendar.tsx
 import React, { useState, useEffect, useId, useMemo } from 'react';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 import { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // Importa el idioma español
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import updateLocale from 'dayjs/plugin/updateLocale';
+
+type props = {
+    date: string;
+    format?: string;
+};
+
+import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 // Configura dayjs con los plugins necesarios
 dayjs.extend(utc);
@@ -92,6 +98,21 @@ interface InstallerWithCalendar {
   // };
 }
 
+
+
+export const toChileTime = (props: props) => {
+    const { date, format = "HH:mm" } = props;
+    const dateUTC = new Date(date);
+    return dayjs(dateUTC).tz('America/Santiago').format(format);
+};
+
+// export const toChileTime = (props: props) => {
+//   const { date, format = "HH:mm" } = props;
+//   const horaUTC = new Date(date);
+//   return formatInTimeZone(horaUTC, "America/Santiago", format);
+// };
+
+
 export default function BookingCalendar() {
   // const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
@@ -167,7 +188,8 @@ export default function BookingCalendar() {
       }) || [];
 
       newWeekAvailableTimes[formattedDate] = visitsForDay.map((visit: CalendarVisit) => ({
-        time: dayjs(visit.startDate).format('HH:mm'),
+        // time: dayjs(visit.startDate).format('HH:mm'),
+        time: toChileTime({date:visit?.startDate}),
         available: visit.state === 'available' && !visit.customerId,
         calendarId: visit.calendarId
       }));
@@ -294,10 +316,12 @@ export default function BookingCalendar() {
               marginBottom: 4,
               display: 'flex',
               flexDirection: 'row',
+              justifyContent: 'flex-start',
               gap: 2,
               flexWrap: 'wrap'
             }}>
-              {Array.isArray(lastScheduleInstallers) && lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
+              { Array.isArray(lastScheduleInstallers) && 
+                lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
                 <Box
                 key={installer?.userId}
                 sx={{
@@ -334,10 +358,8 @@ export default function BookingCalendar() {
                     {installer?.userId}
                     </Typography>
                   </Button>
-                  {/* {installer.CalendarVisits.items[0] && (
-                    )} */}
-                    <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
-                      Proxima fecha <b>{dayjs(installer?.startDate).format('D [de] MMMM')}</b>
+                    <Typography variant="caption" sx={{ display: 'block', mt: 0.5, textAlign:'center' }}>
+                      Proxima fecha <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
                     </Typography>
                 </Box>
               ))}
@@ -418,6 +440,7 @@ export default function BookingCalendar() {
                             }}
                           >
                             {slot.time}
+                            {/* {toChileTime({date:slot?.time})} */}
                           </Button>
                         ))
                       ) : (

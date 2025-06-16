@@ -10,7 +10,7 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  */
 
 export const MainSchema = a
-   .schema({
+  .schema({
     User: a
       .model({
         userId: a.id().required(),
@@ -19,7 +19,6 @@ export const MainSchema = a
         roleId: a.id(),
         Role: a.belongsTo("Role", "roleId"),
         TimeSlots: a.hasMany("UserTimeSlot", "userId"),
-        RequestedTickets: a.hasMany("SupportTicket", "solicitantId"),
         ResolveTickest: a.hasMany("SupportTicket", "employeeId"),
         TicketComments: a.hasMany("TicketComment", "userId"),
         CalendarVisits: a.hasMany("CalendarVisit", "userId"),
@@ -106,7 +105,7 @@ export const MainSchema = a
         employeeId: a.id(),
         AssignedEmployee: a.belongsTo("User", "employeeId"),
         solicitantId: a.id(),
-        Solicitant: a.belongsTo("User", "solicitantId"),
+        Solicitant: a.belongsTo("Customer", "solicitantId"),
       })
       .identifier(["supportTicketId"]),
 
@@ -121,6 +120,8 @@ export const MainSchema = a
         SupportTicket: a.belongsTo("SupportTicket", "supportTicketId"),
         userId: a.id().required(),
         User: a.belongsTo("User", "userId"),
+        solicitantId: a.id(),
+        Solicitant: a.belongsTo("Customer", "solicitantId"),
       })
       .identifier(["ticketCommentId"]),
 
@@ -170,7 +171,9 @@ export const MainSchema = a
       typeOfResidence: a.enum(["house", "appartment", "other"]),
       ClientForm: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId"),
-      Customer: a.hasMany("ShoppingCart", "customerId"),
+      ShoppingCart: a.hasMany("ShoppingCart", "customerId"),
+      SupportTicket: a.hasMany("SupportTicket", "solicitantId"),
+      TicketComment: a.hasMany("TicketComment", "solicitantId"),
     }).identifier(["customerId"]),
 
     ClientForm: a.model({
@@ -368,7 +371,7 @@ export const MainSchema = a
       total: a.integer(), //precio
       vat: a.integer(), //iva
       paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]), //metodo de pago
-      status: a.enum(["pending", "completed", "cancelled"]), //status
+      status: a.enum(["pending", "completed", "cancelled", "timed_out"]), //status
 
       ShoppingCartDetails: a.hasMany("ShoppingCartDetail", "shoppingCartId"), //detalles
 
@@ -422,7 +425,7 @@ export const MainSchema = a
     PaymentTransaction: a
       .model({
         paymentTransactionId: a.id().required(),
-        status: a.string(),
+        status: a.string(), //AUTHORIZED, ERROR, //transbank
         amount: a.float().default(0),
         paymentsProcessorCommission: a.float().default(0),
         date: a.datetime(),

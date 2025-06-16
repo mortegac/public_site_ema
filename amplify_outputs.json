@@ -99,22 +99,6 @@
                 ]
               }
             },
-            "RequestedTickets": {
-              "name": "RequestedTickets",
-              "isArray": true,
-              "type": {
-                "model": "SupportTicket"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true,
-              "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "solicitantId"
-                ]
-              }
-            },
             "ResolveTickest": {
               "name": "ResolveTickest",
               "isArray": true,
@@ -1064,7 +1048,7 @@
               "name": "Solicitant",
               "isArray": false,
               "type": {
-                "model": "User"
+                "model": "Customer"
               },
               "isRequired": false,
               "attributes": [],
@@ -1231,6 +1215,28 @@
                 "connectionType": "BELONGS_TO",
                 "targetNames": [
                   "userId"
+                ]
+              }
+            },
+            "solicitantId": {
+              "name": "solicitantId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Solicitant": {
+              "name": "Solicitant",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "solicitantId"
                 ]
               }
             },
@@ -1644,8 +1650,8 @@
                 ]
               }
             },
-            "Customer": {
-              "name": "Customer",
+            "ShoppingCart": {
+              "name": "ShoppingCart",
               "isArray": true,
               "type": {
                 "model": "ShoppingCart"
@@ -1657,6 +1663,38 @@
                 "connectionType": "HAS_MANY",
                 "associatedWith": [
                   "customerId"
+                ]
+              }
+            },
+            "SupportTicket": {
+              "name": "SupportTicket",
+              "isArray": true,
+              "type": {
+                "model": "SupportTicket"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "solicitantId"
+                ]
+              }
+            },
+            "TicketComment": {
+              "name": "TicketComment",
+              "isArray": true,
+              "type": {
+                "model": "TicketComment"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "solicitantId"
                 ]
               }
             },
@@ -4954,7 +4992,8 @@
           "values": [
             "pending",
             "completed",
-            "cancelled"
+            "cancelled",
+            "timed_out"
           ]
         },
         "ShoppingCartDetailTypeOfItem": {

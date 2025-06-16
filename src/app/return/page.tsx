@@ -294,7 +294,8 @@ const ReturnPage = () => {
         // resTransaction?.tbk_token && 
         // resTransaction?.token_ws && 
         // resTransaction?.token_ws !== "" && 
-        getTransaction()
+        resTransaction?.tbk_token && getTransaction()
+        resTransaction?.token_ws && getTransaction()
         
  }, [resTransaction]); 
  
@@ -335,8 +336,8 @@ const ReturnPage = () => {
   return (
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
       <HpHeader />
-      <pre>{JSON.stringify(paymentTransaction, null, 2 )}</pre>
-      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre>
+      {/* <pre>paymentTransaction = {JSON.stringify(paymentTransaction, null, 2 )}</pre>
+      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre> */}
       <div 
         style={{ 
             // minHeight: '80vh', 

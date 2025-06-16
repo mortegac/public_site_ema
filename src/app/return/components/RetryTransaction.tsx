@@ -24,7 +24,7 @@ import { formatCurrency } from "@/utils/currency";
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
-
+import {fetchWebpayStart, WebpayStartResponse} from '@/store/Webpay/services';
 
 interface RetryTransactionProps {
   glosa: string;
@@ -44,16 +44,51 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
     
     const dispatch = useAppDispatch();
     
-    const getRetry = async () => await dispatch(getWebpayStart({ 
-        shoppingCartId: String(shoppingCartId),
-        glosa: String(glosa),
-    }));
+    const getRetry = async () => {
+      try {
+        const response = await (fetchWebpayStart({ 
+          shoppingCartId: String(shoppingCartId),
+          glosa: String(glosa),
+        }));
 
+        if (response?.url) {
+          // Crear un formulario dinámico para hacer el POST
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = response.url;
 
+          // Agregar los campos necesarios
+          const fields = {
+            token_ws: response.token,
+            order: response.order
+          };
+
+          Object.entries(fields).forEach(([key, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            form.appendChild(input);
+          });
+
+          // Agregar el formulario al documento y enviarlo
+          document.body.appendChild(form);
+          form.submit();
+        }
+      } catch (error) {
+        console.error('Error al procesar el pago:', error);
+      }
+    };
+    
+    
+    // await dispatch(getWebpayStart({ 
+    //   shoppingCartId: String(shoppingCartId),
+    //   glosa: String(glosa),
+    // }))
     
   return (
     <>
-    <pre>shoppingCartId = {JSON.stringify(shoppingCartId)}</pre>
+    {/* <pre>shoppingCartId = {JSON.stringify(shoppingCartId)}</pre> */}
       <Box
         sx={{
           backgroundColor: '#f8fafc',

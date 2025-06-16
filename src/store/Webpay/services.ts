@@ -16,7 +16,7 @@ const client = generateClient<MAIN.MainTypes>();
 
 // , ,  
 
-  interface WebpayStartResponse {
+  export interface WebpayStartResponse {
     WebpayStart: {
       order: string;
       token: string;

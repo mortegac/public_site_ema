@@ -10,6 +10,7 @@ export type PaymentTransaction = {
   amount: string,
   glosa: string,
   usersPaymentTransactionsId: string,
+  shoppingCartId: string,
 };
 
 export const emptyPaymentTransaction: PaymentTransaction = {
@@ -18,6 +19,7 @@ export const emptyPaymentTransaction: PaymentTransaction = {
   amount: "",
   glosa: "",
   usersPaymentTransactionsId: "",
+  shoppingCartId: "",
 };
 
 

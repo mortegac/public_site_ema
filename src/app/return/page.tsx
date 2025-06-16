@@ -19,7 +19,8 @@ import { useAppSelector, useAppDispatch } from '@/store/hooks';
 // import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
 // import { selectShoppingCart, getShoppingCart} from "@/store/ShoppingCart/slice";
 import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentTransaction/slice";
-// import { selectWebpay, getWebpayStart, getWebpayCommit, getWebpayStatus} from "@/store/Webpay/slice";
+import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
+
 import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
   
 
@@ -43,12 +44,13 @@ const ReturnPage = () => {
         status: '',
         apiError: false,
         msg: '',
-        glosa: '',
         total: '',
         order: '',
         card: '',
         typePay: '',
         to_email: '',
+        glosa: '',
+        shoppingCartId: '',
     }
     );
     const { paymentTransaction, status } = useAppSelector(selectPaymentTransaction);
@@ -271,7 +273,13 @@ const ReturnPage = () => {
     }, []);
     
     
-    const getTransaction = async () => await dispatch(getPaymentTransaction({ token: String(resTransaction?.token_ws)}));
+    const getTransaction = async () => await dispatch(getPaymentTransaction({ token: String(resTransaction?.tbk_token)}));
+    // const getTransaction = async () => await dispatch(getPaymentTransaction({ token: String(resTransaction?.token_ws)}));
+    
+    // const getRetry = async () => await dispatch(getWebpayStart({ 
+    //     shoppingCartId: String(paymentTransaction?.shoppingCartId),
+    //     glosa: String(paymentTransaction?.glosa),
+    // }));
     
     useEffect(() => {
         if (!isFirstRender.current) return;
@@ -281,9 +289,11 @@ const ReturnPage = () => {
         
  }, [handleValidation]); 
  
+ 
     useEffect(() => {
-        resTransaction?.token_ws && 
-        resTransaction?.token_ws !== "" && 
+        // resTransaction?.tbk_token && 
+        // resTransaction?.token_ws && 
+        // resTransaction?.token_ws !== "" && 
         getTransaction()
         
  }, [resTransaction]); 
@@ -325,7 +335,8 @@ const ReturnPage = () => {
   return (
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
       <HpHeader />
-      {/* <pre>{JSON.stringify(resTransaction, null, 2 )}</pre> */}
+      <pre>{JSON.stringify(paymentTransaction, null, 2 )}</pre>
+      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre>
       <div 
         style={{ 
             // minHeight: '80vh', 
@@ -368,6 +379,7 @@ const ReturnPage = () => {
                      total={resTransaction?.total}
                      order={resTransaction?.order}
                      email={resTransaction?.to_email}
+                     shoppingCartId={paymentTransaction?.shoppingCartId || null}
                     /> 
                 </>
             }

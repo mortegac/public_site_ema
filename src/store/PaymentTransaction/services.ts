@@ -21,6 +21,7 @@ const client = generateClient<MAIN.MainTypes>();
         amount: number;
         glosa: string;
         usersPaymentTransactionsId: string;
+        shoppingCartId: string;
       }>;
     };
   }
@@ -41,6 +42,7 @@ export const fetchPaymentTransaction = async (objFilter: paymentTransactionInput
             amount
             glosa
             usersPaymentTransactionsId
+            shoppingCartId
           }
           }
         }

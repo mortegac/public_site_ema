@@ -298,9 +298,10 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
               color: 'rgba(0, 0, 0, 0.26)',
             }
           }}
-          href="/cotizador"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform"
+          target='_blank'
         >
-          Simular instalación
+          Simular costo de instalación
         </Button>
             
             

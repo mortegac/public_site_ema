@@ -1,58 +1,18 @@
-// import PageContainer from '@/app/components/container/PageContainer';
-// import Banner from '@/app/components/shared/banner/Banner';
-// import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
-// import HpHeader from '@/app/components/shared/header/HpHeader';
-// import Features from '@/app/components/shared/features/Features';
-// import Notice from '@/app/components/shared/notice/Notice';
-// import Pricing from '@/app/components/shared/pricing';
-
-// import Footer from '@/app/components/shared/footer';
-// import ScrollToTop from '@/app/components/shared/scroll-to-top';
-// const HomePage = async () => {
-
-//   return (
-//     <PageContainer title="Instalación de Cargadores para vehículos eléctricos" description="Instalación de Cargadores para vehículos eléctricos">
-//       <HeaderAlert />
-//       <HpHeader />
-//       <Banner
-//         titleOne="Instalación de "
-//         titleTwo="Cargadores para vehículos eléctricos"
-//         description="Valorizamos tus proyectos de instalación de manera ágil e instalamos el cargador directamente en tu hogar, u oficina, sea casa o edificio."
-
-//         buttonText="Agenda tu visita"
-//         buttonURI="/agenda"
-
-//         buttonTextTwo="Simula el costo de la instalación"
-//         buttonURITwo="/cotizador"
-
-//         imageSrc="/images/headers/cargador-electrico.png"
-//       />
-
-//       <Notice />
-
-//       <Features />
-
-//       <Pricing />
-
-//       <Footer />
-
-//       <ScrollToTop />
-
-//     </PageContainer>
-//   );
-// };
-
-// export default HomePage;
-
-
-
+"use client";
 import {
   Box,
+  Stack,
   Typography,
+  Container,
+  Grid,
+  Button,
 } from "@mui/material";
 
 import PageContainer from '@/app/components/container/PageContainer';
+import Banner from '@/app/components/shared/banner/Banner';
+import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
+// import Calendar from "@/app/components/calendar";
 import CalendarSteps from '@/app/components/shared/CalendarSteps';
 import Steps from '@/app/components/AgendaWizard/Steps';
 import C2a from '@/app/components/shared/c2a';
@@ -62,12 +22,18 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 const HomePage = () => {
   return (
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
+      {/* <HeaderAlert /> */}
       <HpHeader /> 
      
-      <Box sx={{ flexGrow: 1 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
-          <Box sx={{ textAlign: 'left', marginTop: '48px' }}>
-            <Typography
+      
+      <Box bgcolor="#ffffff" pt={7} pb={2}>
+        <Container
+          sx={{
+            maxWidth: "1400px !important",
+            position: "relative",
+          }}
+        >
+           <Typography
               variant="h2"
               fontWeight={700}
               lineHeight="1.2"
@@ -75,18 +41,38 @@ const HomePage = () => {
                 fontSize: {
                   xs: "32px",
                   sm: "40px",
+                  textAlign:"center",
                 },
               }}
             >
-              Agenda tú aquí visita técnica
+              Agenda aquí tu visita técnica.
             </Typography>
-          </Box>
-        </Box>
+        </Container>
       </Box>
       
       <Steps/>
       <CalendarSteps/>
+      {/* <Calendar/> */}
+      
+      
       <C2a/>
+      {/* <Banner 
+        titleOne="Agenda tú " 
+        titleTwo="Visita técnica" 
+        description="Agenda tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."
+        
+        buttonText="Simula aquí, el costo de la instalación" 
+        buttonURI="/cotizador" 
+        
+        buttonTextTwo="" 
+        buttonURITwo="/" 
+        
+        imageSrc="/images/headers/agenda-tu-visita.png" 
+        /> */}
+      {/*
+      <Notice />
+      <Features />
+      <Pricing /> */}
      
       <Footer />
       <ScrollToTop />

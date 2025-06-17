@@ -1,3 +1,4 @@
+"use client";
 import {
   Box,
   Stack,
@@ -24,11 +25,15 @@ const HomePage = () => {
       {/* <HeaderAlert /> */}
       <HpHeader /> 
      
-     
-      <Box sx={{ flexGrow: 1 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
-          <Box sx={{ textAlign: 'left', marginTop: '48px' }}>
-            <Typography
+      
+      <Box bgcolor="#ffffff" pt={7} pb={2}>
+        <Container
+          sx={{
+            maxWidth: "1400px !important",
+            position: "relative",
+          }}
+        >
+           <Typography
               variant="h2"
               fontWeight={700}
               lineHeight="1.2"
@@ -36,13 +41,13 @@ const HomePage = () => {
                 fontSize: {
                   xs: "32px",
                   sm: "40px",
+                  textAlign:"center",
                 },
               }}
             >
-              Agenda tú aquí visita técnica
+              Agenda aquí tu visita técnica.
             </Typography>
-          </Box>
-        </Box>
+        </Container>
       </Box>
       
       <Steps/>

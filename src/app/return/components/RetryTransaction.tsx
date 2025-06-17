@@ -2,6 +2,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import InfoIcon from '@mui/icons-material/Info';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
 
 import {
   Box,
@@ -100,10 +102,25 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
         }}
       >
         <Container maxWidth="md" sx={{ py: 4 }}>
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Typography
+              variant="h2"
+              fontWeight={700}
+              lineHeight="1.2"
+              sx={{
+                fontSize: {
+                  xs: "32px",
+                  sm: "40px",
+                },
+                mb: 4
+              }}
+            >
+              Lamentamos informarte que hubo un problema con tu transacción
+            </Typography>
+          </Box>
           
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <SvgFailed/>
-          
+            <SvgFailed/>
           </Box>
           <Paper
             elevation={0}
@@ -251,7 +268,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
             Agendar otra visita
           </Button>
         </Box>
-        <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
+        <Box bgcolor="#f8fafc" width={"100%"} mt={8} 
             sx={{
               display: "flex",
               justifyContent: "space-evenly",
@@ -263,6 +280,9 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
             variant="contained"
             size="large"
             component={Link}
+            startIcon={
+              <InfoIcon/>
+            }
             sx={{
               paddingX: 4,
               paddingY: 1.5,
@@ -272,6 +292,25 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
             href={`/soporte?glosa=${glosa}&total=${total}&order=${order}&email=${email}`}
           >
             Crear un ticket de soporte
+          </Button>
+          
+          <Button
+            variant="contained"
+            size="large"
+            component={Link}
+            startIcon={
+              <PriceChangeIcon/>
+            }
+            sx={{
+              paddingX: 4,
+              paddingY: 1.5,
+              background:"#f8fafc",
+              color:"#E81A68",
+            }}
+            href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
+            target='_blank'
+          >
+            Simular costo de instalación
           </Button>
           
         </Box>

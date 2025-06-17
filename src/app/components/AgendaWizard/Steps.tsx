@@ -34,14 +34,14 @@ export default function HorizontalLinearStepper() {
   } = useAppSelector(selectCalendarVisits);
   
   
-  const isStepOptional = (step: number) => {
-    return step === 1;
-  };
+  // const isStepOptional = (step: number) => {
+  //   return step === 1;
+  // };
 
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
   return (
     <Box bgcolor="#ffffff" pt={7} pb={2}>
@@ -88,9 +88,9 @@ export default function HorizontalLinearStepper() {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;
-            onClick?: () => void;
+            // onClick?: () => void;
           } = {
-            onClick:() => dispatch(setStep(index))
+            // onClick:() => dispatch(setStep(index))
             // onClick: label === "Resumen cotización" && estimate?.estimateId === "" ? undefined : () => dispatch(setStep(index))
           };
           return (

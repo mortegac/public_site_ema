@@ -128,7 +128,7 @@ const ReturnPage = () => {
                   
                   if (commitResponse?.status === "AUTHORIZED" ) {
                       const objEmail = {
-                          "glosa": statusResponse?.message,
+                          "glosa": statusResponse?.glosa,
                           "total": statusResponse?.amount,
                           "order": statusResponse?.buy_order,
                           "card": statusResponse?.card_number,

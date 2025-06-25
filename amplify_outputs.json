@@ -99,8 +99,8 @@
                 ]
               }
             },
-            "ResolveTickest": {
-              "name": "ResolveTickest",
+            "SupportTickets": {
+              "name": "SupportTickets",
               "isArray": true,
               "type": {
                 "model": "SupportTicket"
@@ -1325,6 +1325,13 @@
               "isRequired": true,
               "attributes": []
             },
+            "googleEventId": {
+              "name": "googleEventId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
             "summary": {
               "name": "summary",
               "isArray": false,
@@ -1618,8 +1625,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "ClientForm": {
-              "name": "ClientForm",
+            "ClientForms": {
+              "name": "ClientForms",
               "isArray": true,
               "type": {
                 "model": "ClientForm"
@@ -1650,8 +1657,8 @@
                 ]
               }
             },
-            "ShoppingCart": {
-              "name": "ShoppingCart",
+            "ShoppingCarts": {
+              "name": "ShoppingCarts",
               "isArray": true,
               "type": {
                 "model": "ShoppingCart"
@@ -1666,8 +1673,8 @@
                 ]
               }
             },
-            "SupportTicket": {
-              "name": "SupportTicket",
+            "SupportTickets": {
+              "name": "SupportTickets",
               "isArray": true,
               "type": {
                 "model": "SupportTicket"
@@ -1682,8 +1689,8 @@
                 ]
               }
             },
-            "TicketComment": {
-              "name": "TicketComment",
+            "TicketComments": {
+              "name": "TicketComments",
               "isArray": true,
               "type": {
                 "model": "TicketComment"
@@ -2230,8 +2237,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "EstimateDetail": {
-              "name": "EstimateDetail",
+            "EstimateDetails": {
+              "name": "EstimateDetails",
               "isArray": true,
               "type": {
                 "model": "EstimateDetail"
@@ -2268,8 +2275,8 @@
                 ]
               }
             },
-            "ShoppingCart": {
-              "name": "ShoppingCart",
+            "ShoppingCarts": {
+              "name": "ShoppingCarts",
               "isArray": true,
               "type": {
                 "model": "ShoppingCart"
@@ -2523,8 +2530,8 @@
                 ]
               }
             },
-            "ShoppingCartDetail": {
-              "name": "ShoppingCartDetail",
+            "ShoppingCartDetails": {
+              "name": "ShoppingCartDetails",
               "isArray": true,
               "type": {
                 "model": "ShoppingCartDetail"
@@ -2975,8 +2982,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "InstallationRecipe": {
-              "name": "InstallationRecipe",
+            "InstallationRecipes": {
+              "name": "InstallationRecipes",
               "isArray": true,
               "type": {
                 "model": "InstallationInputRel"
@@ -3727,8 +3734,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "PaymentTransaction": {
-              "name": "PaymentTransaction",
+            "PaymentTransactions": {
+              "name": "PaymentTransactions",
               "isArray": true,
               "type": {
                 "model": "PaymentTransaction"
@@ -5314,6 +5321,18 @@
               "attributes": []
             }
           }
+        },
+        "ReScheduleCalendarVisitReturnType": {
+          "name": "ReScheduleCalendarVisitReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
         }
       },
       "mutations": {
@@ -5522,6 +5541,12 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "visitId": {
+              "name": "visitId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
             }
           }
         },
@@ -5594,6 +5619,28 @@
               "isArray": false,
               "type": "AWSDate",
               "isRequired": false
+            }
+          }
+        },
+        "ReScheduleCalendarVisit": {
+          "name": "ReScheduleCalendarVisit",
+          "isArray": false,
+          "type": {
+            "nonModel": "ReScheduleCalendarVisitReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "oldVisitId": {
+              "name": "oldVisitId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true
+            },
+            "newVisitId": {
+              "name": "newVisitId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true
             }
           }
         }

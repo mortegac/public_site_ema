@@ -10,7 +10,7 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  */
 
 export const MainSchema = a
-  .schema({
+ .schema({
     User: a
       .model({
         userId: a.id().required(),
@@ -19,7 +19,7 @@ export const MainSchema = a
         roleId: a.id(),
         Role: a.belongsTo("Role", "roleId"),
         TimeSlots: a.hasMany("UserTimeSlot", "userId"),
-        ResolveTickest: a.hasMany("SupportTicket", "employeeId"),
+        SupportTickets: a.hasMany("SupportTicket", "employeeId"),
         TicketComments: a.hasMany("TicketComment", "userId"),
         CalendarVisits: a.hasMany("CalendarVisit", "userId"),
         companyId: a.id(),
@@ -127,6 +127,7 @@ export const MainSchema = a
 
     CalendarVisit: a.model({
       calendarId: a.id().required(),
+      googleEventId: a.id(),
       summary: a.string(),
       location: a.string(),
       description: a.string(),
@@ -169,11 +170,11 @@ export const MainSchema = a
       referenceAddress: a.string().default(""),
       zoomLevel: a.string().default("15"),
       typeOfResidence: a.enum(["house", "appartment", "other"]),
-      ClientForm: a.hasMany("ClientForm", "customerId"),
+      ClientForms: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId"),
-      ShoppingCart: a.hasMany("ShoppingCart", "customerId"),
-      SupportTicket: a.hasMany("SupportTicket", "solicitantId"),
-      TicketComment: a.hasMany("TicketComment", "solicitantId"),
+      ShoppingCarts: a.hasMany("ShoppingCart", "customerId"),
+      SupportTickets: a.hasMany("SupportTicket", "solicitantId"),
+      TicketComments: a.hasMany("TicketComment", "solicitantId"),
     }).identifier(["customerId"]),
 
     ClientForm: a.model({
@@ -253,10 +254,10 @@ export const MainSchema = a
       totalInstallationGross: a.integer(), //lo q ve el cliente, iva incluido
 
       //relationships
-      EstimateDetail: a.hasMany("EstimateDetail", "estimateId"),
+      EstimateDetails: a.hasMany("EstimateDetail", "estimateId"),
       installationRecipeId: a.id(),
       InstallationRecipe: a.belongsTo("InstallationRecipe", "installationRecipeId"),
-      ShoppingCart: a.hasMany("ShoppingCart", "estimateId"),
+      ShoppingCarts: a.hasMany("ShoppingCart", "estimateId"),
       formId: a.id(),
       ClientForm: a.belongsTo("ClientForm", "formId"),
     })
@@ -278,7 +279,7 @@ export const MainSchema = a
       InstallationInput: a.belongsTo("InstallationInput", "installationInputId"),
       productId: a.id(),
       Product: a.belongsTo("Product", "productId"),
-      ShoppingCartDetail: a.hasMany("ShoppingCartDetail", "estimateDetailId"),
+      ShoppingCartDetails: a.hasMany("ShoppingCartDetail", "estimateDetailId"),
     })
       .identifier(["estimateDetailId"]),
 
@@ -321,7 +322,7 @@ export const MainSchema = a
       unit: a.string(),
       conductorCrossSection: a.float().default(0),
       installationRecipeId: a.id(),
-      InstallationRecipe: a.hasMany("InstallationInputRel", "installationInputId"),
+      InstallationRecipes: a.hasMany("InstallationInputRel", "installationInputId"),
       EstimateDetails: a.hasMany("EstimateDetail", "installationInputId"),
       Prices: a.hasMany("Price", "installationInputId"),
     }).identifier(["installationInputId"]),
@@ -384,7 +385,7 @@ export const MainSchema = a
 
       //transaccion
       paymentTransactionId: a.id(), //transaction transbank
-      PaymentTransaction: a.hasMany("PaymentTransaction", "shoppingCartId"),
+      PaymentTransactions: a.hasMany("PaymentTransaction", "shoppingCartId"),
 
       //descuentos
       Discounts: a.hasMany("DiscountShoppingCart", "shoppingCartId"), //descuentos

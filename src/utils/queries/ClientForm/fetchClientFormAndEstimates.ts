@@ -15,7 +15,7 @@ const selectionSet = [
     "customerId",
     "Customer.*",
     "Estimates.*",
-    "Estimates.EstimateDetail.*",
+    "Estimates.EstimateDetails.*",
 ] as const;
 
 export type FetchedClientForm = SelectionSet<

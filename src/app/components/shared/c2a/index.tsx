@@ -67,6 +67,11 @@ const C2a = () => {
                         </Box>
                     </Container>
 
+                    {/* {!lgUp && !smUp && (
+                        <Box sx={{ mt: 3, textAlign: 'center' }}>
+                        <Image src='/images/design-collection.png' alt="design" width={300} height={120} style={{ width: '100%', height: 'auto', position: 'static' }} />
+                        </Box>
+                    )} */}
                     {lgUp ?
                         <Image src='/images/design-collection.png' alt="design" width={900} height={365} style={{
                             position: 'absolute', right: 0,

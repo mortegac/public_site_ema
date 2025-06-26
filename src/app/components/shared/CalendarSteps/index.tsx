@@ -73,22 +73,33 @@ const QuoterSteps = (props:any) => {
   };
 
   return (
-    <Box bgcolor="#ffffff" pt={7} pb={7}>
+    <Box 
+      bgcolor="#ffffff" 
+      pt={7} 
+      pb={{ xs: 12, md: 7 }}
+      sx={{
+        minHeight: { xs: '100vh', md: 'auto' },
+        height: { xs: '100%', md: 'auto' },
+        position: 'relative',
+        zIndex: 1,
+        marginBottom: { xs: '96px', md: '0px' },
+      }}
+    >
       <Container
         sx={{
           maxWidth: "1400px !important",
           position: "relative",
+          height: { xs: '100%', md: 'auto' },
+          minHeight: { xs: 'calc(100vh - 140px)', md: 'auto' }, // 140px para padding top/bottom
         }}
       >
-        
-       
-
-            <FormStep 
+        <FormStep 
               onChangeSetStore={onChangeSetStore}
             />
-            {/* <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre>
-            <pre>{JSON.stringify(calendarVisits, null, 2)}</pre> */}
-            {/* <pre>{JSON.stringify(customer, null, 2)}</pre> */}
+       
+
+            
+            {/* <Calendar/> */}
       </Container>
     </Box>
   );

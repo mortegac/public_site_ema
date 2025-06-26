@@ -247,10 +247,10 @@ export default function BookingCalendar() {
           Seleccione una hora para continuar con el proceso de reserva de su visita técnica
       </Typography>
 
-      <Box sx={{ display: 'flex', gap: 4, height: '350px' }}>
+      <Box sx={{ display: 'flex', gap: 4, height: { xs: 'auto', md: '500px' }, flexDirection: { xs: 'column', md: 'row' } }}>
         {/* Calendario mensual */}
-        <Box sx={{ width: '30%', height: '100%' }}>
-          <Paper elevation={3} sx={{ p: 2, height: '100%' }}>
+        <Box sx={{ width: { xs: '100%', md: '30%' }, height: { xs: 'auto', md: 'auto' } }}>
+          <Paper elevation={3} sx={{ p: 2, pb:10,  height: { xs: 'auto', md: 'auto' } }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DateCalendar
                 value={selectedDate}
@@ -262,7 +262,7 @@ export default function BookingCalendar() {
                 }}
                 sx={{
                   width: '100%',
-                  height: '100%',
+                  height: { xs: 'auto', md: '100%' },
                   '.MuiPickersDay-root': {
                     borderRadius: '8px',
                     margin: '2px',
@@ -307,11 +307,11 @@ export default function BookingCalendar() {
 
         {/* Semana con horas disponibles */}
         {status === "loading" ? (
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: { xs: 'auto', md: '500px' } }}>
             <LoadingIcon icon="puff" color="rgb(86, 193, 0)" className="m-8 h-20"/>
           </Box>
         ) : (
-          <Box sx={{ width: '70%', height: '80%' }}>
+          <Box sx={{ width: { xs: '100%', md: '70%' }, height: { xs: 'auto', md: '100%' } }}>
             <Box sx={{ 
               marginBottom: 4,
               display: 'flex',
@@ -329,10 +329,11 @@ export default function BookingCalendar() {
                       mr: 2, 
                       flexShrink: 0,
                       display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%'
+                      flexDirection: { xs: 'row', md: 'column' },
+                      alignItems: { xs: 'center', md: 'center' },
+                      justifyContent: { xs: 'flex-start', md: 'center' },
+                      height: '100%',
+                      gap: { xs: 2, md: 0.5 }
                     }}
                 >
                   <Button 
@@ -345,7 +346,7 @@ export default function BookingCalendar() {
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      minWidth: '160px',
+                      width: { xs: '160px', md: '160px' },
                       '&:hover': {
                         backgroundColor: selectedInstaller === installer.userId ? 'black' : '#e0e0e0',
                         borderColor: selectedInstaller === installer.userId ? 'black' : '#e8e4e4',
@@ -355,16 +356,25 @@ export default function BookingCalendar() {
                   >
                     {`Instalador ${++index}`}
                     <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
-                    {installer?.userId}
+                      {installer?.userId?.split('.')[0] || installer?.userId}
                     </Typography>
                   </Button>
-                    <Typography variant="caption" sx={{ display: 'block', mt: 0.5, textAlign:'center' }}>
-                      Proxima fecha <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
-                    </Typography>
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
+                      display: 'block', 
+                      mt: { xs: 0, md: 0.5 }, 
+                      textAlign: { xs: 'left', md: 'center' },
+                      fontSize: { xs: '0.7rem', md: 'inherit' }
+                    }}
+                  >
+                    Proxima fecha <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
+                  </Typography>
                 </Box>
               ))}
             </Box>
-            <Paper elevation={3} sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}>
+            <Paper elevation={3} sx={{ p: 2, pb:10, height: 'auto', minHeight: '230px', display: 'flex', overflowX: 'auto' }}>
+            {/* <Box  sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}> */}
               {/* <pre>{JSON.stringify(weekDays, null, 2 )}</pre> */}
               {weekDays.map((day, i) => {
                 const formattedDay = day.format('YYYY-MM-DD');
@@ -453,7 +463,10 @@ export default function BookingCalendar() {
                 );
               })}
             </Paper>
+            {/* </Box> */}
+            
           </Box>
+          
         )}
         
       </Box>

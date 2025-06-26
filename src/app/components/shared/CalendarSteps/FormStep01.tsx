@@ -200,7 +200,7 @@ export const FormStep01 = (props:any) => {
   return (
     <>
     {/* <pre>{JSON.stringify(customer, null, 2 )}</pre> */}
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: { xs: 0, md: 2 } }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography
           align="left"
@@ -216,18 +216,6 @@ export const FormStep01 = (props:any) => {
         >
           Ingrese su información de contacto, incluyendo la dirección en donde se realizara la visita técnica
         </Typography>
-        {/* <Button
-          variant="outlined"
-          color="error"
-          onClick={handleClearAllData}
-          sx={{
-            borderRadius: '24px',
-            paddingX: 2,
-            paddingY: 1,
-          }}
-        >
-          Limpiar todos los datos
-        </Button> */}
       </Box>
         
     <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
@@ -241,6 +229,7 @@ export const FormStep01 = (props:any) => {
           sx={{
             maxWidth: "1400px !important",
             position: "relative",
+            padding: { xs: 0, md: '24px' },
           }}
         >
             
@@ -252,10 +241,10 @@ export const FormStep01 = (props:any) => {
                 <VerticalForm>
                   
                   {/* Nombre y Email en una línea */}
-                  <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
                     
                     {/* Nombre*/}
-                    <Box sx={{ width: '50%' }}>
+                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Nombre</CustomFormLabel>
                       <CustomTextField
                         fullWidth
@@ -275,7 +264,7 @@ export const FormStep01 = (props:any) => {
                       />
                     </Box>
                      {/* Email*/}
-                    <Box sx={{ width: '50%' }}>
+                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Email</CustomFormLabel>
                       <CustomTextField
                         fullWidth
@@ -297,11 +286,11 @@ export const FormStep01 = (props:any) => {
                   </Box>
                   
                   
-                  <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
 
                     
                       {/* Teléfono */}
-                    <Box sx={{ width: '50%' }}>
+                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Teléfono</CustomFormLabel>
                       <PhoneInput
                         international
@@ -339,7 +328,7 @@ export const FormStep01 = (props:any) => {
                     </Box>
                     
                      {/* Tipo de residencia */}
-                     <Box sx={{ width: '50%' }}>
+                     <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Tipo de residencia</CustomFormLabel>
                       <RadioGroup
                         name="residenceType"
@@ -377,11 +366,11 @@ export const FormStep01 = (props:any) => {
   
   
                   
-                  <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
 
                     
                       {/* Direccion */}
-                    <Box sx={{ width: '50%' }}>
+                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
                       <AddressInput 
                         onSelectAddress={(addressDetails) => {
@@ -405,7 +394,7 @@ export const FormStep01 = (props:any) => {
                     </Box>
                     
                      {/* AddressReference */}
-                     <Box sx={{ width: '50%' }}>
+                     <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Referencias</CustomFormLabel>
                       <CustomTextField
                         fullWidth

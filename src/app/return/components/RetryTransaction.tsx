@@ -188,7 +188,8 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               display: "flex",
               justifyContent: "space-evenly",
               alignItems: "center",
-              // marginTop:"48px"
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: { xs: 2, md: 0 }
             }}>
               
               {shoppingCartId && <Button
@@ -222,6 +223,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               background:"#FFFFFF",
               color:"#E81A68",
               border: "1px solid #E81A68",
+              width: { xs: '100%', md: 'auto' }
             }}
             // href="/agenda"
             onClick={() => getRetry()}
@@ -261,6 +263,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               background:"#FFFFFF",
               color:"#E81A68",
               border: "1px solid #E81A68",
+              width: { xs: '100%', md: 'auto' }
             }}
             href="/agenda"
           //   onClick={() => dispatch(setStep(0))}
@@ -273,7 +276,8 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               display: "flex",
               justifyContent: "space-evenly",
               alignItems: "center",
-              // marginTop:"48px"
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: { xs: 2, md: 0 }
             }}>
           
           <Button
@@ -288,6 +292,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               paddingY: 1.5,
               background:"#f8fafc",
               color:"#E81A68",
+              width: { xs: '100%', md: 'auto' }
             }}
             href={`/soporte?glosa=${glosa}&total=${total}&order=${order}&email=${email}`}
           >
@@ -306,6 +311,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               paddingY: 1.5,
               background:"#f8fafc",
               color:"#E81A68",
+              width: { xs: '100%', md: 'auto' }
             }}
             href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
             target='_blank'

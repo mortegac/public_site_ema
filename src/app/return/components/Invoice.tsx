@@ -39,35 +39,18 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
         lineHeight: 1.4,
         width: '100%',
         wordBreak: 'keep-all',
+        p:0,
       }}
     >
-      <Container maxWidth="md" sx={{ py: 4 }}>
-        
+     <Container 
+        maxWidth="md" 
+        sx={{ 
+          p: { xs: 0, md: 4 } // 0 en móviles, 4 en desktop
+        }}
+      >
         <Box sx={{ textAlign: 'center', mb: 4 }}>
         <SvgSuccess email={email} />
-        {/* <Typography
-              variant="h2"
-              fontWeight={700}
-              lineHeight="1.2"
-              sx={{
-                fontSize: {
-                  xs: "32px",
-                  sm: "40px",
-                },
-              }}
-            >
-              {email}
-            </Typography> */}
         </Box>
-        {/* <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Image
-            src="https://images.prismic.io/greta/cd66aa9d-58e6-4054-a475-3f0b164ce3db_energica.png"
-            alt="Energica Logo"
-            width={250}
-            height={100}
-            style={{ marginBottom: '3rem' }}
-          />
-        </Box> */}
 
         <Paper
           elevation={0}
@@ -214,36 +197,16 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
           </TableContainer>
         </Paper>
       <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            // marginTop:"48px"
-          }}>
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: { xs: 2, md: 0 }
+        }}>
         <Button
           variant="contained"
           size="large"
-        //   startIcon={
-        //     <Box
-        //       component="span"
-        //       sx={{
-        //         mr: 1,
-        //         display: 'flex',
-        //         alignItems: 'center',
-        //         justifyContent: 'center',
-        //         width: '20px',
-        //         height: '20px',
-        //         borderRadius: '50%',
-        //         backgroundColor: 'rgba(232, 26, 104, 0.1)',
-        //         color: '#E81A68',
-        //         '&::after': {
-        //           content: '"\\276E"', // Carácter de flecha izquierda
-        //           fontSize: '16px',
-        //           lineHeight: 1,
-        //         },
-        //       }}
-        //     />
-        //   }
           sx={{
             paddingX: 4,
             paddingY: 1.5,
@@ -251,6 +214,7 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
             background:"#FFFFFF",
             color:"#E81A68",
             border: "1px solid #E81A68",
+            width: { xs: '100%', md: 'auto' }
           }}
           href="/agenda"
         //   onClick={() => dispatch(setStep(0))}
@@ -263,28 +227,6 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
           type="submit"
           color="primary"
           size="large"
-          // disabled={!formik.isValid || formik.isSubmitting}
-        //   endIcon={
-        //     <Box
-        //       component="span"
-        //       sx={{
-        //         ml: 1,
-        //         display: 'flex',
-        //         alignItems: 'center',
-        //         justifyContent: 'center',
-        //         width: '20px',
-        //         height: '20px',
-        //         borderRadius: '50%',
-        //         backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        //         color: '#fff',
-        //         '&::after': {
-        //           content: '"\\276F"',
-        //           fontSize: '16px',
-        //           lineHeight: 1,
-        //         },
-        //       }}
-        //     />
-        //   }
           sx={{
             paddingX: 4,
             paddingY: 1.5,
@@ -296,7 +238,8 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
             '&.Mui-disabled': {
               backgroundColor: 'rgba(0, 0, 0, 0.12)',
               color: 'rgba(0, 0, 0, 0.26)',
-            }
+            },
+            width: { xs: '100%', md: 'auto' }
           }}
           href="https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform"
           target='_blank'
@@ -304,15 +247,6 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
           Simular costo de instalación
         </Button>
             
-            
-        {/* <Button type="submit" variant="contained" color="primary"
-          sx={{
-            width: "50%",
-            padding: "10px",
-          }}
-        >
-          Siguiente
-        </Button> */}
       </Box>
       </Container>
     </Box>

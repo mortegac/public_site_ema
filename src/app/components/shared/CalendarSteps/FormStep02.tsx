@@ -153,21 +153,26 @@ export default function FormStep02() {
               </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              {/* Logo de Webpay */}
-              <img
-                src="/images/svgs/webpay-logo.svg" // Asegúrate de tener este logo en tu carpeta public/
-                // src="/images/logos/dark-logo.svg" // Asegúrate de tener este logo en tu carpeta public/
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end', 
+              alignItems: 'center',
+              flexDirection: { xs: 'column', md: 'row' }, // Columna en móviles, fila en desktop
+              gap: { xs: 2, md: 0 } // Espacio entre elementos en móviles
+            }}>
+              
+
+              {/* <Box
+                component="img"
+                src="/images/svgs/webpay-logo.svg"
                 alt="Webpay by Transbank"
-                style={{ height: '60px', objectFit: 'contain' }}
-              />
-
-
-              {/* {webpay?.token ?
-                  <><span className='text-white pt-1'>Continuar</span> <FiChevronRight size={28} className="text-white ml-4" /></>
-                  : <img src="/images/loading.gif" alt="waiting .." />
-              } */}
-                        
+                sx={{
+                  height: '60px',
+                  objectFit: 'contain',
+                  mt: { xs: 3, md: 0 } // 24px en móviles (3 * 8px), 0 en desktop
+                }}
+              /> */}
+              
               <Button
                 variant="contained"
                 type='submit'
@@ -182,14 +187,13 @@ export default function FormStep02() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      // Estilo para la flecha, puedes usar un icono de MUI si lo prefieres
                       width: '20px',
                       height: '20px',
                       borderRadius: '50%',
                       backgroundColor: 'rgba(255, 255, 255, 0.3)',
                       color: '#fff',
                       '&::after': {
-                        content: '"\\276F"', // Carácter de flecha derecha
+                        content: '"\\276F"',
                         fontSize: '16px',
                         lineHeight: 1,
                       },
@@ -199,15 +203,14 @@ export default function FormStep02() {
                 sx={{
                   paddingX: 4,
                   paddingY: 1.5,
-                  borderRadius: '24px', // Ya definido en el tema, pero se puede sobrescribir aquí
+                  borderRadius: '24px',
                   boxShadow: theme.shadows[3],
                   '&:hover': {
                     boxShadow: theme.shadows[6],
                   },
-                  minWidth: "170px",
-                  width: "170px"
+                  minWidth: { xs: '100%', md: '170px' }, // 100% en móviles, 170px en desktop
+                  width: { xs: '100%', md: '170px' } // 100% en móviles, 170px en desktop
                 }}
-                // onClick={() => alert('Continuar con el pago')}
               >
                 { status === "loading" && <>
                     <LoadingIcon icon="puff" color="#E81A68" style={{width:"40px", height:"40px"}}/>
@@ -219,9 +222,21 @@ export default function FormStep02() {
                 </span>
                 </>
                 }
-        
               </Button>
+              
+             
+              
             </Box>
+            <Box
+                component="img"
+                src="/images/svgs/webpay-logo.svg"
+                alt="Webpay by Transbank"
+                sx={{
+                  height: '60px',
+                  objectFit: 'contain',
+                  mt: { xs: 4.5, md: 0 } // 36px en móviles (4.5 * 8px), 0 en desktop
+                }}
+              />
           </Box>
           </form>
           

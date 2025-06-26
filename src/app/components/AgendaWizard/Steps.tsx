@@ -21,7 +21,7 @@ import { selectCalendarVisits, setStep } from "@/store/CalendarVisits/slice";
 const steps = [
   "Selección de la fecha", 
   "Información de contacto", 
-  "Pago"
+  "Paga tu reserva"
 ];
 
 export default function HorizontalLinearStepper() {

@@ -74,15 +74,15 @@ const QuoterSteps = (props:any) => {
 
   return (
     <Box 
-      bgcolor="#ffffff" 
-      pt={7} 
-      pb={{ xs: 12, md: 7 }}
+      bgcolor="#ffffff"
+      pt={3} 
+      pb={{ xs: 4, md: 7 }}
       sx={{
-        minHeight: { xs: '100vh', md: 'auto' },
+        // minHeight: { xs: '100vh', md: 'auto' },
         height: { xs: '100%', md: 'auto' },
         position: 'relative',
         zIndex: 1,
-        marginBottom: { xs: '96px', md: '0px' },
+        marginBottom: { xs: '0px', md: '0px' },
       }}
     >
       <Container
@@ -90,7 +90,7 @@ const QuoterSteps = (props:any) => {
           maxWidth: "1400px !important",
           position: "relative",
           height: { xs: '100%', md: 'auto' },
-          minHeight: { xs: 'calc(100vh - 140px)', md: 'auto' }, // 140px para padding top/bottom
+          // minHeight: { xs: 'calc(100vh - 140px)', md: 'auto' }, // 140px para padding top/bottom
         }}
       >
         <FormStep 

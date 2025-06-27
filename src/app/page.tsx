@@ -26,7 +26,7 @@ const HomePage = () => {
       <HpHeader /> 
      
       
-      <Box bgcolor="#ffffff" pt={7} pb={2}>
+      <Box bgcolor="#ffffff" pt={4} pb={0}>
         <Container
           sx={{
             maxWidth: "1400px !important",
@@ -45,7 +45,7 @@ const HomePage = () => {
                 },
               }}
             >
-              Agenda aquí tu visita técnica.
+              Agenda aquí tu visita.
             </Typography>
         </Container>
       </Box>
@@ -56,24 +56,7 @@ const HomePage = () => {
       
       
       <C2a/>
-      {/* <Banner 
-        titleOne="Agenda tú " 
-        titleTwo="Visita técnica" 
-        description="Agenda tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."
-        
-        buttonText="Simula aquí, el costo de la instalación" 
-        buttonURI="/cotizador" 
-        
-        buttonTextTwo="" 
-        buttonURITwo="/" 
-        
-        imageSrc="/images/headers/agenda-tu-visita.png" 
-        /> */}
-      {/*
-      <Notice />
-      <Features />
-      <Pricing /> */}
-     
+      
       <Footer />
       <ScrollToTop />
     </PageContainer>

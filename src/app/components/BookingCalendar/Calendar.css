@@ -83,7 +83,7 @@
     display: block;
   }
   .rbc-calendar {
-    height: 100vh !important;
+    /* height: 100vh !important; */
   }
 }
 

@@ -8,13 +8,17 @@ import 'dayjs/locale/es'; // Importa el idioma español
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+
 
 type props = {
     date: string;
     format?: string;
 };
 
-import { Box, Grid, Typography, Button, Paper } from '@mui/material';
+import { Box, Grid, Typography, Button, Paper, IconButton } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -83,13 +87,15 @@ interface CalendarVisitsResponse {
 }
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, setDataForm, getCalendarVisits, getLastScheduleInstallers, selectCalendarVisits } from "@/store/CalendarVisits/slice";
-import { setInstaller } from "@/store/CalendarVisits/slice";
+import { setStep, setInstaller, setDataForm, getCalendarVisits, getLastScheduleInstallers, selectCalendarVisits, setLoadingCalendar } from "@/store/CalendarVisits/slice";
+import { Stats } from 'fs';
 
 interface InstallerWithCalendar {
   userId: string;
   name: string;
   startDate: string;
+  calendarId: string;
+  getLastScheduleInstallers: string;
   // CalendarVisits: {
   //   items: Array<{
   //     startDate: string;
@@ -126,8 +132,8 @@ export default function BookingCalendar() {
     calendarVisits, 
     lastScheduleInstallers,
     status,
-    installerId
-    
+    statusCalendar,
+    installerId,    
   } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
@@ -160,6 +166,7 @@ export default function BookingCalendar() {
   // Efecto para la carga inicial
   useEffect(() => {
     if (initialLoad) {
+      // dispatch(setLoadingCalendar("loading"))
       handleInstaller("ariel.rivera@energica.city");
       dispatch(getLastScheduleInstallers())
       setInitialLoad(false);
@@ -228,6 +235,45 @@ export default function BookingCalendar() {
     }
   };
 
+  
+    // Funciones para cambiar de mes
+    const handlePrevMonth = () => {
+      setSelectedDate(prev => prev.subtract(1, 'week'));
+    };
+    const handleNextMonth = () => {
+      setSelectedDate(prev => prev.add(1, 'week'));
+    };
+    
+  // Calcula el primer y último día de la semana seleccionada
+  const startOfWeek = selectedDate.startOf('week');
+  const endOfWeek = selectedDate.endOf('week');
+
+  // Si el mes y año son iguales, muestra solo uno
+  let weekLabel = startOfWeek.format('MMMM YYYY');
+  if (
+    startOfWeek.format('MMMM YYYY') !== endOfWeek.format('MMMM YYYY')
+  ) {
+    // Si el mes o año cambian, muestra ambos
+    weekLabel = `${startOfWeek.format('MMMM YYYY')} - ${endOfWeek.format('MMMM YYYY')}`;
+  }
+
+  const handleInstallerDateClick = (installer: InstallerWithCalendar) => {
+    if (!installer?.startDate) return;
+    
+    // Crear el objeto day desde la fecha del instalador
+    const day = dayjs(installer.startDate);
+    
+    // Crear el objeto slot con la información necesaria
+    const slot: TimeSlot = {
+      time: toChileTime({ date: installer.startDate }),
+      available: true, // Asumiendo que está disponible
+      calendarId: installer.calendarId // O algún ID que identifique esta fecha
+    };
+    
+    // Llamar a la función existente
+    handleTimeSlotClick(day, slot);
+  };
+
   return (
     <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
       {/* <pre>installerId = {JSON.stringify(lastScheduleInstallers, null, 2)}</pre> */}
@@ -236,9 +282,9 @@ export default function BookingCalendar() {
         align="left"
                     sx={{
                       display: "block",
-                      paddingBottom: "30px",
-                      fontSize: "18px",
-                      lineHeight: "2",
+                      paddingBottom: "20px",
+                      fontSize: "16px",
+                      lineHeight: "1.2",
                       marginTop: "0",
                       color: (theme) => theme.palette.text.primary
                     }}
@@ -249,7 +295,7 @@ export default function BookingCalendar() {
 
       <Box sx={{ display: 'flex', gap: 4, height: { xs: 'auto', md: '500px' }, flexDirection: { xs: 'column', md: 'row' } }}>
         {/* Calendario mensual */}
-        <Box sx={{ width: { xs: '100%', md: '30%' }, height: { xs: 'auto', md: 'auto' } }}>
+        <Box sx={{ width: { xs: '100%', md: '30%' }, height: { xs: 'auto', md: 'auto' }, display: { xs: 'none', md: 'block' } }}>
           <Paper elevation={3} sx={{ p: 2, pb:10,  height: { xs: 'auto', md: 'auto' } }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DateCalendar
@@ -306,11 +352,6 @@ export default function BookingCalendar() {
         </Box>
 
         {/* Semana con horas disponibles */}
-        {status === "loading" ? (
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: { xs: 'auto', md: '500px' } }}>
-            <LoadingIcon icon="puff" color="rgb(86, 193, 0)" className="m-8 h-20"/>
-          </Box>
-        ) : (
           <Box sx={{ width: { xs: '100%', md: '70%' }, height: { xs: 'auto', md: '100%' } }}>
             <Box sx={{ 
               marginBottom: 4,
@@ -318,8 +359,17 @@ export default function BookingCalendar() {
               flexDirection: 'row',
               justifyContent: 'flex-start',
               gap: 2,
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
+              height: '120px', overflowX: 'auto'
             }}>
+              
+              {
+              status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
+                <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
+              </Box>
+              }
+              
+              
               { Array.isArray(lastScheduleInstallers) && 
                 lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
                 <Box
@@ -332,10 +382,10 @@ export default function BookingCalendar() {
                       flexDirection: { xs: 'row', md: 'column' },
                       alignItems: { xs: 'center', md: 'center' },
                       justifyContent: { xs: 'flex-start', md: 'center' },
-                      height: '100%',
                       gap: { xs: 2, md: 0.5 }
                     }}
                 >
+                 {/* <pre>{JSON.stringify(installer.calendarId, null, 2)}</pre> */}
                   <Button 
                     key={installer.userId}
                     sx={{ 
@@ -346,7 +396,7 @@ export default function BookingCalendar() {
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      width: { xs: '160px', md: '160px' },
+                      width: { xs: '120px', md: '160px' },
                       '&:hover': {
                         backgroundColor: selectedInstaller === installer.userId ? 'black' : '#e0e0e0',
                         borderColor: selectedInstaller === installer.userId ? 'black' : '#e8e4e4',
@@ -354,10 +404,11 @@ export default function BookingCalendar() {
                     }}
                     onClick={() => handleInstaller(installer.userId)}
                   >
-                    {`Instalador ${++index}`}
-                    <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
+                    {/* {`Instalador ${++index}`}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
+                    {`Instalador `}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''}
+                    {/* <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
                       {installer?.userId?.split('.')[0] || installer?.userId}
-                    </Typography>
+                    </Typography> */}
                   </Button>
                   <Typography 
                     variant="caption" 
@@ -365,109 +416,169 @@ export default function BookingCalendar() {
                       display: 'block', 
                       mt: { xs: 0, md: 0.5 }, 
                       textAlign: { xs: 'left', md: 'center' },
-                      fontSize: { xs: '0.7rem', md: 'inherit' }
+                      fontSize: { xs: '0.7rem', md: 'inherit' },
+                      cursor: 'pointer',
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      }
                     }}
+                    onClick={() => handleInstallerDateClick(installer)}
                   >
-                    Proxima fecha <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
+                    Reserve aquí <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
                   </Typography>
                 </Box>
               ))}
             </Box>
-            <Paper elevation={3} sx={{ p: 2, pb:10, height: 'auto', minHeight: '230px', display: 'flex', overflowX: 'auto' }}>
-            {/* <Box  sx={{ p: 2, height: '100%', display: 'flex', overflowX: 'auto' }}> */}
-              {/* <pre>{JSON.stringify(weekDays, null, 2 )}</pre> */}
-              {weekDays.map((day, i) => {
-                const formattedDay = day.format('YYYY-MM-DD');
-                const timesForDay = weekAvailableTimes[formattedDay] || [];
-                const isToday = day.isSame(dayjs(), 'day');
+            
+            <Box sx={{ position: 'relative', top: 0, left: 0, zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', background: '#f5f5f5', paddingY:1, marginBottom: 1 }}>
+             
+             <Box sx={{ justifyContent: 'space-between' }}>
+               <IconButton onClick={handlePrevMonth} size="small">
+                 <ArrowBackIcon />
+               </IconButton>
+             </Box>
+             <Typography
+               variant="subtitle1"
+               align="center"
+               sx={{
+                //  fontWeight: 'bold',
+                 pb: 1,
+                 textTransform: 'uppercase',
+               }}
+             >
+               {weekLabel}
+             </Typography>
+             <Box sx={{  }}>
+               <IconButton onClick={handleNextMonth} size="small">
+                 <ArrowForwardIcon />
+               </IconButton>
+             </Box>
+           </Box>
+           
+          
+                
+            <Paper elevation={3} sx={{ 
+                      position: 'relative', p: 2, pb:10, height: 'auto', minHeight: '230px', display: 'flex', flexDirection:'column'}}>
+              
+              {
+                  statusCalendar === "loading" &&  <Box sx={{ 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    zIndex: 2, 
+                    background: '#ffffffc2', 
+                    width: '100%', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    height: 'auto', minHeight: '230px',
+                     }}>
+                  <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
+                </Box>
+                }
+                <Box sx={{position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', width: '100%', overflowX: 'auto', paddingLeft:2 }}>
+              
+                {weekDays.map((day, i) => {
+                  const formattedDay = day.format('YYYY-MM-DD');
+                  const timesForDay = weekAvailableTimes[formattedDay] || [];
+                  const isToday = day.isSame(dayjs(), 'day');
 
-                return (
-                  <Box 
-                    key={`${formattedDay}-${i}`} 
-                    sx={{
-                      minWidth: 160, 
-                      mr: 2, 
-                      flexShrink: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '100%'
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
+                  return (
+                    <Box 
+                      key={`${formattedDay}-${i}`} 
                       sx={{
-                        fontWeight: isToday ? 'bold' : 'normal',
-                        color: isToday ? (theme) => theme.palette.primary.main : 'inherit',
-                        pb: 1,
-                        textTransform: 'capitalize',
+                        minWidth: { xs: 40, md: 100 }, 
+                        mr: 2, 
+                        flexShrink: 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%'
                       }}
-                    >
-                      {day.format('dddd').slice(0, 3).toUpperCase()}
-                      <br />
-                      <Typography variant="h6" component="span">
-                        {day.format('D')}
+                    >                      
+                      <Typography
+                        variant="subtitle1"
+                        align="center"
+                        sx={{
+                          fontWeight: isToday ? 'bold' : 'normal',
+                          color: isToday ? (theme) => theme.palette.primary.main : 'inherit',
+                          pb: 1,
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        {day.format('dddd').slice(0, 3).toUpperCase()}
+                        <br />
+                        <Typography variant="h6" component="span">
+                          {day.format('D')}
+                        </Typography>
                       </Typography>
-                    </Typography>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      gap: 1,
-                      overflowY: 'auto',
-                      flex: 1,
-                      '&::-webkit-scrollbar': {
-                        width: '8px',
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        background: '#f1f1f1',
-                        borderRadius: '4px',
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        background: '#888',
-                        borderRadius: '4px',
-                        '&:hover': {
-                          background: '#555',
+                      <Box sx={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        gap: 1,
+                        overflowY: 'auto',
+                        flex: 1,
+                        '&::-webkit-scrollbar': {
+                          width: '8px',
                         },
-                      },
-                    }}>
-                      {timesForDay.length > 0 ? (
-                        timesForDay.map((slot, index) => (
-                          <Button
-                            key={`${formattedDay}-${slot.time}-${index}`}
-                            variant={slot.available ? 'outlined' : 'text'}
-                            disabled={!slot.available || day.isBefore(dayjs(), 'day')}
-                            onClick={() => handleTimeSlotClick(day, slot)}
+                        '&::-webkit-scrollbar-track': {
+                          background: '#f1f1f1',
+                          borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: '#888',
+                          borderRadius: '4px',
+                          '&:hover': {
+                            background: '#555',
+                          },
+                        },
+                      }}>
+                        {timesForDay.length > 0 ? (
+                          timesForDay.map((slot, index) => (
+                            <Button
+                              key={`${formattedDay}-${slot.time}-${index}`}
+                              variant={slot.available ? 'outlined' : 'text'}
+                              disabled={!slot.available || day.isBefore(dayjs(), 'day')}
+                              onClick={() => handleTimeSlotClick(day, slot)}
+                              sx={{
+                                minWidth: 'auto',
+                                width: '100%',
+                                border: slot.available ? '1px solid' : 'none',
+                                borderColor: (theme) => theme.palette.primary.main,
+                                color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
+                                '&.Mui-disabled': {
+                                  borderColor: (theme) => theme.palette.action.disabledBackground,
+                                  color: (theme) => theme.palette.text.disabled,
+                                },
+                              }}
+                            >
+                              {slot.time}
+                            </Button>
+                          ))
+                        ) : (
+                          <Typography 
+                            variant="body2" 
+                            color="text.secondary" 
+                            align="center"
                             sx={{
-                              minWidth: 'auto',
-                              width: '100%',
-                              border: slot.available ? '1px solid' : 'none',
-                              borderColor: (theme) => theme.palette.primary.main,
-                              color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
-                              '&.Mui-disabled': {
-                                borderColor: (theme) => theme.palette.action.disabledBackground,
-                                color: (theme) => theme.palette.text.disabled,
-                              },
+                              display: { xs: 'none', md: 'block' } // Visible en móviles, oculto en desktop
                             }}
                           >
-                            {slot.time}
-                            {/* {toChileTime({date:slot?.time})} */}
-                          </Button>
-                        ))
-                      ) : (
-                        <Typography variant="body2" color="text.secondary" align="center">
-                          Sin <br/> disponibilidad
-                        </Typography>
-                      )}
+                            Sin <br/> fechas
+                          </Typography>
+                        )}
+                      </Box>
                     </Box>
-                  </Box>
-                );
-              })}
+                  );
+                })}
+              </Box>
+           
+            
+              
             </Paper>
-            {/* </Box> */}
             
           </Box>
           
-        )}
+        {/* )} */}
         
       </Box>
     </Box>

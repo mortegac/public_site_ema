@@ -26,7 +26,7 @@ const HomePage = () => {
       <HpHeader /> 
      
       
-      <Box bgcolor="#ffffff" pt={7} pb={2}>
+      <Box bgcolor="#ffffff" pt={4} pb={0}>
         <Container
           sx={{
             maxWidth: "1400px !important",
@@ -45,7 +45,7 @@ const HomePage = () => {
                 },
               }}
             >
-              Agenda aquí tu visita técnica.
+              Agenda tu visita.
             </Typography>
         </Container>
       </Box>

@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 interface CalendarVisitsSliceState {
   currentStep: number,
   status: "idle" | "loading" | "failed";
+  statusCalendar: "idle" | "loading" | "failed" | string;
   installerId: string;
   lastScheduleInstallers: any;
   calendarVisits: CalendarVisit;
@@ -23,6 +24,7 @@ interface CalendarVisitsSliceState {
 const initialState: CalendarVisitsSliceState = {
   currentStep: 0,
   status: "idle",
+  statusCalendar: "loading",
   installerId: "",
   lastScheduleInstallers: [],
   calendarVisits: emptyCalendarVisit,
@@ -76,7 +78,8 @@ export const getLastScheduleInstallers = createAsyncThunk(
             userId: installer.userId,
             name: installer.name,
             startDate: closestDate.startDate,
-            state: closestDate.state
+            state: closestDate.state,
+            calendarId: closestDate.calendarId
           };
         }
         
@@ -161,9 +164,9 @@ const calendarVisitsSlice = createSlice({
   name: 'clientForms',
   initialState,
   reducers: {
-    // setLoading: (state, action: PayloadAction<boolean>) => {
-    //   state.loading = action.payload;
-    // },
+    setLoadingCalendar: (state, action: PayloadAction<string>) => {
+      state.statusCalendar = action.payload;
+    },
     // setError: (state, action: PayloadAction<string | null>) => {
     //   state.error = action.payload;
     // },
@@ -203,34 +206,34 @@ const calendarVisitsSlice = createSlice({
     builder
     // getCalendarVisits
       .addCase(getCalendarVisits.pending, (state) => {
-        state.loading = true;
+        state.statusCalendar = "loading"
         state.error = null;
       })
       .addCase(getCalendarVisits.fulfilled, (state, action) => {
-        state.loading = false;
+        state.statusCalendar = "idle"
         console.log(">>> getCalendarVisits >> action.payload >>", action.payload.data)
         state.calendarVisits = action?.payload
         
       })
       .addCase(getCalendarVisits.rejected, (state, action) => {
-        state.loading = false;
+        state.statusCalendar = "failed"
         state.error = action.error.message || 'Error al actualizar la distancia';
       })
       
       
     // getLastScheduleInstallers
       .addCase(getLastScheduleInstallers.pending, (state) => {
-        state.loading = true;
+        state.status = "loading"
         state.error = null;
       })
       .addCase(getLastScheduleInstallers.fulfilled, (state, action) => {
-        state.loading = false;
         console.log(">>> getLastScheduleInstallers >> action.payload >>", action.payload)
         state.lastScheduleInstallers = action?.payload
+        state.status = "idle"
         
       })
       .addCase(getLastScheduleInstallers.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed"
         state.error = action.error.message || 'Error al actualizar la distancia';
       })
       
@@ -261,6 +264,7 @@ const calendarVisitsSlice = createSlice({
 
 export const {
     setStep,
+    setLoadingCalendar,
     setInstaller,
     decrement,
     increment,

@@ -179,6 +179,7 @@ export const fetchLastScheduleInstallers = async () => {
                 limit: 1
               ) {
                 items {
+                calendarId
                   startDate
                   state
                 }

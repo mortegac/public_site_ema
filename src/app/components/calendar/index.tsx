@@ -10,7 +10,7 @@ import timezone from 'dayjs/plugin/timezone';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
+import Link from "next/link";
 
 
 type props = {
@@ -292,6 +292,7 @@ export default function BookingCalendar() {
         >
           Seleccione una hora para continuar con el proceso de reserva de su visita técnica
       </Typography>
+  
 
       <Box sx={{ display: 'flex', gap: 4, height: { xs: 'auto', md: '500px' }, flexDirection: { xs: 'column', md: 'row' } }}>
         {/* Calendario mensual */}
@@ -581,6 +582,67 @@ export default function BookingCalendar() {
         {/* )} */}
         
       </Box>
+      <Typography
+        align="left"
+                    sx={{
+                      display: "block",
+                      paddingTop: "8px",
+                      paddingBottom: "8px",
+                      fontSize: "14px",
+                      lineHeight: "1.2",
+                      marginTop: "0",
+                      color: (theme) => theme.palette.text.primary
+                    }}
+                    component="span"
+        >
+          VALOR VISITA TÉCNICA: $10.000
+          </Typography>
+      <Typography
+        align="left"
+                    sx={{
+                      display: "block",
+                      paddingTop: "2px",
+                      paddingBottom: "8px",
+                      fontSize: "14px",
+                      lineHeight: "1.2",
+                      marginTop: "0",
+                      color: (theme) => theme.palette.text.primary
+                    }}
+                    component="span"
+        >(El costo de la visita se descuenta de la instalación.)
+      </Typography>
+      <Typography
+        align="left"
+                    sx={{
+                      display: "block",
+                      paddingTop: "8px",
+                      paddingBottom: "0",
+                      fontSize: "14px",
+                      lineHeight: "1.2",
+                      marginTop: "0",
+                      color: (theme) => theme.palette.text.primary
+                    }}
+                    component="span"
+        >
+          Servicio disponible sólo en RM y provincias específicas de V y VI Región.
+      </Typography>
+      <Link href={`https://energica.city/t-y-c-cotizador`}>
+                      <Typography
+                        sx={{
+                          display: "block",
+                          padding: "10px 0",
+                          fontSize: "15px",
+                          textAlign:"left",
+                          color: (theme) => theme.palette.text.primary,
+                          "&:hover": {
+                            color: (theme) => theme.palette.primary.main,
+                          },
+                        }}
+                        component="span"
+                      >
+                        Conozca aquí nuestros términos y condiciones
+                      </Typography>
+                    </Link>
     </Box>
   );
 }

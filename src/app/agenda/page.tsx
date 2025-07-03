@@ -55,7 +55,7 @@ const HomePage = () => {
       {/* <Calendar/> */}
       
       
-      <C2a/>
+      {/* <C2a/> */}
       {/* <Banner 
         titleOne="Agenda tú " 
         titleTwo="Visita técnica" 

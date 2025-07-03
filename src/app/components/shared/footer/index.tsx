@@ -184,19 +184,19 @@ const Footer = () => {
             </Typography>
 
             <Stack direction="row" gap="20px">
-              <Tooltip title="Facebook">
+              {/* <Tooltip title="Facebook">
                 <Link href="#">
                   <Image
-                    src="/images/icons/icon-facebook.svg"
+                    src="/images/icons/icon-linkedin.svg"
                     alt="facebook"
                     width={22}
                     height={22}
                   />
                 </Link>
-              </Tooltip>
+              </Tooltip> */}
                
               <Tooltip title="Instagram">
-                <Link href="#">
+                <Link href="https://www.instagram.com/energicacity/">
                   <Image
                     src="/images/icons/icon-instagram.svg"
                     alt="instagram"

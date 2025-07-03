@@ -57,7 +57,7 @@ const C2a = () => {
                                         lg: '40px',
                                         xs: '30px'
                                     }
-                                }}>¿Necesita su visita técnica en región?</Typography>
+                                }}>¿Vives en edificio y no sabes qué opciones tienes para cargar tu auto?</Typography>
                                 <Stack spacing={{ xs: 1, sm: 2 }} direction="row"  flexWrap="wrap" mb={3}>
                                     <Button variant="contained" size="large" href="https://api.whatsapp.com/send?phone=56967666652">Hablemos por whatsapp</Button>
                                     {/* <Button variant="outlined" size="large" href="/auth/auth1/register">Register as Member</Button> */}

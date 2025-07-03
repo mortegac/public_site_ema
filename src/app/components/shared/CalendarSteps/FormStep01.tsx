@@ -327,6 +327,118 @@ export const FormStep01 = (props:any) => {
                       )}
                     </Box>
                     
+                    
+                     {/* Direccion */}
+                     <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+                      <CustomFormLabel>Dirección</CustomFormLabel>
+                      <AddressInput 
+                        onSelectAddress={(addressDetails) => {
+                          if (addressDetails) {
+                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldTouched('address', true);
+                            dispatch(setCustomerData({              
+                                address: addressDetails?.StreetAddress || "",
+                                city: addressDetails?.City || "",
+                                state: addressDetails?.State || "",
+                                zipCode: addressDetails?.ZipCode || "",
+                                lat: String(addressDetails?.Latitude || ""),
+                                long: String(addressDetails?.Longitude || ""),
+                                zoomLevel: "15"
+                            }))
+                          }
+                        }}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
+                      />
+                    </Box>
+                    
+                     {/* Tipo de residencia 
+                     <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+                      <CustomFormLabel>Tipo de residencia</CustomFormLabel>
+                      <RadioGroup
+                        name="residenceType"
+                        value={formik.values.residenceType}
+                        onChange={(e) => {
+                          formik.setFieldValue('residenceType', e.target.value);
+                          dispatch(setCustomerData({
+                            typeOfResidence: e.target.value
+                          }));
+                        }}
+                        row
+                      >
+                        <FormControlLabel value="house" control={<Radio />} label="casa" />
+                        <FormControlLabel value="appartment" control={<Radio />} label="edificio" />
+                      </RadioGroup>
+                      {formik.touched.residenceType && formik.errors.residenceType && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            display: 'block',
+                            marginTop: '4px',
+                            marginLeft: '14px',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {String(formik.errors.residenceType)}
+                        </Typography>
+                      )}
+                    </Box>*/}
+                  </Box>
+                  
+                  
+                    
+  
+  
+                  
+                  <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
+
+                    
+                      {/* Direccion 
+                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+                      <CustomFormLabel>Dirección</CustomFormLabel>
+                      <AddressInput 
+                        onSelectAddress={(addressDetails) => {
+                          if (addressDetails) {
+                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldTouched('address', true);
+                            dispatch(setCustomerData({              
+                                address: addressDetails?.StreetAddress || "",
+                                city: addressDetails?.City || "",
+                                state: addressDetails?.State || "",
+                                zipCode: addressDetails?.ZipCode || "",
+                                lat: String(addressDetails?.Latitude || ""),
+                                long: String(addressDetails?.Longitude || ""),
+                                zoomLevel: "15"
+                            }))
+                          }
+                        }}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
+                      />
+                    </Box>*/}
+                    
+                    {/* AddressReference */}
+                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+                      <CustomFormLabel>Referencias</CustomFormLabel>
+                      <CustomTextField
+                        fullWidth
+                        id="AddressReference"
+                        AddressReference="AddressReference"
+                        value={formik.values.AddressReference}
+                        onChange={formik.handleChange}
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                          formik.handleBlur;
+                          dispatch(setCustomerData({
+                            referenceAddress: e.target.value
+                          }))
+                        }}
+                        placeholder="Depto 524"
+                        // error={formik.touched.AddressReference && Boolean(formik.errors.AddressReference)}
+                        // helperText={formik.touched.AddressReference && formik.errors.AddressReference}
+                      />
+                    </Box>
+                    
                      {/* Tipo de residencia */}
                      <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Tipo de residencia</CustomFormLabel>
@@ -359,60 +471,9 @@ export const FormStep01 = (props:any) => {
                         </Typography>
                       )}
                     </Box>
-                  </Box>
-                  
-                  
                     
-  
-  
-                  
-                  <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
-
+                     
                     
-                      {/* Direccion */}
-                    <Box sx={{ width: { xs: '100%', md: '50%' } }}>
-                      <CustomFormLabel>Dirección</CustomFormLabel>
-                      <AddressInput 
-                        onSelectAddress={(addressDetails) => {
-                          if (addressDetails) {
-                            formik.setFieldValue('address', addressDetails.StreetAddress);
-                            formik.setFieldTouched('address', true);
-                            dispatch(setCustomerData({              
-                                address: addressDetails?.StreetAddress || "",
-                                city: addressDetails?.City || "",
-                                state: addressDetails?.State || "",
-                                zipCode: addressDetails?.ZipCode || "",
-                                lat: String(addressDetails?.Latitude || ""),
-                                long: String(addressDetails?.Longitude || ""),
-                                zoomLevel: "15"
-                            }))
-                          }
-                        }}
-                        error={formik.touched.address && Boolean(formik.errors.address)}
-                        helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
-                      />
-                    </Box>
-                    
-                     {/* AddressReference */}
-                     <Box sx={{ width: { xs: '100%', md: '50%' } }}>
-                      <CustomFormLabel>Referencias</CustomFormLabel>
-                      <CustomTextField
-                        fullWidth
-                        id="AddressReference"
-                        AddressReference="AddressReference"
-                        value={formik.values.AddressReference}
-                        onChange={formik.handleChange}
-                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                          formik.handleBlur;
-                          dispatch(setCustomerData({
-                            referenceAddress: e.target.value
-                          }))
-                        }}
-                        placeholder="Depto 524"
-                        // error={formik.touched.AddressReference && Boolean(formik.errors.AddressReference)}
-                        // helperText={formik.touched.AddressReference && formik.errors.AddressReference}
-                      />
-                    </Box>
                   </Box>
                   
                   

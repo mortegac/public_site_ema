@@ -7,7 +7,7 @@ import LoadingIcon from "@/app/components/shared/LoadingIcon";
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCustomer } from "@/store/Customer/slice";
-import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
+import { selectCalendarVisits, setStep,  } from "@/store/CalendarVisits/slice";
 import { selectShoppingCart, getShoppingCart} from "@/store/ShoppingCart/slice";
 import { selectWebpay} from "@/store/Webpay/slice";
 
@@ -172,7 +172,45 @@ export default function FormStep02() {
                   mt: { xs: 3, md: 0 } // 24px en móviles (3 * 8px), 0 en desktop
                 }}
               /> */}
-              
+              <Button
+          variant="contained"
+          size="large"
+          startIcon={
+            <Box
+              component="span"
+              sx={{
+                mr: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(232, 26, 104, 0.1)',
+                color: '#E81A68',
+                '&::after': {
+                  content: '"\\276E"', // Carácter de flecha izquierda
+                  fontSize: '16px',
+                  lineHeight: 1,
+                },
+              }}
+            />
+          }
+          sx={{
+            paddingX: 4,
+            paddingY: 1.5,
+            borderRadius: '24px',
+            background:"#FFFFFF",
+            color:"#E81A68",
+            border: "1px solid #E81A68",
+            minWidth: { xs: '100%', md: '170px' }, // 100% en móviles, 170px en desktop
+            width: { xs: '100%', md: '170px' },
+            marginRight: { md: '10px' } 
+          }}
+          onClick={() => dispatch(setStep(1))}
+        >
+          Volver
+        </Button>
               <Button
                 variant="contained"
                 type='submit'

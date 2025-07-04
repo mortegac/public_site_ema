@@ -45,7 +45,7 @@ const HomePage = () => {
                 },
               }}
             >
-              Agenda tu visita.
+              Agenda aquí tu visita.
             </Typography>
         </Container>
       </Box>
@@ -55,25 +55,8 @@ const HomePage = () => {
       {/* <Calendar/> */}
       
       
-      {/* <C2a/> */}
-      {/* <Banner 
-        titleOne="Agenda tú " 
-        titleTwo="Visita técnica" 
-        description="Agenda tu visita con uno de nuestros instaladores de cargadores para vehículos eléctricos certificados."
-        
-        buttonText="Simula aquí, el costo de la instalación" 
-        buttonURI="/cotizador" 
-        
-        buttonTextTwo="" 
-        buttonURITwo="/" 
-        
-        imageSrc="/images/headers/agenda-tu-visita.png" 
-        /> */}
-      {/*
-      <Notice />
-      <Features />
-      <Pricing /> */}
-     
+      <C2a/>
+      
       <Footer />
       <ScrollToTop />
     </PageContainer>

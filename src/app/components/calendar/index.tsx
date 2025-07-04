@@ -389,6 +389,7 @@ export default function BookingCalendar() {
                  {/* <pre>{JSON.stringify(installer.calendarId, null, 2)}</pre> */}
                   <Button 
                     key={installer.userId}
+                    id={installer.userId}
                     sx={{ 
                       backgroundColor: selectedInstaller === installer.userId ? 'black' : '#f5f5f5',
                       color: selectedInstaller === installer.userId ? 'white' : 'inherit',

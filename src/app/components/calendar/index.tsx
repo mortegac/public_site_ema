@@ -406,7 +406,8 @@ export default function BookingCalendar() {
                     onClick={() => handleInstaller(installer.userId)}
                   >
                     {/* {`Instalador ${++index}`}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
-                    {`Instalador `}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''}
+                    {`Instalador ${++index}`}
+                       {/* {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
                     {/* <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
                       {installer?.userId?.split('.')[0] || installer?.userId}
                     </Typography> */}

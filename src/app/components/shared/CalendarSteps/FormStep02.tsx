@@ -127,7 +127,7 @@ export default function FormStep02() {
               <Typography variant="body1" sx={{ flexGrow: 1, pr: 2 }}>
                 {PRODUCT_NAME}
                 <br />
-                {PRODUCT_TIME}
+                {/* {PRODUCT_TIME} */}
               </Typography>
               <Typography variant="body1" fontWeight="bold">
                 {formatCurrency(Number(shoppingCart?.total || 0))}

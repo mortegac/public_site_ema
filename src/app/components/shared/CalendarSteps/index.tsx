@@ -15,6 +15,7 @@ import {
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectCalendarVisits, setDataForm } from "@/store/CalendarVisits/slice";
+import { useAnalytics } from '@/hooks/useAnalytics';
 
   
 
@@ -48,6 +49,7 @@ const QuoterSteps = (props:any) => {
     customer
   } = useAppSelector(selectCustomer);
   const dispatch = useAppDispatch();
+  const { trackEvent } = useAnalytics();
   
 
   const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
@@ -64,6 +66,9 @@ const QuoterSteps = (props:any) => {
     }
     e.preventDefault();
 
+    // Track form field changes
+    trackEvent('form_field_change', 'form_interaction', e.target.name);
+
     dispatch(
       setDataForm({
         key: e.target.name,
@@ -71,6 +76,11 @@ const QuoterSteps = (props:any) => {
       })
     );
   };
+
+  // Track step changes
+  React.useEffect(() => {
+    trackEvent('step_change', 'navigation', `step_${currentStep}`);
+  }, [currentStep, trackEvent]);
 
   return (
     <Box 

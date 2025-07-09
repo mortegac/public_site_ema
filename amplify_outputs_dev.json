@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-2_bqbta3Q0z",
+    "user_pool_id": "us-east-2_YNPJLwx1p",
     "aws_region": "us-east-2",
-    "user_pool_client_id": "1f7nd93mch2c2431eeo8ljsqui",
-    "identity_pool_id": "us-east-2:31de0d76-319d-478d-bf2d-10d4f8466bf6",
+    "user_pool_client_id": "qi2jmlvgk3uafrg4em715qijk",
+    "identity_pool_id": "us-east-2:fb45415d-b245-44fe-95b0-0f8d8de4e846",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email"
@@ -26,9 +26,9 @@
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://hxncxtno75ac7cetsri66gdlri.appsync-api.us-east-2.amazonaws.com/graphql",
+    "url": "https://sdit4qsgvnbqhanpgarq2zxqqq.appsync-api.us-east-2.amazonaws.com/graphql",
     "aws_region": "us-east-2",
-    "api_key": "da2-t6hfz5j2mzb75j2xtz2qudqzni",
+    "api_key": "da2-sy4nbrk3rrd4tm6k5fdzjo2obi",
     "default_authorization_type": "API_KEY",
     "authorization_types": [
       "AMAZON_COGNITO_USER_POOLS",
@@ -83,11 +83,11 @@
                 ]
               }
             },
-            "RequestedTickets": {
-              "name": "RequestedTickets",
+            "TimeSlots": {
+              "name": "TimeSlots",
               "isArray": true,
               "type": {
-                "model": "SupportTicket"
+                "model": "UserTimeSlot"
               },
               "isRequired": false,
               "attributes": [],
@@ -95,12 +95,12 @@
               "association": {
                 "connectionType": "HAS_MANY",
                 "associatedWith": [
-                  "solicitantId"
+                  "userId"
                 ]
               }
             },
-            "ResolveTickest": {
-              "name": "ResolveTickest",
+            "SupportTickets": {
+              "name": "SupportTickets",
               "isArray": true,
               "type": {
                 "model": "SupportTicket"
@@ -241,6 +241,132 @@
           "primaryKeyInfo": {
             "isCustomPrimaryKey": true,
             "primaryKeyFieldName": "userId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "UserTimeSlot": {
+          "name": "UserTimeSlot",
+          "fields": {
+            "userTimeSlotId": {
+              "name": "userTimeSlotId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "day": {
+              "name": "day",
+              "isArray": false,
+              "type": {
+                "enum": "UserTimeSlotDay"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "timeAvailable": {
+              "name": "timeAvailable",
+              "isArray": true,
+              "type": {
+                "nonModel": "TimeSlot"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "User": {
+              "name": "User",
+              "isArray": false,
+              "type": {
+                "model": "User"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "userId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "UserTimeSlots",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "userTimeSlotId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "userTimeSlotId",
             "sortKeyFieldNames": []
           }
         },
@@ -922,7 +1048,7 @@
               "name": "Solicitant",
               "isArray": false,
               "type": {
-                "model": "User"
+                "model": "Customer"
               },
               "isRequired": false,
               "attributes": [],
@@ -1092,6 +1218,28 @@
                 ]
               }
             },
+            "solicitantId": {
+              "name": "solicitantId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Solicitant": {
+              "name": "Solicitant",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "solicitantId"
+                ]
+              }
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -1170,18 +1318,18 @@
         "CalendarVisit": {
           "name": "CalendarVisit",
           "fields": {
-            "id": {
-              "name": "id",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
-            },
             "calendarId": {
               "name": "calendarId",
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "googleEventId": {
+              "name": "googleEventId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
               "attributes": []
             },
             "summary": {
@@ -1233,10 +1381,12 @@
               "isRequired": false,
               "attributes": []
             },
-            "amount": {
-              "name": "amount",
+            "state": {
+              "name": "state",
               "isArray": false,
-              "type": "Int",
+              "type": {
+                "enum": "CalendarVisitState"
+              },
               "isRequired": false,
               "attributes": []
             },
@@ -1284,6 +1434,22 @@
                 ]
               }
             },
+            "ShoppingCartDetail": {
+              "name": "ShoppingCartDetail",
+              "isArray": false,
+              "type": {
+                "model": "ShoppingCartDetail"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "HAS_ONE",
+                "associatedWith": [
+                  "calendarId"
+                ],
+                "targetNames": []
+              }
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -1311,10 +1477,18 @@
             {
               "type": "key",
               "properties": {
-                "name": "visitsByDate",
-                "queryField": "listCalendarVisitByCalendarIdAndStartDate",
                 "fields": [
-                  "calendarId",
+                  "calendarId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "calendarVisitsByStateAndStartDate",
+                "queryField": "CalendarVisitsByState",
+                "fields": [
+                  "state",
                   "startDate"
                 ]
               }
@@ -1357,8 +1531,8 @@
             }
           ],
           "primaryKeyInfo": {
-            "isCustomPrimaryKey": false,
-            "primaryKeyFieldName": "id",
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "calendarId",
             "sortKeyFieldNames": []
           }
         },
@@ -1376,14 +1550,14 @@
               "name": "name",
               "isArray": false,
               "type": "String",
-              "isRequired": false,
+              "isRequired": true,
               "attributes": []
             },
-            "comune": {
-              "name": "comune",
+            "phone": {
+              "name": "phone",
               "isArray": false,
               "type": "String",
-              "isRequired": false,
+              "isRequired": true,
               "attributes": []
             },
             "address": {
@@ -1393,15 +1567,66 @@
               "isRequired": false,
               "attributes": []
             },
-            "phone": {
-              "name": "phone",
+            "city": {
+              "name": "city",
               "isArray": false,
               "type": "String",
               "isRequired": false,
               "attributes": []
             },
-            "ClientForm": {
-              "name": "ClientForm",
+            "state": {
+              "name": "state",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "zipCode": {
+              "name": "zipCode",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "referenceAddress": {
+              "name": "referenceAddress",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "zoomLevel": {
+              "name": "zoomLevel",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "typeOfResidence": {
+              "name": "typeOfResidence",
+              "isArray": false,
+              "type": {
+                "enum": "CustomerTypeOfResidence"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "ClientForms": {
+              "name": "ClientForms",
               "isArray": true,
               "type": {
                 "model": "ClientForm"
@@ -1429,6 +1654,54 @@
                 "connectionType": "HAS_MANY",
                 "associatedWith": [
                   "customerId"
+                ]
+              }
+            },
+            "ShoppingCarts": {
+              "name": "ShoppingCarts",
+              "isArray": true,
+              "type": {
+                "model": "ShoppingCart"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
+                ]
+              }
+            },
+            "SupportTickets": {
+              "name": "SupportTickets",
+              "isArray": true,
+              "type": {
+                "model": "SupportTicket"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "solicitantId"
+                ]
+              }
+            },
+            "TicketComments": {
+              "name": "TicketComments",
+              "isArray": true,
+              "type": {
+                "model": "TicketComment"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "solicitantId"
                 ]
               }
             },
@@ -1964,8 +2237,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "EstimateDetail": {
-              "name": "EstimateDetail",
+            "EstimateDetails": {
+              "name": "EstimateDetails",
               "isArray": true,
               "type": {
                 "model": "EstimateDetail"
@@ -2002,8 +2275,8 @@
                 ]
               }
             },
-            "ShoppingCart": {
-              "name": "ShoppingCart",
+            "ShoppingCarts": {
+              "name": "ShoppingCarts",
               "isArray": true,
               "type": {
                 "model": "ShoppingCart"
@@ -2153,13 +2426,6 @@
               "isRequired": false,
               "attributes": []
             },
-            "estimateId": {
-              "name": "estimateId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
             "type": {
               "name": "type",
               "isArray": false,
@@ -2173,6 +2439,13 @@
               "type": {
                 "enum": "EstimateDetailState"
               },
+              "isRequired": false,
+              "attributes": []
+            },
+            "estimateId": {
+              "name": "estimateId",
+              "isArray": false,
+              "type": "ID",
               "isRequired": false,
               "attributes": []
             },
@@ -2257,8 +2530,8 @@
                 ]
               }
             },
-            "ShoppingCartDetail": {
-              "name": "ShoppingCartDetail",
+            "ShoppingCartDetails": {
+              "name": "ShoppingCartDetails",
               "isArray": true,
               "type": {
                 "model": "ShoppingCartDetail"
@@ -2709,8 +2982,8 @@
               "isRequired": false,
               "attributes": []
             },
-            "InstallationRecipe": {
-              "name": "InstallationRecipe",
+            "InstallationRecipes": {
+              "name": "InstallationRecipes",
               "isArray": true,
               "type": {
                 "model": "InstallationInputRel"
@@ -3362,8 +3635,8 @@
               "isRequired": true,
               "attributes": []
             },
-            "totalPrice": {
-              "name": "totalPrice",
+            "total": {
+              "name": "total",
               "isArray": false,
               "type": "Int",
               "isRequired": false,
@@ -3394,6 +3667,44 @@
               "isRequired": false,
               "attributes": []
             },
+            "ShoppingCartDetails": {
+              "name": "ShoppingCartDetails",
+              "isArray": true,
+              "type": {
+                "model": "ShoppingCartDetail"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "shoppingCartId"
+                ]
+              }
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
+            },
             "estimateId": {
               "name": "estimateId",
               "isArray": false,
@@ -3416,11 +3727,18 @@
                 ]
               }
             },
-            "ShoppingCartDetails": {
-              "name": "ShoppingCartDetails",
+            "paymentTransactionId": {
+              "name": "paymentTransactionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "PaymentTransactions": {
+              "name": "PaymentTransactions",
               "isArray": true,
               "type": {
-                "model": "ShoppingCartDetail"
+                "model": "PaymentTransaction"
               },
               "isRequired": false,
               "attributes": [],
@@ -3430,29 +3748,6 @@
                 "associatedWith": [
                   "shoppingCartId"
                 ]
-              }
-            },
-            "paymentTransactionId": {
-              "name": "paymentTransactionId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
-            "PaymentTransaction": {
-              "name": "PaymentTransaction",
-              "isArray": false,
-              "type": {
-                "model": "PaymentTransaction"
-              },
-              "isRequired": false,
-              "attributes": [],
-              "association": {
-                "connectionType": "HAS_ONE",
-                "associatedWith": [
-                  "shoppingCartId"
-                ],
-                "targetNames": []
               }
             },
             "Discounts": {
@@ -3556,10 +3851,17 @@
               "isRequired": true,
               "attributes": []
             },
-            "shoppingCartId": {
-              "name": "shoppingCartId",
+            "glosa": {
+              "name": "glosa",
               "isArray": false,
-              "type": "ID",
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "price": {
+              "name": "price",
+              "isArray": false,
+              "type": "Int",
               "isRequired": false,
               "attributes": []
             },
@@ -3572,10 +3874,10 @@
               "isRequired": false,
               "attributes": []
             },
-            "price": {
-              "name": "price",
+            "shoppingCartId": {
+              "name": "shoppingCartId",
               "isArray": false,
-              "type": "Int",
+              "type": "ID",
               "isRequired": false,
               "attributes": []
             },
@@ -3635,6 +3937,28 @@
                 "connectionType": "BELONGS_TO",
                 "targetNames": [
                   "estimateDetailId"
+                ]
+              }
+            },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "CalendarVisit": {
+              "name": "CalendarVisit",
+              "isArray": false,
+              "type": {
+                "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "calendarId"
                 ]
               }
             },
@@ -4578,6 +4902,18 @@
         }
       },
       "enums": {
+        "UserTimeSlotDay": {
+          "name": "UserTimeSlotDay",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
+        },
         "SupportTicketLevel": {
           "name": "SupportTicketLevel",
           "values": [
@@ -4601,6 +4937,28 @@
             "internal",
             "client",
             "test"
+          ]
+        },
+        "CalendarVisitState": {
+          "name": "CalendarVisitState",
+          "values": [
+            "available",
+            "reserved",
+            "payed",
+            "payedAndAgended",
+            "error",
+            "occupied",
+            "stale",
+            "timedOut",
+            "waiting"
+          ]
+        },
+        "CustomerTypeOfResidence": {
+          "name": "CustomerTypeOfResidence",
+          "values": [
+            "house",
+            "appartment",
+            "other"
           ]
         },
         "EstimateStateValidation": {
@@ -4641,7 +4999,8 @@
           "values": [
             "pending",
             "completed",
-            "cancelled"
+            "cancelled",
+            "timed_out"
           ]
         },
         "ShoppingCartDetailTypeOfItem": {
@@ -4663,8 +5022,58 @@
         }
       },
       "nonModels": {
-        "ProcessCalendarReturnType": {
-          "name": "ProcessCalendarReturnType",
+        "TimeSlot": {
+          "name": "TimeSlot",
+          "fields": {
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "ProcessEstimateReturnType": {
+          "name": "ProcessEstimateReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "MakeReservationAndCartReturnType": {
+          "name": "MakeReservationAndCartReturnType",
+          "fields": {
+            "cartId": {
+              "name": "cartId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "BlockInstallerScheduleReturnType": {
+          "name": "BlockInstallerScheduleReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -4741,6 +5150,34 @@
             },
             "email": {
               "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "amount": {
+              "name": "amount",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "card": {
+              "name": "card",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "payment_type_code": {
+              "name": "payment_type_code",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "status": {
+              "name": "status",
               "isArray": false,
               "type": "String",
               "isRequired": false,
@@ -4822,14 +5259,90 @@
               "attributes": []
             }
           }
+        },
+        "ProcessCalendarReturnType": {
+          "name": "ProcessCalendarReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "ReserveCalendarVisitReturnType": {
+          "name": "ReserveCalendarVisitReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "shoppingCartId": {
+              "name": "shoppingCartId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "ReleaseCalendarVisitReturnType": {
+          "name": "ReleaseCalendarVisitReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "GenerateTimeSlotsReturnType": {
+          "name": "GenerateTimeSlotsReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "ReScheduleCalendarVisitReturnType": {
+          "name": "ReScheduleCalendarVisitReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
         }
       },
       "mutations": {
         "ProcessEstimate": {
           "name": "ProcessEstimate",
           "isArray": false,
-          "type": "String",
-          "isRequired": true,
+          "type": {
+            "nonModel": "ProcessEstimateReturnType"
+          },
+          "isRequired": false,
           "arguments": {
             "formId": {
               "name": "formId",
@@ -4875,24 +5388,58 @@
             }
           }
         },
-        "processCalendar": {
-          "name": "processCalendar",
+        "MakeReservationAndCart": {
+          "name": "MakeReservationAndCart",
           "isArray": false,
           "type": {
-            "nonModel": "ProcessCalendarReturnType"
+            "nonModel": "MakeReservationAndCartReturnType"
           },
           "isRequired": false,
           "arguments": {
-            "token": {
-              "name": "token",
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "customerId": {
+              "name": "customerId",
               "isArray": false,
               "type": "String",
               "isRequired": true
             }
           }
         },
-        "webpayStart": {
-          "name": "webpayStart",
+        "BlockInstallerSchedule": {
+          "name": "BlockInstallerSchedule",
+          "isArray": false,
+          "type": {
+            "nonModel": "BlockInstallerScheduleReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            }
+          }
+        },
+        "WebpayStart": {
+          "name": "WebpayStart",
           "isArray": false,
           "type": {
             "nonModel": "WebpayStartReturnType"
@@ -4905,28 +5452,16 @@
               "type": "ID",
               "isRequired": true
             },
-            "amount": {
-              "name": "amount",
-              "isArray": false,
-              "type": "Int",
-              "isRequired": true
-            },
             "glosa": {
               "name": "glosa",
               "isArray": false,
               "type": "String",
               "isRequired": true
-            },
-            "userId": {
-              "name": "userId",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false
             }
           }
         },
-        "webpayCommit": {
-          "name": "webpayCommit",
+        "WebpayCommit": {
+          "name": "WebpayCommit",
           "isArray": false,
           "type": {
             "nonModel": "WebpayCommitReturnType"
@@ -4941,8 +5476,8 @@
             }
           }
         },
-        "webpayStatus": {
-          "name": "webpayStatus",
+        "WebpayStatus": {
+          "name": "WebpayStatus",
           "isArray": false,
           "type": {
             "nonModel": "WebpayStatusReturnType"
@@ -4953,6 +5488,158 @@
               "name": "token",
               "isArray": false,
               "type": "String",
+              "isRequired": true
+            }
+          }
+        },
+        "processCalendar": {
+          "name": "processCalendar",
+          "isArray": false,
+          "type": {
+            "nonModel": "ProcessCalendarReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "summary": {
+              "name": "summary",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "description": {
+              "name": "description",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "location": {
+              "name": "location",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "visitId": {
+              "name": "visitId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            }
+          }
+        },
+        "reserveCalendarVisit": {
+          "name": "reserveCalendarVisit",
+          "isArray": false,
+          "type": {
+            "nonModel": "ReserveCalendarVisitReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "formId": {
+              "name": "formId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
+        "releaseCalendarVisit": {
+          "name": "releaseCalendarVisit",
+          "isArray": false,
+          "type": {
+            "nonModel": "ReleaseCalendarVisitReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "reason": {
+              "name": "reason",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
+        "generateTimeSlots": {
+          "name": "generateTimeSlots",
+          "isArray": false,
+          "type": {
+            "nonModel": "GenerateTimeSlotsReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDate",
+              "isRequired": false
+            }
+          }
+        },
+        "ReScheduleCalendarVisit": {
+          "name": "ReScheduleCalendarVisit",
+          "isArray": false,
+          "type": {
+            "nonModel": "ReScheduleCalendarVisitReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "oldVisitId": {
+              "name": "oldVisitId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true
+            },
+            "newVisitId": {
+              "name": "newVisitId",
+              "isArray": false,
+              "type": "ID",
               "isRequired": true
             }
           }

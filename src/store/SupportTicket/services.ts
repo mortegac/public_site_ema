@@ -1,6 +1,7 @@
 import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { supportTicketInput } from './type';
+import { configureAmplify } from "@/utils/amplify-config";
 
 import emailjs, { init } from "emailjs-com";
 init("lUerPXXiKXnrvLlVw");
@@ -9,6 +10,9 @@ init("lUerPXXiKXnrvLlVw");
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
 Amplify.configure(outputs);
+
+// Configurar Amplify con la configuración del entorno correspondiente
+configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
 

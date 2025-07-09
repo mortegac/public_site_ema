@@ -24,7 +24,7 @@ export default function FormStep02() {
   const { webpay, status } = useAppSelector(selectWebpay);
   
   const PRODUCT_NAME = "Visita Técnica "
-  const PRODUCT_TIME = "09:00 Hrs"
+  // const PRODUCT_TIME = "09:00 Hrs"
   // Datos de ejemplo, en una app real vendrían de props o un estado global
   // const orderDetails = {
   //   email: 'email@hotmail.com',
@@ -80,7 +80,7 @@ export default function FormStep02() {
           align="left"
           sx={{
             display: "block",
-            paddingBottom: "30px",
+            // paddingBottom: "30px",
             fontSize: "18px",
             lineHeight: "2",
             marginTop: "0",
@@ -90,6 +90,20 @@ export default function FormStep02() {
         >
           Email: {shoppingCart?.customerId} 
           {/* {customer?.customerId} */}
+        </Typography>
+        <Typography
+          align="left"
+          sx={{
+            display: "block",
+            paddingBottom: "30px",
+            fontSize: "18px",
+            lineHeight: "2",
+            marginTop: "0",
+            color: (theme) => theme.palette.text.primary
+          }}
+          component="span"
+        >
+          Dirección: {shoppingCart?.addressCustomer} 
         </Typography>
         
         <pre>
@@ -125,8 +139,9 @@ export default function FormStep02() {
           <Box sx={{ p: 3, flexGrow: 1 }}> {/* flexGrow para que ocupe el espacio disponible */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
               <Typography variant="body1" sx={{ flexGrow: 1, pr: 2 }}>
-                {PRODUCT_NAME}
-                <br />
+                {/* {PRODUCT_NAME} */}
+                {shoppingCart?.glosa}
+                {/* <br /> */}
                 {/* {PRODUCT_TIME} */}
               </Typography>
               <Typography variant="body1" fontWeight="bold">

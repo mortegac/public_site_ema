@@ -89,6 +89,7 @@ interface CalendarVisitsResponse {
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { setStep, setInstaller, setDataForm, getCalendarVisits, getLastScheduleInstallers, selectCalendarVisits, setLoadingCalendar } from "@/store/CalendarVisits/slice";
 import { Stats } from 'fs';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface InstallerWithCalendar {
   userId: string;
@@ -137,6 +138,7 @@ export default function BookingCalendar() {
   } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
+  const { trackEvent } = useAnalytics();
 
   // Memoizamos las fechas de inicio y fin de semana
   const weekDates = useMemo(() => {
@@ -206,31 +208,31 @@ export default function BookingCalendar() {
   }, [selectedDate, calendarVisits]);
 
   const handleInstaller = async (installerId: string) => {
+    trackEvent('installer_selection', 'calendar_interaction', `installer_${installerId}`);
     setSelectedInstaller(installerId);
     await dispatch(setInstaller(installerId));
   };
 
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
+      trackEvent('date_selection', 'calendar_interaction', date.format('YYYY-MM-DD'));
       const newDate = date.tz('America/Santiago').locale('es').startOf('week');
       setSelectedDate(newDate);
     }
   };
 
   const handleTimeSlotClick = async (date: Dayjs, timeSlot: TimeSlot) => {
-    
-    // console.log("--timeSlot--", timeSlot)
+    trackEvent('time_slot_selection', 'calendar_interaction', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
     
     if (timeSlot.available) {
-      // alert(`Has seleccionado la hora: ${timeSlot.time} el día ${date.format('dddd, DD [de] MMMM')} con ID: ${timeSlot.calendarId}`);
       Promise.all([
         await dispatch(setDataForm({
           key:"calendarId", value:timeSlot?.calendarId
         })),
         dispatch(setStep(1))
       ])
-      // userId: "",
     } else {
+      trackEvent('time_slot_unavailable', 'calendar_interaction', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
       alert(`La hora ${timeSlot.time} no está disponible.`);
     }
   };
@@ -238,9 +240,11 @@ export default function BookingCalendar() {
   
     // Funciones para cambiar de mes
     const handlePrevMonth = () => {
+      trackEvent('calendar_navigation', 'calendar_interaction', 'previous_month');
       setSelectedDate(prev => prev.subtract(1, 'week'));
     };
     const handleNextMonth = () => {
+      trackEvent('calendar_navigation', 'calendar_interaction', 'next_month');
       setSelectedDate(prev => prev.add(1, 'week'));
     };
     
@@ -260,17 +264,15 @@ export default function BookingCalendar() {
   const handleInstallerDateClick = (installer: InstallerWithCalendar) => {
     if (!installer?.startDate) return;
     
-    // Crear el objeto day desde la fecha del instalador
-    const day = dayjs(installer.startDate);
+    trackEvent('quick_reservation', 'calendar_interaction', `${installer.userId}_${installer.startDate}`);
     
-    // Crear el objeto slot con la información necesaria
+    const day = dayjs(installer.startDate);
     const slot: TimeSlot = {
       time: toChileTime({ date: installer.startDate }),
-      available: true, // Asumiendo que está disponible
-      calendarId: installer.calendarId // O algún ID que identifique esta fecha
+      available: true,
+      calendarId: installer.calendarId
     };
     
-    // Llamar a la función existente
     handleTimeSlotClick(day, slot);
   };
 

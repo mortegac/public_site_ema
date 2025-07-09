@@ -9,6 +9,9 @@ export type ShoppingCart = {
   vat?: string,  // paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]), //metodo de pago
   status?: string, //: a.enum(["pending", "completed", "cancelled"]), //status
   customerId?: string,
+  addressCustomer?: string,
+  glosa?: string,
+  
 };
 
 export const emptyShoppingCart: ShoppingCart = {
@@ -17,6 +20,8 @@ export const emptyShoppingCart: ShoppingCart = {
   vat: "",
   status: "",
   customerId: "",
+  addressCustomer: "",
+  glosa: "",
 };
 
 

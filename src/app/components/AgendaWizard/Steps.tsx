@@ -17,6 +17,7 @@ import StepLabel from '@mui/material/StepLabel';
 
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectCalendarVisits, setStep } from "@/store/CalendarVisits/slice";
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 const steps = [
   "Selección de la fecha", 
@@ -32,6 +33,7 @@ export default function HorizontalLinearStepper() {
   const { 
     currentStep
   } = useAppSelector(selectCalendarVisits);
+  const { trackEvent } = useAnalytics();
   
   
   // const isStepOptional = (step: number) => {
@@ -42,6 +44,12 @@ export default function HorizontalLinearStepper() {
   // const handleReset = () => {
   //   setActiveStep(0);
   // };
+
+  // Función para manejar el click en un paso
+  const handleStepClick = (stepIndex: number, stepName: string) => {
+    trackEvent('step_click', 'navigation', `${stepName}_step_${stepIndex + 1}`);
+    dispatch(setStep(stepIndex));
+  };
 
   return (
     <Box bgcolor="#ffffff" pt={4} pb={2}>
@@ -88,10 +96,9 @@ export default function HorizontalLinearStepper() {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;
-            // onClick?: () => void;
+            onClick?: () => void;
           } = {
-            // onClick:() => dispatch(setStep(index))
-            // onClick: label === "Resumen cotización" && estimate?.estimateId === "" ? undefined : () => dispatch(setStep(index))
+            onClick: () => handleStepClick(index, label)
           };
           return (
             <Step key={label} {...stepProps}>

@@ -1,15 +1,12 @@
 import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { clientFormInput } from './type';
+import { configureAmplify } from "@/utils/amplify-config";
 
-
-import { Amplify } from "aws-amplify";
-import outputs from "../../../amplify_outputs.json";
-Amplify.configure(outputs);
+// Configurar Amplify con la configuración del entorno correspondiente
+configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
-
-
 
 export const createClientForm = async (input: clientFormInput): Promise<any> => {
     return new Promise(async (resolve, reject) => {

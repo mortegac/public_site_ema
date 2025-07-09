@@ -1,6 +1,13 @@
 import React from "react";
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
+import { configureAmplify } from "@/utils/amplify-config";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import GoogleTagManager from "@/components/analytics/GoogleTagManager";
+import GoogleTagManagerNoScript from "@/components/analytics/GoogleTagManagerNoScript";
+
+// Configurar Amplify con la configuración del entorno correspondiente
+configureAmplify();
 
 export const metadata = {
   // title: "Instalación de cargadores para autos eléctricos",
@@ -28,7 +35,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <GoogleTagManager />
+        <GoogleAnalytics />
+      </head>
       <body>
+        <GoogleTagManagerNoScript />
         <Providers>
           <MyApp>{children}</MyApp>
         </Providers>

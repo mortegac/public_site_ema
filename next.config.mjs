@@ -1,5 +1,3 @@
-// const nextConfig = {reactStrictMode: false,};
-
 /**
  * @type {import('next').NextConfig}
  */
@@ -8,15 +6,28 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-}
-   
-    // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
-    // trailingSlash: true,
-   
-    // Optional: Prevent automatic `/me` -> `/me/`, instead preserve `href`
-    // skipTrailingSlashRedirect: true,
-   
-    // Optional: Change the output directory `out` -> `dist`
-    // distDir: 'dist',
-   
-  export default nextConfig;
+    // Configuración para analytics
+    experimental: {
+      optimizePackageImports: ['@mui/material', '@mui/icons-material'],
+    },
+    // Headers para analytics
+    async headers() {
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'X-Frame-Options',
+              value: 'DENY',
+            },
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff',
+            },
+          ],
+        },
+      ];
+    },
+};
+
+export default nextConfig;

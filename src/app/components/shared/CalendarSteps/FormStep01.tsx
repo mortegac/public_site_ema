@@ -35,6 +35,7 @@ import { persistor } from '@/store/store';
 
 import 'react-phone-number-input/style.css'
 import './phone.css'
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 // interface ClientForm {
 //   name: string;
@@ -98,6 +99,7 @@ export const FormStep01 = (props:any) => {
   const { installerId, calendarVisits } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
+  const { trackEvent } = useAnalytics();
 
   useEffect(() => {
     if (!customer?.phone) {
@@ -121,10 +123,8 @@ export const FormStep01 = (props:any) => {
     enableReinitialize: true, 
 
     onSubmit: async (values:any) => {
-      
-      
-      // calendarVisits?.calendarId
-      // customer?.customerId
+      // Track form submission
+      trackEvent('form_submission', 'form_interaction', 'contact_info_form');
       
       Promise.all([
         await dispatch(
@@ -142,8 +142,6 @@ export const FormStep01 = (props:any) => {
         
         dispatch(setStep(2)),
       ]);
-    
-      
     },
     }); 
     
@@ -195,6 +193,11 @@ export const FormStep01 = (props:any) => {
       setError('Error al validar el número');
       setIsValid(false);
     }
+  };
+  
+  // Track form field interactions
+  const handleFieldInteraction = (fieldName: string, action: string) => {
+    trackEvent('form_field_interaction', 'form_interaction', `${fieldName}_${action}`);
   };
   
   return (
@@ -295,6 +298,7 @@ export const FormStep01 = (props:any) => {
                       <PhoneInput
                         international
                         defaultCountry="CL"
+                        id="phone"
                         countryCallingCodeEditable={true}
                         name="phone"
                         tabIndex={4} 
@@ -443,6 +447,7 @@ export const FormStep01 = (props:any) => {
                      <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Tipo de residencia</CustomFormLabel>
                       <RadioGroup
+                        id="residenceType"
                         name="residenceType"
                         value={formik.values.residenceType}
                         onChange={(e) => {

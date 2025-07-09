@@ -1,9 +1,8 @@
-import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
-
 import { MainTypes } from "@types";
-import outputs from "../../amplify_outputs.json";
+import { configureAmplify } from "@/utils/amplify-config";
 
-Amplify.configure(outputs);
+// Configurar Amplify con la configuración del entorno correspondiente
+configureAmplify();
 
 export const client = generateClient<MainTypes>();

@@ -1,13 +1,17 @@
 import { generateClient, SelectionSet } from "aws-amplify/api";
-import * as MAIN from "../../../amplify/data/main.schema";
+// Importa el tipo completo de ClientSchema para acceder a los modelos
+import { MainTypes } from "../../../amplify/data/main.schema"; // <--- CAMBIO AQUÍ
+
+// import * as MAIN from "../../../amplify/data/main.schema";
 import { shoppingCartInput } from './type';
+import { configureAmplify } from "@/utils/amplify-config";
+// import { Customer } from '../../utils/queries/Customer/index';
 
+// Configurar Amplify con la configuración del entorno correspondiente
+configureAmplify();
 
-import { Amplify } from "aws-amplify";
-import outputs from "../../../amplify_outputs.json";
-Amplify.configure(outputs);
-
-const client = generateClient<MAIN.MainTypes>();
+// const client = generateClient<MAIN.MainTypes>();
+const client = generateClient<MainTypes>(); // <--- USA MainTypes AQUÍ
 
 
 
@@ -21,15 +25,31 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
         console.log("--fecthShoppingCart--", input)
     
         if (shoppingCartId) {
-        
+            
             const { data: getShoppingCart, errors } = await client.models.ShoppingCart.list({ 
                 filter: { shoppingCartId: { eq: shoppingCartId } } 
             });
+            
+            const dataCustomer = await getShoppingCart[0].Customer();
+            const dataShoppingCartDetails = await getShoppingCart[0].ShoppingCartDetails();
+
           
-            console.log("--getShoppingCart--", getShoppingCart)
+            // console.log("--getShoppingCart--", getShoppingCart)
+            // console.log("--dataCustomer--", dataCustomer)
+            // console.log("--dataShoppingCartDetails--", dataShoppingCartDetails)
+            
+          
             if (getShoppingCart) {
-                console.log("--fecthShoppingCart--", getShoppingCart);
-                resolve(getShoppingCart[0]);
+                // console.log("--fecthShoppingCart--", getShoppingCart);
+                resolve({
+                  ...getShoppingCart[0],
+                  addressCustomer: `
+                  ${dataCustomer?.data?.address} 
+                  ${dataCustomer?.data?.referenceAddress} 
+                  ${dataCustomer?.data?.city} 
+                  ${dataCustomer?.data?.state}`,
+                  glosa: dataShoppingCartDetails?.data[0]?.glosa
+                });
                 return;
             }
             

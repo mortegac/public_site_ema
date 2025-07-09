@@ -7,10 +7,12 @@ import { webpayInput } from './type';
 import emailjs, { init } from "emailjs-com";
 init("lUerPXXiKXnrvLlVw");
 
-
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
-Amplify.configure(outputs);
+import { configureAmplify } from "@/utils/amplify-config";
+
+// Configurar Amplify con la configuración del entorno correspondiente
+configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
 

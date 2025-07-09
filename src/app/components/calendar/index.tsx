@@ -88,7 +88,6 @@ interface CalendarVisitsResponse {
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { setStep, setInstaller, setDataForm, getCalendarVisits, getLastScheduleInstallers, selectCalendarVisits, setLoadingCalendar } from "@/store/CalendarVisits/slice";
-import { Stats } from 'fs';
 import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface InstallerWithCalendar {
@@ -97,12 +96,6 @@ interface InstallerWithCalendar {
   startDate: string;
   calendarId: string;
   getLastScheduleInstallers: string;
-  // CalendarVisits: {
-  //   items: Array<{
-  //     startDate: string;
-  //     state: string;
-  //   }>;
-  // };
 }
 
 
@@ -113,15 +106,7 @@ export const toChileTime = (props: props) => {
     return dayjs(dateUTC).tz('America/Santiago').format(format);
 };
 
-// export const toChileTime = (props: props) => {
-//   const { date, format = "HH:mm" } = props;
-//   const horaUTC = new Date(date);
-//   return formatInTimeZone(horaUTC, "America/Santiago", format);
-// };
-
-
 export default function BookingCalendar() {
-  // const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
@@ -168,19 +153,37 @@ export default function BookingCalendar() {
   // Efecto para la carga inicial
   useEffect(() => {
     if (initialLoad) {
-      // dispatch(setLoadingCalendar("loading"))
-      handleInstaller("ariel.rivera@energica.city");
+      // handleInstaller("ariel.rivera@energica.city");
       dispatch(getLastScheduleInstallers())
       setInitialLoad(false);
     }
   }, [initialLoad]);
+
+  // Nuevo efecto para manejar la selección automática de fecha
+  useEffect(() => {
+    if (Array.isArray(lastScheduleInstallers) && lastScheduleInstallers.length > 0) {
+      const firstInstaller = lastScheduleInstallers[0];
+      if (firstInstaller?.startDate && firstInstaller?.userId) {
+        // Primero setear el instalador
+        handleInstaller(firstInstaller.userId);
+        
+        // Luego cambiar la fecha
+        const installerDate = dayjs(firstInstaller.startDate);
+        const weekStart = installerDate.startOf('week');
+        
+        // Solo cambiar la fecha si es diferente a la actual
+        if (!selectedDate.isSame(weekStart, 'week')) {
+          handleDateChange(installerDate);
+        }
+      }
+    }
+  }, [lastScheduleInstallers]);
 
   // Efecto para actualizar la vista semanal
   useEffect(() => {
     // Calcular los 7 días de la semana a partir de selectedDate
     const startOfWeek = selectedDate.startOf('week');
     const daysInWeek: Dayjs[] = [];
-    // for (let i = 0; i < 7; i++) {
     for (let i = 0; i < 5; i++) {
       daysInWeek.push(startOfWeek.add(i, 'day'));
     }

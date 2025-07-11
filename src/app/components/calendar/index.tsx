@@ -167,7 +167,7 @@ export default function BookingCalendar() {
       if (firstInstaller?.startDate && firstInstaller?.userId) {
         // Primero setear el instalador
         handleInstaller(firstInstaller.userId);
-        
+        trackEvent('seleccion_instalador', 'firstInstaller.userId', firstInstaller.userId);
         // Luego cambiar la fecha
         const installerDate = dayjs(firstInstaller.startDate);
         const weekStart = installerDate.startOf('week');
@@ -212,7 +212,8 @@ export default function BookingCalendar() {
   }, [selectedDate, calendarVisits]);
 
   const handleInstaller = async (installerId: string) => {
-    trackEvent('seleccion_instalador', 'AGENDA_EMA', `installer_${installerId}`);
+    // trackEvent('seleccion_instalador', 'AGENDA_EMA', `installer_${installerId}`);
+    trackEvent('seleccion_instalador', 'AGENDA_EMA', installerId);
     setSelectedInstaller(installerId);
     await dispatch(setInstaller(installerId));
   };

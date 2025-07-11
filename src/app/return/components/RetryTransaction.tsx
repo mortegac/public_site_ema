@@ -27,6 +27,7 @@ import { formatCurrency } from "@/utils/currency";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
 import {fetchWebpayStart, WebpayStartResponse} from '@/store/Webpay/services';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface RetryTransactionProps {
   glosa: string;
@@ -45,7 +46,11 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
     const router = useRouter();
     
     const dispatch = useAppDispatch();
-    
+
+    const { trackEvent } = useAnalytics();
+    trackEvent('rechazo_pago', 'AGENDA_EMA', 'pago existoso desde webpay')
+
+
     const getRetry = async () => {
       try {
         const response = await (fetchWebpayStart({ 
@@ -226,7 +231,12 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               width: { xs: '100%', md: 'auto' }
             }}
             // href="/agenda"
-            onClick={() => getRetry()}
+            onClick={() => {
+              getRetry();              
+              trackEvent('reintentar_pago', 'AGENDA_EMA', 'volver a la pagina de reintento de pago')
+          
+            
+            }}
           >
             Reintentar el pago de tu reserva
           </Button>
@@ -266,7 +276,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               width: { xs: '100%', md: 'auto' }
             }}
             href="/agenda"
-          //   onClick={() => dispatch(setStep(0))}
+            onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
           >
             Agendar otra visita
           </Button>
@@ -295,6 +305,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               width: { xs: '100%', md: 'auto' }
             }}
             href={`/soporte?glosa=${glosa}&total=${total}&order=${order}&email=${email}`}
+            onClick={() => trackEvent('crear_ticket_soporte', 'AGENDA_EMA', 'ir a la pagina de crear ticket de soporte') }
           >
             Crear un ticket de soporte
           </Button>
@@ -315,6 +326,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
             }}
             href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
             target='_blank'
+            onClick={() => trackEvent('simular_costo_instalacion', 'AGENDA_EMA', 'ir a la pagina de google Form para evaluar instalacion') }
           >
             Simular costo de instalación
           </Button>

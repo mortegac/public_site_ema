@@ -245,11 +245,11 @@ export default function BookingCalendar() {
   
     // Funciones para cambiar de mes
     const handlePrevMonth = () => {
-      trackEvent('cambio_mes', 'AGENDA_EMA', 'previous_month');
+      trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'previous_month');
       setSelectedDate(prev => prev.subtract(1, 'week'));
     };
     const handleNextMonth = () => {
-      trackEvent('cambio_mes', 'AGENDA_EMA', 'next_month');
+      trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'next_month');
       setSelectedDate(prev => prev.add(1, 'week'));
     };
     

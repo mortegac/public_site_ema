@@ -12,8 +12,9 @@ import {
   Button,
   useTheme,
 } from '@mui/material';
-  
-import Image from 'next/image';
+
+import { useAnalytics } from '@/hooks/useAnalytics';
+
 
 import {SvgSuccess} from "./SvgSuccess";
 import { formatCurrency } from "@/utils/currency";
@@ -29,7 +30,9 @@ interface InvoiceProps {
 
 const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, email }) => {
     const theme = useTheme(); // Acceder al tema para los colores
-    
+    const { trackEvent } = useAnalytics();
+    trackEvent('exito_pago', 'AGENDA_EMA', 'pago existoso desde webpay')
+
   return (
     <Box
       sx={{

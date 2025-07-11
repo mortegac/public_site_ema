@@ -11,11 +11,15 @@ import { selectCalendarVisits, setStep,  } from "@/store/CalendarVisits/slice";
 import { selectShoppingCart, getShoppingCart} from "@/store/ShoppingCart/slice";
 import { selectWebpay} from "@/store/Webpay/slice";
 
+import { useAnalytics } from '@/hooks/useAnalytics';
+
+
 import { formatCurrency } from "@/utils/currency";
 
 export default function FormStep02() {
   const theme = useTheme(); // Acceder al tema para los colores
-
+  const { trackEvent } = useAnalytics();
+  
   const dispatch = useAppDispatch();
   
   const { customer } = useAppSelector(selectCustomer);
@@ -222,7 +226,12 @@ export default function FormStep02() {
             width: { xs: '100%', md: '170px' },
             marginRight: { md: '10px' } 
           }}
-          onClick={() => dispatch(setStep(1))}
+          onClick={() => {
+            dispatch(setStep(1));
+            trackEvent('volver_datos_cliente', 'AGENDA_EMA', 'volver al paso anterior');
+
+  
+          }}
         >
           Volver
         </Button>
@@ -264,6 +273,9 @@ export default function FormStep02() {
                   minWidth: { xs: '100%', md: '170px' }, // 100% en móviles, 170px en desktop
                   width: { xs: '100%', md: '170px' } // 100% en móviles, 170px en desktop
                 }}
+                onClick={ () => 
+                  trackEvent('continuar_carro_compra', 'AGENDA_EMA', 'ir a la pagina de webpay')
+                }
               >
                 { status === "loading" && <>
                     <LoadingIcon icon="puff" color="#E81A68" style={{width:"40px", height:"40px"}}/>

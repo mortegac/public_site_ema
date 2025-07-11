@@ -36,6 +36,7 @@ import { persistor } from '@/store/store';
 import 'react-phone-number-input/style.css'
 import './phone.css'
 import { useAnalytics } from '@/hooks/useAnalytics';
+      
 
 // interface ClientForm {
 //   name: string;
@@ -124,7 +125,7 @@ export const FormStep01 = (props:any) => {
 
     onSubmit: async (values:any) => {
       // Track form submission
-      trackEvent('form_submission', 'form_interaction', 'contact_info_form');
+      trackEvent('ingreso_datos_cliente', 'AGENDA_EMA', 'envio formulario');
       
       Promise.all([
         await dispatch(
@@ -196,9 +197,9 @@ export const FormStep01 = (props:any) => {
   };
   
   // Track form field interactions
-  const handleFieldInteraction = (fieldName: string, action: string) => {
-    trackEvent('form_field_interaction', 'form_interaction', `${fieldName}_${action}`);
-  };
+  // const handleFieldInteraction = (fieldName: string, action: string) => {
+  //   trackEvent('form_field_interaction', 'form_interaction', `${fieldName}_${action}`);
+  // };
   
   return (
     <>

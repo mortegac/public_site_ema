@@ -13,7 +13,6 @@ import { useAppSelector } from '@/store/hooks';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { AppState } from "@/store/store";
 import "@/utils/i18n";
-import "@/app/api/index";
 
 const KEY = "AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ"
 

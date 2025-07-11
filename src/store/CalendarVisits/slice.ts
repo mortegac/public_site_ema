@@ -55,14 +55,14 @@ export const getLastScheduleInstallers = createAsyncThunk(
       const response = await fetchLastScheduleInstallers();
       
       
-      console.log(">>> 1.- response >>", response);
+      // console.log(">>> 1.- response >>", response);
       
       const combinedData = await Promise.all(response.map(async (installer: any) => {
         
         const scheduleData:any = await fetchLastScheduleOneInstaller(installer.userId);
         
         
-        console.log(`>>> 2.- ${installer.userId} >>", ${JSON.stringify(scheduleData, null, 2)}`);
+        // console.log(`>>> 2.- ${installer.userId} >>", ${JSON.stringify(scheduleData, null, 2)}`);
         
         if (Array.isArray(scheduleData) && scheduleData.length > 0) {
           
@@ -92,7 +92,7 @@ export const getLastScheduleInstallers = createAsyncThunk(
       }));
       
     
-      console.log(">>> combinedData >>", combinedData);
+      // console.log(">>> combinedData >>", combinedData);
       
       return combinedData;
     } catch (error) {
@@ -211,7 +211,7 @@ const calendarVisitsSlice = createSlice({
       })
       .addCase(getCalendarVisits.fulfilled, (state, action) => {
         state.statusCalendar = "idle"
-        console.log(">>> getCalendarVisits >> action.payload >>", action.payload.data)
+        // console.log(">>> getCalendarVisits >> action.payload >>", action.payload.data)
         state.calendarVisits = action?.payload
         
       })
@@ -227,7 +227,7 @@ const calendarVisitsSlice = createSlice({
         state.error = null;
       })
       .addCase(getLastScheduleInstallers.fulfilled, (state, action) => {
-        console.log(">>> getLastScheduleInstallers >> action.payload >>", action.payload)
+        // console.log(">>> getLastScheduleInstallers >> action.payload >>", action.payload)
         state.lastScheduleInstallers = action?.payload
         state.status = "idle"
         
@@ -246,7 +246,7 @@ const calendarVisitsSlice = createSlice({
       })
       .addCase(setCalendarVisits.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(">>> setCalendarVisits >> action.payload >>", action.payload.data)
+        // console.log(">>> setCalendarVisits >> action.payload >>", action.payload.data)
         state.calendarVisits = action?.payload
         state.message = action?.payload?.message
         state.cartId = action?.payload?.cartId

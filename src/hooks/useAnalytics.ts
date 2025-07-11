@@ -30,11 +30,13 @@ export const useAnalytics = () => {
     };
   }, []);
 
+  // envía eventos generales de analytics
   const trackEvent = (action: string, category: string, label?: string, value?: number) => {
     event({ action, category, label, value });
     gtmEvent('custom_event', { action, category, label, value });
   };
 
+  // envía Específicamente para conversiones de Google Ads
   const trackConversion = (conversionId: string, conversionLabel: string, value?: number) => {
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('event', 'conversion', {
@@ -44,5 +46,5 @@ export const useAnalytics = () => {
     }
   };
 
-  return { trackEvent, trackConversion };
+  return { trackEvent, trackConversion, gtmEvent };
 }; 

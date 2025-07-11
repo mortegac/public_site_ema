@@ -27,7 +27,7 @@ const HomePage = () => {
 
   // Track page load
 useEffect(() => {
-    trackEvent('page_view', 'navigation', 'agenda_page');
+    trackEvent('page_view', 'AGENDA_EMA', 'agenda_page');
   }, [trackEvent]);
 
   const handleStepClick = (step: string) => {

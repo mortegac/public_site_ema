@@ -156,6 +156,7 @@ export default function BookingCalendar() {
       // handleInstaller("ariel.rivera@energica.city");
       dispatch(getLastScheduleInstallers())
       setInitialLoad(false);
+      trackEvent('carga_agenda', 'AGENDA_EMA');
     }
   }, [initialLoad]);
 
@@ -211,21 +212,21 @@ export default function BookingCalendar() {
   }, [selectedDate, calendarVisits]);
 
   const handleInstaller = async (installerId: string) => {
-    trackEvent('installer_selection', 'calendar_interaction', `installer_${installerId}`);
+    trackEvent('seleccion_instalador', 'AGENDA_EMA', `installer_${installerId}`);
     setSelectedInstaller(installerId);
     await dispatch(setInstaller(installerId));
   };
 
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
-      trackEvent('date_selection', 'calendar_interaction', date.format('YYYY-MM-DD'));
+      trackEvent('seleccion_fecha', 'AGENDA_EMA', date.format('YYYY-MM-DD'));
       const newDate = date.tz('America/Santiago').locale('es').startOf('week');
       setSelectedDate(newDate);
     }
   };
 
   const handleTimeSlotClick = async (date: Dayjs, timeSlot: TimeSlot) => {
-    trackEvent('time_slot_selection', 'calendar_interaction', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
+    trackEvent('seleccion_fecha_hora', 'AGENDA_EMA', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
     
     if (timeSlot.available) {
       Promise.all([
@@ -235,7 +236,7 @@ export default function BookingCalendar() {
         dispatch(setStep(1))
       ])
     } else {
-      trackEvent('time_slot_unavailable', 'calendar_interaction', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
+      trackEvent('no_disponible_fecha_hora_seleccionada', 'AGENDA_EMA', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
       alert(`La hora ${timeSlot.time} no está disponible.`);
     }
   };
@@ -243,11 +244,11 @@ export default function BookingCalendar() {
   
     // Funciones para cambiar de mes
     const handlePrevMonth = () => {
-      trackEvent('calendar_navigation', 'calendar_interaction', 'previous_month');
+      trackEvent('cambio_mes', 'AGENDA_EMA', 'previous_month');
       setSelectedDate(prev => prev.subtract(1, 'week'));
     };
     const handleNextMonth = () => {
-      trackEvent('calendar_navigation', 'calendar_interaction', 'next_month');
+      trackEvent('cambio_mes', 'AGENDA_EMA', 'next_month');
       setSelectedDate(prev => prev.add(1, 'week'));
     };
     
@@ -267,7 +268,7 @@ export default function BookingCalendar() {
   const handleInstallerDateClick = (installer: InstallerWithCalendar) => {
     if (!installer?.startDate) return;
     
-    trackEvent('quick_reservation', 'calendar_interaction', `${installer.userId}_${installer.startDate}`);
+    trackEvent('seleccion_proxima_fecha_instalador', 'AGENDA_EMA', `${installer.userId}_${installer.startDate}`);
     
     const day = dayjs(installer.startDate);
     const slot: TimeSlot = {

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from 'react';
 import {
   Box,
   Stack,
@@ -12,20 +13,28 @@ import PageContainer from '@/app/components/container/PageContainer';
 import Banner from '@/app/components/shared/banner/Banner';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
-// import Calendar from "@/app/components/calendar";
 import CalendarSteps from '@/app/components/shared/CalendarSteps';
 import Steps from '@/app/components/AgendaWizard/Steps';
 import C2a from '@/app/components/shared/c2a';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
+import { usePageLoadEvent } from '@/hooks/usePageLoadEvent';
+import { useClientIP } from '@/hooks/useClientIP';
 
 const HomePage = () => {
+  // Obtener la IP del cliente
+  const ipAddress = useClientIP();
+
+  // Hook personalizado para el evento de carga
+  usePageLoadEvent({
+    eventName: 'carga_agenda',
+    ipAddress
+  });
+
   return (
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
-      {/* <HeaderAlert /> */}
       <HpHeader /> 
      
-      
       <Box bgcolor="#ffffff" pt={4} pb={0}>
         <Container
           sx={{
@@ -52,8 +61,6 @@ const HomePage = () => {
       
       <Steps/>
       <CalendarSteps/>
-      {/* <Calendar/> */}
-      
       
       <C2a/>
       

@@ -47,7 +47,7 @@ export default function HorizontalLinearStepper() {
 
   // Función para manejar el click en un paso
   const handleStepClick = (stepIndex: number, stepName: string) => {
-    trackEvent('step_click', 'navigation', `${stepName}_step_${stepIndex + 1}`);
+    trackEvent('cambio_de_paso_agenda', 'navigation', `${stepName}_step_${stepIndex + 1}`);
     dispatch(setStep(stepIndex));
   };
 

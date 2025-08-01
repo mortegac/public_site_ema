@@ -106,6 +106,10 @@ export const toChileTime = (props: props) => {
     return dayjs(dateUTC).tz('America/Santiago').format(format);
 };
 
+
+const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || 'DEV';
+    
+      
 export default function BookingCalendar() {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
@@ -244,7 +248,7 @@ export default function BookingCalendar() {
 
   
     // Funciones para cambiar de mes
-    const handlePrevMonth = () => {
+  const handlePrevMonth = () => {
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'previous_month');
       setSelectedDate(prev => prev.subtract(1, 'week'));
     };
@@ -287,15 +291,15 @@ export default function BookingCalendar() {
       {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
       <Typography
         align="left"
-                    sx={{
-                      display: "block",
-                      paddingBottom: "20px",
-                      fontSize: "16px",
-                      lineHeight: "1.2",
-                      marginTop: "0",
-                      color: (theme) => theme.palette.text.primary
-                    }}
-                    component="span"
+        sx={{
+          display: "block",
+          paddingBottom: "20px",
+          fontSize: "16px",
+          lineHeight: "1.2",
+          marginTop: "0",
+          color: (theme) => theme.palette.text.primary
+        }}
+        component="span"
         >
           Seleccione una hora para continuar con el proceso de reserva de su visita técnica
       </Typography>
@@ -414,7 +418,10 @@ export default function BookingCalendar() {
                     onClick={() => handleInstaller(installer.userId)}
                   >
                     {/* {`Instalador ${++index}`}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
-                    {`Instalador ${++index}`}
+                    {/* {`Instalador ${++index}`} */}
+                    
+                    {environment === 'PROD' && `Instalador ${++index}` }
+                    {environment !== 'PROD' && installer.userId.split('@')[0] || installer.userId }
                        {/* {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
                     {/* <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
                       {installer?.userId?.split('.')[0] || installer?.userId}
@@ -466,7 +473,7 @@ export default function BookingCalendar() {
            </Box>
            
           
-                
+           {/* <pre>{JSON.stringify(weekDays, null, 2)}</pre> */}
             <Paper elevation={3} sx={{ 
                       position: 'relative', p: 2, pb:10, height: 'auto', minHeight: '230px', display: 'flex', flexDirection:'column'}}>
               
@@ -504,7 +511,8 @@ export default function BookingCalendar() {
                         flexDirection: 'column',
                         height: '100%'
                       }}
-                    >                      
+                    >        
+                    {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
                       <Typography
                         variant="subtitle1"
                         align="center"

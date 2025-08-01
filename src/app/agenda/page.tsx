@@ -21,9 +21,16 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import { usePageLoadEvent } from '@/hooks/usePageLoadEvent';
 import { useClientIP } from '@/hooks/useClientIP';
 
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { selectCalendarVisits, setStep } from "@/store/CalendarVisits/slice";
+
 const HomePage = () => {
   // Obtener la IP del cliente
   const ipAddress = useClientIP();
+
+const { 
+  currentStep
+} = useAppSelector(selectCalendarVisits);
 
   // Hook personalizado para el evento de carga
   usePageLoadEvent({
@@ -35,6 +42,8 @@ const HomePage = () => {
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
       <HpHeader /> 
      
+     {/* <pre>currentStep = {JSON.stringify(currentStep)}</pre> */}
+      { currentStep !== 3 &&
       <Box bgcolor="#ffffff" pt={4} pb={0}>
         <Container
           sx={{
@@ -58,7 +67,7 @@ const HomePage = () => {
             </Typography>
         </Container>
       </Box>
-      
+      }
       <Steps/>
       <CalendarSteps/>
       

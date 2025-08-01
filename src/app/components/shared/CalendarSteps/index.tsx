@@ -26,7 +26,7 @@ import FormStep02 from "./FormStep02";
 import { selectCustomer } from "@/store/Customer/slice";
 // import {PersonalInfo} from "./PersonalInfo";
 // import {FormStep03} from "./FormStep03";
-// import {FormStep04} from "./FormStep04";
+import FormResumeVirtual from "./FormStep04";
 // import { Button } from '@mui/material';
 
 
@@ -35,7 +35,7 @@ const typeOfForm: any = {
   ["0"]: Calendar,
   ["1"]: FormStep01,
   ["2"]: FormStep02,
-  // ["3"]: FormStep04,
+  ["3"]: FormResumeVirtual, // Resumen agenda virtual
 };
 
 
@@ -52,6 +52,7 @@ const QuoterSteps = (props:any) => {
   const { trackEvent } = useAnalytics();
   
 
+  // const FormStep = typeOfForm[3];
   const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
 
   
@@ -67,7 +68,7 @@ const QuoterSteps = (props:any) => {
     e.preventDefault();
 
     // Track form field changes
-    trackEvent('form_field_change', 'form_interaction', e.target.name);
+    trackEvent('formulario_ingreso_dato', 'form_interaction', e.target.name);
 
     dispatch(
       setDataForm({
@@ -78,13 +79,14 @@ const QuoterSteps = (props:any) => {
   };
 
   // Track step changes
-  React.useEffect(() => {
-    trackEvent('step_change', 'navigation', `step_${currentStep}`);
-  }, [currentStep, trackEvent]);
+  // React.useEffect(() => {
+  //   // separar pasos 
+  //   trackEvent('step_change', 'navigation', `step_${currentStep}`);
+  // }, [currentStep, trackEvent]);
 
   return (
     <Box 
-      bgcolor="#ffffff"
+      bgcolor={`${currentStep === 3 && "#f8fafc"}  `}
       pt={3} 
       pb={{ xs: 4, md: 7 }}
       sx={{

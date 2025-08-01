@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { emptyCalendarVisit, calendarVisitInput, CalendarVisit } from './type';
 import { RootState } from "../store";
-import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastScheduleOneInstaller,makeReservation } from './services';
+import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastScheduleOneInstaller,makeReservation, makeReservationNotPaid } from './services';
 import { getShoppingCart } from '../ShoppingCart/slice';
 import { getWebpayStart } from '../Webpay/slice';
-import { AnyARecord } from 'node:dns';
+// import { AnyARecord } from 'node:dns';
 import dayjs from 'dayjs';
 
 interface CalendarVisitsSliceState {
@@ -150,6 +150,31 @@ export const setCalendarVisits = createAsyncThunk(
       }
     }
 );
+  
+export const setCalendarNotPay = createAsyncThunk(
+    "CalendarVisits/updateCalendarNotPay ",
+    async (objFilter: calendarVisitInput, { dispatch }) => {
+      try {
+        const response:any = await makeReservationNotPaid({ ...objFilter });
+        console.log(">>> response >>", response)
+        // if (response && response.cartId) {
+        //   Promise.all([
+        //     dispatch(getShoppingCart({ shoppingCartId: response.cartId })),
+        //     dispatch(getWebpayStart({ 
+        //       shoppingCartId: response.cartId,
+        //       glosa: "Visita técnica", 
+        //      }))
+        //   ])
+          // await dispatch(getShoppingCart({ shoppingCartId: response.cartId }));
+        // }
+        
+        return response;
+      } catch (error) {
+        console.error(">>>>ERROR FETCH getCalendarVisits", error)
+        return Promise.reject(error);
+      }
+    }
+);
 
 
 // export const updateDistance = createAsyncThunk(
@@ -257,6 +282,28 @@ const calendarVisitsSlice = createSlice({
       .addCase(setCalendarVisits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la distancia';
+      })
+      
+      
+      /** TODO:  FALYTA IMPLEMENTAR setCalendarNotPay en el front */
+    // setCalendarNotPay
+      .addCase(setCalendarNotPay.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(setCalendarNotPay.fulfilled, (state, action) => {
+        state.loading = false;
+        // console.log(">>> setCalendarNotPay >> action.payload >>", action.payload.data)
+        // state.calendarVisits = action?.payload
+        // state.message = action?.payload?.message
+        // state.cartId = action?.payload?.cartId
+        //  "message": "visita agendada exitosamente",
+        //   "cartId": "b7fddb24-b4d4-42fb-9bc4-e46cfbbe0442"
+        
+      })
+      .addCase(setCalendarNotPay.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error al actualizar la agenda';
       });
   },
 });

@@ -604,7 +604,7 @@ export default function FormResumeVirtual() {
                               fontSize: "1rem",
                             }}
                           >
-                            Tener acceso al tablero eléctrico
+                           Acceso al tablero eléctrico
                           </Typography>
                         </Box>
                       </Box>
@@ -660,7 +660,7 @@ export default function FormResumeVirtual() {
                               fontSize: "1rem",
                             }}
                           >
-                            Tener acceso al medidor eléctrico
+                            Acceso al medidor eléctrico
                           </Typography>
                         </Box>
                       </Box>
@@ -774,8 +774,7 @@ export default function FormResumeVirtual() {
                               fontSize: "1rem",
                             }}
                           >
-                            Tener Muy Buena señal Wifi o Celular para el momento
-                            de la llamada
+                            Buena señal Wifi o Celular para la videollamada
                           </Typography>
                         </Box>
                       </Box>

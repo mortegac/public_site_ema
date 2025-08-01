@@ -244,10 +244,11 @@ export const makeReservationNotPaid = async (objFilter: calendarVisitInput) => {
   try {
     const response = await client.graphql<MakeReservationResponse>({
       query: `
-        mutation reserveCalendarVisit($calendarId: String!, $customerId: String!) {
+        mutation reserveCalendarVisit($calendarId: String!, $customerId: String!, $isRemote: Boolean) {
           reserveCalendarVisit(
             calendarId: $calendarId,
             customerId: $customerId
+            isRemote: $isRemote
           ) {
             message
     calendarId
@@ -258,6 +259,7 @@ export const makeReservationNotPaid = async (objFilter: calendarVisitInput) => {
       variables: {
         calendarId: objFilter.calendarId,
         customerId: objFilter.customerId,
+        isRemote: true
       }
     }) as GraphQLResult<MakeReservationResponse>;
     

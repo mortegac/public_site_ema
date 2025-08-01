@@ -528,7 +528,7 @@ export const FormStep01 = (props:any) => {
                                 display: 'block',
                                 fontSize: '1rem'
                               }}
-                            >Cableado será sobrepuesto y existir deben paredes o muros disponibles
+                            >Cableado será sobrepuesto y deben existir paredes o muros disponibles
                             </Typography>
                           </Box>
                         </Box>

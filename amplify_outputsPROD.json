@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-2_YNPJLwx1p",
+    "user_pool_id": "us-east-2_bqbta3Q0z",
     "aws_region": "us-east-2",
-    "user_pool_client_id": "qi2jmlvgk3uafrg4em715qijk",
-    "identity_pool_id": "us-east-2:fb45415d-b245-44fe-95b0-0f8d8de4e846",
+    "user_pool_client_id": "1f7nd93mch2c2431eeo8ljsqui",
+    "identity_pool_id": "us-east-2:31de0d76-319d-478d-bf2d-10d4f8466bf6",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email"
@@ -26,9 +26,9 @@
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://sdit4qsgvnbqhanpgarq2zxqqq.appsync-api.us-east-2.amazonaws.com/graphql",
+    "url": "https://hxncxtno75ac7cetsri66gdlri.appsync-api.us-east-2.amazonaws.com/graphql",
     "aws_region": "us-east-2",
-    "api_key": "da2-sy4nbrk3rrd4tm6k5fdzjo2obi",
+    "api_key": "da2-t6hfz5j2mzb75j2xtz2qudqzni",
     "default_authorization_type": "API_KEY",
     "authorization_types": [
       "AMAZON_COGNITO_USER_POOLS",
@@ -5072,8 +5072,8 @@
             }
           }
         },
-        "BlockInstallerScheduleReturnType": {
-          "name": "BlockInstallerScheduleReturnType",
+        "ClearInstallerScheduleReturnType": {
+          "name": "ClearInstallerScheduleReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -5410,11 +5410,11 @@
             }
           }
         },
-        "BlockInstallerSchedule": {
-          "name": "BlockInstallerSchedule",
+        "ClearInstallerSchedule": {
+          "name": "ClearInstallerSchedule",
           "isArray": false,
           "type": {
-            "nonModel": "BlockInstallerScheduleReturnType"
+            "nonModel": "ClearInstallerScheduleReturnType"
           },
           "isRequired": false,
           "arguments": {

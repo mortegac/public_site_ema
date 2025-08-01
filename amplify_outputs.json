@@ -4516,6 +4516,17 @@
             {
               "type": "key",
               "properties": {
+                "name": "paymentTransactionsByStatusAndDate",
+                "queryField": "listPaymentTransactionByStatusAndDate",
+                "fields": [
+                  "status",
+                  "date"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
                 "name": "paymentTransactionsByToken",
                 "queryField": "listPaymentTransactionByToken",
                 "fields": [

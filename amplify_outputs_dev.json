@@ -4516,6 +4516,17 @@
             {
               "type": "key",
               "properties": {
+                "name": "paymentTransactionsByStatusAndDate",
+                "queryField": "listPaymentTransactionByStatusAndDate",
+                "fields": [
+                  "status",
+                  "date"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
                 "name": "paymentTransactionsByToken",
                 "queryField": "listPaymentTransactionByToken",
                 "fields": [
@@ -5910,6 +5921,12 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
             }
           }
         },
@@ -5937,6 +5954,12 @@
               "name": "formId",
               "isArray": false,
               "type": "String",
+              "isRequired": false
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
               "isRequired": false
             }
           }

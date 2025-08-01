@@ -9,14 +9,16 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  *
  */
 
+
 export const MainSchema = a
- .schema({
+  .schema({
     User: a
       .model({
         userId: a.id().required(),
         name: a.string().required(),
         validated: a.boolean().default(false),
         roleId: a.id(),
+        order: a.integer().default(0),
         Role: a.belongsTo("Role", "roleId"),
         TimeSlots: a.hasMany("UserTimeSlot", "userId"),
         SupportTickets: a.hasMany("SupportTicket", "employeeId"),
@@ -135,6 +137,9 @@ export const MainSchema = a
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
+      // Explicitly define the timestamp fields you want to index
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
       state: a.enum([
         "available", // disponible
         "reserved", // reservada lo libera webpayStatus si falla 15m
@@ -155,6 +160,7 @@ export const MainSchema = a
       .identifier(["calendarId"])
       .secondaryIndexes(index => [
         index('state').sortKeys(['startDate']).queryField("CalendarVisitsByState"),
+        index("state").sortKeys(['updatedAt']).queryField("CalendarVisitsByStateAndUpdatedAt"),
       ]),
 
     Customer: a.model({
@@ -175,6 +181,7 @@ export const MainSchema = a
       ShoppingCarts: a.hasMany("ShoppingCart", "customerId"),
       SupportTickets: a.hasMany("SupportTicket", "solicitantId"),
       TicketComments: a.hasMany("TicketComment", "solicitantId"),
+      CustomerSessions: a.hasMany("CustomerSession", "customerId"),
     }).identifier(["customerId"]),
 
     ClientForm: a.model({
@@ -451,6 +458,36 @@ export const MainSchema = a
       .secondaryIndexes((index) => [index("token")])
       .identifier(["paymentTransactionId"]),
 
+    CustomerSession: a.model({
+      sessionId: a.id().required(),
+      startTime: a.datetime().required(),
+      endTime: a.datetime(),
+      duration: a.integer(),
+
+      // Technical data
+      ipAddress: a.string(),
+      userAgent: a.string(),
+      deviceType: a.enum(["desktop", "mobile", "tablet"]),
+      browser: a.string(),
+      operatingSystem: a.string(),
+      screenResolution: a.string(),
+
+      CustomerInteractions: a.hasMany("SessionInteraction", "sessionId"),
+      customerId: a.id(),
+      Customer: a.belongsTo("Customer", "customerId"),
+    })
+      .identifier(["sessionId"]),
+
+    SessionInteraction: a.model({
+      interactionId: a.id().required(),
+      type: a.string(), //click, scroll, etc submit
+      name: a.string(), //press button, click, etc submit x
+      date: a.datetime().required(), //date of the interaction
+      data: a.string(), //json
+
+      sessionId: a.id().required(),
+      CustomerSession: a.belongsTo("CustomerSession", "sessionId"),
+    }).identifier(["interactionId"])
   })
   .authorization((allow) => [
     allow.publicApiKey(),

@@ -5643,6 +5643,20 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "meetLink": {
+              "name": "meetLink",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "googleEventId": {
+              "name": "googleEventId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         },

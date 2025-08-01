@@ -68,6 +68,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
             "Role": {
               "name": "Role",
               "isArray": false,
@@ -1381,6 +1388,20 @@
               "isRequired": false,
               "attributes": []
             },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
             "state": {
               "name": "state",
               "isArray": false,
@@ -1449,22 +1470,6 @@
                 ],
                 "targetNames": []
               }
-            },
-            "createdAt": {
-              "name": "createdAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
-            },
-            "updatedAt": {
-              "name": "updatedAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
             }
           },
           "syncable": true,
@@ -1490,6 +1495,17 @@
                 "fields": [
                   "state",
                   "startDate"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "calendarVisitsByStateAndUpdatedAt",
+                "queryField": "CalendarVisitsByStateAndUpdatedAt",
+                "fields": [
+                  "state",
+                  "updatedAt"
                 ]
               }
             },
@@ -1702,6 +1718,22 @@
                 "connectionType": "HAS_MANY",
                 "associatedWith": [
                   "solicitantId"
+                ]
+              }
+            },
+            "CustomerSessions": {
+              "name": "CustomerSessions",
+              "isArray": true,
+              "type": {
+                "model": "CustomerSession"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
                 ]
               }
             },
@@ -4484,6 +4516,17 @@
             {
               "type": "key",
               "properties": {
+                "name": "paymentTransactionsByStatusAndDate",
+                "queryField": "listPaymentTransactionByStatusAndDate",
+                "fields": [
+                  "status",
+                  "date"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
                 "name": "paymentTransactionsByToken",
                 "queryField": "listPaymentTransactionByToken",
                 "fields": [
@@ -4531,6 +4574,329 @@
           "primaryKeyInfo": {
             "isCustomPrimaryKey": true,
             "primaryKeyFieldName": "paymentTransactionId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "CustomerSession": {
+          "name": "CustomerSession",
+          "fields": {
+            "sessionId": {
+              "name": "sessionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "endTime": {
+              "name": "endTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "ipAddress": {
+              "name": "ipAddress",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userAgent": {
+              "name": "userAgent",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "deviceType": {
+              "name": "deviceType",
+              "isArray": false,
+              "type": {
+                "enum": "CustomerSessionDeviceType"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "browser": {
+              "name": "browser",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "operatingSystem": {
+              "name": "operatingSystem",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "screenResolution": {
+              "name": "screenResolution",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "CustomerInteractions": {
+              "name": "CustomerInteractions",
+              "isArray": true,
+              "type": {
+                "model": "SessionInteraction"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "sessionId"
+                ]
+              }
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "CustomerSessions",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "sessionId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "sessionId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "SessionInteraction": {
+          "name": "SessionInteraction",
+          "fields": {
+            "interactionId": {
+              "name": "interactionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "type": {
+              "name": "type",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "name": {
+              "name": "name",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "data": {
+              "name": "data",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "sessionId": {
+              "name": "sessionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "CustomerSession": {
+              "name": "CustomerSession",
+              "isArray": false,
+              "type": {
+                "model": "CustomerSession"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "sessionId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SessionInteractions",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "interactionId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "interactionId",
             "sortKeyFieldNames": []
           }
         },
@@ -5011,6 +5377,14 @@
             "input"
           ]
         },
+        "CustomerSessionDeviceType": {
+          "name": "CustomerSessionDeviceType",
+          "values": [
+            "desktop",
+            "mobile",
+            "tablet"
+          ]
+        },
         "MakeEstimateIntoCartPaymentMethod": {
           "name": "MakeEstimateIntoCartPaymentMethod",
           "values": [
@@ -5072,8 +5446,8 @@
             }
           }
         },
-        "ClearInstallerScheduleReturnType": {
-          "name": "ClearInstallerScheduleReturnType",
+        "BlockInstallerScheduleReturnType": {
+          "name": "BlockInstallerScheduleReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -5269,6 +5643,20 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "meetLink": {
+              "name": "meetLink",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "googleEventId": {
+              "name": "googleEventId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         },
@@ -5410,11 +5798,11 @@
             }
           }
         },
-        "ClearInstallerSchedule": {
-          "name": "ClearInstallerSchedule",
+        "BlockInstallerSchedule": {
+          "name": "BlockInstallerSchedule",
           "isArray": false,
           "type": {
-            "nonModel": "ClearInstallerScheduleReturnType"
+            "nonModel": "BlockInstallerScheduleReturnType"
           },
           "isRequired": false,
           "arguments": {
@@ -5547,6 +5935,12 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
             }
           }
         },
@@ -5574,6 +5968,12 @@
               "name": "formId",
               "isArray": false,
               "type": "String",
+              "isRequired": false
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
               "isRequired": false
             }
           }

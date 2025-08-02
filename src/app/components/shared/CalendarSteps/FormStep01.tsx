@@ -28,9 +28,7 @@ import AddressInput from '@/app/components/AddressInput2';
 // import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCustomer, setCustomer, setCustomerData } from "@/store/Customer/slice";
-import { selectCalendarVisits, setStep, setCalendarVisits, setCalendarNotPay } from "@/store/CalendarVisits/slice";
-import { persistor } from '@/store/store';
-// import { emptyClientForm } from '@/store/ClientForms/type';
+import { selectCalendarVisits, setStep, setCalendarVisits, setCalendarNotPay, setLoading } from "@/store/CalendarVisits/slice";
 
 
 import 'react-phone-number-input/style.css'
@@ -98,7 +96,7 @@ export const FormStep01 = (props:any) => {
   const [submitButton, setSubmitButton] = useState<string>('');
   
   const {  customer } = useAppSelector(selectCustomer);
-  const { installerId, calendarVisits } = useAppSelector(selectCalendarVisits);
+  const { installerId, calendarVisits, status } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
   const { trackEvent } = useAnalytics();
@@ -132,6 +130,7 @@ export const FormStep01 = (props:any) => {
         trackEvent('ingreso_datos_cliente', 'AGENDA_EMA', 'envio formulario visita virtual');
         
          Promise.all([
+          await dispatch(setLoading()),
           await dispatch(
             setCustomer({
               ...customer,
@@ -155,6 +154,7 @@ export const FormStep01 = (props:any) => {
         trackEvent('agendar_visita_virtual', 'AGENDA_EMA', 'envio formulario visita fisica');
         
         Promise.all([
+          await dispatch(setLoading()),
           await dispatch(
             setCustomer({
               ...customer,
@@ -163,10 +163,10 @@ export const FormStep01 = (props:any) => {
           ),
           customer?.customerId && 
           calendarVisits?.calendarId && 
-            await dispatch(setCalendarNotPay({
+          await dispatch(setCalendarNotPay({
               customerId: customer?.customerId,
               calendarId: calendarVisits?.calendarId,
-            })),
+          })),
           
           dispatch(setStep(3)), // Ir al paso de visita virtual
         ]);
@@ -509,7 +509,7 @@ export const FormStep01 = (props:any) => {
                                 display: 'block',
                                 fontSize: '1rem'
                               }}
-                            >Puedes hacer la visita técnica de forma virtual sin costo
+                            >Deben existir paredes o muros disponibles 
                             </Typography>
                           </Box>
                         </Box>
@@ -528,7 +528,7 @@ export const FormStep01 = (props:any) => {
                                 display: 'block',
                                 fontSize: '1rem'
                               }}
-                            >Cableado será sobrepuesto y deben existir paredes o muros disponibles
+                            >El cableado será sobrepuesto
                             </Typography>
                           </Box>
                         </Box>
@@ -574,11 +574,12 @@ export const FormStep01 = (props:any) => {
                               boxShadow: theme.shadows[6],
                               },
                               '&.Mui-disabled': {
-                              backgroundColor: 'rgba(0, 0, 0, 0.12)',
+                              backgroundColor: `${status === "loading" ? "#bfbfbf": "rgba(0, 0, 0, 0.12)"}`,
                               // backgroundColor: 'rgba(0, 0, 0, 0.12)',
                               color: 'rgba(0, 0, 0, 0.26)',
                               }
                               }}
+                              disabled={status === "loading"}
                             >
                             Continuar con  visita virtual sin costo
                           </Button>
@@ -645,11 +646,12 @@ export const FormStep01 = (props:any) => {
             paddingX: 4,
             paddingY: 1.5,
             borderRadius: '24px',
-            background:"#FFFFFF",
+            background: `${status === "loading" ? "#bfbfbf": "#FFFFFF"}`,
             color:"#E81A68",
             border: "1px solid #E81A68",
             width: { xs: '100%', md: 'auto' },
           }}
+          disabled={status === "loading"}
           onClick={() => dispatch(setStep(0))}
         >
           Volver
@@ -673,7 +675,7 @@ export const FormStep01 = (props:any) => {
                 width: '20px',
                 height: '20px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(232, 26, 104, 0.1)',
+                // backgroundColor: 'rgba(232, 26, 104, 0.1)',
                 color: '#E81A68',
                 '&::after': {
                   content: '"\\276F"', // Carácter de flecha izquierda
@@ -687,11 +689,12 @@ export const FormStep01 = (props:any) => {
             paddingX: 4,
             paddingY: 1.5,
             borderRadius: '24px',
-            background:"#FFFFFF",
+            background:`${status === "loading" ? "#bfbfbf": "#FFFFFF"}`,
             color:"#E81A68",
             border: "1px solid #E81A68",
             width: { xs: '100%', md: 'auto' },
           }}
+          disabled={status === "loading"}
         >
           Continuar y pagar la visita física
         </Button>

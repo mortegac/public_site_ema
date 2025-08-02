@@ -226,6 +226,9 @@ const calendarVisitsSlice = createSlice({
           ...emptyCalendarVisit
         }
       },
+      setLoading: (state) => {
+        state.status = "loading"
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -288,10 +291,12 @@ const calendarVisitsSlice = createSlice({
       /** TODO:  FALYTA IMPLEMENTAR setCalendarNotPay en el front */
     // setCalendarNotPay
       .addCase(setCalendarNotPay.pending, (state) => {
+        state.status = "loading";
         state.loading = true;
         state.error = null;
       })
       .addCase(setCalendarNotPay.fulfilled, (state, action) => {
+        state.status = "idle";
         state.loading = false;
         // console.log(">>> setCalendarNotPay >> action.payload >>", action.payload.data)
         // state.calendarVisits = action?.payload
@@ -302,6 +307,7 @@ const calendarVisitsSlice = createSlice({
         
       })
       .addCase(setCalendarNotPay.rejected, (state, action) => {
+        state.status = "failed";
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la agenda';
       });
@@ -317,6 +323,7 @@ export const {
     increment,
     setDataForm,
     cleanData,
+    setLoading
   } = calendarVisitsSlice.actions;
   
 export const selectCalendarVisits = (state: RootState) => state.calendarVisits;

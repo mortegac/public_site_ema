@@ -299,39 +299,11 @@ const ReturnPage = () => {
         
  }, [resTransaction]); 
  
- 
-  // useEffect(() => {
-  //   const handlePaymentValidation = async () => {
-  //     try {
-  //         const token = searchParams.get("token_ws") || "";
-  //         const tbkToken = searchParams.get("TBK_TOKEN") || "";
-  //         const tbkOrdenCompra = searchParams.get("TBK_ORDEN_COMPRA") || "";
-  //         const tbkIdSesion = searchParams.get("TBK_ID_SESION") || "";
-
-
-  //         await validation({
-  //             token: token, 
-  //             tbkToken: tbkToken, 
-  //             tbkOrdenCompra: tbkOrdenCompra, 
-  //             tbkIdSesion: tbkIdSesion
-  //         });
-
-  //     } catch (error) {
-  //         console.log('Error en el proceso de validación:', error);
-  //         setResTransaction(prev => ({
-  //             ...prev,
-  //             apiError: true,
-  //             msg: "Error inesperado en el proceso de pago",
-  //             status: "ERROR"
-  //         }));
-  //     }
-  // };
-
-  // handlePaymentValidation();
-
-  // }, [searchParams]);
-
-  
+    /** TODO:  CASO BORDE 
+     * El tiempo maximo es de 20 minutos para reintentar la transaccion 
+     * Despues de los 20 minutos la fecha es LIBERADA y el carro de comprar queda en estado "time_out"
+     * Se DEBE traer info del carro y validar
+    */
   
   return (
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">

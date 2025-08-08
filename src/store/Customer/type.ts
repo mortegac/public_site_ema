@@ -46,6 +46,7 @@ export const emptyCustomer: Customer = {
 
 
 export type customerInput = {
+  existCustomer?: boolean | null,
   id?: string | null,
   customerId?: string | null,
   name?: string,

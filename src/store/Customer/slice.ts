@@ -2,10 +2,11 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
 import { emptyCustomer, customerInput, Customer } from './type';
 import { RootState } from "../store";
-import { createCustomer } from './services';
+import { createCustomer, getCustomerService } from './services';
 interface CustomerState {
   status: "idle" | "loading" | "failed";
   customer: Customer;
+  existCustomer: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -13,6 +14,7 @@ interface CustomerState {
 const initialState: CustomerState = {
   status: "idle",
   customer: emptyCustomer,
+  existCustomer: false,
   loading: false,
   error: null,
 };
@@ -25,6 +27,18 @@ export const setCustomer = createAsyncThunk(
         return response;
       } catch (error) {
         console.log(">>>>ERROR FETCH setCustomer", error)
+        return Promise.reject(error);
+      }
+    }
+);
+export const getCustomer = createAsyncThunk(
+    "CUSTOMER/getCustomer ",
+    async (objFilter: customerInput) => {
+      try {
+        const response:any = await getCustomerService({ ...objFilter });
+        return response;
+      } catch (error) {
+        console.log(">>>>ERROR FETCH getCustomer", error)
         return Promise.reject(error);
       }
     }
@@ -47,6 +61,7 @@ const customerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    
     // setCustomer
       .addCase(setCustomer.pending, (state) => {
         state.loading = true;
@@ -55,12 +70,27 @@ const customerSlice = createSlice({
       .addCase(setCustomer.fulfilled, (state, action) => {
         state.loading = false;
         console.log(">>> action.payload >>", action.payload)
-        state.customer = {...action.payload};
+        // state.customer = {...action.payload};
         console.log(">>> state.customer >>", action.payload)
-        // if (state.currentForm) {
-        // }
       })
       .addCase(setCustomer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error al actualizar el customer';
+        state.customer={...emptyCustomer}
+      })
+      
+    // getCustomer
+      .addCase(getCustomer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCustomer.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(">>> action.payload >>", action.payload)
+        state.existCustomer = Boolean(action.payload?.customerId && action.payload.customerId.trim() !== '');
+        console.log(">>> state.customer >>", action.payload)
+      })
+      .addCase(getCustomer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar el customer';
         state.customer={...emptyCustomer}

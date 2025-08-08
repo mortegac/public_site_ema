@@ -7,6 +7,7 @@ export const getAmplifyConfig = () => {
   try {
     let outputs;
     
+    
     if (environment === 'PROD') {
       outputs = require('../../amplify_outputs.json');
     } else {

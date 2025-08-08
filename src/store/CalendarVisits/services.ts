@@ -9,10 +9,11 @@ import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
 import { configureAmplify } from "@/utils/amplify-config";
 
+import { client } from "../../app/init";
 // Configurar Amplify con la configuración del entorno correspondiente
-configureAmplify();
+// configureAmplify();
 
-const client = generateClient<MAIN.MainTypes>();
+// const client = generateClient<MAIN.MainTypes>();
 
 interface MakeReservationResponse {
   MakeReservationAndCart: {
@@ -223,6 +224,42 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
       variables: {
         customerId: objFilter.customerId,
         calendarId: objFilter.calendarId,
+      }
+    }) as GraphQLResult<MakeReservationResponse>;
+    
+    // console.log("response.data", response.data)
+
+    return response.data?.MakeReservationAndCart;
+    
+  } catch (error) {
+    console.log("Error fetching calendar visits:", error);
+    throw error;
+  }
+};
+
+
+
+
+export const makeReservationNotPaid = async (objFilter: calendarVisitInput) => {
+  try {
+    const response = await client.graphql<MakeReservationResponse>({
+      query: `
+        mutation reserveCalendarVisit($calendarId: String!, $customerId: String!, $isRemote: Boolean) {
+          reserveCalendarVisit(
+            calendarId: $calendarId,
+            customerId: $customerId
+            isRemote: $isRemote
+          ) {
+            message
+    calendarId
+    shoppingCartId
+          }
+        }
+      `,
+      variables: {
+        calendarId: objFilter.calendarId,
+        customerId: objFilter.customerId,
+        isRemote: true
       }
     }) as GraphQLResult<MakeReservationResponse>;
     

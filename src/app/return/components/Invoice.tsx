@@ -52,7 +52,7 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
         }}
       >
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <SvgSuccess email={email} />
+          <SvgSuccess email={email} />
         </Box>
 
         <Paper
@@ -207,12 +207,14 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
               fontWeight: 300,
               textAlign: 'center',
               mb: 4,
+              mt: 8,
             }}
           >
             En caso de instalar con nosotros, este monto será descontado de la cotización
           </Typography>
           
         </Paper>
+      
       <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
         sx={{
           display: "flex",

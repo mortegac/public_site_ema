@@ -63,7 +63,7 @@ export const SvgSuccess = (props: any) => {
           fill="#21D57B"
         />
       </svg>
-      <h2 className="text-4xl mt-8">Listo! Tú visita fue agendada</h2>
+      <h2 className="text-4xl mt-8">Listo! Tu visita fue agendada</h2>
       {/* <span className="text-lg mt-4">Envíaremos el comprobante al email <b>{`${props?.email || "ingresado"}`}</b></span> */}
     </div>
   );
@@ -218,7 +218,7 @@ export default function FormResumeVirtual() {
                       >
                         <Box
                           sx={{
-                            width: { xs: "40px", md: "120px" },
+                            width: { xs: "90px", md: "120px" },
                             display: "flex",
                             justifyContent: "flex-start",
                             alignItems: "flex-start",
@@ -276,7 +276,7 @@ export default function FormResumeVirtual() {
                       >
                         <Box
                           sx={{
-                            width: { xs: "40px", md: "120px" },
+                            width: { xs: "90px", md: "120px" },
                             display: "flex",
                             justifyContent: "flex-start",
                             alignItems: "flex-start",
@@ -331,7 +331,7 @@ export default function FormResumeVirtual() {
                       >
                         <Box
                           sx={{
-                            width: { xs: "40px", md: "120px" },
+                            width: { xs: "90px", md: "120px" },
                             display: "flex",
                             justifyContent: "flex-start",
                             alignItems: "flex-start",
@@ -386,7 +386,7 @@ export default function FormResumeVirtual() {
                       >
                         <Box
                           sx={{
-                            width: { xs: "40px", md: "120px" },
+                            width: { xs: "90px", md: "120px" },
                             display: "flex",
                             justifyContent: "flex-start",
                             alignItems: "flex-start",
@@ -442,7 +442,7 @@ export default function FormResumeVirtual() {
                       >
                         <Box
                           sx={{
-                            width: { xs: "40px", md: "120px" },
+                            width: { xs: "90px", md: "120px" },
                             display: "flex",
                             justifyContent: "flex-start",
                             alignItems: "flex-start",

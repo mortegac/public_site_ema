@@ -28,7 +28,7 @@ import AddressInput from '@/app/components/AddressInput2';
 
 // import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { selectCustomer, setCustomer, setCustomerData } from "@/store/Customer/slice";
+import { selectCustomer, setCustomer, getCustomer, setCustomerData } from "@/store/Customer/slice";
 import { selectCalendarVisits, setStep, setCalendarVisits, setCalendarNotPay, setLoading } from "@/store/CalendarVisits/slice";
 
 
@@ -91,12 +91,13 @@ export const FormStep01 = (props:any) => {
   const theme = useTheme(); // Acceder al tema para los colores
   // const { onChangeSetStore } = props;
   
+  // const [loadingPage, setLoadingPage] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
   const [phoneInput, setPhoneInput] = useState('+569');
   const [isValid, setIsValid] = useState(false);
   const [submitButton, setSubmitButton] = useState<string>('');
   
-  const {  customer } = useAppSelector(selectCustomer);
+  const {  customer, existCustomer } = useAppSelector(selectCustomer);
   const { installerId, calendarVisits, status } = useAppSelector(selectCalendarVisits);
   
   const dispatch = useAppDispatch();
@@ -124,11 +125,12 @@ export const FormStep01 = (props:any) => {
     enableReinitialize: true, 
 
     onSubmit: async (values:any) => {
-      console.log('Botón presionado:', submitButton);
-      
+
+      // setLoadingPage(true)
       if (submitButton === 'schedule') {
         // alert("schedule")
         trackEvent('ingreso_datos_cliente', 'AGENDA_EMA', 'envio formulario visita virtual');
+        
         
          Promise.all([
           await dispatch(setLoading()),
@@ -136,6 +138,7 @@ export const FormStep01 = (props:any) => {
             setCustomer({
               ...customer,
               customerId: values?.email,
+              existCustomer: Boolean(existCustomer)
             })
           ),
           customer?.customerId && 
@@ -147,8 +150,6 @@ export const FormStep01 = (props:any) => {
           
           dispatch(setStep(2)), // Ir al paso de pago
         ]);
-      
-        
       
       } else if (submitButton === 'scheduleNotPay') {
         // alert("scheduleNotPay")
@@ -173,7 +174,9 @@ export const FormStep01 = (props:any) => {
         ]);
         
         
-       }
+      }
+      
+      // setLoadingPage(false)
     },
     }); 
     
@@ -215,7 +218,7 @@ export const FormStep01 = (props:any) => {
   
   return (
     <>
-    {/* <pre>{JSON.stringify(customer, null, 2 )}</pre> */}
+    {/* <pre>existCustomer = {JSON.stringify(existCustomer, null, 2 )}</pre> */}
     <Box sx={{ p: { xs: 0, md: 2 } }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Typography
@@ -288,9 +291,20 @@ export const FormStep01 = (props:any) => {
                         id="email"
                         name="email"
                         value={formik.values.email}
+                        sx={{
+                          backgroundColor: existCustomer ? 'grey.100' : 'transparent',
+                          '& .MuiOutlinedInput-root': {
+                            backgroundColor: existCustomer ? 'grey.100' : 'transparent',
+                          }
+                        }}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           formik.setFieldValue('email', e.target.value);
                           dispatch(setCustomerData({
+                            customerId: e.target.value
+                          }))
+                        }}
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                          dispatch(getCustomer({
                             customerId: e.target.value
                           }))
                         }}

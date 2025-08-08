@@ -8,6 +8,37 @@ configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
 
+export const getCustomerService = async (input: customerInput): Promise<any> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { customerId } = input;
+      
+      const { data: existingCustomers, errors } = await client.models.Customer.list({ 
+        filter: { customerId: { eq: customerId || undefined } } 
+    });
+    let customer: any  = existingCustomers?.[0];
+    
+      console.log("--getCustomer--", customer)
+  
+      if (errors) {
+        console.log("--customer--errors", customer)
+        reject({
+          errorMessage: errors.map(e => e.message).join(', ')
+        });
+        return;
+      }
+      console.log("--getCustomer--resolve", customer)
+      resolve(customer);
+        
+    } catch (err) {
+      console.log("--getCustomer--err", err)
+      reject({
+        errorMessage: JSON.stringify(err),
+      });
+    }
+  });
+};
+
 export const createCustomer = async (input: customerInput): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -48,17 +79,15 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
       };
       
         // Primero verificamos si existe el customer
-        let existingCustomer: any = null;
+        // let existingCustomer: any = null;
         if (customerId) {
         
-            const { data: existingCustomers } = await client.models.Customer.list({ 
-                filter: { customerId: { eq: customerId } } 
-            });
-            existingCustomer = existingCustomers?.[0];
-                
-        console.log("--existingCustomer--", existingCustomer)
-            if (existingCustomer) {
-                console.log("--createCustomer--exists", existingCustomer);
+            // const { data: existingCustomers } = await client.models.Customer.list({ 
+            //     filter: { customerId: { eq: customerId } } 
+            // });
+            
+            if (Boolean(input.existCustomer)) {
+              console.log("input.existCustomer = ", input.existCustomer);
                 
                 const { data, errors } = await client.models.Customer.update(formData);
                 if (errors) {
@@ -70,28 +99,46 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
                 }
                 console.log("--updateCustomer--resolve", data)
                 resolve(data);
+                return;  
+            }else{
+              console.log("--formData", formData)
+              const { data, errors } = await client.models.Customer.create(formData);
+              console.log("--createCustomer--data", data)
+              
+              if (errors) {
+                console.log("--createCustomer--errors", errors)
+                reject({
+                  errorMessage: errors.map(e => e.message).join(', ')
+                });
                 return;
-                
-                // resolve(existingCustomer);
+              }
+              console.log("--createCustomer--resolve", data)
+              resolve(data);
             }
+                
+        // console.log("--existingCustomer--", existingCustomer)
+            // if (existingCustomer) {
+            //     console.log("--createCustomer--exists", existingCustomer);
+                
+            //     const { data, errors } = await client.models.Customer.update(formData);
+            //     if (errors) {
+            //       console.log("--updateCustomer--errors", errors)
+            //       reject({
+            //         errorMessage: errors.map(e => e.message).join(', ')
+            //       });
+            //       return;
+            //     }
+            //     console.log("--updateCustomer--resolve", data)
+            //     resolve(data);
+            //     return;
+
+            // }
         }
 
         
     
     
-        console.log("--formData", formData)
-        const { data, errors } = await client.models.Customer.create(formData);
-        console.log("--createCustomer--data", data)
         
-        if (errors) {
-          console.log("--createCustomer--errors", errors)
-          reject({
-            errorMessage: errors.map(e => e.message).join(', ')
-          });
-          return;
-        }
-        console.log("--createCustomer--resolve", data)
-        resolve(data);
           
       } catch (err) {
         console.log("--createCustomer--err", err)

@@ -421,7 +421,7 @@ export default function BookingCalendar() {
                     {/* {`Instalador ${++index}`} */}
                     
                     {environment === 'PROD' && `Instalador ${++index}` }
-                    {environment !== 'PROD' && installer.userId.split('@')[0] || installer.userId }
+                    {/* {environment !== 'PROD' && installer.userId.split('@')[0] || installer.userId } */}
                        {/* {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
                     {/* <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
                       {installer?.userId?.split('.')[0] || installer?.userId}

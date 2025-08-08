@@ -18,6 +18,7 @@ import * as yup from 'yup';
 import { styled } from '@mui/material/styles';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 
+import LoadingIcon from "@/app/components/shared/LoadingIcon";
 
 
 import CustomTextField from './CustomTextField';
@@ -452,7 +453,7 @@ export const FormStep01 = (props:any) => {
                        position: { xs: 'relative', md: 'static' }
                      }}>
                       
-                                             <Box id="box-tittle" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"14px" }}>
+                      <Box id="box-tittle" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"14px" }}>
                          <Box sx={{ width: { xs: "0%", md: "20%" }, display: { xs: "none", md: "flex" }, justifyContent: "center", alignItems: "center" }}>
                            <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
                              <path d="M2.68126 4.18359C1.20654 4.18359 0 5.39025 0 6.86497V37.7001L31.8407 40.3814L30.5 4.18359H2.68126Z" fill="#461E7D" fill-opacity="0.06"/>
@@ -478,7 +479,7 @@ export const FormStep01 = (props:any) => {
                             >Puedes hacer la visita técnica de forma virtual sin costo
                             </Typography>
                           </Box>
-                        </Box>
+                      </Box>
                        
                        <Box id="box-tittle" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", marginTop:"36px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
                          <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
@@ -494,7 +495,7 @@ export const FormStep01 = (props:any) => {
                          </Box>
                        </Box>
                        
-                                               <Box id="box-check01" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", marginTop:"14px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
+                      <Box id="box-check01" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", marginTop:"14px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
                           <Box sx={{ width: { xs: "15%", md: "10%" }, display: "flex", justifyContent: "center", alignItems: "center" }}>
                            <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: "10px" }}>
                              <path fill-rule="evenodd" clip-rule="evenodd" d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z" fill="#21D57B"/>
@@ -512,8 +513,9 @@ export const FormStep01 = (props:any) => {
                             >Deben existir paredes o muros disponibles 
                             </Typography>
                           </Box>
-                        </Box>
-                                               <Box id="box-check02" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex" , marginTop:"14px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
+                      </Box>
+                      
+                      <Box id="box-check02" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex" , marginTop:"14px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
                           <Box sx={{ width: { xs: "15%", md: "10%" }, display: "flex", justifyContent: "center", alignItems: "center" }}>
                            <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: "10px" }}>
                              <path fill-rule="evenodd" clip-rule="evenodd" d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z" fill="#21D57B"/>
@@ -531,7 +533,7 @@ export const FormStep01 = (props:any) => {
                             >El cableado será sobrepuesto
                             </Typography>
                           </Box>
-                        </Box>
+                      </Box>
                       
                        <Box sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex" , marginTop:"32px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
                          <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -592,6 +594,11 @@ export const FormStep01 = (props:any) => {
                     </Box>
                   }
                     
+                  {status === "loading" &&  <Box sx={{ width: { xs: '100vw', md: '50%' }, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
+                    <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
+                  </Box>
+                  }
+                  
                   </Box>
                   
                   {/* <pre>{JSON.stringify(customer, null, 2)}</pre> */}

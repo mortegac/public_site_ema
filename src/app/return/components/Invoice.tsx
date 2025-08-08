@@ -198,6 +198,20 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
               </TableBody>
             </Table>
           </TableContainer>
+          
+          <Typography
+            sx={{
+              color: '#37373c',
+              fontSize: '14px',
+              lineHeight: '24px',
+              fontWeight: 300,
+              textAlign: 'center',
+              mb: 4,
+            }}
+          >
+            En caso de instalar con nosotros, este monto será descontado de la cotización
+          </Typography>
+          
         </Paper>
       <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
         sx={{

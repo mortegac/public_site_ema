@@ -512,8 +512,7 @@ export default function FormResumeVirtual() {
                               //  fontSize: '1.1rem'
                             }}
                           >
-                            Te contactaremos vía Whatsapp al momento de la
-                            videollamada
+                            Debes conectarte al enlace de videollamada al momento de la cita
                           </Typography>
                         </Box>
                       </Box>

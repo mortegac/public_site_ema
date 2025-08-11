@@ -1,0 +1,63 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Sunt consequat in pariatur sint incididunt voluptate Lorem do occaecat. Sunt qui proident incididunt consequat. Sit sint pariatur sunt duis eu amet voluptate qui excepteur laboris excepteur in."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Et non laboris est proident adipisicing in."
+						}
+					}
+				]
+			},
+			"buttononetext": {
+				"__TYPE__": "FieldContent",
+				"value": "wood",
+				"type": "Text"
+			},
+			"buttononelink": {
+				"key": "297669d9-739b-49e1-b93e-72d0aae8d73c",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://prismic.io",
+					"text": "contrast"
+				}
+			},
+			"imageisright": {
+				"__TYPE__": "BooleanContent",
+				"value": false
+			},
+			"buttontwotext": {
+				"__TYPE__": "FieldContent",
+				"value": "bad",
+				"type": "Text"
+			},
+			"buttontwolink": {
+				"key": "c884ded8-7b46-4828-b1b6-3b690002079e",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "rocket"
+				}
+			}
+		},
+		"items": []
+	}
+]

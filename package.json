@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "slicemachine": "start-slicemachine"
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.16.1",
@@ -21,6 +22,9 @@
     "@mui/material": "^7.1.0",
     "@mui/material-nextjs": "6.1.1",
     "@mui/x-date-pickers": "^8.4.0",
+    "@prismicio/client": "^7.19.1",
+    "@prismicio/next": "^2.0.1",
+    "@prismicio/react": "^3.2.1",
     "@reduxjs/toolkit": "^1.9.7",
     "@tabler/icons-react": "^2.39.0",
     "apexcharts": "3.43.0",
@@ -57,6 +61,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@slicemachine/adapter-next": "^0.3.82",
     "@types/chance": "^1.1.4",
     "@types/google.maps": "^3.58.1",
     "@types/lodash": "^4.14.199",
@@ -64,6 +69,7 @@
     "@types/react-big-calendar": "^1.15.0",
     "@types/react-helmet": "^6.1.7",
     "eslint": "latest",
-    "eslint-config-next": "latest"
+    "eslint-config-next": "latest",
+    "slice-machine-ui": "^2.18.0"
   }
 }

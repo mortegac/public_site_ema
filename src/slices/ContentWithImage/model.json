@@ -1,0 +1,82 @@
+{
+  "id": "content_with_image",
+  "type": "SharedSlice",
+  "name": "ContentWithImage",
+  "description": "ContentWithImage",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "description",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "buttononetext": {
+          "type": "Text",
+          "config": {
+            "label": "buttonOneText",
+            "placeholder": ""
+          }
+        },
+        "buttononelink": {
+          "type": "Link",
+          "config": {
+            "label": "buttonOneLink",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        },
+        "buttontwotext": {
+          "type": "Text",
+          "config": {
+            "label": "buttonTwoText",
+            "placeholder": ""
+          }
+        },
+        "buttontwolink": {
+          "type": "Link",
+          "config": {
+            "label": "buttonTwoLink",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        },
+        "imageisright": {
+          "type": "Boolean",
+          "config": {
+            "label": "imageIsRight",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": true
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

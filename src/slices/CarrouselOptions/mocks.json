@@ -1,0 +1,299 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Exercitation quis in ad ea deserunt culpa. Id et enim aliqua. Irure qui occaecat eiusmod consequat."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Incididunt in est aute ea cillum. Reprehenderit aliqua esse officia adipisicing pariatur officia occaecat. Reprehenderit anim sint duis esse anim minim pariatur cupidatat duis id incididunt."
+						}
+					}
+				]
+			},
+			"options": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"texttopbanner",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Magna cillum magna dolore cillum irure aliquip ex qui non Lorem esse qui veniam. Aliquip voluptate est velit qui aliquip eiusmod."
+											}
+										}
+									]
+								}
+							],
+							[
+								"hastopbanner",
+								{
+									"__TYPE__": "BooleanContent",
+									"value": false
+								}
+							],
+							[
+								"brand",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "brain",
+									"type": "Text"
+								}
+							],
+							[
+								"capacity",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "aboard",
+									"type": "Text"
+								}
+							],
+							[
+								"pricetoptext",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Veniam est amet in proident."
+											}
+										}
+									]
+								}
+							],
+							[
+								"pricetopvalue",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "7",
+									"type": "Number"
+								}
+							],
+							[
+								"pricebottomtext",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Amet duis quis minim tempor dolore. Fugiat cupidatat ad excepteur consectetur ipsum sint in adipisicing exercitation culpa aute consectetur sit."
+											}
+										}
+									]
+								}
+							],
+							[
+								"buttontext",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "object",
+									"type": "Text"
+								}
+							],
+							[
+								"buttonlink",
+								{
+									"__TYPE__": "LinkContent",
+									"key": "96cf0779-8b19-4d2c-bb7b-76d958760563",
+									"value": {
+										"__TYPE__": "ExternalLink",
+										"url": "https://prismic.io",
+										"text": "writer"
+									}
+								}
+							]
+						]
+					}
+				]
+			}
+		},
+		"items": []
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "extendedOptions",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Reprehenderit quis ad consectetur minim. Irure laborum voluptate do nisi consectetur aliqua sint duis do. Labore aliquip sit eiusmod dolor cupidatat dolore laborum ipsum nulla et amet sit adipisicing consectetur."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Aute culpa velit excepteur aliquip esse ea Lorem. Lorem aute ut aliquip non dolore enim aliqua consequat nulla excepteur do laborum amet ea. Reprehenderit pariatur anim Lorem quis in quis sunt proident tempor dolore aliquip proident amet aute dolore."
+						}
+					}
+				]
+			},
+			"options": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"texttopbanner",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Laborum do adipisicing qui ex velit reprehenderit esse. Ipsum nisi do ipsum deserunt mollit."
+											}
+										}
+									]
+								}
+							],
+							[
+								"hastopbanner",
+								{
+									"__TYPE__": "BooleanContent",
+									"value": false
+								}
+							],
+							[
+								"brand",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "wealth",
+									"type": "Text"
+								}
+							],
+							[
+								"capacity",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "steam",
+									"type": "Text"
+								}
+							],
+							[
+								"pricetoptext",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Laborum eiusmod consequat aliquip fugiat exercitation aliquip quis Lorem."
+											}
+										}
+									]
+								}
+							],
+							[
+								"pricetopvalue",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "16",
+									"type": "Number"
+								}
+							],
+							[
+								"pricebottomtext",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Tempor consequat culpa ad. Non aliquip minim et velit ullamco magna commodo ipsum commodo ipsum fugiat quis qui officia officia. Ea consectetur nostrud adipisicing ipsum minim sunt aute adipisicing veniam sit."
+											}
+										}
+									]
+								}
+							],
+							[
+								"htmlfeatures",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "planned",
+									"type": "Text"
+								}
+							],
+							[
+								"buttontext",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "log",
+									"type": "Text"
+								}
+							],
+							[
+								"buttonlink",
+								{
+									"key": "f14193bc-8984-495b-ae38-f29826e81ada",
+									"__TYPE__": "LinkContent",
+									"value": {
+										"__TYPE__": "ExternalLink",
+										"url": "http://google.com",
+										"text": "follow"
+									}
+								}
+							],
+							[
+								"buttontwotext",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "instance",
+									"type": "Text"
+								}
+							],
+							[
+								"buttontwolink",
+								{
+									"key": "b93ec98a-4b81-46d2-9749-a8ae46cd2ed1",
+									"__TYPE__": "LinkContent",
+									"value": {
+										"__TYPE__": "ExternalLink",
+										"url": "http://google.com",
+										"text": "leaf"
+									}
+								}
+							]
+						]
+					}
+				]
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

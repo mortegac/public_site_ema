@@ -5415,6 +5415,74 @@
             }
           }
         },
+        "EstimateResume": {
+          "name": "EstimateResume",
+          "fields": {
+            "estimateId": {
+              "name": "estimateId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "materialsCost": {
+              "name": "materialsCost",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationCost": {
+              "name": "installationCost",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "SECCost": {
+              "name": "SECCost",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "referenceChargerPrice": {
+              "name": "referenceChargerPrice",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "netPrice": {
+              "name": "netPrice",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "VAT": {
+              "name": "VAT",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "grossPrice": {
+              "name": "grossPrice",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "chargerPotence": {
+              "name": "chargerPotence",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "ProcessEstimateReturnType": {
           "name": "ProcessEstimateReturnType",
           "fields": {
@@ -5425,13 +5493,15 @@
               "isRequired": false,
               "attributes": []
             },
-            "estimatesIds": {
-              "name": "estimatesIds",
+            "estimates": {
+              "name": "estimates",
               "isArray": true,
-              "type": "String",
+              "type": {
+                "nonModel": "EstimateResume"
+              },
               "isRequired": false,
               "attributes": [],
-              "isArrayNullable": false
+              "isArrayNullable": true
             }
           }
         },

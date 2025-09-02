@@ -613,7 +613,7 @@ export default function BookingCalendar() {
                     component="span"
         >
           VALOR VISITA TÉCNICA: $10.000
-          </Typography>
+      </Typography>
       <Typography
         align="left"
                     sx={{
@@ -659,7 +659,7 @@ export default function BookingCalendar() {
                       >
                         Conozca aquí nuestros términos y condiciones
                       </Typography>
-                    </Link>
+      </Link>
     </Box>
   );
 }

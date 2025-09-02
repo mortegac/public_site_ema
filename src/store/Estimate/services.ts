@@ -19,8 +19,19 @@ export const createEstimate = async (input: estimateInput): Promise<any> => {
           query: `
             mutation ProcessEstimate($formId: String!) {
               ProcessEstimate(formId: $formId) {
+               message
+              estimates {
                 estimateId
-                message
+                materialsCost
+                installationCost
+                SECCost
+                referenceChargerPrice
+                netPrice
+                VAT
+                grossPrice
+                chargerPotence
+              }
+
               }
             }
           `,
@@ -30,24 +41,28 @@ export const createEstimate = async (input: estimateInput): Promise<any> => {
         
         console.log("--processResult--", processResult)
         console.log("--processResult-data-", processResult?.data?.ProcessEstimate)
+       
         
-        if ('data' in processResult && processResult.data?.ProcessEstimate) {
-          const { data: estimate } = await client.models.Estimate.get({ 
-            estimateId: processResult.data.ProcessEstimate.estimateId 
-          });
+        // const estimate = processResult?.data?.ProcessEstimate?.estimates[0]
+        resolve(processResult?.data?.ProcessEstimate?.estimates[0])
+        
+        // if ('data' in processResult && processResult.data?.ProcessEstimate) {
+        //   const { data: estimate } = await client.models.Estimate.get({ 
+        //     estimateId: processResult.data.ProcessEstimate.estimateId 
+        //   });
           
-          if (estimate) {
-            resolve(estimate);
-          } else {
-            reject({
-              errorMessage: "No se pudo obtener los datos del estimate"
-            });
-          }
-        } else {
-          reject({
-            errorMessage: "No se pudo procesar el estimate"
-          });
-        }
+        //   if (estimate) {
+        //     resolve(estimate);
+        //   } else {
+        //     reject({
+        //       errorMessage: "No se pudo obtener los datos del estimate"
+        //     });
+        //   }
+        // } else {
+        //   reject({
+        //     errorMessage: "No se pudo procesar el estimate"
+        //   });
+        // }
           
       } catch (err) {
         console.log("--createEstimate--err", err)

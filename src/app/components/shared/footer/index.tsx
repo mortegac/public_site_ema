@@ -30,11 +30,11 @@ const footerLinks = [
               titleText: 'Agenda',
               link: '/agenda',
           },
-          // {
-          //     title: false,
-          //     titleText: 'Cotizador',
-          //     link: '/cotizador',
-          // },
+          {
+              title: false,
+              titleText: 'Cotizador',
+              link: '/cotizador',
+          },
           // {
           //     title: false,
           //     titleText: 'FAQs',

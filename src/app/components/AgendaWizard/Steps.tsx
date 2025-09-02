@@ -47,8 +47,11 @@ export default function HorizontalLinearStepper() {
 
   // Función para manejar el click en un paso
   const handleStepClick = (stepIndex: number, stepName: string) => {
+    
+    
     trackEvent('cambio_de_paso_agenda', 'navigation', `${stepName}_step_${stepIndex + 1}`);
-    dispatch(setStep(stepIndex));
+    Number(stepIndex) !== 2 && dispatch(setStep(stepIndex));
+    // console.log("--currentStep--", currentStep)
   };
 
   return (
@@ -97,9 +100,7 @@ export default function HorizontalLinearStepper() {
           const labelProps: {
             optional?: React.ReactNode;
             onClick?: () => void;
-          } = {
-            onClick: () => handleStepClick(index, label)
-          };
+          } = { onClick: () => handleStepClick(index, label) };
           return (
             <Step key={label} {...stepProps}>
               <StepLabel 
@@ -114,7 +115,17 @@ export default function HorizontalLinearStepper() {
                   }
                 }}
               >
-                {label}
+                
+                <Typography
+            align="left"
+            sx={{
+              fontSize: "14px",
+              color: Number(currentStep) === Number(index) ? '#E81A68' : '#b9b9b9'
+            }}
+            component="span"
+            >
+              {label}
+            </Typography>
               </StepLabel>
             </Step>
           );

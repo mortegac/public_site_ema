@@ -1,5 +1,57 @@
 
 
+Servikin
+- 11 de agosto 
+
+15 
+Paola - 
+
+si estas pensando en comprar un vehiculo electrico o ya tienes uno, compra aqui tu cargador con o sin instalacion 
+
+Conoce las alternativas para simular el costo 
+simular
+agenda visita 
+
+
+
+==============================================
+GOOGLE ADS
+
+9 ventas mensauales 
+
+120.000 semanal 
+
+- visitas
+- Cargadores 
+
+
+
+
+Estudiar busquedas
+- hacer contenido con palabras claves
+- 
+
+
+
+Pagina web 
+- Stack tecnologico ema
+- Agregar un gestor de contenido 
+- 
+
+
+Sub-campañas
+- Venta de Cargadores
+- Instalacion de cargadores
+- Agenda visitas tecnicas 
+
+
+OBJETIVOS 
+-> el cliente sepa lo que hago y me contacto
+-> 
+
+
+SEO / SEM
+
 
 
 EMA

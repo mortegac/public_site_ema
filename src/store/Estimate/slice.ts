@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyEstimate, estimateInput, Estimate } from './type';
+import { emptyEstimate, estimateInput, Estimate, EstimateData, emptyEstimateData  } from './type';
 import { RootState } from "../store";
 import { createEstimate } from './services';
 
@@ -8,6 +8,7 @@ import { createEstimate } from './services';
 interface EstimateState {
   status: "idle" | "loading" | "failed";
   estimate: Estimate;
+  estimateData: EstimateData;
   loading: boolean;
   error: string | null;
 }
@@ -15,6 +16,7 @@ interface EstimateState {
 const initialState: EstimateState = {
   status: "idle",
   estimate: emptyEstimate,
+  estimateData: emptyEstimateData,
   loading: false,
   error: null,
 };
@@ -62,7 +64,7 @@ const estimateSlice = createSlice({
       .addCase(setEstimate.fulfilled, (state, action) => {
         state.loading = false;
         console.log(">>> action.payload >>", action.payload)
-        state.estimate = {...action.payload};
+        state.estimateData = {...action.payload};
       })
       .addCase(setEstimate.rejected, (state, action) => {
         state.loading = false;

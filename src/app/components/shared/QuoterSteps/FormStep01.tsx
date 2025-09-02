@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import {
   Box,
-  Stack,
+  Paper,
   Typography,
   Container,
   Grid,
@@ -12,7 +12,7 @@ import {
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { styled } from '@mui/material/styles';
-
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 
 
 import CustomTextField from './CustomTextField';
@@ -20,8 +20,9 @@ import CustomFormLabel from './CustomFormLabel';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
-import { setCustomer } from "@/store/Customer/slice";
-
+import { selectCustomer, setCustomer, setCustomerData, getCustomer } from "@/store/Customer/slice";
+import 'react-phone-number-input/style.css'
+import './phone.css'
 
 // Componente para el formulario vertical
 const VerticalForm = styled(Box)(({ theme }) => ({
@@ -29,7 +30,11 @@ const VerticalForm = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: theme.spacing(2), // Espacio entre los campos
   padding: theme.spacing(3),
+  
   width: '100%',
+  [theme.breakpoints.down('md')]: {
+    padding: 0, // Padding 0 en responsive
+  },
   '& .MuiTextField-root': {
     width: '100%',
     maxWidth: '800px'
@@ -62,31 +67,28 @@ const validationSchema = yup.object({
       return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value || "");
     })
     .required('Email es requerido'),
-  phone: yup.string().required('El teléfono es Requerido'),
+    phone: yup
+    .string()
+    .required('El teléfono es requerido')
+    .matches(/^\+56\s?\d{9}$/, 'El teléfono debe tener el formato +56 9XX XXX XXX')
+    .trim(),
 });
 
 export const FormStep01 = (props:any) => {
   const { onChangeSetStore } = props;
-  
+  const [error, setError] = useState<any>(null);
+  const [phoneInput, setPhoneInput] = useState('+569');
+  const [isValid, setIsValid] = useState(false);
   const { 
     currentStep,
     // currentForm,
     currentForm
   } = useAppSelector(selectClientForms);
-  
+  const {  customer, existCustomer } = useAppSelector(selectCustomer);
   const dispatch = useAppDispatch();
   
-  // const [name, setName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [phone, setPhone] = useState('');
-
-  // const handleSubmit = (event:any) => {
-  //   event.preventDefault();
-    // console.log('Formulario enviado:', { name, email, phone });
-    // setName('');
-    // setEmail('');
-    // setPhone('');
-  // };
+  const UUID = useId();
+  
   
   const MiSVG = () => (
     <svg width="123" height="123" viewBox="0 0 123 123" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,11 +110,12 @@ export const FormStep01 = (props:any) => {
   );
 
   
+  
      const formik = useFormik({
       initialValues: {
         name: currentForm?.name || '',
         email: currentForm?.email || '',
-        phone: currentForm?.phone || '',
+        phone: currentForm?.phone ? (currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`) : '+569',
       },
       validationSchema: validationSchema,
       enableReinitialize: true, 
@@ -124,14 +127,19 @@ export const FormStep01 = (props:any) => {
       //   dispatch(setDataForm({ key: name, value }));
       // },
       onSubmit: (values) => {
+        // trackEvent('ingreso_datos_cliente', 'COTIZADOR_EMA', 'envio formulario cliente simulador');
+        
+        
         Promise.all([
           dispatch(
             setCustomer({
               customerId: values?.email,
+              existCustomer: Boolean(existCustomer),
               name: values?.name,
               comune: "",
               address: "",
               phone: values?.phone,
+              typeOfResidence: "other",
             })
           ),
           dispatch(
@@ -159,6 +167,32 @@ export const FormStep01 = (props:any) => {
       },
     });
     
+    const validatePhoneNumber = (value:any) => {
+      setPhoneInput(value);
+      
+      if (!value) {
+        setError('El número de teléfono es Required');
+        setIsValid(false);
+        return;
+      }
+  
+      try {
+        if (isValidPhoneNumber(value)) {
+          setError('');
+          setIsValid(true);
+          dispatch(setCustomerData({
+            phone: value
+        }))
+          
+        } else {
+          setError('Número de teléfono inválido');
+          setIsValid(false);
+        }
+      } catch (err) {
+        setError('Error al validar el número');
+        setIsValid(false);
+      }
+    };
   // Sincronización de cada campo con Redux cuando cambian los valores
   // useEffect(() => {
   //   if (formik.values.name !== currentForm?.name) {
@@ -185,103 +219,192 @@ export const FormStep01 = (props:any) => {
   
   return (
     <>
-    <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
-      <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
-      sx={{
-        boxSizing: 'border-box',
-        border: '1px solid #EAEFF4',
-        borderRadius: '12px',
-      }}>
-        <Container
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <Typography
+          align="left"
           sx={{
-            maxWidth: "1400px !important",
-            position: "relative",
+            display: "block",
+            fontSize: "18px",
+            lineHeight: "2",
+            marginTop: "0",
+            color: (theme) => theme.palette.text.primary
           }}
-        >
-          <Box sx={{ display: 'flex', width: '100%', height: 'auto', minHeight: '400px' }}>
-            {/* Área izquierda para el formulario */}
-            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              {/* <form onSubmit={handleSubmit} style={{ width: '80%' }}> */}
-              
-                <VerticalForm>
-                  <Typography variant="h6" gutterBottom>
-                    Información de contacto
-                  </Typography>
-                  <CustomFormLabel>Nombre</CustomFormLabel>
-                  <CustomTextField
-                    fullWidth
-                    id="name"
-                    name="name"
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="Juanin Jan Jarri"
-                    error={formik.touched.name && Boolean(formik.errors.name)}
-                    helperText={formik.touched.name && formik.errors.name}
-                  />
-                  <CustomFormLabel>Email</CustomFormLabel>
-                  <CustomTextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="email@dominio.com"
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                  <CustomFormLabel>Teléfono</CustomFormLabel>
-                  <CustomTextField
-                    fullWidth
-                    id="phone"
-                    name="phone"
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="+56 9 99 22 999"
-                    error={formik.touched.phone && Boolean(formik.errors.phone)}
-                    helperText={formik.touched.phone && formik.errors.phone}
-                  />
-                </VerticalForm>
-            </Box>
-            
-            {/* Área derecha para el SVG */}
-            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <CenteredSVGContainer>
-                <MiSVG />
-              </CenteredSVGContainer>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-      <Box bgcolor="#ffffff" width={"100%"} mt={1} 
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-        <Button
-            type="button"
-            onClick={handleReset}
-            sx={{
-              width: "10%",
-              padding: "10px",
-              marginRight: "10px",
-            }}
+          component="span"
           >
-            Limpiar
-        </Button>
-        <Button type="submit" variant="contained" color="primary"
-          sx={{
-            width: "50%",
-            padding: "10px",
-          }}
-        >
-          Siguiente
-        </Button>
+            Complete el siguiente formulario para obtener un precio aproximado para la instalación eléctrica de su cargador de vehículo eléctrico. Con solo unos pocos datos, podremos ofrecerle una estimación personalizada que se ajuste a sus necesidades específicas. Todos los campos marcados con * son obligatorios para poder realizar el cálculo correctamente.
+        </Typography>
       </Box>
-       </form>
+      <Box 
+          id="boxCentral" 
+          bgcolor="#ffffff" 
+          pt={4} 
+          pb={4} 
+          width={{ xs: "100%", md: "50%" }}
+          mt={4}
+          mx="auto"
+          sx={{
+            boxSizing: 'border-box',
+            border: '1px solid #EAEFF4',
+            borderRadius: '12px',
+            maxWidth: "1400px",
+          }}>
+        
+        <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
+          <Box bgcolor="#ffffff" width={"100%"} mt={0}
+            sx={{
+              boxSizing: 'border-box',
+            }}>
+          <Container
+              sx={{
+                maxWidth: "1400px !important",
+                position: "relative",
+              }}
+            >
+              <Box sx={{ display: 'flex', width: '100%', height: 'auto', pb:"24px" }}>
+                {/* Área izquierda para el formulario - ocupa todo el ancho en móvil */}
+                <Box sx={{ 
+                  flex: { xs: 1, md: 1 }, 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'flex-start',
+                  width: { xs: '100%', md: '50%' },
+                  
+                }}>
+                    <VerticalForm sx={{ width: '100%' }}>
+                      <CustomFormLabel>Nombre</CustomFormLabel>
+                      <CustomTextField
+                        fullWidth
+                        id="name"
+                        name="name"
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        placeholder="Juanin Jan Jarri"
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name}
+                        sx={{ width: '100%' }}
+                      />
+                      <CustomFormLabel>Email</CustomFormLabel>
+                      <CustomTextField
+                        fullWidth
+                        id="email"
+                        name="email"
+                        value={formik.values.email}
+                        // onChange={formik.handleChange}
+                        // onBlur={formik.handleBlur}
+                        placeholder="email@dominio.com"
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        sx={{ width: '100%' }}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          formik.setFieldValue('email', e.target.value);
+                          dispatch(setCustomerData({
+                            customerId: e.target.value
+                          }))
+                        }}
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                          dispatch(getCustomer({
+                            customerId: e.target.value
+                          }))
+                        }}
+                      />
+                      {/* <CustomFormLabel>Teléfono</CustomFormLabel>
+                      <CustomTextField
+                        fullWidth
+                        id="phone"
+                        name="phone"
+                        value={formik.values.phone}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        placeholder="+56 9 99 22 999"
+                        error={formik.touched.phone && Boolean(formik.errors.phone)}
+                        helperText={formik.touched.phone && formik.errors.phone}
+                        sx={{ width: '100%' }}
+                      /> */}
+                        <CustomFormLabel>Teléfono</CustomFormLabel>
+                      <PhoneInput
+                        international
+                        defaultCountry="CL"
+                        id="phone"
+                        countryCallingCodeEditable={true}
+                        name="phone"
+                        tabIndex={4} 
+                        value={formik.values.phone}
+                        onChange={(value) => {
+                          const formattedValue = value || '+569';
+                          formik.setFieldValue('phone', formattedValue);
+                          formik.setFieldTouched('phone', true);
+                          validatePhoneNumber(formattedValue);
+                        }}
+                        onBlur={() => {
+                          formik.setFieldTouched('phone', true);
+                        }}
+                        className={`w-full ${formik.touched.phone && formik.errors.phone ? 'error' : ''}`}
+                        placeholder="Ingrese número de teléfono"
+                      />
+                      {formik.touched.phone && formik.errors.phone && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            display: 'block',
+                            marginTop: '4px',
+                            marginLeft: '14px',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {String(formik.errors.phone)}
+                        </Typography>
+                      )}
+                    </VerticalForm>
+                </Box>
+                
+                {/* Área derecha para el SVG - se oculta en móvil */}
+                <Box sx={{ 
+                  flex: { xs: 0, md: 1 }, 
+                  display: { xs: 'none', md: 'flex' }, 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  width: { xs: '0%', md: '50%' }
+                }}>
+                  <MiSVG />
+                </Box>
+              </Box>
+            </Container>
+          </Box>
+          <Box id="botones" bgcolor="#ffffff" width={"98%"} mt={1} 
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mx: "auto", // Centra horizontalmente
+                maxWidth: "98%", // Asegura que no exceda el 98% del ancho
+              }}>
+            <Button
+                type="button"
+                onClick={handleReset}
+                sx={{
+                  width: { xs: "40%", md: "10%" },
+                  padding: "10px",
+                  marginRight: "10px",
+                }}
+              >
+                Limpiar
+            </Button>
+            <Button type="submit" variant="contained" color="primary"
+              sx={{
+                width: { xs: "60%", md: "50%" },
+                padding: "10px",
+              }}
+            >
+              Siguiente
+            </Button>
+          </Box>
+        </form>
+      </Box>
+      
+      
+  
       
     </>
   );

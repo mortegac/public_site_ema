@@ -1,94 +1,28 @@
-"use client";
-import {useEffect} from "react"
-import {
-  Box,
-  Stack,
-  Typography,
-  Container,
-  Grid,
-  Button,
-} from "@mui/material";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { asText } from "@prismicio/client";
+import { SliceZone } from "@prismicio/react";
 
+import { createClient } from "@/prismicio";
+import { components } from "@/slices";
 
-import PageContainer from '@/app/components/container/PageContainer';
-import Banner from '@/app/components/shared/banner/Banner';
-import HeaderENV from '@/app/components/shared/header/HeaderENV';
-import HpHeader from '@/app/components/shared/header/HpHeader';
-import CalendarSteps from '@/app/components/shared/CalendarSteps';
-import Steps from '@/app/components/AgendaWizard/Steps';
-import C2a from '@/app/components/shared/c2a';
-import Footer from '@/app/components/shared/footer';
-import ScrollToTop from '@/app/components/shared/scroll-to-top';
-import { isProduction } from '@/utils/amplify-config';
-import { useAnalytics } from '@/hooks/useAnalytics';
+export async function generateMetadata(): Promise<Metadata> {
+  const client = createClient();
+  const page = await client.getByUID("page", "home").catch(() => notFound());
 
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { increment, setStep, decrement, selectCalendarVisits, setDataForm } from "@/store/CalendarVisits/slice";
+  return {
+    title: page.data.meta_title,
+    description: page.data.meta_description,
+    openGraph: {
+      title: page.data.meta_title ?? undefined,
+      images: [{ url: page.data.meta_image.url ?? "" }],
+    },
+  };
+}
 
-const HomePage = () => {
-  const { trackEvent } = useAnalytics();
-  const { 
-    currentStep
-  } = useAppSelector(selectCalendarVisits);
-  
-  // Track page load
-useEffect(() => {
-    trackEvent('page_view', 'AGENDA_EMA', 'agenda_page');
-  }, [trackEvent]);
+export default async function Page() {
+  const client = createClient();
+  const page = await client.getByUID("page", "home").catch(() => notFound());
 
-  // const handleStepClick = (step: string) => {
-  //   trackEvent('step_click', 'AGENDA_EMA', step);
-  // };
-
-  // const handleCalendarInteraction = (action: string) => {
-  //   trackEvent('calendar_interaction', 'user_action', action);
-  // };
-
-  return (
-    <PageContainer title="Agenda" description="Agenda tú Visita técnica">
-      {/* Mostrar HeaderENV solo si NO estamos en producción */}
-      {!isProduction() && <HeaderENV />}
-      <HpHeader /> 
-     
-      {/* <pre>currentStep = {JSON.stringify(currentStep)}</pre> */}
-      { currentStep !== 3 &&
-        <>
-        <Box bgcolor="#ffffff" pt={4} pb={0}>
-          <Container
-            sx={{
-              maxWidth: "1400px !important",
-              position: "relative",
-            }}
-          >
-            <Typography
-                variant="h2"
-                fontWeight={700}
-                lineHeight="1.2"
-                sx={{
-                  fontSize: {
-                    xs: "32px",
-                    sm: "40px",
-                    textAlign:"center",
-                  },
-                }}
-              >
-                Agenda aquí tu visita.
-              </Typography>
-          </Container>
-        </Box>
-        
-        <Steps/>
-        
-      </>
-      }
-      <CalendarSteps/>
-      
-      <C2a/>
-      
-      <Footer />
-      <ScrollToTop />
-    </PageContainer>
-  );
-};
-
-export default HomePage;
+  return <SliceZone slices={page.data.slices} components={components} />;
+}

@@ -1,10 +1,33 @@
 import React from "react";
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
+import PageContainer from '@/app/components/container/PageContainer';
+import Banner from '@/app/components/shared/banner/Banner';
+import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
+import HpHeader from '@/app/components/shared/header/HpHeader';
+import Footer from '@/app/components/shared/footer';
+import ScrollToTop from '@/app/components/shared/scroll-to-top';
+
+
 import { configureAmplify } from "@/utils/amplify-config";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import GoogleTagManagerNoScript from "@/components/analytics/GoogleTagManagerNoScript";
+
+
+import { Inter } from "next/font/google";
+import { asText } from "@prismicio/client";
+import { PrismicText } from "@prismicio/react";
+import { PrismicNextLink, PrismicPreview } from "@prismicio/next";
+
+import { createClient, repositoryName } from "@/prismicio";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 
 // Configurar Amplify con la configuración del entorno correspondiente
 configureAmplify();
@@ -34,15 +57,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className={inter.variable}>
       <head>
         <GoogleTagManager />
         <GoogleAnalytics />
       </head>
-      <body>
+      <body className="overflow-x-hidden antialiased">
         <GoogleTagManagerNoScript />
-        <Providers>
-          <MyApp>{children}</MyApp>
+          <Providers>
+            <MyApp>
+              <PageContainer title="¡Hablemos!" description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible.">
+              <HeaderAlert />
+              <HpHeader /> 
+                {/* {children} */}
+                <div className='isolate'>{children}</div>
+                <Footer />
+                <ScrollToTop />
+              </PageContainer>
+            </MyApp>
+          <PrismicPreview repositoryName={repositoryName} />
         </Providers>
       </body>
     </html>

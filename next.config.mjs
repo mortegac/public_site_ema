@@ -2,7 +2,7 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-    output: 'export',
+    // output: 'export', // Comentar o remover esta línea
     images: {
       unoptimized: true,
     },

@@ -143,6 +143,16 @@ export type AllDocumentTypes = PageDocument;
  */
 export interface CarrouselOptionsSliceDefaultPrimaryOptionsItem {
   /**
+   * image field in *CarrouselOptions → Default → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.default.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
    * textTopBanner field in *CarrouselOptions → Default → Primary → options*
    *
    * - **Field Type**: Rich Text

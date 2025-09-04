@@ -9553,6 +9553,24 @@ emailjs-com@^3.2.0:
   resolved "https://registry.yarnpkg.com/emailjs-com/-/emailjs-com-3.2.0.tgz#a53cb22f1bc433c701c84c53d8b56eefd5ce7111"
   integrity sha512-Prbz3E1usiAwGjMNYRv6EsJ5c373cX7/AGnZQwOfrpNJrygQJ15+E9OOq4pU8yC977Z5xMetRfc3WmDX6RcjAA==
 
+embla-carousel-react@^8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-8.6.0.tgz#b737042a32761c38d6614593653b3ac619477bd1"
+  integrity sha512-0/PjqU7geVmo6F734pmPqpyHqiM99olvyecY7zdweCw+6tKEXnrE90pBiBbMMU8s5tICemzpQ3hi5EpxzGW+JA==
+  dependencies:
+    embla-carousel "8.6.0"
+    embla-carousel-reactive-utils "8.6.0"
+
+embla-carousel-reactive-utils@8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.6.0.tgz#607f1d8ab9921c906a555c206251b2c6db687223"
+  integrity sha512-fMVUDUEx0/uIEDM0Mz3dHznDhfX+znCCDCeIophYb1QGVM7YThSWX+wz11zlYwWFOr74b4QLGg0hrGPJeG2s4A==
+
+embla-carousel@8.6.0, embla-carousel@^8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.6.0.tgz#abcedff2bff36992ea8ac27cd30080ca5b6a3f58"
+  integrity sha512-SjWyZBHJPbqxHOzckOfo8lHisEaJWmwd23XppYFYVh10bU66/Pn5tkVkbkCMZVdbUE5eTCI2nD8OyIP4Z+uwkA==
+
 emoji-picker-react@^4.5.2:
   version "4.12.2"
   resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-4.12.2.tgz#323fbbf763daf1ffc1a9ff819966408e1ec30bab"

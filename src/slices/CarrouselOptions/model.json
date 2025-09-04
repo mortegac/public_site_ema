@@ -36,6 +36,14 @@
             "label": "options",
             "repeat": true,
             "fields": {
+              "image": {
+                "type": "Image",
+                "config": {
+                  "label": "image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
               "texttopbanner": {
                 "type": "StructuredText",
                 "config": {

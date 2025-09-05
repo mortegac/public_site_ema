@@ -231,15 +231,15 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                       }}
                     >
                       <Stack
-          id="listOptions"
-          my={3}
-          direction={{ xs: "column", sm: "row" }}
-          spacing="20px"
-          alignItems="center"
-          justifyContent="center"
-          sx={{ width: '100%' }}
-        >
-                      {/* Banner superior gris si existe texttopbanner */}
+                        id="listOptions"
+                        my={3}
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{ width: '100%' }}
+                      >
+                      {/* texttopbanner */}
                       {option.texttopbanner && option.texttopbanner.length > 0 && (
                         <Box
                           sx={{
@@ -278,6 +278,48 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                           />
                         </Box>
                       )}
+                      
+                      {/* pricetoptext */}                      
+                      {option.pricetoptext && option.pricetoptext.length > 0 && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            backgroundColor: option?.hastopbanner ? '#929292' : 'transparent',
+                            padding: '12px 16px',
+                            zIndex: 1,
+                            borderTopLeftRadius: '4px',
+                            borderTopRightRadius: '4px',
+                            textAlign: 'center'
+                          }}
+                        >
+                          <PrismicRichText
+                            field={option.texttopbanner}
+                            components={{
+                              paragraph: ({ children }) => (
+                                <Typography 
+                                  variant="caption" 
+                                  sx={{ 
+                                    fontSize: '16px',
+                                    fontWeight: 400,
+                                    color: option?.hastopbanner ? '#fff': '#3a3a3a',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.5px'
+                                  }}
+                                  
+                                  
+                                >
+                                  {children}
+                                </Typography>
+                              ),
+                            }}
+                          />
+                        </Box>
+                      )}
+                      
+                    
 
                       {/* Imagen de la card */}
                       <CardMedia
@@ -309,6 +351,60 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
 
                       {/* Contenido de la card */}
                       <CardContent sx={{ padding: '16px', background: 'pink' }}>
+                        
+                        {/* brand */}
+                        <Typography
+                          id="brand-options"
+                          variant="body1"
+                          fontWeight={200}
+                          lineHeight="1.5"
+                          align="center"
+                          sx={{
+                            fontSize: {
+                              xs: "16px",
+                              sm: "16px",
+                            },
+                          }}
+                        >
+                          {/* <PrismicRichText
+                            field={option?.brand || ""} 
+                            components={defaultComponents}
+                          />   */}
+                          {option?.brand || ""}               
+                        </Typography>
+                        
+                        <Typography
+                          id="description-options"
+                          variant="body1"
+                          fontWeight={200}
+                          lineHeight="1.5"
+                          align="center"
+                          sx={{
+                            fontSize: {
+                              xs: "12px",
+                              sm: "12px",
+                            },
+                          }}
+                        >Potencia de salida             
+                        </Typography>
+                        
+                        {/* capacity */}
+                        <Typography
+                          id="description-options"
+                          variant="body1"
+                          fontWeight={200}
+                          lineHeight="1.5"
+                          align="center"
+                          sx={{
+                            fontSize: {
+                              xs: "16px",
+                              sm: "16px",
+                            },
+                          }}
+                        >{option.capacity} 
+                        </Typography>
+                        
+                        {/* pricetoptext */}
                         <Typography
                           id="description-options"
                           variant="body1"
@@ -327,6 +423,68 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                             components={defaultComponents}
                           />                
                         </Typography>
+                        
+                        {/* pricetopvalue */}
+                        <Typography
+                          id="description-options"
+                          variant="body1"
+                          fontWeight={200}
+                          lineHeight="1.5"
+                          align="center"
+                          sx={{
+                            fontSize: {
+                              xs: "16px",
+                              sm: "16px",
+                            },
+                          }}
+                        >{option.pricetopvalue} 
+                        </Typography>
+                        
+                         {/* pricebottomtext */}
+                         <Typography
+                          id="description-options"
+                          variant="body1"
+                          fontWeight={200}
+                          lineHeight="1.5"
+                          align="center"
+                          sx={{
+                            fontSize: {
+                              xs: "12px",
+                              sm: "12px",
+                            },
+                          }}
+                        >
+                          <PrismicRichText
+                            field={option.pricebottomtext} 
+                            components={defaultComponents}
+                          />                
+                        </Typography>
+                        
+                         {/* Botón de compra */}
+                         {option.buttontext && (
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Button
+                              variant="contained"
+                              href={(option.buttonlink as any)?.url || '#'}
+                              sx={{
+                                backgroundColor: '#E91E63', // Color magenta/rosa como en la imagen
+                                color: 'white',
+                                padding: '12px 24px',
+                                borderRadius: '8px',
+                                textTransform: 'none',
+                                fontSize: '16px',
+                                fontWeight: 600,
+                                '&:hover': {
+                                  backgroundColor: '#C2185B',
+                                }
+                              }}
+                            >
+                              {option.buttontext}
+                            </Button>
+                          </Box>
+                        )}
+                        
+                        
                       </CardContent>
                       
                       </Stack>

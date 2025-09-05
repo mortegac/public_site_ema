@@ -69,26 +69,9 @@ const Hero: FC<HeroProps> = ({ slice }) => {
               </Typography>
               <br/>
               
-                {/* <PrismicRichText 
-                  field={primary?.description}
-                  components={{
-                    heading1: ({ children }) => (
-                      <span style={{ color: 'inherit' }}>{children}</span>
-                    ),
-                    paragraph: ({ children }) => (
-                      <span style={{ color: 'inherit' }}>{children}</span>
-                    ),
-                    strong: ({ children }) => (
-                      <strong style={{ color: 'inherit' }}>{children}</strong>
-                    ),
-                    em: ({ children }) => (
-                      <em style={{ color: 'inherit' }}>{children}</em>
-                    ),
-                  }}
-                /> */}
                 
                 <Typography
-                  id="title-hero"
+                  id="title-description"
                   variant="body1"
                   fontWeight={200}
                   lineHeight="1.5"

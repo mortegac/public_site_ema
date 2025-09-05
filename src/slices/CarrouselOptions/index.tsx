@@ -16,6 +16,7 @@ import { SliceComponentProps } from "@prismicio/react";
 import { PrismicRichText } from "@prismicio/react";
 import { defaultComponents } from "@/app/components/PrismicRichText";
 import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 
 import {
   Box,
@@ -49,8 +50,10 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: false,
     slidesToScroll: 1,
-    containScroll: 'trimSnaps'
-  });
+    containScroll: 'trimSnaps',
+    align: 'start',
+    dragFree: false,
+  }, [Autoplay({ delay: 3000, stopOnInteraction: true })]);
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
 
@@ -73,6 +76,11 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
     onSelect();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
+    
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   return (
@@ -142,7 +150,7 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
         
         {/* Contenedor del carrusel */}
         <Box id='container-carrousel' sx={{ 
-          width: '90%', 
+          width: '100%', // Cambiar de 90% a 100%
           position: 'relative',
           overflow: 'hidden'
         }}>
@@ -152,7 +160,7 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
             disabled={prevBtnDisabled}
             sx={{
               position: 'absolute',
-              left: -15,
+              left: 10, // Cambiar de -15 a 10
               top: '50%',
               transform: 'translateY(-50%)',
               zIndex: 10,
@@ -176,7 +184,7 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
             disabled={nextBtnDisabled}
             sx={{
               position: 'absolute',
-              right: -15,
+              right: 10, // Cambiar de -15 a 10
               top: '50%',
               transform: 'translateY(-50%)',
               zIndex: 10,
@@ -196,46 +204,59 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
           </IconButton>
 
           {/* Carrusel */}
-          <Box className="embla" ref={emblaRef}>
+          <Box className="embla" ref={emblaRef} sx={{ 
+            overflow: 'hidden',
+            background: "blue",
+            padding: '0 10px', // Aumentar padding para los botones
+            margin: '0 80px', 
+          }}>
             <Box className="embla__container" sx={{ 
               display: 'flex',
-              gap: '20px'
+              justifyContent:'flex-start',
+              transition: 'transform 0.5s ease-in-out',
+              gap: '26px',
+              padding: '16px 56px',
+              alignItems: 'stretch',
+              
+              
             }}>
               {slice?.primary?.options?.map((option, index) => (
-                <>
-                {/* <pre>{JSON.stringify(option, null, 2 )}</pre> */}
-                  <Box 
-                    key={index}
-                    className="embla__slide" 
+                <Box 
+                  key={index}
+                  className="embla__slide" 
+                  sx={{ 
+                    flex: '0 0 45%', // Cambiar a 45% para 2 cards
+                    minWidth: 0,
+                    padding: '0 5px',
+                    display: 'flex',
+                    '@media (max-width: 600px)': {
+                      flex: '0 0 100%'
+                    }
+                  }}
+                >
+                  <Card 
                     sx={{ 
-                      flex: '0 0 30%', // 40% del ancho
-                      justifyContent: 'center',
-                      minWidth: 0,
-                      '@media (max-width: 600px)': {
-                        flex: '0 0 100%' // 1 slide en móvil
+                      background: option?.hastopbanner ? '#ECF2FF' :'#FFF',
+                      maxWidth: '100%',
+                      width: '100%',
+                      height: '100%',
+                      position: 'relative',
+                      boxShadow: 3,
+                      transition: 'all 0.3s ease-in-out',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      '&:hover': {
+                        boxShadow: 6,
+                        transform: 'translateY(-4px)',
                       }
                     }}
                   >
-                    <Card 
-                      sx={{ 
-                        background: option?.hastopbanner ? '#ECF2FF' :'#FFF',
-                        maxWidth: '100%',
-                        width: '100%',
-                        position: 'relative',
-                        boxShadow: 3,
-                        '&:hover': {
-                          boxShadow: 6,
-                          transform: 'translateY(-4px)',
-                          transition: 'all 0.3s ease-in-out'
-                        }
-                      }}
-                    >
                       <Stack
                         id="listOptions"
                         my={3}
                         direction={{ xs: "column", sm: "row" }}
                         spacing="20px"
-                        alignItems="center"
+                        alignItems="flex-end"
                         justifyContent="center"
                         sx={{ width: '100%' }}
                       >
@@ -321,11 +342,11 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                       
                     
 
-                      {/* Imagen de la card */}
+                      {/* Imagen de la card - MÁS GRANDE */}
                       <CardMedia
                         component="div"
                         sx={{
-                          height: 160,
+                          height: '100%', // Aumentar de 160 a 250
                           position: 'relative',
                           overflow: 'hidden',
                           display: 'flex',
@@ -338,8 +359,8 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                           <Image
                             src={(option as any).image.url}
                             alt={(option as any).image.alt || `Option ${index + 1}`}
-                            width={200}
-                            height={200}
+                            width={300} // Aumentar de 200 a 300
+                            height={300} // Aumentar de 200 a 300
                             style={{
                               objectFit: 'contain',
                               borderRadius: '8px'
@@ -488,10 +509,8 @@ const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                       </CardContent>
                       
                       </Stack>
-                    </Card>
-                    
-                  </Box>
-                </>
+                  </Card>
+                </Box>
               ))}
             </Box>
           </Box>

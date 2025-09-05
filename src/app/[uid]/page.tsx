@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { asText } from "@prismicio/client";
 import { SliceZone } from "@prismicio/react";
 
+import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
+import PageContainer from '@/app/components/container/PageContainer';
+
+const DOMAIN:string="https://ema.energica.city";
 
 type Params = { uid: string };
 
@@ -16,25 +21,99 @@ export async function generateMetadata({
   const { uid } = await params;
   const client = createClient();
   const page = await client.getByUID("page", uid).catch(() => notFound());
+  // console.log("--page--", page)
+  
+  
+  const DOMAIN_PAGE:string=`${DOMAIN}${page.url}`;
 
   return {
     title: page.data.meta_title,
     description: page.data.meta_description,
-    openGraph: {
-      title: page.data.meta_title ?? undefined,
-      images: [{ url: page.data.meta_image.url ?? "" }],
+    alternates: {
+      canonical: `${DOMAIN_PAGE}`,
+      languages: { [`${page.lang ?? "es"}`]: `${DOMAIN_PAGE}`},
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
+    openGraph: {
+      type: "website",
+      url: `${DOMAIN_PAGE}`,
+      title: page.data.meta_title ?? undefined,
+      description: page.data.meta_description ?? "",
+      images: [
+        { 
+          url: page.data.meta_image.url ?? "",
+          width: 1200,
+          height: 630,
+          alt: page.data.meta_image.alt ?? "",
+        }
+        
+      ],
+    },
+    // twitter: {
+    //   card: "summary_large_image",
+    //   site: "@miniswimmer_edu",
+    //   creator: "@miniswimmer_edu",
+    //   title: `Academia de Natación para Bebés, Niños, Embarazadas en Viña del Mar`,
+    //   description: `¿Buscas clases de natación en Viña del Mar, Concón, Valparaíso, Reñaca, Quilpué, Villa Alemana? Con nuestro Método Miniswimmer, combinamos la natación con PNL y coaching para que tus hijos aprendan de forma real y significativa. Ofrecemos lecciones personalizadas para bebés y niños de todas las edades. ¡Inscríbelos hoy!`,
+    //   images: [
+    //     {
+    //       url: "https://images.prismic.io/miniswimmerchile/aLTn32GNHVfTOeOK_SOCIAL-MEDIA-Vina-del-mar.png?auto=format,compress",
+    //       width: 1200,
+    //       height: 630,
+    //       alt: "Academia de Natación para Bebés, Niños, Embarazadas en Viña del Mar"
+    //     }
+    //   ],
+    // },
   };
 }
+
+
 
 export default async function Page({ params }: { params: Promise<Params> }) {
   const { uid } = await params;
   const client = createClient();
   const page = await client.getByUID("page", uid).catch(() => notFound());
 
+    
+  const DOMAIN_PAGE:string=`${DOMAIN}${page.url}`;
+
+
+  console.log("--page--", page)
+  
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Energica City",
+    "url": `${DOMAIN_PAGE}`,
+    "logo": `${DOMAIN_PAGE}`,
+    "description": page?.data.meta_description ?? "",
+    "sameAs": [
+      "https://www.instagram.com/energicacity/",
+      "https://www.linkedin.com/company/energicacity"
+    ]
+  };
+  
   return <>
-  {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
-    <SliceZone slices={page.data.slices} components={components} />;
+    <SchemaMarkup type="Organization" data={organizationSchema} />
+    <PageContainer title="" description="">
+      <Container
+        sx={{
+          maxWidth: "1200px !important",
+          position: "relative",
+        }}
+      >
+            
+        {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
+        <SliceZone slices={page.data.slices} components={components} />;
+      </Container>
+    </PageContainer>
   </>
 }
 

@@ -84,14 +84,14 @@ export default function RootLayout({
         <GoogleTagManagerNoScript />
           <Providers>
             <MyApp>
-              <PageContainer title="¡Hablemos!" description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible.">
+              {/* <PageContainer title="¡Hablemos!" description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible."> */}
               {/* <HeaderAlert /> */}
+              
               <HpHeader /> 
-                {/* {children} */}
                 <div className='isolate'>{children}</div>
                 <Footer />
                 <ScrollToTop />
-              </PageContainer>
+              {/* </PageContainer> */}
             </MyApp>
           <PrismicPreview repositoryName={repositoryName} />
         </Providers>

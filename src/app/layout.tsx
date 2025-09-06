@@ -38,10 +38,10 @@ export const metadata = {
   openGraph: {
     images: [
       {
-        url: 'https://energica.city/hubfs/T%C3%A9cnico-instalador-1.png',
+        url: 'https://images.prismic.io/energica-public-site/aLsX6WGNHVfTOuFj_SOCIAL-MEDIA-energica-cargadores.png?auto=format,compress',
         width: 1200,
         height: 630,
-        alt: 'Técnico instalador Energica',
+        alt: 'Energica city',
       },
     ],
   },
@@ -66,7 +66,7 @@ export default function RootLayout({
         <GoogleTagManagerNoScript />
           <Providers>
             <MyApp>
-              <PageContainer title="¡Hablemos!" description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible.">
+              <PageContainer title="" description="">
               <HeaderAlert />
               <HpHeader /> 
                 {/* {children} */}

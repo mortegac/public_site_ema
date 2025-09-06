@@ -1,0 +1,113 @@
+{
+  "format": "page",
+  "id": "blog",
+  "label": "blog",
+  "repeatable": true,
+  "status": true,
+  "json": {
+    "Main": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "UID"
+        }
+      },
+      "title": {
+        "type": "StructuredText",
+        "config": {
+          "label": "title",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        }
+      },
+      "shortdescription": {
+        "type": "StructuredText",
+        "config": {
+          "label": "shortdescription",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        }
+      },
+      "htmlcontent": {
+        "type": "Text",
+        "config": {
+          "label": "htmlcontent",
+          "placeholder": ""
+        }
+      },
+      "category": {
+        "type": "Select",
+        "config": {
+          "label": "category",
+          "placeholder": "",
+          "options": [
+            "Beneficios",
+            "Servicios Energica",
+            "Instalaciones",
+            "Optimización de flotas"
+          ]
+        }
+      },
+      "image": {
+        "type": "Image",
+        "config": {
+          "label": "image",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "labels": {
+              "type": "SharedSlice"
+            },
+            "content_with_image": {
+              "type": "SharedSlice"
+            },
+            "options_content": {
+              "type": "SharedSlice"
+            },
+            "ideas": {
+              "type": "SharedSlice"
+            },
+            "resume_blog": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    },
+    "SEO & Metadata": {
+      "meta_title": {
+        "config": {
+          "label": "Meta Title",
+          "placeholder": "A title of the page used for social media and search engines"
+        },
+        "type": "Text"
+      },
+      "meta_description": {
+        "config": {
+          "label": "Meta Description",
+          "placeholder": "A brief summary of the page"
+        },
+        "type": "Text"
+      },
+      "meta_image": {
+        "config": {
+          "constraint": {
+            "height": 1260,
+            "width": 2400
+          },
+          "label": "Meta Image",
+          "thumbnails": []
+        },
+        "type": "Image"
+      }
+    }
+  }
+}

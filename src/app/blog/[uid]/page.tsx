@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from 'next/image'
+
 import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { asText } from "@prismicio/client";
 import { SliceZone } from "@prismicio/react";
@@ -9,7 +11,7 @@ import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import PageContainer from '@/app/components/container/PageContainer';
 
-const DOMAIN:string="https://ema.energica.city";
+const DOMAIN:string="https://ema.energica.city/blog";
 
 type Params = { uid: string };
 
@@ -20,12 +22,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { uid } = await params;
   const client = createClient();
-  const page = await client.getByUID("page", uid).catch(() => notFound());
-  // console.log("--page--", page)
+  const page = await client.getByUID("blog", uid).catch(() => notFound());
+  console.log("--page--", page)
   
   
-  const DOMAIN_PAGE:string=`${DOMAIN}${page.url}`;
-
+  const DOMAIN_PAGE:string=`${DOMAIN}/blog${page?.uid}`;
+console.log("--page--", page)
   return {
     title: page.data.meta_title,
     description: page.data.meta_description,
@@ -56,21 +58,6 @@ export async function generateMetadata({
         
       ],
     },
-    // twitter: {
-    //   card: "summary_large_image",
-    //   site: "@miniswimmer_edu",
-    //   creator: "@miniswimmer_edu",
-    //   title: `Academia de Natación para Bebés, Niños, Embarazadas en Viña del Mar`,
-    //   description: `¿Buscas clases de natación en Viña del Mar, Concón, Valparaíso, Reñaca, Quilpué, Villa Alemana? Con nuestro Método Miniswimmer, combinamos la natación con PNL y coaching para que tus hijos aprendan de forma real y significativa. Ofrecemos lecciones personalizadas para bebés y niños de todas las edades. ¡Inscríbelos hoy!`,
-    //   images: [
-    //     {
-    //       url: "https://images.prismic.io/miniswimmerchile/aLTn32GNHVfTOeOK_SOCIAL-MEDIA-Vina-del-mar.png?auto=format,compress",
-    //       width: 1200,
-    //       height: 630,
-    //       alt: "Academia de Natación para Bebés, Niños, Embarazadas en Viña del Mar"
-    //     }
-    //   ],
-    // },
   };
 }
 
@@ -79,10 +66,10 @@ export async function generateMetadata({
 export default async function Page({ params }: { params: Promise<Params> }) {
   const { uid } = await params;
   const client = createClient();
-  const page = await client.getByUID("page", uid).catch(() => notFound());
+  const page = await client.getByUID("blog", uid).catch(() => notFound());
 
     
-  const DOMAIN_PAGE:string=`${DOMAIN}${page.url}`;
+  const DOMAIN_PAGE:string=`${DOMAIN}/blog${page.url}`;
 
 
   console.log("--page--", page)
@@ -109,8 +96,42 @@ export default async function Page({ params }: { params: Promise<Params> }) {
           position: "relative",
         }}
       >
-            
-        {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
+        <Box
+          id="imageSlice"
+          sx={{
+            marginTop:'26px',
+            width: '100%',
+            maxWidth: '1200px',
+            height: 'auto',
+            position: 'relative',
+            '& img': {
+              width: '100%',
+              height: 'auto',
+            }
+          }}
+        >
+        <Image
+          src={page?.data?.image?.url || ""}
+          alt={page?.data?.image?.alt || ""}
+          width={1200}
+          height={300}
+          priority
+          unoptimized
+          style={{
+            maxWidth: '100%',
+            height: 'auto',
+          }}
+          
+          // src={page?.data?.image?.url}
+          // alt={"Miniswimmer Academy"}
+          // layout="fill"
+          // objectFit="cover"
+          // objectPosition="center"
+          // priority
+        /> 
+                
+              </Box>
+        {/* <pre>{JSON.stringify(page?.data, null, 2 )}</pre> */}
         <SliceZone slices={page.data.slices} components={components} />;
       </Container>
     </PageContainer>

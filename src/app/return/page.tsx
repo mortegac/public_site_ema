@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import PageContainer from '@/app/components/container/PageContainer';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
@@ -33,6 +33,7 @@ import RetryTransaction from './components/RetryTransaction';
 
 const ReturnPage = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const isFirstRender = useRef(true);
   
   const searchParams = useSearchParams();
@@ -57,6 +58,14 @@ const ReturnPage = () => {
     
     
     
+    // Función alternativa usando sessionStorage
+    const redirectToInvoice = useCallback((data: any) => {
+      // Guardar datos en sessionStorage
+      sessionStorage.setItem('invoiceData', JSON.stringify(data));
+      // Redirigir a la página de invoice
+      router.push('/return/invoice');
+    }, [router]);
+
     const validation = async (obj:any) => {
       //Flujos:
       //1. Flujo normal (OK): solo llega token_ws
@@ -299,6 +308,23 @@ const ReturnPage = () => {
         
  }, [resTransaction]); 
  
+    // Nuevo useEffect para manejar la redirección
+    useEffect(() => {
+        if (resTransaction?.status === "AUTHORIZED" && status === "idle") {
+            const invoiceData = {
+                glosa: resTransaction?.glosa,
+                total: resTransaction?.total,
+                order: resTransaction?.order,
+                card: `xxxx xxxx xxxx ${resTransaction?.card}`,
+                typePay: resTransaction?.typePay,
+                email: resTransaction?.to_email
+            };
+            
+            // Redirigir con datos POST
+            redirectToInvoice(invoiceData);
+        }
+    }, [resTransaction?.status, status, redirectToInvoice]);
+
     /** TODO:  CASO BORDE 
      * El tiempo maximo es de 20 minutos para reintentar la transaccion 
      * Despues de los 20 minutos la fecha es LIBERADA y el carro de comprar queda en estado "time_out"
@@ -327,21 +353,8 @@ const ReturnPage = () => {
           </Box>
         }
        
-       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          { resTransaction?.status === "AUTHORIZED" 
-            && status === "idle" 
-            && <>
-            <Invoice
-                glosa={resTransaction?.glosa}
-                total={resTransaction?.total}
-                order={resTransaction?.order}
-                card={`xxxx xxxx xxxx ${resTransaction?.card}`}
-                typePay={resTransaction?.typePay}
-                email={resTransaction?.to_email}
-            />
-          </>
-          }
-          {/* { dataEmail[0]?.status === "AUTHORIZED" && statusPay === "idle" && <SentEmail data={dataEmail[0]}/> } */}
+       <Box id="returnPage" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          {/* Removido el renderizado condicional del Invoice ya que ahora se redirige */}
           
             { resTransaction?.status !== "AUTHORIZED" 
                 && resTransaction?.status !== "" 

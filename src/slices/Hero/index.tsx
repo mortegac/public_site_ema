@@ -36,7 +36,7 @@ const Hero: FC<HeroProps> = ({ slice }) => {
     >
       <Container
         sx={{
-          maxWidth: "1400px !important",
+          maxWidth: "1200px !important",
           position: "relative",
         }}
       >
@@ -44,7 +44,7 @@ const Hero: FC<HeroProps> = ({ slice }) => {
           <Box sx={{ textAlign: 'left', display:'flex', flexDirection:'col', alignItems:'center' }}>
             <Stack
               my={3}
-              direction={{ xs: "column", sm: "row", xl:"column" }}
+              direction={{ xs: "column", sm: "column", xl:"column" }}
               spacing="20px"
               alignItems="center"
               justifyContent="left"

@@ -1,3 +1,4 @@
+import React from "react";
 import {
     PrismicRichText as BasePrismicRichText,
     type PrismicRichTextProps,
@@ -9,7 +10,19 @@ import {
   
 export const defaultComponents: JSXMapSerializer = {
     heading1: ({ children }) => (
-      <span style={{ color: 'inherit' }}>{children}</span>
+      <>{children}</>
+    ),
+    heading2: ({ children }) => (
+      <>{children}</>
+    ),
+    heading3: ({ children }) => (
+      <>{children}</>
+    ),
+    heading4: ({ children }) => (
+      <>{children}</>
+    ),
+    heading5: ({ children }) => (
+      <>{children}</>
     ),
     paragraph: ({ children }) => (
       <span style={{ color: 'inherit' }}>{children}</span>

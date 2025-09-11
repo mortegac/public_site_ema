@@ -1,0 +1,33 @@
+# Descripción del sitio
+Enérgica es una startup chilena especializada en soluciones de electromovilidad y transporte sostenible. Se enfocan en la instalación y gestión de cargadores para vehículos eléctricos, ofreciendo sus servicios tanto a particulares como a empresas.
+
+Además, ayudan a las empresas a descarbonizar sus flotas de vehículos mediante la transición a opciones eléctricas, trabajando con industrias como la minería, el transporte y la logística. También desarrollan plataformas de software para automatizar la gestión de sus servicios y proveen soporte técnico.
+
+# Quiénes somos
+
+[cite_start]Somos una startup chilena de expertos en electromovilidad y transporte sostenible[cite: 28, 33]. 
+[cite_start]Nos dedicamos a la instalación, gestión y soporte técnico de cargadores para vehículos eléctricos[cite: 21, 22, 37]. 
+[cite_start]Ofrecemos soluciones personalizadas tanto para empresas como para personas particulares[cite: 26, 31].
+
+# Qué hacemos
+- 
+[cite_start]**Instalación de Cargadores**: Instalamos cargadores eléctricos inteligentes (protocolo OCPP) y "tontos" con nuestra propia plataforma[cite: 21, 38]. 
+[cite_start]Contamos con instaladores certificados por la SEC y ofrecemos precios competitivos[cite: 34, 40].
+- 
+[cite_start]**Gestión de Flotas**: Ayudamos a empresas de diversas industrias como minería, transporte, logística e inmobiliaria a descarbonizar su flota y transicionar a vehículos eléctricos de forma eficiente y rentable[cite: 23, 29, 36].
+- 
+[cite_start]**Software y Plataformas**: Creamos plataformas de software para automatizar la gestión de nuestros servicios[cite: 24].
+- 
+[cite_start]**Soporte Técnico**: Proveemos soporte técnico para los cargadores que instalamos y gestionamos[cite: 22].
+
+# Audiencia principal
+
+[cite_start]Nuestros servicios están dirigidos tanto a **empresas** que buscan electrificar sus flotas como a **personas** que necesitan un cargador en su hogar o edificio[cite: 26, 31].
+
+# Temas clave en nuestro sitio
+- Electromovilidad en Chile
+- Instalación de cargadores EV
+- Gestión de flotas eléctricas
+- Transporte sostenible y descarbonización
+- Cargadores para casas, edificios y empresas
+- Protocolo OCPP

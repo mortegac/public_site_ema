@@ -381,6 +381,16 @@ export interface CarrouselOptionsSliceDefaultPrimaryOptionsItem {
  */
 export interface CarrouselOptionsSliceExtendedOptionsPrimaryOptionsItem {
   /**
+   * image field in *CarrouselOptions → ExtendedOptions → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.extendedOptions.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
    * textTopBanner field in *CarrouselOptions → ExtendedOptions → Primary → options*
    *
    * - **Field Type**: Rich Text

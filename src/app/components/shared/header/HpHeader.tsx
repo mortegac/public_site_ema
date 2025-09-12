@@ -50,11 +50,17 @@ const HpHeader = (props: any) => {
   };
 
   return (
-    <AppBarStyled position="sticky" elevation={1}>
+    <AppBarStyled 
+    position="sticky" 
+    elevation={0}
+    
+    // elevation={1}
+    >
       <Container
         sx={{
-          maxWidth: "1400px !important",
-          background: "#4dbfd9",
+          maxWidth: "1200px !important",
+          background: "transparent",
+          // background: "#4dbfd9",
         }}
       >
         <ToolbarStyled>

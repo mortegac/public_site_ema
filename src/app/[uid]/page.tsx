@@ -107,9 +107,30 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     {/* <PageContainer title="" description=""> */}
       <HpHeader /> 
       <Container
+        id="container-page"
         sx={{
-          // maxWidth: "1200px !important",
-          position: "relative",
+          padding: 0,
+          margin: 0,
+          width: "100%",
+          maxWidth: "none !important",
+          paddingLeft: "0 !important",
+          paddingRight: "0 !important",
+          "&.MuiContainer-root": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
+          "@media (min-width: 600px)": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
+          "@media (min-width: 900px)": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
+          "@media (min-width: 1200px)": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
         }}
       >
             

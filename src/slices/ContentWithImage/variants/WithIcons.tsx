@@ -32,6 +32,11 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
       <Box bgcolor="#ffffff" pt={7} pb={7}
         data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
+        sx={{
+          display: 'flex', 
+          flexDirection: 'column', 
+          
+        }}
       >
         <Container
           sx={{
@@ -39,24 +44,28 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
             position: "relative",
           }}
         >
-          <Box sx={{ 
+          <Box
+          id="boxContainer"
+          sx={{ 
             display: 'grid', 
             gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, 
             gap: 3, 
             mb: 4 
           }}>
             {/* Contenido de texto */}
-            <Box sx={{ 
-              textAlign: 'left', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'start', 
-              justifyContent: 'start',
-              order: imageIsRight ? 1 : 2
-            }}>
+            <Box 
+              id="boxText"
+              sx={{ 
+                textAlign: 'left', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'start', 
+                justifyContent: 'start',
+                order: imageIsRight ? 1 : 2
+              }}>
               <Stack
                 my={3}
-                direction={{ xs: "column", sm: "row", xl: "column" }}
+                direction={{ xs: "column", sm: "column", xl: "column" }}
                 alignItems="start"
                 justifyContent="start"
               >
@@ -84,6 +93,7 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                   fontWeight={200}
                   lineHeight="1.5"
                   sx={{
+                    mt:"24px",
                     fontSize: {
                       xs: "18px",
                       sm: "18px",

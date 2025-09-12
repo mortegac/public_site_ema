@@ -21,9 +21,17 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
   const {primary} = slice;
   
     return(
-      <Box id="hero" bgcolor="#4dbfd9" pt={7} pb={7}
+      <Box id="hero" bgcolor="#4dbfd9"
       sx={{ 
+        width: '100%',
         maxHeight: "463px",
+        margin: 0,
+        padding: 0,
+        position: "relative",
+        borderRadius: 0,
+        display:'flex',
+        justifyContent:'center',
+        alignContent:'center',
       }}
       data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
@@ -31,69 +39,69 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
       <Container
         sx={{
           maxWidth: "1200px !important",
-         
+          width: '100%',
+          padding: 0,
+          margin: 0,
           position: "relative",
         }}
       >
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
-          <Box sx={{ textAlign: 'left', display:'flex', flexDirection:'col', alignItems:'center' }}>
-            <Stack
-              my={3}
-              direction={{ xs: "column", sm: "column", xl:"column" }}
-              spacing="20px"
-              alignItems="center"
-              justifyContent="left"
-            >
-
-              <Typography
-                id="title-hero"
-                variant="h1"
-                fontWeight={700}
-                lineHeight="1.2"
-                sx={{
-                  fontSize: {
-                    xs: "24px",
-                    sm: "24px",
-                  },
-                }}
-              >
-                <PrismicRichText
-                  field={slice.primary.title} 
-                  components={defaultComponents}
-                />                
-              </Typography>
-              <br/>
-              
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            width: '100%',
+            height: '100%',
+            maxHeight: '463px',
+            margin: 0,
+            padding: 0,
+          }}>
+          {/* Contenido de texto */}
+          <Box sx={{ 
+            flex: 1, 
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}>
+            {/* Tu contenido existente aquí */}
+             <Typography
+                    id="title-hero"
+                    variant="h1"
+                    fontWeight={700}
+                    lineHeight="1.2"
+                    sx={{
+                      fontSize: {
+                        xs: "48px",
+                        sm: "48px",
+                      },
+                    }}
+                  >
+                    {/* <PrismicRichText
+                      field={slice.primary.title} 
+                      components={defaultComponents}
+                    />                 */}
+                     <PrismicRichText
+                      field={slice.primary.title} 
+                      components={{
+                        ...defaultComponents,
+                        em: ({ children }) => (
+                          <em style={{ 
+                            color: '#ffffff',
+                            fontStyle:'normal',
+                          }}>{children}</em>
+                        ),
+                      }}
+                    />  
+            </Typography>
                 
-                <Typography
-                  id="title-description"
-                  variant="body1"
-                  fontWeight={200}
-                  lineHeight="1.5"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "18px",
-                    },
-                  }}
-                >
-                  <PrismicRichText
-                    field={(slice?.primary as any)?.description} 
-                    components={defaultComponents}
-                  />                
-                </Typography>
-             
-
-            </Stack>
+            {/* </Stack> */}
             <Stack
-              direction={{ xs: "column", sm: "row" }}
-              alignItems="left"
-              spacing={3}
-              mb={4}
-              justifyContent="left"
+              sx={{
+                flexDirection:{ xs: "column", sm: "row" },
+                mt:'24px',
+              }}
             >
               
-             {primary?.buttononetext && <Button
+              {primary?.buttononetext && <Button
                 color="primary"
                 size="large"
                 variant="contained"
@@ -108,47 +116,38 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
                 variant="outlined"
                 href={(primary?.buttontwolink as any)?.url || "#"}
               >
-                 {primary.buttontwotext}
+                  {primary.buttontwotext}
               </Button>}
             
             </Stack>
-            <Stack
-              direction="row"
-              flexWrap="wrap"
-              alignItems="center"
-              spacing={3}
-              mb={8}
-              justifyContent="center"
-            >
-            </Stack>
+              
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Box
-              sx={{
-                width: '100%',
-                maxWidth: '500px',
-                height: 'auto',
-                position: 'relative',
-                '& img': {
-                  width: '100%',
-                  height: 'auto',
-                }
+          
+          {/* Imagen  */}
+          <Box sx={{ 
+            flex: 1,
+            position: 'relative',
+            height: '250px',
+            margin: 0,
+            padding: 0,
+            '& img': {
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }
+          }}>
+            <Image
+              src={primary?.image?.url || "/images/headers/contacto-energica.png"}
+              alt={primary?.image?.alt || "Cargador eléctrico"}
+              fill
+              priority
+              unoptimized
+              style={{
+                objectFit: 'cover',
               }}
-            >
-              <Image
-                src={primary?.image?.url || "/images/headers/contacto-energica.png"}
-                alt={primary?.image?.alt || "Cargador eléctrico"}
-                width={500}
-                height={300}
-                priority
-                unoptimized
-                style={{
-                  maxWidth: '100%',
-                  height: 'auto',
-                }}
-              />
-            </Box>
+            />
           </Box>
+          
         </Box>
        
       </Container>

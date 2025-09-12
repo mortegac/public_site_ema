@@ -140,6 +140,70 @@
         }
       },
       "items": {}
+    },
+    {
+      "id": "blogHero",
+      "name": "blogHero",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "image": {
+          "type": "Image",
+          "config": {
+            "label": "image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "buttononetext": {
+          "type": "Text",
+          "config": {
+            "label": "buttonOneText",
+            "placeholder": ""
+          }
+        },
+        "buttononelink": {
+          "type": "Link",
+          "config": {
+            "label": "buttonOneLink",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        },
+        "buttontwotext": {
+          "type": "Text",
+          "config": {
+            "label": "buttonTwoText",
+            "placeholder": ""
+          }
+        },
+        "buttontwolink": {
+          "type": "Link",
+          "config": {
+            "label": "buttonTwoLink",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        }
+      },
+      "items": {}
     }
   ]
 }

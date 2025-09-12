@@ -104,11 +104,11 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   
   return <>
     <SchemaMarkup type="Organization" data={organizationSchema} />
-    <PageContainer title="" description="">
+    {/* <PageContainer title="" description=""> */}
       <HpHeader /> 
       <Container
         sx={{
-          maxWidth: "1200px !important",
+          // maxWidth: "1200px !important",
           position: "relative",
         }}
       >
@@ -116,7 +116,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
         <SliceZone slices={page.data.slices} components={components} />;
       </Container>
-    </PageContainer>
+    {/* </PageContainer> */}
   </>
 }
 

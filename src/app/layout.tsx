@@ -66,14 +66,14 @@ export default function RootLayout({
         <GoogleTagManagerNoScript />
           <Providers>
             <MyApp>
-              <PageContainer title="" description="">
-              <HeaderAlert />
-              <HpHeader /> 
+              {/* <PageContainer title="" description=""> */}
+              {/* <HeaderAlert />
+              <HpHeader />  */}
                 {/* {children} */}
                 <div className='isolate'>{children}</div>
                 <Footer />
                 <ScrollToTop />
-              </PageContainer>
+              {/* </PageContainer> */}
             </MyApp>
           <PrismicPreview repositoryName={repositoryName} />
         </Providers>

@@ -61,14 +61,13 @@ export default function RootLayout({
       <body className="overflow-x-hidden antialiased">
         <GoogleTagManagerNoScript />
           <Providers>
+            
             <MyApp>
-             
-              {/* <HpHeader />  */}
-                <div className='isolate'>{children}</div>
-                <Footer />
-                <ScrollToTop />
-              {/* </PageContainer> */}
+              <div className='isolate'>{children}</div>
+              <Footer />
+              <ScrollToTop />
             </MyApp>
+            
           <PrismicPreview repositoryName={repositoryName} />
         </Providers>
       </body>

@@ -1060,9 +1060,102 @@ export type HeroSliceBgPrimary = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *Hero → blogHero → Primary*
+ */
+export interface HeroSliceBlogHeroPrimary {
+  /**
+   * title field in *Hero → blogHero → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.blogHero.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * image field in *Hero → blogHero → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.blogHero.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * buttonOneText field in *Hero → blogHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.blogHero.primary.buttononetext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttononetext: prismic.KeyTextField;
+
+  /**
+   * buttonOneLink field in *Hero → blogHero → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.blogHero.primary.buttononelink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttononelink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * buttonTwoText field in *Hero → blogHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.blogHero.primary.buttontwotext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontwotext: prismic.KeyTextField;
+
+  /**
+   * buttonTwoLink field in *Hero → blogHero → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.blogHero.primary.buttontwolink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttontwolink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * blogHero variation for Hero Slice
+ *
+ * - **API ID**: `blogHero`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSliceBlogHero = prismic.SharedSliceVariation<
+  "blogHero",
+  Simplify<HeroSliceBlogHeroPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *Hero*
  */
-type HeroSliceVariation = HeroSliceDefault | HeroSliceBgPrimary;
+type HeroSliceVariation =
+  | HeroSliceDefault
+  | HeroSliceBgPrimary
+  | HeroSliceBlogHero;
 
 /**
  * Hero Shared Slice
@@ -1520,9 +1613,11 @@ declare module "@prismicio/client" {
       HeroSlice,
       HeroSliceDefaultPrimary,
       HeroSliceBgPrimaryPrimary,
+      HeroSliceBlogHeroPrimary,
       HeroSliceVariation,
       HeroSliceDefault,
       HeroSliceBgPrimary,
+      HeroSliceBlogHero,
       IdeasSlice,
       IdeasSliceDefaultPrimary,
       IdeasSliceVariation,

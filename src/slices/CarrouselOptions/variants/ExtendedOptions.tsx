@@ -243,10 +243,12 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                             padding: "0",
                             pt: "24px",
                             width: "100%",
-                            height: "300px",
+                            height: { xs: "400px", sm: "300px" },
                             display: 'flex',
                             flexDirection: { xs: 'column', sm: 'row' },
                             gap: 2,
+                            overflowY: { xs: 'auto', sm: 'visible' },
+                            overflowX: 'hidden',
                           }}
                         >                          
                           <Box
@@ -299,7 +301,17 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                             {option?.brand || ""}               
                           </Typography>
                           
-                          <Typography
+                          <Box
+                            id="potencia-box"
+                            sx={{
+                              width: "100%",
+                              display:'flex',
+                              flexDirection: { xs: 'row', sm: 'column' },
+                              justifyContent:'flex-start',
+                              alignItems:'flex-start',
+                            }}
+                          >
+                            <Typography
                             variant="body1"
                             fontWeight={200}
                             lineHeight="1.5"
@@ -326,9 +338,12 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                                 xs: "16px",
                                 sm: "16px",
                               },
+                              marginLeft: { xs: '16px', sm: 0 }
                             }}
                           >{option.capacity} 
                           </Typography>
+                          </Box>
+                          
                           
                           
                           
@@ -345,6 +360,16 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                             }}
                           >
                             
+                            <Box
+                            id="potencia-box"
+                            sx={{
+                              width: "100%",
+                              display:'flex',
+                              flexDirection: { xs: 'row', sm: 'column' },
+                              justifyContent:'flex-start',
+                              alignItems:'flex-start',
+                            }}
+                          ></Box>
                             {/* pricetoptext */}
                             <Typography
                               id="pricetoptext-options"
@@ -384,6 +409,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                               }}
                             >{formatCurrency(Number(option?.pricetopvalue || 0))}
                             </Typography>
+                            
                             
                             {/* pricebottomtext */}
                             <Typography

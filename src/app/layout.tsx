@@ -71,7 +71,7 @@ export default function RootLayout({
               <HpHeader />  */}
                 {/* {children} */}
                 <div className='isolate'>{children}</div>
-                <Footer />
+                {/* <Footer /> */}
                 <ScrollToTop />
               {/* </PageContainer> */}
             </MyApp>

@@ -36,7 +36,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
   
   return(
     <>
-        <Box bgcolor="#ffffff" pt={7} pb={7}
+        <Box bgcolor="#ffffff" pt={0} pb={7}
     data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
   >
@@ -64,8 +64,8 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                   sx={{
                     mb: '22px',
                     fontSize: {
-                      xs: "22px",
-                      sm: "22px",
+                      xs: "32px",
+                      sm: "32px",
                     },
                   }}
                 >
@@ -136,6 +136,10 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                   transition: 'all 0.3s ease-in-out',
                   display: 'flex',
                   flexDirection: 'column',
+                  // height: { xs: "500px", sm: "500px" },
+                  height: "500px",
+                  overflowY: { xs: 'auto', sm: 'visible' },
+                  overflowX: 'hidden',
                   '&:hover': {
                     boxShadow: 6,
                     transform: 'translateY(-4px)',
@@ -247,36 +251,96 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                         padding: "0",
                         pt: "24px",
                         width: "100%",
-                        height: { xs: "400px", sm: "300px" },
                         display: 'flex',
                         flexDirection: { xs: 'column', sm: 'row' },
                         gap: 2,
-                        overflowY: { xs: 'auto', sm: 'visible' },
-                        overflowX: 'hidden',
+                        // height: { xs: "400px", sm: "300px" },
+                        // overflowY: { xs: 'auto', sm: 'visible' },
+                        // overflowX: 'hidden',
                       }}
                     >                          
                       <Box
-                        id="orderA"
+                        id="imageBox"
                         sx={{
                           width: { xs: "100%", sm: "50%" },
                           display:'flex',
                           flexDirection: 'row',
-                          justifyContent: 'flex-start',
+                          justifyContent: { xs: 'flex-start', sm: 'space-between' },
                           alignItems: 'center',
+                          gap: 2,
+                          position: 'relative'
                         }}
                       >
-                      {(option as any).image?.url && (
-                        <Image
-                          src={(option as any).image.url}
-                          alt={(option as any).image.alt || `Option ${index + 1}`}
-                          width={250}
-                          height={250}
-                          style={{
-                            objectFit: 'contain',
-                          }}
-                          unoptimized
-                        />
-                      )}
+                        {/* Imagen - Parte izquierda */}
+                        <Box sx={{ 
+                          flex: 1,
+                          backgroundImage: { xs: `url(${(option as any)?.image?.url || ''})`, sm: 'none' },
+                          backgroundSize: 'contain',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: { xs: 'left -30px center', sm: 'left center' },
+                          minHeight: { xs: '200px', sm: 'auto' }
+                        }}>
+                          {(option as any).image?.url && (
+                            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                              <Image
+                                id="imageBox"
+                                src={(option as any).image.url}
+                                alt={(option as any).image.alt || `Option ${index + 1}`}
+                                width={250}
+                                height={250}
+                                style={{
+                                  objectFit: 'contain',
+                                }}
+                                unoptimized
+                              />
+                            </Box>
+                          )}
+                        </Box>
+
+                         {/* Botones RESPONSIVE- Parte derecha */}
+                          <Box 
+                            id="buttonBox"
+                            sx={{ 
+                              position: { xs: 'absolute', sm: 'static' },
+                              top: { xs: '50%', sm: 'auto' },
+                              right: { xs: '20px', sm: 'auto' },
+                              transform: { xs: 'translateY(-50%)', sm: 'none' },
+                              display: { xs: 'flex', sm: 'none' }, 
+                              flexDirection: 'column', 
+                              gap: 1,
+                              zIndex: { xs: 10, sm: 'auto' },
+                              width: "100px",
+                            }}>
+                          <Button
+                            variant='contained'
+                            sx={{
+                              minWidth: 'auto',
+                              width: '100%',
+                              fontSize: '14px',
+                            }}
+                          >
+                            Comprar
+                          </Button>
+                          
+                          <PrismicNextLink
+                            field={option?.buttontwolink}
+                            style={{ textDecoration: 'none', width: '100%' }}
+                          >
+                            <Button
+                              id="ficha-tecnica"
+                              variant='outlined'
+                              sx={{
+                                background: "white",
+                                minWidth: 'auto',
+                                width: '100%',
+                                fontSize: '14px',
+                              }}
+                            >
+                              Ver Ficha
+                            </Button>
+                          </PrismicNextLink>
+                        </Box>
+                        
                       </Box>
                       <Box
                         id="orderB"
@@ -444,35 +508,45 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                           />                
                         </Typography>
 
-                        
+                           {/* Botones DESKTOP- Parte derecha */}
+                           <Box 
+                           id="buttonBoxDesktop"
+                           sx={{ 
+                             display: { xs: 'none', sm: 'none', md: 'flex' }, 
+                             flexDirection: 'column', 
+                             gap: 1,
+                             width: '100%'
+                           }}>
+                          <Button
+                            variant='contained'
+                            sx={{
+                              minWidth: 'auto',
+                              width: '100%',
+                              fontSize: '14px',
+                            }}
+                          >
+                            Comprar
+                          </Button>
+                          
+                          <PrismicNextLink
+                            field={option?.buttontwolink}
+                            style={{ textDecoration: 'none', width: '100%' }}
+                          >
+                            <Button
+                              id="ficha-tecnica"
+                              variant='outlined'
+                              sx={{
+                                minWidth: 'auto',
+                                width: '100%',
+                                fontSize: '14px',
+                              }}
+                            >
+                              Ficha
+                            </Button>
+                          </PrismicNextLink>
+                        </Box>
                       </Box>
                       
-                      <Button
-                        variant='contained'
-                        sx={{
-                          minWidth: 'auto',
-                          width: '90%',                            
-                        }}
-                      >
-                        Comprar
-                      </Button>
-                      {/* <pre>{JSON.stringify(option?.buttontwolink, null, 2 )}</pre> */}
-                      <PrismicNextLink
-                        field={option?.buttontwolink}
-                        style={{ textDecoration: 'none', width: '90%' }}
-                      >
-                        <Button
-                          id="ficha-tecnica"
-                          variant='outlined'
-                          sx={{
-                            minWidth: 'auto',
-                            width: '100%',
-                            mt:'8px',
-                          }}
-                        >
-                          Ficha técnica
-                        </Button>
-                      </PrismicNextLink>
                       </Box>
                   </Box>
                   
@@ -505,11 +579,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                         id="boxHTML"
                         sx={{
                           width: { xs: "100%", sm: "100%" },
-                          display: { xs: 'none', sm: 'flex',  },
-                          // display: 'flex',
-                          // alignItems: 'flex-start',
-                          // justifyContent: 'flex-start',
-                          
+                          // display: { xs: 'none', sm: 'flex',  },                          
                           paddingX:'22px',
                           paddingY:'12px',
                           

@@ -71,6 +71,10 @@ export const Default: FC<HeroProps> = ({ slice }) => {
                       xs: "18px",
                       sm: "18px",
                     },
+                    display: {
+                      xs: "none", // Oculta en mobile (xs)
+                      sm: "block", // Muestra desde tablet en adelante (sm y mayores)
+                    },
                   }}
                 >
                   <PrismicRichText

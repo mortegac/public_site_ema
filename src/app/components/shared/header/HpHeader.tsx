@@ -59,8 +59,8 @@ const HpHeader = (props: any) => {
       <Container
         sx={{
           maxWidth: "1200px !important",
-          background: "transparent",
-          // background: "#4dbfd9",
+          // background: "transparent",
+          background: "#4dbfd9",
         }}
       >
         <ToolbarStyled>
@@ -74,6 +74,7 @@ const HpHeader = (props: any) => {
               <IconMenu2 size="20" />
             </IconButton>
           ) : null}
+          
           {lgUp ? (
             <>
               <Stack spacing={1} direction="row" alignItems="center">

@@ -15,18 +15,19 @@ import {
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
-import { HeroProps } from "../types"
+import { IdeasProps } from "../types"
 
-export const BlogHero: FC<HeroProps> = ({ slice }) => {
+export const Default: FC<IdeasProps> = ({ slice }) => {
   const {primary} = slice;
   
     return(
-      <Box id="hero" bgcolor="#4dbfd9"
+      <Box id="hero" bgcolor="#f1f1f1"
       sx={{ 
         width: '100%',
         maxHeight: "463px",
         margin: 0,
         padding: 0,
+        paddingY: "22px",
         position: "relative",
         borderRadius: 0,
         display:'flex',
@@ -124,7 +125,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
           </Box>
           
           {/* Imagen  */}
-          <Box sx={{ 
+          {/* <Box sx={{ 
             flex: 1,
             position: 'relative',
             display: { xs: 'none', sm: 'block' },
@@ -148,7 +149,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
               }}
             />
           </Box>
-          
+           */}
         </Box>
        
       </Container>

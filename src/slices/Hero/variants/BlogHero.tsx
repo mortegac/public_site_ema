@@ -24,7 +24,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
       <Box id="hero" bgcolor="#4dbfd9"
       sx={{ 
         width: '100%',
-        maxHeight: "463px",
+        maxHeight: "600px",
         margin: 0,
         padding: 0,
         position: "relative",
@@ -52,6 +52,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
             height: '100%',
             maxHeight: '463px',
             margin: 0,
+            marginY: "24px",
             padding: 0,
           }}>
           {/* Contenido de texto */}
@@ -131,6 +132,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
             height: '250px',
             margin: 0,
             padding: 0,
+            
             '& img': {
               width: '100%',
               height: '100%',

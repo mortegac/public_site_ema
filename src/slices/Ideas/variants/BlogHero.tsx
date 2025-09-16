@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
-import { HeroProps } from "../types"
+import { IdeasProps } from "../types"
 
-export const BlogHero: FC<HeroProps> = ({ slice }) => {
+export const BlogHero: FC<IdeasProps> = ({ slice }) => {
   const {primary} = slice;
   
     return(
@@ -138,8 +138,8 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
             }
           }}>
             <Image
-              src={primary?.image?.url || "/images/headers/contacto-energica.png"}
-              alt={primary?.image?.alt || "Cargador eléctrico"}
+              src={(primary as any)?.image?.url || "/images/headers/contacto-energica.png"}
+              alt={(primary as any)?.image?.alt || "Cargador eléctrico"}
               fill
               priority
               unoptimized

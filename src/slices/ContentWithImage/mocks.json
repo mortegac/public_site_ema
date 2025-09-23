@@ -1,0 +1,188 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Sunt consequat in pariatur sint incididunt voluptate Lorem do occaecat. Sunt qui proident incididunt consequat. Sit sint pariatur sunt duis eu amet voluptate qui excepteur laboris excepteur in."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Et non laboris est proident adipisicing in."
+						}
+					}
+				]
+			},
+			"buttononetext": {
+				"__TYPE__": "FieldContent",
+				"value": "wood",
+				"type": "Text"
+			},
+			"buttononelink": {
+				"key": "297669d9-739b-49e1-b93e-72d0aae8d73c",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://prismic.io",
+					"text": "contrast"
+				}
+			},
+			"imageisright": {
+				"__TYPE__": "BooleanContent",
+				"value": false
+			},
+			"buttontwotext": {
+				"__TYPE__": "FieldContent",
+				"value": "bad",
+				"type": "Text"
+			},
+			"buttontwolink": {
+				"key": "c884ded8-7b46-4828-b1b6-3b690002079e",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "rocket"
+				}
+			}
+		},
+		"items": []
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "withIcons",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Aliquip consectetur aliqua id tempor cillum ex minim est nisi et. Commodo est dolore aliqua ad officia nisi amet qui exercitation cupidatat ea irure aliquip ea nisi."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Nostrud tempor ea eu ipsum non pariatur consectetur fugiat nisi qui consectetur."
+						}
+					}
+				]
+			},
+			"imageisright": {
+				"__TYPE__": "BooleanContent",
+				"value": false
+			},
+			"list": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"ico",
+								{
+									"origin": {
+										"id": "main",
+										"url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+										"width": 3882,
+										"height": 2584
+									},
+									"url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+									"width": 3882,
+									"height": 2584,
+									"edit": {
+										"zoom": 1,
+										"crop": {
+											"x": 0,
+											"y": 0
+										},
+										"background": "transparent"
+									},
+									"alt": "wagon",
+									"credits": null,
+									"__TYPE__": "ImageContent",
+									"thumbnails": {}
+								}
+							],
+							[
+								"title",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Dolore aliquip et in nisi laborum officia labore magna magna deserunt. Culpa reprehenderit aliquip anim cillum cupidatat qui. Exercitation proident id minim ea voluptate sit fugiat adipisicing duis deserunt ipsum labore laborum commodo consequat."
+											}
+										}
+									]
+								}
+							],
+							[
+								"description",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Dolore laboris cupidatat sint occaecat nulla do commodo reprehenderit cupidatat aute reprehenderit aliquip do. Consectetur dolore incididunt ex enim dolore est anim. Do sunt reprehenderit sunt ex voluptate incididunt tempor proident aliquip in aliquip consectetur."
+											}
+										}
+									]
+								}
+							]
+						]
+					}
+				]
+			},
+			"image": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1587905069134-008460d7a636",
+					"width": 3935,
+					"height": 5894
+				},
+				"url": "https://images.unsplash.com/photo-1587905069134-008460d7a636",
+				"width": 3935,
+				"height": 5894,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"alt": "lead",
+				"credits": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

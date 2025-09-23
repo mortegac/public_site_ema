@@ -23,7 +23,7 @@ const HomePage = () => {
       
       <Banner 
         titleOne="" 
-        titleTwo="¡Hablemos!" 
+        titleTwo="Instala el cargador para tu vehículo eléctrico" 
         description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible."
         
         buttonText="Agenda tu visita" 

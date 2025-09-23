@@ -1,9 +1,10 @@
+
 import React from "react";
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
-import PageContainer from '@/app/components/container/PageContainer';
-import Banner from '@/app/components/shared/banner/Banner';
-import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
+// import PageContainer from '@/app/components/container/PageContainer';
+// import Banner from '@/app/components/shared/banner/Banner';
+// import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import HpHeader from '@/app/components/shared/header/HpHeader';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
@@ -16,8 +17,8 @@ import GoogleTagManagerNoScript from "@/components/analytics/GoogleTagManagerNoS
 
 
 import { Inter } from "next/font/google";
-import { asText } from "@prismicio/client";
-import { PrismicText } from "@prismicio/react";
+// import { asText } from "@prismicio/client";
+// import { PrismicText } from "@prismicio/react";
 import { PrismicNextLink, PrismicPreview } from "@prismicio/next";
 
 import { createClient, repositoryName } from "@/prismicio";
@@ -28,28 +29,23 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+//   // title: "Instalación de cargadores para autos eléctricos",
+//   description: "Cotiza en tiempo real cuanto sale instalar el cargador de tu auto eléctrico. Simula tu proyecto y obtén una pre-cotización en segundos.",
+//   openGraph: {
+//     images: [
+//       {
+//         url: 'https://energica.city/hubfs/T%C3%A9cnico-instalador-1.png',
+//         width: 1200,
+//         height: 630,
+//         alt: 'Técnico instalador Energica',
+//       },
+//     ],
+//   },
+// };
 
-// Configurar Amplify con la configuración del entorno correspondiente
-configureAmplify();
-
-export const metadata = {
-  // title: "Instalación de cargadores para autos eléctricos",
-  description: "Cotiza en tiempo real cuanto sale instalar el cargador de tu auto eléctrico. Simula tu proyecto y obtén una pre-cotización en segundos.",
-  openGraph: {
-    images: [
-      {
-        url: 'https://images.prismic.io/energica-public-site/aLsX6WGNHVfTOuFj_SOCIAL-MEDIA-energica-cargadores.png?auto=format,compress',
-        width: 1200,
-        height: 630,
-        alt: 'Energica city',
-      },
-    ],
-  },
-};
-
-import { Amplify } from "aws-amplify";
-import outputs from "../../amplify_outputs.json";
-Amplify.configure(outputs);
+// import { Amplify } from "aws-amplify";
+// import outputs from "../../amplify_outputs.json";
+// Amplify.configure(outputs);
 
 export default function RootLayout({
   children,
@@ -65,16 +61,13 @@ export default function RootLayout({
       <body className="overflow-x-hidden antialiased">
         <GoogleTagManagerNoScript />
           <Providers>
+            
             <MyApp>
-              {/* <PageContainer title="" description=""> */}
-              {/* <HeaderAlert />
-              <HpHeader />  */}
-                {/* {children} */}
-                <div className='isolate'>{children}</div>
-                {/* <Footer /> */}
-                <ScrollToTop />
-              {/* </PageContainer> */}
+              <div className='isolate'>{children}</div>
+              <Footer />
+              <ScrollToTop />
             </MyApp>
+            
           <PrismicPreview repositoryName={repositoryName} />
         </Providers>
       </body>

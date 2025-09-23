@@ -50,10 +50,16 @@ const HpHeader = (props: any) => {
   };
 
   return (
-    <AppBarStyled position="sticky" elevation={1}>
+    <AppBarStyled 
+    position="sticky" 
+    elevation={0}
+    
+    // elevation={1}
+    >
       <Container
         sx={{
-          maxWidth: "1400px !important",
+          maxWidth: "1200px !important",
+          // background: "transparent",
           background: "#4dbfd9",
         }}
       >
@@ -68,6 +74,7 @@ const HpHeader = (props: any) => {
               <IconMenu2 size="20" />
             </IconButton>
           ) : null}
+          
           {lgUp ? (
             <>
               <Stack spacing={1} direction="row" alignItems="center">

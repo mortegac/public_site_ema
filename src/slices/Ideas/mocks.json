@@ -1,0 +1,53 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"subtitle": {
+				"__TYPE__": "FieldContent",
+				"value": "angry",
+				"type": "Text"
+			},
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Deserunt quis ut reprehenderit ut sunt id. Qui laboris ullamco ut enim duis aute reprehenderit officia veniam ullamco."
+						}
+					}
+				]
+			},
+			"buttononetext": {
+				"__TYPE__": "FieldContent",
+				"value": "package",
+				"type": "Text"
+			},
+			"buttononelink": {
+				"key": "372eaf72-0e4e-4001-8e45-377fc75986a1",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "guard"
+				}
+			},
+			"buttontwotext": {
+				"__TYPE__": "FieldContent",
+				"value": "party",
+				"type": "Text"
+			},
+			"buttontwolink": {
+				"__TYPE__": "LinkContent",
+				"key": "80970314-0cd2-4c08-bf61-9a2eb48ae32d",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "movie"
+				}
+			}
+		},
+		"items": []
+	}
+]

@@ -54,6 +54,93 @@ SEO / SEM
 
 
 
+COTIZADOR
+============================
+
+Casa  = distancia 60 max distanica 
+*si su instalacion requiere mas de 60 metros por favor escribamos a contacto@energica.city
+
+
+
+paso 2  :
+
+Seleccione el cargador: 
+- ya tengo mi cargador 
+- Si, deseo, Agregar cargador referencial de 7kW
+
+
+*Agregar una tarea para benchmark y Estados del arte de plataformas parecidas a EVE y EMA 
+
+
+
+  isPortable: false,
+  isWallbox: false,
+  isHouse: false,
+  isBuilding: false,  
+  hasOwnCharger: false,
+  needsCharger: false,
+  distance: 0,
+  acceptTermAndConditions: false,
+  
+  
+  Deseas añadir el valor del cargador a la simulación :
+  
+  
+  
+
+COTIZADOR 
+- Hacer cotizador 
+
+
+
+si estas pensando en comprar un vehiculo electrico o ya tienes uno, compra aqui tu cargador con o sin instalacion 
+
+Conoce las alternativas para simular el costo 
+simular
+agenda visita 
+
+
+
+==============================================
+GOOGLE ADS
+
+9 ventas mensauales 
+
+120.000 semanal 
+
+- visitas
+- Cargadores 
+
+
+
+
+Estudiar busquedas
+- hacer contenido con palabras claves
+- 
+
+
+
+Pagina web 
+- Stack tecnologico ema
+- Agregar un gestor de contenido 
+- 
+
+
+Sub-campañas
+- Venta de Cargadores
+- Instalacion de cargadores
+- Agenda visitas tecnicas 
+
+
+OBJETIVOS 
+-> el cliente sepa lo que hago y me contacto
+-> 
+
+
+SEO / SEM
+
+
+
 EMA
 - Agregar Google Tag Manager
 

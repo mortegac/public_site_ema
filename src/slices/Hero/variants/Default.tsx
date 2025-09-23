@@ -21,7 +21,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
   const {primary} = slice;
   
     return(
-      <Box bgcolor="#ffffff" pt={7} pb={7}
+      <Box id="container" bgcolor="#ffffff" pt={7} pb={{ xs: 0, md: 7 }}
       data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
     >
@@ -57,31 +57,29 @@ export const Default: FC<HeroProps> = ({ slice }) => {
                   field={slice.primary.title} 
                   components={defaultComponents}
                 />                
-              </Typography>
-              <br/>
-              
+              </Typography>    
                 
-                <Typography
-                  id="title-description"
-                  variant="body1"
-                  fontWeight={200}
-                  lineHeight="1.5"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "18px",
-                    },
-                    display: {
-                      xs: "none", // Oculta en mobile (xs)
-                      sm: "block", // Muestra desde tablet en adelante (sm y mayores)
-                    },
-                  }}
-                >
-                  <PrismicRichText
-                    field={(slice?.primary as any)?.description} 
-                    components={defaultComponents}
-                  />                
-                </Typography>
+              <Typography
+                id="title-description"
+                variant="body1"
+                fontWeight={200}
+                lineHeight="1.5"
+                sx={{
+                  fontSize: {
+                    xs: "18px",
+                    sm: "18px",
+                  },
+                  display: {
+                    xs: "none", // Oculta en mobile (xs)
+                    sm: "block", // Muestra desde tablet en adelante (sm y mayores)
+                  },
+                }}
+              >
+                <PrismicRichText
+                  field={(slice?.primary as any)?.description} 
+                  components={defaultComponents}
+                />                
+              </Typography>
              
 
             </Stack>
@@ -112,7 +110,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
               </Button>}
             
             </Stack>
-            <Stack
+            {/* <Stack
               direction="row"
               flexWrap="wrap"
               alignItems="center"
@@ -120,15 +118,19 @@ export const Default: FC<HeroProps> = ({ slice }) => {
               mb={8}
               justifyContent="center"
             >
-            </Stack>
+            </Stack> */}
           </Box>
+          
+          {/* image */}
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box
+              id="boxImage"
               sx={{
                 width: '100%',
                 maxWidth: '500px',
                 height: 'auto',
                 position: 'relative',
+                display: { xs: 'none', sm: 'block' },
                 '& img': {
                   width: '100%',
                   height: 'auto',

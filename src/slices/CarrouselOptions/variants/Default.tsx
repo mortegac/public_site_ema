@@ -84,6 +84,8 @@ export const Default: FC<CarrouselOptionsProps> = ({ slice }) => {
         justifyContent: 'center', 
         width: '100%' 
       }}>
+        
+        {/* Title and description */}
         <Stack
           my={3}
           direction={{ xs: "column", sm: "row", xl:"column" }}

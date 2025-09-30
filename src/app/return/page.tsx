@@ -325,6 +325,37 @@ const ReturnPage = () => {
         }
     }, [resTransaction?.status, status, redirectToInvoice]);
 
+    
+    // Nuevo useEffect para manejar el timeout de 30 segundos y redirección sin parámetros
+    useEffect(() => {
+        // Verificar si no hay parámetros en la URL
+        const token = searchParams.get("token_ws") || "";
+        const tbkToken = searchParams.get("TBK_TOKEN") || "";
+        const tbkOrdenCompra = searchParams.get("TBK_ORDEN_COMPRA") || "";
+        const tbkIdSesion = searchParams.get("TBK_ID_SESION") || "";
+        
+        const hasNoParams = !token && !tbkToken && !tbkOrdenCompra && !tbkIdSesion;
+        
+        // Redirigir inmediatamente si no hay parámetros en la URL
+        if (hasNoParams) {
+            router.push('/return/invoice');
+            return;
+        }
+        
+        // Solo activar el timeout si estamos en estado de loading (status vacío) y hay parámetros
+        if (resTransaction?.status === "") {
+            const timeoutId = setTimeout(() => {
+                // Después de 30 segundos, redirigir a invoice
+                router.push('/return/invoice');
+            }, 30000); // 30 segundos
+
+            // Cleanup del timeout si el componente se desmonta o cambia el estado
+            return () => clearTimeout(timeoutId);
+        }
+    }, [resTransaction?.status, router, searchParams]);
+
+    
+    
     /** TODO:  CASO BORDE 
      * El tiempo maximo es de 20 minutos para reintentar la transaccion 
      * Despues de los 20 minutos la fecha es LIBERADA y el carro de comprar queda en estado "time_out"
@@ -348,7 +379,7 @@ const ReturnPage = () => {
       >
           {/* <pre>{JSON.stringify(resTransaction, null, 2 )}</pre> */}
         {resTransaction?.status === "" &&
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
+          <Box id="box-loading" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
             <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
           </Box>
         }

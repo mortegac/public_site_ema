@@ -39,7 +39,7 @@ const ReturnPage = () => {
   const searchParams = useSearchParams();
   const [resTransaction, setResTransaction] = useState(
     {
-        step: 0,
+        statusRedirect: "", // PAYMENT_REJECTED  | PAYMENT_APPROVED
         token_ws: '',
         tbk_token: '',
         status: '',
@@ -54,17 +54,19 @@ const ReturnPage = () => {
         shoppingCartId: '',
     }
     );
+    
+    
     const { paymentTransaction, status } = useAppSelector(selectPaymentTransaction);
     
     
     
     // Función alternativa usando sessionStorage
-    const redirectToInvoice = useCallback((data: any) => {
-      // Guardar datos en sessionStorage
-      sessionStorage.setItem('invoiceData', JSON.stringify(data));
-      // Redirigir a la página de invoice
-      router.push('/return/invoice');
-    }, [router]);
+    // const redirectToInvoice = useCallback((data: any) => {
+    //   // Guardar datos en sessionStorage
+    //   sessionStorage.setItem('invoiceData', JSON.stringify(data));
+    //   // Redirigir a la página de invoice
+    //   router.push('/return/invoice');
+    // }, [router]);
 
     const validation = async (obj:any) => {
       //Flujos:
@@ -146,8 +148,9 @@ const ReturnPage = () => {
                       }
       
                       await sendEmail({ ...objEmail })
-                  }                
-                  return true;
+                  }           
+                setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_APPROVED"})
+                return true;
               }
               
               // Flujo 2: Transacción Anulada por tiempo de espera |   tbkOrdenCompra y tbkIdSesion
@@ -170,7 +173,7 @@ const ReturnPage = () => {
                       }));
                   }
                   
-    
+                  setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
                   return true;
               }
               
@@ -206,7 +209,7 @@ const ReturnPage = () => {
                         to_email: statusResponse?.email,
                     }));
                   }
-    
+                  setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
                   return true;
               }
               
@@ -229,10 +232,11 @@ const ReturnPage = () => {
                           status: statusResponse.status
                       }));
                   }
-    
+                  setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
                   return true;
               }
     
+              
               return false;
           } catch (error) {
               console.log('Error en la validación:', error);
@@ -309,50 +313,79 @@ const ReturnPage = () => {
  }, [resTransaction]); 
  
     // Nuevo useEffect para manejar la redirección
-    useEffect(() => {
-        if (resTransaction?.status === "AUTHORIZED" && status === "idle") {
-            const invoiceData = {
-                glosa: resTransaction?.glosa,
-                total: resTransaction?.total,
-                order: resTransaction?.order,
-                card: `xxxx xxxx xxxx ${resTransaction?.card}`,
-                typePay: resTransaction?.typePay,
-                email: resTransaction?.to_email
-            };
+    // useEffect(() => {
+    //     if (resTransaction?.status === "AUTHORIZED" && status === "idle") {
+    //         const invoiceData = {
+    //             glosa: resTransaction?.glosa,
+    //             total: resTransaction?.total,
+    //             order: resTransaction?.order,
+    //             card: `xxxx xxxx xxxx ${resTransaction?.card}`,
+    //             typePay: resTransaction?.typePay,
+    //             email: resTransaction?.to_email
+    //         };
             
-            // Redirigir con datos POST
-            redirectToInvoice(invoiceData);
-        }
-    }, [resTransaction?.status, status, redirectToInvoice]);
+    //         // Redirigir con datos POST
+    //         redirectToInvoice(invoiceData);
+    //     }
+    // }, [resTransaction?.status, status, redirectToInvoice]);
 
     
     // Nuevo useEffect para manejar el timeout de 30 segundos y redirección sin parámetros
     useEffect(() => {
-        // Verificar si no hay parámetros en la URL
-        const token = searchParams.get("token_ws") || "";
-        const tbkToken = searchParams.get("TBK_TOKEN") || "";
-        const tbkOrdenCompra = searchParams.get("TBK_ORDEN_COMPRA") || "";
-        const tbkIdSesion = searchParams.get("TBK_ID_SESION") || "";
-        
-        const hasNoParams = !token && !tbkToken && !tbkOrdenCompra && !tbkIdSesion;
-        
-        // Redirigir inmediatamente si no hay parámetros en la URL
-        if (hasNoParams) {
-            router.push('/return/invoice');
-            return;
-        }
-        
-        // Solo activar el timeout si estamos en estado de loading (status vacío) y hay parámetros
-        if (resTransaction?.status === "") {
-            const timeoutId = setTimeout(() => {
-                // Después de 30 segundos, redirigir a invoice
-                router.push('/return/invoice');
-            }, 30000); // 30 segundos
+        const timeoutId = setTimeout(() => {
+            // Preparar los datos para enviar
+            const paymentData = {                    
+                glosa: paymentTransaction?.glosa,
+                order: resTransaction?.order,
+                
+                total: paymentTransaction?.amount,
+                email: paymentTransaction?.usersPaymentTransactionsId,
+                shoppingCartId: paymentTransaction?.shoppingCartId || null,
+                // Agregar estos si son necesarios para recibo-pago
+                card: resTransaction?.card,
+                typePay: resTransaction?.typePay,
+            };
+            
+            // Guardar en sessionStorage
+            sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+            
+            // Redirigir según el estado
+            if (resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
+                router.push('/agenda/recibo-pago');
+            } else if (resTransaction?.statusRedirect === "PAYMENT_REJECTED") {
+                router.push('/agenda/rechazo-pago');
+            }
+        }, 6000);
 
-            // Cleanup del timeout si el componente se desmonta o cambia el estado
-            return () => clearTimeout(timeoutId);
-        }
-    }, [resTransaction?.status, router, searchParams]);
+        return () => clearTimeout(timeoutId);
+    }, [resTransaction?.statusRedirect, resTransaction?.glosa, resTransaction?.total, resTransaction?.order, resTransaction?.to_email, resTransaction?.card, resTransaction?.typePay, paymentTransaction?.shoppingCartId, router]);
+    
+    // useEffect(() => {
+    //     // Verificar si no hay parámetros en la URL
+    //     const token = searchParams.get("token_ws") || "";
+    //     const tbkToken = searchParams.get("TBK_TOKEN") || "";
+    //     const tbkOrdenCompra = searchParams.get("TBK_ORDEN_COMPRA") || "";
+    //     const tbkIdSesion = searchParams.get("TBK_ID_SESION") || "";
+        
+    //     const hasNoParams = !token && !tbkToken && !tbkOrdenCompra && !tbkIdSesion;
+        
+    //     // Redirigir inmediatamente si no hay parámetros en la URL
+    //     if (hasNoParams) {
+    //         router.push('/return/invoice');
+    //         return;
+    //     }
+        
+    //     // Solo activar el timeout si estamos en estado de loading (status vacío) y hay parámetros
+    //     if (resTransaction?.status === "") {
+    //         const timeoutId = setTimeout(() => {
+    //             // Después de 30 segundos, redirigir a invoice
+    //             router.push('/return/invoice');
+    //         }, 30000); // 30 segundos
+
+    //         // Cleanup del timeout si el componente se desmonta o cambia el estado
+    //         return () => clearTimeout(timeoutId);
+    //     }
+    // }, [resTransaction?.status, router, searchParams]);
 
     
     
@@ -366,7 +399,9 @@ const ReturnPage = () => {
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
       <HpHeader />
       {/* <pre>paymentTransaction = {JSON.stringify(paymentTransaction, null, 2 )}</pre>
-      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre> */}
+      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre>  */}
+      {/* 
+      */}
       <div 
         style={{ 
             // minHeight: '80vh', 
@@ -377,6 +412,8 @@ const ReturnPage = () => {
             backgroundColor: '#f8fafc'
         }}
       >
+        
+          {/* <pre>{JSON.stringify(resTransaction?.statusRedirect, null, 2 )}</pre> */}
           {/* <pre>{JSON.stringify(resTransaction, null, 2 )}</pre> */}
         {resTransaction?.status === "" &&
           <Box id="box-loading" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
@@ -384,8 +421,8 @@ const ReturnPage = () => {
           </Box>
         }
        
-       <Box id="returnPage" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          {/* Removido el renderizado condicional del Invoice ya que ahora se redirige */}
+       {/* <Box id="returnPage" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          
           
             { resTransaction?.status !== "AUTHORIZED" 
                 && resTransaction?.status !== "" 
@@ -400,7 +437,7 @@ const ReturnPage = () => {
                     /> 
                 </>
             }
-       </Box>
+       </Box> */}
         
              
              

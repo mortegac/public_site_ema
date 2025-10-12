@@ -66,7 +66,8 @@ interface RetryTransactionProps {
   shoppingCartId: string | null;
 }
 
-const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order, email, shoppingCartId }) => {
+const RetryTransaction: React.FC<RetryTransactionProps> = () => {
+  // { glosa, total, order, email, shoppingCartId }
   const theme = useTheme(); // Acceder al tema para los colores
   const router = useRouter();
   
@@ -79,8 +80,8 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
   const getRetry = async () => {
     try {
       const response = await (fetchWebpayStart({ 
-        shoppingCartId: String(shoppingCartId),
-        glosa: String(glosa),
+        shoppingCartId: String(paymentData?.shoppingCartId),
+        glosa: String(paymentData?.glosa),
       }));
 
       if (response?.url) {
@@ -111,9 +112,39 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
       console.error('Error al procesar el pago:', error);
     }
   };
+
+  
+  // AGREGAR ESTO AL INICIO DEL COMPONENTE (después de las líneas existentes)
+  const [paymentData, setPaymentData] = useState({ 
+    glosa:"", 
+    total:"", 
+    order:"", 
+    email:"", 
+    shoppingCartId:"" });
+  
+  useEffect(() => {
+    // Recuperar datos de sessionStorage si existen
+    const storedData = sessionStorage.getItem('paymentData');
+    if (storedData) {
+      const data = JSON.parse(storedData);
+      setPaymentData({
+        glosa: data.glosa || "",
+        total: data.total || "",
+        order: data.order || "",
+        email: data.email || "",
+        shoppingCartId: data.shoppingCartId || "",
+      });
+      // Limpiar sessionStorage después de leer
+      sessionStorage.removeItem('paymentData');
+    }
+  }, []);
+
+  
+  
   return (
     <>
-  <Box
+      {/* <pre>paymentData = {JSON.stringify(paymentData, null, 2 )}</pre> */}
+      <Box
         sx={{
           backgroundColor: '#f8fafc',
           color: '#74787e',
@@ -154,18 +185,6 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               mx: 'auto',
             }}
           >
-            {/* <Typography
-              sx={{
-                color: '#37373c',
-                fontSize: '18px',
-                lineHeight: '24px',
-                fontWeight: 300,
-                textAlign: 'center',
-                mb: 4,
-              }}
-            >
-              ¡Tu pago ha sido rechazado!
-            </Typography> */}
             <Typography
               sx={{
                 color: '#37373c',
@@ -188,167 +207,130 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               }}
             >Hemos pre-reservado tu hora por 30 minutos. Esto significa que solo tú puedes agendarla en este período. Para confirmarla, simplemente necesitas <b>reintentar el pago de tu reserva.</b> Si no se completa la transacción en 30 minutos, la hora se liberará automáticamente y estará disponible para otros usuarios.
             </Typography>
-            {/* <Typography
-              sx={{
-                color: '#37373c',
-                fontSize: '14px',
-                lineHeight: '24px',
-                fontWeight: 300,
-                textAlign: 'center',
-                mb: 4,
-              }}
-            >¿Qué puedes hacer?
-
-            </Typography>
-            <ul>
-              <li>Reintentar tu transacción: Haz clic en el botón de abajo para intentar tu pago nuevamente.</li><br/>
-              <li>Agendar una nueva fecha: Si lo prefieres, puedes seleccionar otra fecha y hora para tu reserva.</li>
-            </ul> */}
           </Paper>
-        <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
-            sx={{
-              display: "flex",
-              justifyContent: "space-evenly",
-              alignItems: "center",
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: { xs: 2, md: 0 }
-            }}>
-              
-              {shoppingCartId && <Button
-            variant="contained"
-            size="large"
-            startIcon={
-              <Box
-                component="span"
-                sx={{
-                  mr: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '20px',
-                  height: '20px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(232, 26, 104, 0.1)',
-                  color: '#E81A68',
-                  '&::after': {
-                    content: '"\\276E"', // Carácter de flecha izquierda
-                    fontSize: '16px',
-                    lineHeight: 1,
-                  },
-                }}
-              />
-            }
-            sx={{
-              paddingX: 4,
-              paddingY: 1.5,
-              borderRadius: '24px',
-              background:"#FFFFFF",
-              color:"#E81A68",
-              border: "1px solid #E81A68",
-              width: { xs: '100%', md: 'auto' }
-            }}
-            // href="/agenda"
-            onClick={() => {
-              getRetry();              
-              trackEvent('reintentar_pago', 'AGENDA_EMA', 'volver a la pagina de reintento de pago')
-          
+          <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: { xs: 'column', md: 'row' },
+                gap: { xs: 2, md: 0 }
+              }}>
+                
+                {paymentData?.shoppingCartId && <Button
+              variant="contained"
+              size="large"
+              startIcon={
+                <Box
+                  component="span"
+                  sx={{
+                    mr: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(232, 26, 104, 0.1)',
+                    color: '#E81A68',
+                    '&::after': {
+                      content: '"\\276E"', // Carácter de flecha izquierda
+                      fontSize: '16px',
+                      lineHeight: 1,
+                    },
+                  }}
+                />
+              }
+              sx={{
+                paddingX: 4,
+                paddingY: 1.5,
+                borderRadius: '24px',
+                background:"#FFFFFF",
+                color:"#E81A68",
+                border: "1px solid #E81A68",
+                width: { xs: '100%', md: 'auto' }
+              }}
+              // href="/agenda"
+              onClick={() => {
+                getRetry();              
+                trackEvent('reintentar_pago', 'AGENDA_EMA', 'volver a la pagina de reintento de pago')
             
-            }}
-          >
-            Reintentar el pago de tu reserva
-          </Button>
-          
-          }
-          <Button
-            variant="contained"
-            size="large"
-            // startIcon={
-            //   <Box
-            //     component="span"
-            //     sx={{
-            //       mr: 1,
-            //       display: 'flex',
-            //       alignItems: 'center',
-            //       justifyContent: 'center',
-            //       width: '20px',
-            //       height: '20px',
-            //       borderRadius: '50%',
-            //       backgroundColor: 'rgba(232, 26, 104, 0.1)',
-            //       color: '#E81A68',
-            //       '&::after': {
-            //         content: '"\\276E"', // Carácter de flecha izquierda
-            //         fontSize: '16px',
-            //         lineHeight: 1,
-            //       },
-            //     }}
-            //   />
-            // }
-            sx={{
-              paddingX: 4,
-              paddingY: 1.5,
-              borderRadius: '24px',
-              background:"#FFFFFF",
-              color:"#E81A68",
-              border: "1px solid #E81A68",
-              width: { xs: '100%', md: 'auto' }
-            }}
-            href="/agenda"
-            onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
-          >
-            Agendar otra visita
-          </Button>
-        </Box>
-        <Box bgcolor="#f8fafc" width={"100%"} mt={8} 
-            sx={{
-              display: "flex",
-              justifyContent: "space-evenly",
-              alignItems: "center",
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: { xs: 2, md: 0 }
-            }}>
-          
-          <Button
-            variant="contained"
-            size="large"
-            component={Link}
-            startIcon={
-              <InfoIcon/>
+              
+              }}
+            >
+              Reintentar el pago de tu reserva
+            </Button>
+            
             }
-            sx={{
-              paddingX: 4,
-              paddingY: 1.5,
-              background:"#f8fafc",
-              color:"#E81A68",
-              width: { xs: '100%', md: 'auto' }
-            }}
-            href={`/soporte?glosa=${glosa}&total=${total}&order=${order}&email=${email}`}
-            onClick={() => trackEvent('crear_ticket_soporte', 'AGENDA_EMA', 'ir a la pagina de crear ticket de soporte') }
-          >
-            Crear un ticket de soporte
-          </Button>
-          
-          <Button
-            variant="contained"
-            size="large"
-            component={Link}
-            startIcon={
-              <PriceChangeIcon/>
-            }
-            sx={{
-              paddingX: 4,
-              paddingY: 1.5,
-              background:"#f8fafc",
-              color:"#E81A68",
-              width: { xs: '100%', md: 'auto' }
-            }}
-            href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
-            target='_blank'
-            onClick={() => trackEvent('simular_costo_instalacion', 'AGENDA_EMA', 'ir a la pagina de google Form para evaluar instalacion') }
-          >
-            Simular costo de instalación
-          </Button>
-          
-        </Box>
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                paddingX: 4,
+                paddingY: 1.5,
+                borderRadius: '24px',
+                background:"#FFFFFF",
+                color:"#E81A68",
+                border: "1px solid #E81A68",
+                width: { xs: '100%', md: 'auto' }
+              }}
+              href="/agenda"
+              onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
+            >
+              Agendar otra visita
+            </Button>
+          </Box>
+          <Box bgcolor="#f8fafc" width={"100%"} mt={8} 
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: { xs: 'column', md: 'row' },
+                gap: { xs: 2, md: 0 }
+              }}>
+            
+            <Button
+              variant="contained"
+              size="large"
+              component={Link}
+              startIcon={
+                <InfoIcon/>
+              }
+              sx={{
+                paddingX: 4,
+                paddingY: 1.5,
+                background:"#f8fafc",
+                color:"#E81A68",
+                width: { xs: '100%', md: 'auto' }
+              }}
+              href={`/soporte?glosa=${paymentData?.glosa}&total=${paymentData?.total}&order=${paymentData.order}&email=${paymentData.email}`}
+              onClick={() => trackEvent('crear_ticket_soporte', 'AGENDA_EMA', 'ir a la pagina de crear ticket de soporte') }
+            >
+              Crear un ticket de soporte
+            </Button>
+            
+            <Button
+              variant="contained"
+              size="large"
+              component={Link}
+              startIcon={
+                <PriceChangeIcon/>
+              }
+              sx={{
+                paddingX: 4,
+                paddingY: 1.5,
+                background:"#f8fafc",
+                color:"#E81A68",
+                width: { xs: '100%', md: 'auto' }
+              }}
+              href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
+              target='_blank'
+              onClick={() => trackEvent('simular_costo_instalacion', 'AGENDA_EMA', 'ir a la pagina de google Form para evaluar instalacion') }
+            >
+              Simular costo de instalación
+            </Button>
+            
+          </Box>
         </Container>
       </Box>
     </>

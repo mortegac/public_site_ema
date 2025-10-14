@@ -26,12 +26,15 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
     
         if (shoppingCartId) {
             
-            const { data: getShoppingCart, errors } = await client.models.ShoppingCart.list({ 
-                filter: { shoppingCartId: { eq: shoppingCartId } } 
+            // const { data: getShoppingCart, errors } = await client.models.ShoppingCart.list({ 
+            //     filter: { shoppingCartId: { eq: shoppingCartId } } 
+            // })
+            const { data: getShoppingCart, errors } = await client.models.ShoppingCart.get({ 
+                shoppingCartId: shoppingCartId
             });
             
-            const dataCustomer = await getShoppingCart[0].Customer();
-            const dataShoppingCartDetails = await getShoppingCart[0].ShoppingCartDetails();
+            const dataCustomer = await getShoppingCart?.Customer();
+            const dataShoppingCartDetails = await getShoppingCart?.ShoppingCartDetails();
 
           
             // console.log("--getShoppingCart--", getShoppingCart)
@@ -42,7 +45,7 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
             if (getShoppingCart) {
                 // console.log("--fecthShoppingCart--", getShoppingCart);
                 resolve({
-                  ...getShoppingCart[0],
+                  ...getShoppingCart,
                   addressCustomer: `
                   ${dataCustomer?.data?.address} 
                   ${dataCustomer?.data?.referenceAddress} 

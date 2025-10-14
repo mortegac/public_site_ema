@@ -44,7 +44,7 @@ import {fetchWebpayStart, WebpayStartResponse} from '@/store/Webpay/services';
 
 import { formatCurrency } from "@/utils/currency";
 
-export const SvgFailed = () => <div className="flex justify-center items-center flex-col">
+const SvgFailed = () => <div className="flex justify-center items-center flex-col">
     <svg width="143" height="143" viewBox="0 0 143 143" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M71.4987 137.042C107.696 137.042 137.04 107.698 137.04 71.5006C137.04 35.303 107.696 5.95898 71.4987 5.95898C35.301 5.95898 5.95703 35.303 5.95703 71.5006C5.95703 107.698 35.301 137.042 71.4987 137.042Z" fill="white" />
     <path fillRule="evenodd" clipRule="evenodd" d="M7.44922 71.4994C7.44922 36.1244 36.1263 7.44727 71.5013 7.44727C106.876 7.44727 135.554 36.1244 135.554 71.4994C135.554 106.874 106.876 135.552 71.5013 135.552C36.1263 135.552 7.44922 106.874 7.44922 71.4994ZM71.5013 16.3848C41.0624 16.3848 16.3868 41.0604 16.3868 71.4994C16.3868 101.938 41.0624 126.614 71.5013 126.614C101.94 126.614 126.616 101.938 126.616 71.4994C126.616 41.0604 101.94 16.3848 71.5013 16.3848Z" fill="#F4706E" />
@@ -56,17 +56,19 @@ export const SvgFailed = () => <div className="flex justify-center items-center 
 </div>
 
 
-interface RetryTransactionProps {
-  glosa: string;
-  total: string;
-  order: string;
-  // card: string;
-  // typePay: string;
-  email: string;
-  shoppingCartId: string | null;
-}
+// interface RetryTransactionProps {
+//   glosa: string;
+//   total: string;
+//   order: string;
+//   // card: string;
+//   // typePay: string;
+//   email: string;
+//   shoppingCartId: string | null;
+// }
 
-const RetryTransaction: React.FC<RetryTransactionProps> = () => {
+// const RetryTransaction: React.FC<RetryTransactionProps> = () => {
+  
+const RetryTransaction = () => {
   // { glosa, total, order, email, shoppingCartId }
   const theme = useTheme(); // Acceder al tema para los colores
   const router = useRouter();

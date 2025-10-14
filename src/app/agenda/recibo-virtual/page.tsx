@@ -37,7 +37,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 
 import { formatCurrency } from "@/utils/currency";
 
-export const SvgSuccess = (props: any) => {
+const SvgSuccess = (props: any) => {
   return (
     <div className="flex justify-center items-center flex-col">
       <svg

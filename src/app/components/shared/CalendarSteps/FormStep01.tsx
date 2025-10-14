@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import {
   Box,
   Stack,
@@ -13,6 +14,17 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
+import dayjs from "dayjs";
+import "dayjs/locale/es"; // Importa el idioma español
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+// Configurar los plugins de dayjs
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale("es"); // Configurar el idioma español
+
+
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { styled } from '@mui/material/styles';
@@ -88,6 +100,7 @@ const validationSchema = yup.object({
 });
 
 export const FormStep01 = (props:any) => {
+  const router = useRouter();
   const theme = useTheme(); // Acceder al tema para los colores
   // const { onChangeSetStore } = props;
   
@@ -103,6 +116,12 @@ export const FormStep01 = (props:any) => {
   const dispatch = useAppDispatch();
   const { trackEvent } = useAnalytics();
 
+  const toChileTime = (dateSchedule: any) => {
+    const { date, format = "HH:mm" } = dateSchedule;
+    const dateUTC = new Date(date);
+    return dayjs(dateUTC).tz("America/Santiago").format(format);
+  };
+  
   useEffect(() => {
     if (!customer?.phone) {
       formik.setFieldValue('phone', '+569');
@@ -154,7 +173,27 @@ export const FormStep01 = (props:any) => {
       } else if (submitButton === 'scheduleNotPay') {
         // alert("scheduleNotPay")
         trackEvent('agendar_visita_virtual', 'AGENDA_EMA', 'envio formulario visita fisica');
-        
+        const timeoutId = calendarVisits?.calendarId && setTimeout(() => {
+          // Preparar los datos para enviar
+          
+          const paymentData = {                    
+              email: calendarVisits?.customerId,
+              date: dayjs(calendarVisits?.startDate).format("D [de] MMMM"),
+              hour: toChileTime({ date: calendarVisits?.startDate }),
+              address: `${customer?.address}, ${customer?.city}` || "",
+              phone: customer?.phone,
+          };
+          
+          console.log("---paymentData---", paymentData)
+          // Guardar en sessionStorage
+          sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+          
+          // Redirigir según el estado
+          router.push('/agenda/recibo-virtual');
+          
+      }, 3000);
+      
+      
         Promise.all([
           await dispatch(setLoading()),
           await dispatch(
@@ -170,7 +209,11 @@ export const FormStep01 = (props:any) => {
               calendarId: calendarVisits?.calendarId,
           })),
           
-          dispatch(setStep(3)), // Ir al paso de visita virtual
+          // dispatch(setStep(3)), // Ir al paso de visita virtual
+          // Redirect a la página de conversion
+          clearTimeout(timeoutId)
+
+          
         ]);
         
         

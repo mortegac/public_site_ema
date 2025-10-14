@@ -133,6 +133,7 @@ export const fetchWebpayStatus= async (objFilter: webpayInput) => {
               message
               buy_order
               email
+              shoppingCartId
               amount
               card_number
               payment_type_code

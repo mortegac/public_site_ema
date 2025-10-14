@@ -120,22 +120,32 @@ const ReturnPage = () => {
                   
                   
                   
-                  const statusResponse = await fetchWebpayStatus({ token:token });
+                  const statusResponse:any = await fetchWebpayStatus({ token:token });
                   console.log("---statusResponse-fetchWebpayStatus--", statusResponse)
                   if (!statusResponse || !statusResponse.status) {
                       throw new Error('Error en getWPStatus o respuesta inválida');
                   }
     
-                  setResTransaction(prev => ({
-                      ...prev,
-                      status: statusResponse?.status,
-                      glosa: statusResponse?.glosa,
-                      total: statusResponse?.amount,
-                      order: statusResponse?.buy_order,
-                      card: statusResponse?.card_number,
-                      typePay: statusResponse?.payment_type_code,
-                      to_email: statusResponse?.email,
-                  }));
+                //   setResTransaction(({
+                //       ...resTransaction,
+                //       status: statusResponse?.status,
+                //       glosa: statusResponse?.glosa,
+                //       total: statusResponse?.amount,
+                //       order: statusResponse?.buy_order,
+                //       card: statusResponse?.card_number,
+                //       typePay: statusResponse?.payment_type_code,
+                //       to_email: statusResponse?.email,
+                //   }));
+                //   setResTransaction(prev => ({
+                //       ...prev,
+                //       status: statusResponse?.status,
+                //       glosa: statusResponse?.glosa,
+                //       total: statusResponse?.amount,
+                //       order: statusResponse?.buy_order,
+                //       card: statusResponse?.card_number,
+                //       typePay: statusResponse?.payment_type_code,
+                //       to_email: statusResponse?.email,
+                //   }));
                   
                   if (commitResponse?.status === "AUTHORIZED" ) {
                       const objEmail = {
@@ -149,7 +159,18 @@ const ReturnPage = () => {
       
                       await sendEmail({ ...objEmail })
                   }           
-                setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_APPROVED"})
+                setResTransaction({ 
+                    ...resTransaction , 
+                    token_ws: token,
+                    tbk_token: tbkToken,
+                    total: statusResponse?.amount,
+                    order: statusResponse?.buy_order,
+                    card: statusResponse?.card_number,
+                    typePay: statusResponse?.payment_type_code,
+                    to_email: statusResponse?.email,
+                    glosa: statusResponse?.glosa,
+                    shoppingCartId: statusResponse?.shoppingCartId,
+                    statusRedirect: "PAYMENT_APPROVED"})
                 return true;
               }
               
@@ -165,15 +186,27 @@ const ReturnPage = () => {
                       status:""
                   }));
     
-                  const statusResponse = await fetchWebpayStatus({ token:tbkToken });
+                  const statusResponse:any = await fetchWebpayStatus({ token:tbkToken });
                   if (statusResponse?.status) {
-                      setResTransaction(prev => ({
-                          ...prev,
-                          status: statusResponse.status
-                      }));
+                    //   setResTransaction(prev => ({
+                    //       ...prev,
+                    //       status: statusResponse.status
+                    //   }));
+                    setResTransaction({ 
+                        ...resTransaction , 
+                        token_ws: token,
+                        tbk_token: tbkToken,
+                        total: statusResponse?.amount,
+                        order: statusResponse?.buy_order,
+                        card: statusResponse?.card_number,
+                        typePay: statusResponse?.payment_type_code,
+                        to_email: statusResponse?.email,
+                        glosa: statusResponse?.glosa,
+                        shoppingCartId: statusResponse?.shoppingCartId,
+                        statusRedirect: "PAYMENT_REJECTED"})
                   }
                   
-                  setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
+                //   setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
                   return true;
               }
               
@@ -191,25 +224,39 @@ const ReturnPage = () => {
                   // const statusResponse = await getWPStatus(tbkToken);
                   // getWebpayStart
                   
-                  const statusResponse = await fetchWebpayStatus({ token:tbkToken });
+                  const statusResponse:any = await fetchWebpayStatus({ token:tbkToken });
                   // const statusResponse = await fetchWPStatus(tbkToken);
                   if (statusResponse?.status) {
                     //   setResTransaction(prev => ({
                     //       ...prev,
                     //       status: statusResponse.status
                     //   }));
-                    setResTransaction(prev => ({
-                        ...prev,
-                        status: statusResponse.status,
-                        glosa: statusResponse?.glosa,
+                    // setResTransaction(prev => ({
+                    //     ...prev,
+                    //     status: statusResponse.status,
+                    //     glosa: statusResponse?.glosa,
+                    //     total: statusResponse?.amount,
+                    //     order: statusResponse?.buy_order,
+                    //     card: statusResponse?.card_number,
+                    //     typePay: statusResponse?.payment_type_code,
+                    //     to_email: statusResponse?.email,
+                    // }));
+                    setResTransaction({ 
+                        ...resTransaction , 
+                        token_ws: token,
+                        tbk_token: tbkToken,
                         total: statusResponse?.amount,
                         order: statusResponse?.buy_order,
                         card: statusResponse?.card_number,
                         typePay: statusResponse?.payment_type_code,
                         to_email: statusResponse?.email,
-                    }));
+                        glosa: statusResponse?.glosa,
+                        shoppingCartId: statusResponse?.shoppingCartId,
+                        statusRedirect: "PAYMENT_REJECTED"})
+                  
+                  
                   }
-                  setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
+                //   setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
                   return true;
               }
               
@@ -225,19 +272,31 @@ const ReturnPage = () => {
                   }));
     
                   // const statusResponse = await getWPStatus(token);
-                  const statusResponse = await fetchWebpayStatus({ token:tbkToken });
+                  const statusResponse:any = await fetchWebpayStatus({ token:tbkToken });
                   if (statusResponse?.status) {
-                      setResTransaction(prev => ({
-                          ...prev,
-                          status: statusResponse.status
-                      }));
+                    //   setResTransaction(prev => ({
+                    //       ...prev,
+                    //       status: statusResponse.status
+                    //   }));
+                    setResTransaction({ 
+                        ...resTransaction , 
+                        token_ws: token,
+                        tbk_token: tbkToken,
+                        total: statusResponse?.amount,
+                        order: statusResponse?.buy_order,
+                        card: statusResponse?.card_number,
+                        typePay: statusResponse?.payment_type_code,
+                        to_email: statusResponse?.email,
+                        glosa: statusResponse?.glosa,
+                        shoppingCartId: statusResponse?.shoppingCartId,
+                        statusRedirect: "PAYMENT_REJECTED"})
                   }
-                  setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
+                //   setResTransaction({ ...resTransaction , statusRedirect: "PAYMENT_REJECTED"})
                   return true;
               }
     
               
-              return false;
+            //   return false;
           } catch (error) {
               console.log('Error en la validación:', error);
               setResTransaction(prev => ({
@@ -246,15 +305,33 @@ const ReturnPage = () => {
                   msg: "Error en la validación del pago",
                   status: "ERROR"  // Agregamos un status de error
               }));
-              const statusResponse = await fetchWebpayStatus({ token:tbkToken });
+              const statusResponse:any = await fetchWebpayStatus({ token:tbkToken });
               if (statusResponse?.status) {
-                  setResTransaction(prev => ({
-                      ...prev,
-                      status: statusResponse.status
-                  }));
+                //   setResTransaction(prev => ({
+                //       ...prev,
+                //       status: statusResponse.status
+                //   }));
+                setResTransaction({ 
+                    ...resTransaction , 
+                    token_ws: token,
+                    tbk_token: tbkToken,
+                    total: statusResponse?.amount,
+                    order: statusResponse?.buy_order,
+                    card: statusResponse?.card_number,
+                    typePay: statusResponse?.payment_type_code,
+                    to_email: statusResponse?.email,
+                    glosa: statusResponse?.glosa,
+                    shoppingCartId: statusResponse?.shoppingCartId,
+                    statusRedirect: "PAYMENT_REJECTED"})
               }
               return false;
           }
+          
+          tbkToken && getTransaction(String(tbkToken))
+          token && getTransaction(String(token))
+          
+          return false;
+          
       };
 
       
@@ -286,7 +363,7 @@ const ReturnPage = () => {
     }, []);
     
     
-    const getTransaction = async () => await dispatch(getPaymentTransaction({ token: String(resTransaction?.tbk_token)}));
+    const getTransaction = async (token:string) => await dispatch(getPaymentTransaction({ token }));
     // const getTransaction = async () => await dispatch(getPaymentTransaction({ token: String(resTransaction?.token_ws)}));
     
     // const getRetry = async () => await dispatch(getWebpayStart({ 
@@ -303,14 +380,14 @@ const ReturnPage = () => {
  }, [handleValidation]); 
  
  
-    useEffect(() => {
-        // resTransaction?.tbk_token && 
-        // resTransaction?.token_ws && 
-        // resTransaction?.token_ws !== "" && 
-        resTransaction?.tbk_token && getTransaction()
-        resTransaction?.token_ws && getTransaction()
+//     useEffect(() => {
+//         // resTransaction?.tbk_token && 
+//         // resTransaction?.token_ws && 
+//         // resTransaction?.token_ws !== "" && 
+//         resTransaction?.tbk_token && getTransaction(String(resTransaction?.tbk_token))
+//         resTransaction?.token_ws && getTransaction(String(resTransaction?.tbk_token))
         
- }, [resTransaction]); 
+//  }, [resTransaction]); 
  
     // Nuevo useEffect para manejar la redirección
     // useEffect(() => {
@@ -332,33 +409,62 @@ const ReturnPage = () => {
     
     // Nuevo useEffect para manejar el timeout de 30 segundos y redirección sin parámetros
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
+        
+        console.log("----paymentTransaction?.shoppingCartId---", paymentTransaction?.shoppingCartId)
+        
+        const timeoutId = resTransaction?.shoppingCartId && setTimeout(() => {
             // Preparar los datos para enviar
+            
             const paymentData = {                    
-                glosa: paymentTransaction?.glosa,
-                order: resTransaction?.order,
+                glosa: resTransaction?.glosa,
                 
-                total: paymentTransaction?.amount,
-                email: paymentTransaction?.usersPaymentTransactionsId,
-                shoppingCartId: paymentTransaction?.shoppingCartId || null,
+                total: resTransaction?.total,
+                shoppingCartId: resTransaction?.shoppingCartId || null,
                 // Agregar estos si son necesarios para recibo-pago
+                order: resTransaction?.order,
                 card: resTransaction?.card,
                 typePay: resTransaction?.typePay,
+                email: resTransaction?.to_email,
             };
+            // const paymentData = {                    
+            //     glosa: paymentTransaction?.glosa,
+                
+            //     total: paymentTransaction?.amount,
+            //     shoppingCartId: paymentTransaction?.shoppingCartId || null,
+            //     // Agregar estos si son necesarios para recibo-pago
+            //     order: resTransaction?.order,
+            //     card: resTransaction?.card,
+            //     typePay: resTransaction?.typePay,
+            //     email: paymentTransaction?.usersPaymentTransactionsId,
+            // };
             
+            console.log("---paymentData---", paymentData)
             // Guardar en sessionStorage
             sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
             
             // Redirigir según el estado
             if (resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
+                console.log("----REDIRECT--- /agenda/recibo-pago")
+                
                 router.push('/agenda/recibo-pago');
+                
             } else if (resTransaction?.statusRedirect === "PAYMENT_REJECTED") {
+                console.log("----REDIRECT--- /agenda/rechazo-pago")
+                
                 router.push('/agenda/rechazo-pago');
             }
-        }, 6000);
+        }, 3000);
 
         return () => clearTimeout(timeoutId);
+    // }, [paymentTransaction, router]);
     }, [resTransaction?.statusRedirect, resTransaction?.glosa, resTransaction?.total, resTransaction?.order, resTransaction?.to_email, resTransaction?.card, resTransaction?.typePay, paymentTransaction?.shoppingCartId, router]);
+    
+    // funel de ventas 
+    // y atrae y finalziaa nuevos clientes 
+    
+    // http://localhost:3000/return?TBK_TOKEN=1131653f49ea357ae10804c04d295d9b132044d17557a1fc30f424746a3823d0
+    // http://localhost:3000/return?token_ws=1131653f49ea357ae10804c04d295d9b132044d17557a1fc30f424746a3823d0
+    
     
     // useEffect(() => {
     //     // Verificar si no hay parámetros en la URL
@@ -399,7 +505,9 @@ const ReturnPage = () => {
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
       <HpHeader />
       {/* <pre>paymentTransaction = {JSON.stringify(paymentTransaction, null, 2 )}</pre>
-      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre>  */}
+      <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre>   */}
+      {/* 
+      */}
       {/* 
       */}
       <div 

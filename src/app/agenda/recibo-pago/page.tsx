@@ -54,6 +54,11 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
       sessionStorage.removeItem('paymentData');
     }
   }, []);
+  
+  
+
+
+  
 
   return (
     <Box
@@ -291,44 +296,7 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
           </Button>
           
           }
-          <Button
-            variant="contained"
-            size="large"
-            // startIcon={
-            //   <Box
-            //     component="span"
-            //     sx={{
-            //       mr: 1,
-            //       display: 'flex',
-            //       alignItems: 'center',
-            //       justifyContent: 'center',
-            //       width: '20px',
-            //       height: '20px',
-            //       borderRadius: '50%',
-            //       backgroundColor: 'rgba(232, 26, 104, 0.1)',
-            //       color: '#E81A68',
-            //       '&::after': {
-            //         content: '"\\276E"', // Carácter de flecha izquierda
-            //         fontSize: '16px',
-            //         lineHeight: 1,
-            //       },
-            //     }}
-            //   />
-            // }
-            sx={{
-              paddingX: 4,
-              paddingY: 1.5,
-              borderRadius: '24px',
-              background:"#FFFFFF",
-              color:"#E81A68",
-              border: "1px solid #E81A68",
-              width: { xs: '100%', md: 'auto' }
-            }}
-            href="/agenda"
-            onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
-          >
-            Agendar otra visita
-          </Button>
+         
         </Box>
         
       <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
@@ -339,7 +307,7 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
           flexDirection: { xs: 'column', md: 'row' },
           gap: { xs: 2, md: 0 }
         }}>
-        <Button
+        {/* <Button
           variant="contained"
           size="large"
           sx={{
@@ -355,8 +323,26 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
         //   onClick={() => dispatch(setStep(0))}
         >
           Agendar otra visita
-        </Button>
+        </Button> */}
         
+        <Button
+            variant="contained"
+            size="large"
+            sx={{
+              paddingX: 4,
+              paddingY: 1.5,
+              borderRadius: '24px',
+              background:"#FFFFFF",
+              color:"#E81A68",
+              border: "1px solid #E81A68",
+              width: { xs: '100%', md: 'auto' }
+            }}
+            href="/agenda"
+            onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
+          >
+            Agendar otra visita
+          </Button>
+          
         <Button
           variant="contained"
           type="submit"

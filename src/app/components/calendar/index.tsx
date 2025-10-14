@@ -422,7 +422,7 @@ export default function BookingCalendar() {
                     
                     {environment === 'PROD' && `Instalador ${++index}` }
                     
-                    <p>{installer?.userId.split('@')[0].toUpperCase()}</p>
+                    {/* <p>{installer?.userId.split('@')[0].toUpperCase()}</p> */}
                     
                     {/* {environment !== 'PROD' && installer.userId.split('@')[0] || installer.userId } */}
                        {/* {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}

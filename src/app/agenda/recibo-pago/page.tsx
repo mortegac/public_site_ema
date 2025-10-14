@@ -20,22 +20,24 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import {SvgSuccess} from "./SvgSuccess";
 import { formatCurrency } from "@/utils/currency";
 
-interface InvoiceProps {
-  glosa: string;
-  total: string;
-  order: string;
-  card: string;
-  typePay: string;
-  email: string;
-}
+// interface InvoiceProps {
+//   glosa: string;
+//   total: string;
+//   order: string;
+//   card: string;
+//   typePay: string;
+//   email: string;
+// }
 
-const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, email }) => {
+// const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, email, shoppingCartId }) => {
+const Invoice = () => {
+  
     const theme = useTheme(); // Acceder al tema para los colores
     const { trackEvent } = useAnalytics();
     trackEvent('exito_pago', 'AGENDA_EMA', 'pago existoso desde webpay')
 
   // AGREGAR ESTO AL INICIO DEL COMPONENTE
-  const [paymentData, setPaymentData] = useState({ glosa, total, order, card, typePay, email });
+  const [paymentData, setPaymentData] = useState({ glosa:"", total:"", order:"", card:"", typePay:"", email:"", shoppingCartId:"" });
   
   useEffect(() => {
     // Recuperar datos de sessionStorage si existen
@@ -43,12 +45,13 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
     if (storedData) {
       const data = JSON.parse(storedData);
       setPaymentData({
-        glosa: data.glosa || glosa,
-        total: data.total || total,
-        order: data.order || order,
-        card: data.card || card,
-        typePay: data.typePay || typePay,
-        email: data.email || email,
+        glosa: data.glosa || "",
+        total: data.total || "",
+        order: data.order || "",
+        card: data.card || "",
+        typePay: data.typePay ||"",
+        email: data.email || "",
+        shoppingCartId: data.shoppingCartId || "",
       });
       // Limpiar sessionStorage después de leer
       sessionStorage.removeItem('paymentData');
@@ -79,7 +82,7 @@ const Invoice: React.FC<InvoiceProps> = ({ glosa, total, order, card, typePay, e
         }}
       >
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <SvgSuccess email={email} />
+          <SvgSuccess email={paymentData?.email} />
         </Box>
 
         <Paper

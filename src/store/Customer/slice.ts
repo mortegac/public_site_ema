@@ -76,7 +76,9 @@ const customerSlice = createSlice({
       .addCase(setCustomer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar el customer';
-        state.customer={...emptyCustomer}
+        const data:any = action?.payload
+        state.customer={ ...data || emptyCustomer }
+        // state.customer={...emptyCustomer}
       })
       
     // getCustomer

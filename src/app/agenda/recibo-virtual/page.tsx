@@ -145,7 +145,7 @@ export default function FormResumeVirtual() {
         hasData: true,
       });
       // Limpiar sessionStorage después de leer
-      sessionStorage.removeItem('paymentData');
+      // sessionStorage.removeItem('paymentData');
     }else{
       setPaymentData({
         ...paymentData,

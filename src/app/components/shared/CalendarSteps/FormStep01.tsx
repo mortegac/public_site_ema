@@ -111,7 +111,13 @@ export const FormStep01 = (props:any) => {
   const [submitButton, setSubmitButton] = useState<string>('');
   
   const {  customer, existCustomer } = useAppSelector(selectCustomer);
-  const { installerId, calendarVisits, status } = useAppSelector(selectCalendarVisits);
+  const { installerId, calendarVisits, calendarVisit, status } = useAppSelector(selectCalendarVisits);
+
+  // Filtrar el calendario específico del array calendarVisits.data
+  let selectedCalendar:any = calendarVisits
+  selectedCalendar = selectedCalendar?.data?.find(
+    (calendar: any) => calendar.calendarId === calendarVisits.calendarId
+  );
   
   const dispatch = useAppDispatch();
   const { trackEvent } = useAnalytics();
@@ -145,6 +151,30 @@ export const FormStep01 = (props:any) => {
 
     onSubmit: async (values:any) => {
 
+      const timeoutId = selectedCalendar?.calendarId && setTimeout(() => {
+        // Preparar los datos para enviar
+        // const dateSchedule:string = calendarVisit?.startDate || ""
+        const paymentData = {                    
+            email: customer?.customerId,
+            date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM"),
+            hour: toChileTime({ date: selectedCalendar?.startDate }),
+            address: `${customer?.address}, ${customer?.city}` || "",
+            phone: customer?.phone,
+        };
+        
+        console.log("---calendarVisit---", calendarVisit)
+        console.log("---customer---", customer)
+        
+        console.log("---paymentData---", paymentData)
+        // Guardar en sessionStorage
+        sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+        
+        // Redirigir según el estado
+        router.push('/agenda/recibo-virtual');
+        
+      }, 3000);
+      
+      
       // setLoadingPage(true)
       if (submitButton === 'schedule') {
         // alert("schedule")
@@ -161,10 +191,10 @@ export const FormStep01 = (props:any) => {
             })
           ),
           customer?.customerId && 
-          calendarVisits?.calendarId && 
+          selectedCalendar?.calendarId && 
             await dispatch(setCalendarVisits({
               customerId: customer?.customerId,
-              calendarId: calendarVisits?.calendarId,
+              calendarId: selectedCalendar?.calendarId,
             })),
           
           dispatch(setStep(2)), // Ir al paso de pago
@@ -172,26 +202,10 @@ export const FormStep01 = (props:any) => {
       
       } else if (submitButton === 'scheduleNotPay') {
         // alert("scheduleNotPay")
+        console.log("---calendarVisits---", calendarVisits)
+        
         trackEvent('agendar_visita_virtual', 'AGENDA_EMA', 'envio formulario visita fisica');
-        const timeoutId = calendarVisits?.calendarId && setTimeout(() => {
-          // Preparar los datos para enviar
-          
-          const paymentData = {                    
-              email: calendarVisits?.customerId,
-              date: dayjs(calendarVisits?.startDate).format("D [de] MMMM"),
-              hour: toChileTime({ date: calendarVisits?.startDate }),
-              address: `${customer?.address}, ${customer?.city}` || "",
-              phone: customer?.phone,
-          };
-          
-          console.log("---paymentData---", paymentData)
-          // Guardar en sessionStorage
-          sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-          
-          // Redirigir según el estado
-          router.push('/agenda/recibo-virtual');
-          
-      }, 3000);
+    
       
       
         Promise.all([
@@ -203,19 +217,22 @@ export const FormStep01 = (props:any) => {
             })
           ),
           customer?.customerId && 
-          calendarVisits?.calendarId && 
+          selectedCalendar?.calendarId && 
           await dispatch(setCalendarNotPay({
               customerId: customer?.customerId,
-              calendarId: calendarVisits?.calendarId,
+              calendarId: selectedCalendar?.calendarId,
           })),
-          
+          clearTimeout(timeoutId)
           // dispatch(setStep(3)), // Ir al paso de visita virtual
           // Redirect a la página de conversion
-          clearTimeout(timeoutId)
-
+          
           
         ]);
+        console.log("---calendarVisit---", calendarVisit)
         
+      
+      
+       
         
       }
       
@@ -261,7 +278,8 @@ export const FormStep01 = (props:any) => {
   
   return (
     <>
-    {/* <pre>existCustomer = {JSON.stringify(existCustomer, null, 2 )}</pre> */}
+    {/* <pre>selectedCalendar = {JSON.stringify(selectedCalendar, null, 2 )}</pre> */}
+    {/* <pre>calendarVisits = {JSON.stringify(calendarVisits, null, 2 )}</pre> */}
     <Box sx={{ p: { xs: 0, md: 2 } }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Typography
@@ -555,7 +573,7 @@ export const FormStep01 = (props:any) => {
                       <Box id="box-check01" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", marginTop:"14px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
                           <Box sx={{ width: { xs: "15%", md: "10%" }, display: "flex", justifyContent: "center", alignItems: "center" }}>
                            <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: "10px" }}>
-                             <path fill-rule="evenodd" clip-rule="evenodd" d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z" fill="#21D57B"/>
+                             <path fillRule="evenodd" clipRule="evenodd" d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z" fill="#21D57B"/>
                            </svg>
 
                           </Box>
@@ -575,7 +593,7 @@ export const FormStep01 = (props:any) => {
                       <Box id="box-check02" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex" , marginTop:"14px", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"20px" }}>
                           <Box sx={{ width: { xs: "15%", md: "10%" }, display: "flex", justifyContent: "center", alignItems: "center" }}>
                            <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: "10px" }}>
-                             <path fill-rule="evenodd" clip-rule="evenodd" d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z" fill="#21D57B"/>
+                             <path fillRule="evenodd" clipRule="evenodd" d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z" fill="#21D57B"/>
                            </svg>
 
                           </Box>

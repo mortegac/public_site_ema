@@ -13,6 +13,7 @@ interface CalendarVisitsSliceState {
   statusCalendar: "idle" | "loading" | "failed" | string;
   installerId: string;
   lastScheduleInstallers: any;
+  calendarVisit: CalendarVisit;
   calendarVisits: CalendarVisit;
   loading: boolean;
   error: string | null;
@@ -27,6 +28,7 @@ const initialState: CalendarVisitsSliceState = {
   statusCalendar: "loading",
   installerId: "",
   lastScheduleInstallers: [],
+  calendarVisit: emptyCalendarVisit,
   calendarVisits: emptyCalendarVisit,
   loading: false,
   error: null,
@@ -299,7 +301,7 @@ const calendarVisitsSlice = createSlice({
         state.status = "idle";
         state.loading = false;
         // console.log(">>> setCalendarNotPay >> action.payload >>", action.payload.data)
-        // state.calendarVisits = action?.payload
+        state.calendarVisit = action?.payload
         // state.message = action?.payload?.message
         // state.cartId = action?.payload?.cartId
         //  "message": "visita agendada exitosamente",

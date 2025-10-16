@@ -151,28 +151,7 @@ export const FormStep01 = (props:any) => {
 
     onSubmit: async (values:any) => {
 
-      const timeoutId = selectedCalendar?.calendarId && setTimeout(() => {
-        // Preparar los datos para enviar
-        // const dateSchedule:string = calendarVisit?.startDate || ""
-        const paymentData = {                    
-            email: customer?.customerId,
-            date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM"),
-            hour: toChileTime({ date: selectedCalendar?.startDate }),
-            address: `${customer?.address}, ${customer?.city}` || "",
-            phone: customer?.phone,
-        };
-        
-        console.log("---calendarVisit---", calendarVisit)
-        console.log("---customer---", customer)
-        
-        console.log("---paymentData---", paymentData)
-        // Guardar en sessionStorage
-        sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-        
-        // Redirigir según el estado
-        router.push('/agenda/recibo-virtual');
-        
-      }, 3000);
+
       
       
       // setLoadingPage(true)
@@ -206,7 +185,28 @@ export const FormStep01 = (props:any) => {
         
         trackEvent('agendar_visita_virtual', 'AGENDA_EMA', 'envio formulario visita fisica');
     
-      
+        const timeoutId = selectedCalendar?.calendarId && setTimeout(() => {
+          // Preparar los datos para enviar
+          // const dateSchedule:string = calendarVisit?.startDate || ""
+          const paymentData = {                    
+              email: customer?.customerId,
+              date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM"),
+              hour: toChileTime({ date: selectedCalendar?.startDate }),
+              address: `${customer?.address}, ${customer?.city}` || "",
+              phone: customer?.phone,
+          };
+          
+          console.log("---calendarVisit---", calendarVisit)
+          console.log("---customer---", customer)
+          
+          console.log("---paymentData---", paymentData)
+          // Guardar en sessionStorage
+          sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+          
+          // Redirigir según el estado
+          router.push('/agenda/recibo-virtual');
+          
+        }, 3000);
       
         Promise.all([
           await dispatch(setLoading()),

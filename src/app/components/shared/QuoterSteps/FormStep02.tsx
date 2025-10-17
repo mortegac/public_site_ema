@@ -141,7 +141,7 @@ export const FormStep02 = (props:any) => {
 
   return (  
     <>
-    <pre>currentForm.formId = {JSON.stringify(currentForm.formId, null, 2)}</pre>
+    {/* <pre>currentForm.formId = {JSON.stringify(currentForm.formId, null, 2)}</pre> */}
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 
@@ -461,7 +461,7 @@ export const FormStep02 = (props:any) => {
         </Button>
         
       </Box>
-      <pre>{JSON.stringify(currentForm, null, 2 )}</pre>
+      {/* <pre>{JSON.stringify(currentForm, null, 2 )}</pre> */}
     </>      
   );
 };

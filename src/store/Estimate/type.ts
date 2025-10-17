@@ -28,6 +28,7 @@ export type Estimate = {
   isHouse?: boolean;
   chargerPotence?: number;
   numberOfChargers?: number;
+  distance?: number;
   distanceExposed?: number;
   distanceUnderground?: number;
   preChanneledDistance?: number;
@@ -75,6 +76,7 @@ export const emptyEstimate: Estimate = {
   isHouse: false,
   chargerPotence: 0,
   numberOfChargers: 0,
+  distance: 0,
   distanceExposed: 0,
   distanceUnderground: 0,
   preChanneledDistance: 0,

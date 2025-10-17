@@ -410,7 +410,7 @@ const ReturnPage = () => {
     // Nuevo useEffect para manejar el timeout de 30 segundos y redirección sin parámetros
     useEffect(() => {
         
-        console.log("----paymentTransaction?.shoppingCartId---", paymentTransaction?.shoppingCartId)
+        // console.log("----paymentTransaction?.shoppingCartId---", paymentTransaction?.shoppingCartId)
         
         const timeoutId = resTransaction?.shoppingCartId && setTimeout(() => {
             // Preparar los datos para enviar

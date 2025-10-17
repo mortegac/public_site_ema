@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Stack,
@@ -23,10 +23,16 @@ import TableRow from '@mui/material/TableRow';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectEstimate } from "@/store/Estimate/slice";
+import { sendEmail } from "@/store/Estimate/services";
 import { setStep, cleanData, selectClientForms } from "@/store/ClientForms/slice";
 
 export const FormStep04 = (props:any) => {
-  const [submitButton, setSubmitButton] = useState('');
+  const [sendEMailBox, setSendEMailBox] = useState({
+    msg:"",
+    hasSent: false
+  });
+  const hasEmailBeenSent = useRef(false);
+  
   const { 
     estimate,
     estimateData,
@@ -39,9 +45,67 @@ export const FormStep04 = (props:any) => {
   const borderColor = theme.palette.divider;
   
   
-  function sendEmail(){
+  async function sendEmailResume(){
+    // Validar que exista estimateData antes de enviar
+    if (!estimateData) {
+      console.warn('No se puede enviar email: estimateData no existe');
+      return;
+    }
     
+    console.log('Enviando email con resumen de estimación:', {
+      estimateData,
+      currentForm,
+      email: currentForm?.email
+    });
+    const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
+    // estimateData
+    const objEmail = {
+          "materiales_35": estimateData?.materialsCost?.toLocaleString(),
+          "materiales_7": estimateData?.materialsCost?.toLocaleString(),
+          "instalacion_35": estimateData?.installationCost?.toLocaleString(),
+          "instalacion_7": estimateData?.installationCost?.toLocaleString(),
+          "SEC_35": estimateData?.SECCost?.toLocaleString(),
+          "SEC_7": estimateData?.SECCost?.toLocaleString(),
+          "cargador_35": "0",
+          "cargador_7": "0",
+          "neto_35": `$ ${estimateData?.netPrice?.toLocaleString()}`,
+          "neto_7": `$ ${estimateData?.netPrice?.toLocaleString()}`,
+          "iva_35": `$ ${estimateData?.VAT?.toLocaleString()}`,
+          "iva_7": `$ ${estimateData?.VAT?.toLocaleString()}`,
+          "bruto_35": `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+          "bruto_7": `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+          "mts": `${currentForm?.distance} mts`,
+          "typeOfResidence": typeOfResidence,
+          "email": currentForm?.email,
+          "name": currentForm?.email,
+    }
+
+    const sendEMail: boolean = await sendEmail({ ...objEmail })
+    sendEMail && setSendEMailBox({
+      msg:`Email enviado a ${currentForm?.email}`,
+      hasSent:true
+    })
+    
+    !sendEMail && setSendEMailBox({
+      msg:`Se produjo un error al enviar el Email a ${currentForm?.email}`,
+      hasSent:false
+    })
+    
+    // Marcar como enviado usando ref para persistir entre renders
+    hasEmailBeenSent.current = true;
   }
+  
+  useEffect(() => {
+    // Solo ejecutar si:
+    // 1. El status es "idle" (datos cargados)
+    // 2. Existe estimateData
+    // 3. No se ha enviado previamente el email
+    if (status === "idle" && estimateData && !hasEmailBeenSent.current) {
+      sendEmailResume();
+    }
+  }, [status, estimateData]);
+  
+  
   // useEffect(() => {
   //   if (estimate?.estimateId === "") {
   //     Promise.all([
@@ -52,8 +116,11 @@ export const FormStep04 = (props:any) => {
   // }, [estimate?.estimateId, dispatch]);
   
   {/* <pre>{JSON.stringify(estimate, null, 2 )}</pre> */}
+  
   return (
     <> 
+     
+      
       <Box bgcolor="#ffffff" pt={7} pb={7}>
         <Container
           sx={{
@@ -62,6 +129,31 @@ export const FormStep04 = (props:any) => {
           }}
         >
           
+          { sendEMailBox?.hasSent &&
+      <Box 
+        id="boxAlert" 
+        sx={{
+          // width: '90vw',
+          backgroundColor: '#4CAF50',
+          color: '#ffffff',
+          padding: '16px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // position: 'relative',
+          // left: '50%',
+          // right: '50%',
+          marginLeft: '-50vw',
+          marginRight: '-50vw',
+          marginTop:"0",
+          marginBottom:"20px",
+        }}
+      >
+        <Typography variant="h3" fontWeight={500}>
+          { sendEMailBox?.msg}
+        </Typography>
+      </Box>
+      }
           <Typography
                 variant="h1"
                 fontWeight={700}
@@ -286,7 +378,7 @@ export const FormStep04 = (props:any) => {
                   Incluye tablero, canalización sobrepuesta y cableado para cargador de acuerdo con la potencia escogida.
                 </p>
                 <p className="text-gray-700">
-                  Se estima para una distancia de <b>{estimate?.distanceExposed?.toLocaleString()} mts </b> de cableado entre el tablero eléctrico y el estacionamiento.
+                  Se estima para una distancia de <b>{currentForm?.distance} mts </b> de cableado entre el tablero eléctrico y el estacionamiento.
                 </p>
                 <p className="text-gray-700">
                   Considera declaración TE6 y medición de puesta a tierra. (Ítem trámites SEC).
@@ -353,7 +445,7 @@ export const FormStep04 = (props:any) => {
           variant="contained"
           type="submit"
           size="large"
-          onClick={() => sendEmail()}
+          onClick={() => sendEmailResume()}
           sx={{
             paddingX: 4,
             paddingY: 1.5,

@@ -108,8 +108,8 @@ const QuoterSteps = (props:any) => {
             <FormStep 
               onChangeSetStore={onChangeSetStore}
             />
-            <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre>
-            <pre>{JSON.stringify(currentForm, null, 2)}</pre>
+            {/* <pre>STEP = {JSON.stringify(currentStep, null, 2)}</pre> */}
+            {/* <pre>{JSON.stringify(currentForm, null, 2)}</pre> */}
       </Container>
     </Box>
   );

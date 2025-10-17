@@ -84,7 +84,7 @@ export const FormStep01 = (props:any) => {
     // currentForm,
     currentForm
   } = useAppSelector(selectClientForms);
-  const {  customer, existCustomer } = useAppSelector(selectCustomer);
+  const {  customer, existCustomer } = useAppSelector(selectCustomer); 
   const dispatch = useAppDispatch();
   
   const UUID = useId();

@@ -3,6 +3,8 @@ import * as MAIN from "../../../amplify/data/main.schema";
 import { clientFormInput } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
 
+
+
 // Configurar Amplify con la configuración del entorno correspondiente
 configureAmplify();
 

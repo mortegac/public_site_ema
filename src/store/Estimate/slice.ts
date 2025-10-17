@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyEstimate, estimateInput, Estimate } from './type';
+import { emptyEstimate, estimateInput, Estimate, EstimateData, emptyEstimateData  } from './type';
 import { RootState } from "../store";
 import { createEstimate } from './services';
 
@@ -8,6 +8,7 @@ import { createEstimate } from './services';
 interface EstimateState {
   status: "idle" | "loading" | "failed";
   estimate: Estimate;
+  estimateData: EstimateData;
   loading: boolean;
   error: string | null;
 }
@@ -15,6 +16,7 @@ interface EstimateState {
 const initialState: EstimateState = {
   status: "idle",
   estimate: emptyEstimate,
+  estimateData: emptyEstimateData,
   loading: false,
   error: null,
 };
@@ -58,15 +60,18 @@ const estimateSlice = createSlice({
       .addCase(setEstimate.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.status = "loading";
       })
       .addCase(setEstimate.fulfilled, (state, action) => {
         state.loading = false;
         console.log(">>> action.payload >>", action.payload)
-        state.estimate = {...action.payload};
+        state.estimateData = {...action.payload};
+        state.status = "idle";
       })
       .addCase(setEstimate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la distancia';
+        state.status = "failed";
       });
   },
 });

@@ -1,3 +1,25 @@
+export type EstimateData = {
+  SECCost: string;
+  VAT: string;
+  chargerPotence: string;
+  estimateId: string;
+  grossPrice: string;
+  installationCost: string;
+  materialsCost: string;
+  netPrice: string;
+  referenceChargerPrice: string;
+}
+export const emptyEstimateData: EstimateData = {
+  SECCost: "",
+  VAT: "",
+  chargerPotence: "",
+  estimateId: "",
+  grossPrice: "",
+  installationCost: "",
+  materialsCost: "",
+  netPrice: "",
+  referenceChargerPrice: "",
+}
 export type Estimate = {
   estimateId: string;
   stateValidation: "automated" | "installerVerified" | "installerModified";

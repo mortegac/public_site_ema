@@ -263,12 +263,12 @@ export default function FormResumeVirtual() {
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.materialsCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.materiales_35?.toLocaleString()}
+                                {paymentDataLocal?.materiales_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                $ {paymentDataLocal?.materiales_7?.toLocaleString()}
+                                {paymentDataLocal?.materiales_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -283,13 +283,13 @@ export default function FormResumeVirtual() {
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.instalacion_35?.toLocaleString()}
+                                {paymentDataLocal?.instalacion_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.instalacion_7?.toLocaleString()}
+                                {paymentDataLocal?.instalacion_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -304,12 +304,12 @@ export default function FormResumeVirtual() {
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.TE6Cost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.SEC_35?.toLocaleString()}
+                                {paymentDataLocal?.SEC_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                $ {paymentDataLocal?.SEC_7?.toLocaleString()}
+                                {paymentDataLocal?.SEC_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -324,12 +324,12 @@ export default function FormResumeVirtual() {
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.TE6Cost?.toLocaleString()} */}
-                                $ 0
+                                0
                                 </Typography>
                               </TableCell>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                $ 0
+                                0
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -344,12 +344,12 @@ export default function FormResumeVirtual() {
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.netCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.neto_35?.toLocaleString()}
+                                {paymentDataLocal?.neto_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
-                                $ {paymentDataLocal?.neto_7?.toLocaleString()}
+                                {paymentDataLocal?.neto_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -365,12 +365,12 @@ export default function FormResumeVirtual() {
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.vat?.toLocaleString()} */}
-                                $ {paymentDataLocal?.iva_35?.toLocaleString()}
+                                {paymentDataLocal?.iva_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
-                                $ {paymentDataLocal?.iva_7?.toLocaleString()}
+                                {paymentDataLocal?.iva_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -385,13 +385,13 @@ export default function FormResumeVirtual() {
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.totalInstallationGross?.toLocaleString()} */}
-                                $ {paymentDataLocal?.bruto_35?.toLocaleString()}
+                                {paymentDataLocal?.bruto_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.totalInstallationGross?.toLocaleString()} */}
-                                $ {paymentDataLocal?.bruto_7?.toLocaleString()}
+                                {paymentDataLocal?.bruto_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>

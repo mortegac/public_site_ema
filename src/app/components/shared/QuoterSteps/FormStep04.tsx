@@ -96,26 +96,12 @@ export const FormStep04 = (props:any) => {
   }
   
   useEffect(() => {
-    // Solo ejecutar si:
-    // 1. El status es "idle" (datos cargados)
-    // 2. Existe estimateData
-    // 3. No se ha enviado previamente el email
     if (status === "idle" && estimateData && !hasEmailBeenSent.current) {
       sendEmailResume();
     }
   }, [status, estimateData]);
   
   
-  // useEffect(() => {
-  //   if (estimate?.estimateId === "") {
-  //     Promise.all([
-  //       dispatch(cleanData()),
-  //       dispatch(setStep(0)),
-  //     ]);
-  //   }
-  // }, [estimate?.estimateId, dispatch]);
-  
-  {/* <pre>{JSON.stringify(estimate, null, 2 )}</pre> */}
   
   return (
     <> 
@@ -167,7 +153,7 @@ export const FormStep04 = (props:any) => {
               >
               Resultado de la Simulación
               </Typography>
-          <Typography
+               <Typography
               align="left"
                           sx={{
                             display: "block",

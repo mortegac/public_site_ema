@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from 'next/navigation';
 import {
   Box,
   TextField,
@@ -66,19 +67,27 @@ const VerticalForm = styled(Box)(({ theme }) => ({
 }));
 
 export const FormStep02 = (props:any) => {
+  const router = useRouter();
+  const isFirstRender = useRef(true);
+  const hasRedirected = useRef(false);
+  
   const [ typeOf, setTypeOf] = useState({
     typeOfCharger:"",
     typeOfResidence:"",
   })
   
-  const [checked, setChecked] = React.useState(false);
+  const [isSaved, setIsSaved] = React.useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
   
   const { 
     currentStep,
     currentForm,
   } = useAppSelector(selectClientForms);
-  
+  const { 
+    estimate,
+    estimateData,
+    status
+  } = useAppSelector(selectEstimate);
   
   const dispatch = useAppDispatch();
  
@@ -122,7 +131,8 @@ export const FormStep02 = (props:any) => {
               formId: currentForm.formId
             })
           ),
-          dispatch(setStep(3))
+          // dispatch(setStep(3))
+          setIsSaved(true)
         ]);
         
         // Resetear el flag después de ejecutar
@@ -135,13 +145,63 @@ export const FormStep02 = (props:any) => {
     
     fetchData();
     
+    
+    
 }, [currentForm.formId, isFormSubmitted, dispatch]);
 
+
+useEffect(() => {
+   
+  if (!isSaved || !estimateData?.estimateId) return;
+  
+  const timeoutId = setTimeout(() => {
+    // Preparar los datos para enviar
+    const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
+    
+    const paymentData = {                    
+      materiales_35: estimateData?.materialsCost?.toLocaleString(),
+      materiales_7: estimateData?.materialsCost?.toLocaleString(),
+      instalacion_35: estimateData?.installationCost?.toLocaleString(),
+      instalacion_7: estimateData?.installationCost?.toLocaleString(),
+      SEC_35: estimateData?.SECCost?.toLocaleString(),
+      SEC_7: estimateData?.SECCost?.toLocaleString(),
+      cargador_35: 0,
+      cargador_7: 0,
+      neto_35: `$ ${estimateData?.netPrice?.toLocaleString()}`,
+      neto_7: `$ ${estimateData?.netPrice?.toLocaleString()}`,
+      iva_35: `$ ${estimateData?.VAT?.toLocaleString()}`,
+      iva_7: `$ ${estimateData?.VAT?.toLocaleString()}`,
+      bruto_35: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+      bruto_7: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+      mts: `${currentForm?.distance} mts`,
+      typeOfResidence: typeOfResidence,
+      email: currentForm?.email,
+      name: currentForm?.email,
+    };
+    
+    console.log("---paymentData---", paymentData)
+    // Guardar en sessionStorage
+    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+    
+    // Redirigir según el estado
+    console.log("----REDIRECT--- /cotizador/simulacion")
+        
+    router.push('/cotizador/simulacion');
+        
+   
+  }, 3000);
+
+  return () => clearTimeout(timeoutId);
+  
+}, [isSaved, estimateData?.estimateId]);
 
 
   return (  
     <>
-    {/* <pre>currentForm.formId = {JSON.stringify(currentForm.formId, null, 2)}</pre> */}
+    {/* <pre>isSaved = {JSON.stringify(isSaved, null, 2)}</pre>
+    <pre>estimateData = {JSON.stringify(isSaved, null, 2)}</pre>
+    <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>
+    <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre> */}
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 

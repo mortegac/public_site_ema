@@ -1,46 +1,79 @@
+"use client";
+import {useEffect} from "react"
+import {
+  Box,
+  Stack,
+  Typography,
+  Container,
+  Grid,
+  Button,
+} from "@mui/material";
+
 import PageContainer from '@/app/components/container/PageContainer';
-import Banner from '@/app/components/shared/banner/Banner';
-import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
+import { isProduction } from '@/utils/amplify-config';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import HpHeader from '@/app/components/shared/header/HpHeader';
-// import CotizadorWizard from '@/app/components/CotizadorWizard';
+import HeaderENV from '@/app/components/shared/header/HeaderENV';
+
 import QuoterSteps from '@/app/components/shared/QuoterSteps';
 import Steps from '@/app/components/CotizadorWizard/Steps';
-import Features from '@/app/components/shared/features/Features';
-import Notice from '@/app/components/shared/notice/Notice';
-import Pricing from '@/app/components/shared/pricing';
 import C2a from '@/app/components/shared/c2a';
-// import DefendFocus from '../../components/frontend-pages/homepage/defend-focus';
-// import Leadership from '../../components/frontend-pages/shared/leadership';
-// import PowerfulDozens from '@/app/components/shared/powerful-dozens';
-// import Reviews from '../../components/frontend-pages/shared/reviews';
-// import ExceptionalFeature from '../../components/frontend-pages/homepage/exceptional-feature';
-// import FAQ from '../../components/frontend-pages/homepage/faq';
-// import C2a from '../../components/frontend-pages/shared/c2a';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
+
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";
 
 
 
 
 const QuoterPage = () => {
+  const { 
+    currentStep,
+    currentForm,
+  } = useAppSelector(selectClientForms);
+  const dispatch = useAppDispatch();
+
+  
+  useEffect(()=>{
+    dispatch(setStep(0))
+  },[])
+  
   return (
     <PageContainer title="Cotiza tú Instalación" description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación">
-      <HeaderAlert />
+      {!isProduction() && <HeaderENV />}
       <HpHeader /> 
-      {/* <Banner 
-        titleOne="Cotiza tú " 
-        titleTwo="Instalación" 
-        description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación"
-               
-        buttonText="Agenda tu visita" 
-        buttonURI="/agenda" 
+      { currentStep !== 3 &&
+        <>
+        <Box bgcolor="#ffffff" pt={4} pb={0}>
+          <Container
+            sx={{
+              maxWidth: "1400px !important",
+              position: "relative",
+            }}
+          >
+            <Typography
+                variant="h2"
+                fontWeight={700}
+                lineHeight="1.2"
+                sx={{
+                  fontSize: {
+                    xs: "32px",
+                    sm: "40px",
+                    textAlign:"center",
+                  },
+                }}
+              >
+                Simula el costo de tu instalación
+              </Typography>
+          </Container>
+        </Box>
         
-        buttonTextTwo="" 
-        buttonURITwo="" 
-        imageSrc="/images/headers/cotiza-tu-instalacion.png" 
-      /> */}
-      <Steps/>
-      {/* <CotizadorWizard/> */}
+        <Steps/>
+        
+      </>
+      }
+      
       <QuoterSteps/>
       
       <C2a/>

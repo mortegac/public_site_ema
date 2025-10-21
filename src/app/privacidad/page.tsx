@@ -13,7 +13,7 @@ const content = "<div class='MuiTypography-root MuiTypography-h4 mui-1ltozgt-Mui
 const HomePage = () => {
   return (
     <PageContainer title="Política de Privacidad de Enérgica City" description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, excríbenos un mensaje. Te responderemos lo antes posible.">
-      <HeaderAlert />
+      {/* <HeaderAlert /> */}
       <HpHeader /> 
       
       <Banner 

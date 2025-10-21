@@ -74,6 +74,30 @@ const clientFormsSlice = createSlice({
           [objAction.key]: objAction.value,
         };
       },
+      setTypeOfCharger: (state, action: PayloadAction<{}>) => {
+        const objAction: any = action.payload;
+        state.currentForm = {
+          ...state.currentForm,
+          isPortable: objAction.isPortable,
+          isWallbox: objAction.isWallbox,
+        };
+      },
+      setTypeOfBuilder: (state, action: PayloadAction<{}>) => {
+        const objAction: any = action.payload;
+        state.currentForm = {
+          ...state.currentForm,
+          isHouse: objAction.isHouse,
+          isBuilding: objAction.isBuilding,
+        };
+      },
+      setToggleChargerStatus: (state, action: PayloadAction<{}>) => {
+        const objAction: any = action.payload;
+        state.currentForm = {
+          ...state.currentForm,
+          hasOwnCharger: objAction.hasOwnCharger,
+          needsCharger: objAction.needsCharger,
+        };
+      },     
       cleanData: (state) => {
         state.currentForm = emptyClientForm;
         state.currentStep = 0;
@@ -115,6 +139,9 @@ export const {
     decrement,
     increment,
     setDataForm,
+    setTypeOfCharger,
+    setTypeOfBuilder,
+    setToggleChargerStatus,
     cleanData,
   } = clientFormsSlice.actions;
   

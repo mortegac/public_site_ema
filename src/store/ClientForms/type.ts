@@ -40,6 +40,13 @@ export type ClientForm = {
   name?: string,
   email?: string,
   phone?: string,
+  
+  // NEWS
+  acceptTermAndConditions: boolean,
+  isBuilding?: boolean,
+  hasOwnCharger?: boolean,
+  needsCharger?: boolean,
+  
 };
 
 
@@ -59,6 +66,11 @@ export const emptyClientForm: ClientForm = {
   numberOfChargers: 0,
   // createdAt: "",
   // updatedAt: "",
+    // NEWS
+  acceptTermAndConditions: false,
+  isBuilding: false,
+  hasOwnCharger: true,
+  needsCharger: false,
 };
 
 

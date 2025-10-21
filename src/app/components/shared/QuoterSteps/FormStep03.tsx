@@ -58,19 +58,31 @@ const MyProgressButton = (props:any) => {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setIsProgressing(true);
     
     // Tu lógica aquí
     await new Promise(resolve => setTimeout(resolve, 100));
     
     // Esperar a que termine la animación
-    setTimeout(() => {
-      handleSubmit(e);
-      setIsProgressing(false);
-      setIsCompleted(true);
-      
-      // Volver al estado inicial
-      setTimeout(() => setIsCompleted(false), 2000);
+    setTimeout(async () => {
+      try {
+        // Llamar directamente a handleSubmit con un evento simulado
+        const fakeEvent = {
+          preventDefault: () => {},
+          target: e.currentTarget.closest('form')
+        } as unknown as React.FormEvent<HTMLFormElement>;
+        
+        await handleSubmit(fakeEvent);
+        setIsProgressing(false);
+        setIsCompleted(true);
+        
+        // Volver al estado inicial
+        setTimeout(() => setIsCompleted(false), 2000);
+      } catch (error) {
+        setIsProgressing(false);
+        console.error('Error en handleSubmit:', error);
+      }
     }, 3000); // duración de la animación
   };
 
@@ -79,6 +91,7 @@ const MyProgressButton = (props:any) => {
       variant="contained"
       onClick={handleClick}
       disabled={isProgressing}
+      type="button" // Importante: no es submit
       sx={{
         width: "50%",
         padding: "10px",
@@ -125,7 +138,7 @@ const FullWidthButtonWithIcons = styled(Button)(({ theme }) => ({
   boxSizing: 'border-box',
   marginBottom:"12px",
   background: '#ECF2FF',
-  border: '1px solid #E81A68',
+  border: '1px solid rgb(213, 213, 213)',
   borderRadius: '8px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -184,7 +197,7 @@ export const FormStep03 = (props:any) => {
   // const [distance, setDistance] = useState<string>('');
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     try {
@@ -246,13 +259,12 @@ export const FormStep03 = (props:any) => {
             position: "relative",
           }}
         >
-          <form 
-          // onSubmit={handleSubmit}
+          <form onSubmit={handleSubmit}
           >
             <Typography variant="h6" gutterBottom>
               Indique la distancia existente entre su tablero eléctrico y donde quiere instalar el cargador
             </Typography>
-            
+                
             <VerticalForm>
               <Typography variant="caption" gutterBottom 
                 sx={{
@@ -284,6 +296,8 @@ export const FormStep03 = (props:any) => {
               </Typography>
             </VerticalForm>
 
+       
+            
             <Box bgcolor="#ffffff" pt={4} pb={4} width={"90%"} mt={4}
             sx={{
               boxSizing: 'border-box',
@@ -296,26 +310,30 @@ export const FormStep03 = (props:any) => {
                   position: "relative",
                 }}
               >
+                
+                HOLA
                 <FullWidthButtonWithIcons 
-                  variant="contained" 
-                  color="primary"
-                  onClick={() => setTermsAccepted(!termsAccepted)}
+                  variant="contained"
                   sx={{
-                    backgroundColor: termsAccepted ? '#E81A68' : '#ECF2FF',
-                    color: termsAccepted ? '#FFFFFF' : '#2A3547',
+                    background:`${currentForm?.acceptTermAndConditions ? "#ECF2FF" : "#FFF"} `
+                  }}
+                  onClick={()=> {
+                    dispatch( setDataForm({key:"acceptTermAndConditions", value:!currentForm?.acceptTermAndConditions}))
+                    // setTypeOf({...typeOf, typeOfResidence:"BUILDING" })
                   }}
                 >
                   <BoxLeft>
                     <SmallLeftIcon>
-                      <SmallSVG />
+                      
+                      {currentForm?.acceptTermAndConditions && <SmallSVG />}
                     </SmallLeftIcon>  
                     <Typography variant="caption"
                       sx={{
-                        fontSize:"18px",
+                      fontSize:"18px",
+                      color: "#2A3547",
+                      
                       }}
-                    >
-                      Acepto términos y condiciones
-                    </Typography>
+                      >Acepto términos y condiciones</Typography>  
                   </BoxLeft>
                 </FullWidthButtonWithIcons>
               </Container>

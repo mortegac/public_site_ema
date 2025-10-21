@@ -925,6 +925,30 @@ export default function FormResumeVirtual() {
                         >
                           Agendar otra visita
                     </Button>
+                    <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              size="large"
+              sx={{
+                paddingX: 4,
+                paddingY: 1.5,
+                borderRadius: '24px',
+                boxShadow: theme.shadows[3],
+                '&:hover': {
+                  boxShadow: theme.shadows[6],
+                },
+                '&.Mui-disabled': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.12)',
+                  color: 'rgba(0, 0, 0, 0.26)',
+                },
+                width: { xs: '100%', md: 'auto' }
+              }}
+              href="/cotizador"
+              // target='_blank'
+            >
+              Simular costo de instalación
+            </Button>
                   </Box>
                   </>
                 }       

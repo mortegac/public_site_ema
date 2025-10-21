@@ -1,3 +1,25 @@
+export type EstimateData = {
+  SECCost: string;
+  VAT: string;
+  chargerPotence: string;
+  estimateId: string;
+  grossPrice: string;
+  installationCost: string;
+  materialsCost: string;
+  netPrice: string;
+  referenceChargerPrice: string;
+}
+export const emptyEstimateData: EstimateData = {
+  SECCost: "",
+  VAT: "",
+  chargerPotence: "",
+  estimateId: "",
+  grossPrice: "",
+  installationCost: "",
+  materialsCost: "",
+  netPrice: "",
+  referenceChargerPrice: "",
+}
 export type Estimate = {
   estimateId: string;
   stateValidation: "automated" | "installerVerified" | "installerModified";
@@ -6,6 +28,7 @@ export type Estimate = {
   isHouse?: boolean;
   chargerPotence?: number;
   numberOfChargers?: number;
+  distance?: number;
   distanceExposed?: number;
   distanceUnderground?: number;
   preChanneledDistance?: number;
@@ -53,6 +76,7 @@ export const emptyEstimate: Estimate = {
   isHouse: false,
   chargerPotence: 0,
   numberOfChargers: 0,
+  distance: 0,
   distanceExposed: 0,
   distanceUnderground: 0,
   preChanneledDistance: 0,

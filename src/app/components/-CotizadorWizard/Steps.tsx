@@ -20,9 +20,10 @@ import { setStep, selectClientForms } from "@/store/ClientForms/slice";
 import { selectEstimate } from "@/store/Estimate/slice";
 
 const steps = [
-  "Información de contacto",
-  "Información  técnica",
-  "Resultado"
+  "Información de contacto", 
+  "Tipo de cargador", 
+  "Información  técnica", 
+  "Resumen cotización"
 ];
 
 export default function HorizontalLinearStepper() {
@@ -38,18 +39,51 @@ export default function HorizontalLinearStepper() {
     currentForm,
   } = useAppSelector(selectClientForms);
   
+  const isStepOptional = (step: number) => {
+    return step === 1;
+  };
 
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  const handleStepClick = (stepIndex: number, stepName: string) => {
-    // trackEvent('cambio_de_paso_agenda', 'navigation', `${stepName}_step_${stepIndex + 1}`);
-    Number(stepIndex) !== 2 && dispatch(setStep(stepIndex));
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // You probably want to guard against something like this,
+      // it should never occur unless someone's actively trying to break something.
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
   };
 
   return (
     // <Box sx={{ width: '100%' }}>
-    <Box bgcolor="#ffffff" pt={4} pb={2}>
+    <Box bgcolor="#ffffff" pt={7} pb={7}>
       <Container
         sx={{
           maxWidth: "1400px !important",
@@ -89,16 +123,15 @@ export default function HorizontalLinearStepper() {
           }
         }}
       >
-        
-
-        
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;
             onClick?: () => void;
-          } = { onClick: () => handleStepClick(index, label) };
-          // } = { onClick: label === "Resumen cotización" && estimate?.estimateId === "" ? undefined : () => dispatch(setStep(index)) };
+          } = {
+            // onClick:() => dispatch(setStep(index))
+            onClick: label === "Resumen cotización" && estimate?.estimateId === "" ? undefined : () => dispatch(setStep(index))
+          };
           return (
             <Step key={label} {...stepProps}>
               <StepLabel 
@@ -109,21 +142,11 @@ export default function HorizontalLinearStepper() {
                     color: Number(currentStep) === Number(index+1) ? '#E81A68' : '#b9b9b9'
                   },
                   '&.no-hover .MuiStepIcon-root:hover': {
-                    color: 'inherit',
-                  
+                    color: 'inherit'
                   }
                 }}
               >
-                <Typography
-            align="left"
-            sx={{
-              fontSize: "14px",
-              color: Number(currentStep) === Number(index) ? '#E81A68' : '#b9b9b9'
-            }}
-            component="span"
-            >
-              {label}
-            </Typography>
+                {label}
               </StepLabel>
             </Step>
           );

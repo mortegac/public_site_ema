@@ -336,8 +336,9 @@ const RetryTransaction = () => {
                 color:"#E81A68",
                 width: { xs: '100%', md: 'auto' }
               }}
-              href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
-              target='_blank'
+              // href={`https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform`}
+               href="/cotizador"
+              // target='_blank'
               onClick={() => trackEvent('simular_costo_instalacion', 'AGENDA_EMA', 'ir a la pagina de google Form para evaluar instalacion') }
             >
               Simular costo de instalación

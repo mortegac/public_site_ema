@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from 'next/navigation';
+import LoadingIcon from "@/app/components/shared/LoadingIcon";
 import {
   Box,
   TextField,
@@ -513,11 +514,18 @@ useEffect(() => {
             !currentForm?.distance || Number(currentForm?.distance) <= 0 ||
             
             // Validación de términos y condiciones
-            !currentForm?.acceptTermAndConditions
+            !currentForm?.acceptTermAndConditions  ||
+            
+            status !== "idle"
           }
           onClick={(e) => handlerNextStep(e)}
         >
           Siguiente
+          {
+              status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
+                <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
+              </Box>
+          }
         </Button>
         
       </Box>

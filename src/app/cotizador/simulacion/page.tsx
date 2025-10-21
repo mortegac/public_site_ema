@@ -74,30 +74,7 @@ export default function FormResumeVirtual() {
     
     console.log('Enviando email con resumen de estimación:', {
       data,
-      // email: data?.email
     });
-    // const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
-    // estimateData
-    // const objEmail = {
-    //       "materiales_35": paymentDataLocal?.materiales_35?.toLocaleString(),
-    //       "materiales_7": paymentDataLocal?.materiales_7?.toLocaleString(),
-    //       "instalacion_35": paymentDataLocal?.instalacion_35?.toLocaleString(),
-    //       "instalacion_7": paymentDataLocal?.instalacion_7?.toLocaleString(),
-    //       "SEC_35": paymentDataLocal?.SEC_35?.toLocaleString(),
-    //       "SEC_7": paymentDataLocal?.SEC_7?.toLocaleString(),
-    //       "cargador_35": "0",
-    //       "cargador_7": "0",
-    //       "neto_35": `$ ${paymentDataLocal?.neto_35?.toLocaleString()}`,
-    //       "neto_7": `$ ${paymentDataLocal?.neto_7?.toLocaleString()}`,
-    //       "iva_35": `$ ${paymentDataLocal?.iva_35?.toLocaleString()}`,
-    //       "iva_7": `$ ${paymentDataLocal?.iva_7?.toLocaleString()}`,
-    //       "bruto_35": `$ ${paymentDataLocal?.bruto_35?.toLocaleString()}`,
-    //       "bruto_7": `$ ${paymentDataLocal?.bruto_7?.toLocaleString()}`,
-    //       "mts": `${paymentDataLocal?.mts} mts`,
-    //       "typeOfResidence": paymentDataLocal?.typeOfResidence,
-    //       "email": paymentDataLocal?.email,
-    //       "name": paymentDataLocal?.name,
-    // }
 
     const sendEMail: boolean = await sendEmail({ ...data })
     sendEMail && setSendEMailBox({
@@ -113,46 +90,7 @@ export default function FormResumeVirtual() {
     // Marcar como enviado usando ref para persistir entre renders
     hasEmailBeenSent.current = true;
   }
-  
-  let count = 0;
-  
-  // useEffect(() => {
-  //   // Recuperar datos de sessionStorage si existen
-  //   const storedData = sessionStorage.getItem('paymentData');
-  //   if (storedData) {
-  //     const data = JSON.parse(storedData);
-      
-  //     console.log("----storedData---", data)
-      
-  //     setPaymentDataLocal({
-  //      ...data,
-  //       hasData: true,
-  //     });
-      
-  //     sendEmailResume({...data});
-  //     // Limpiar sessionStorage después de leer
-  //     sessionStorage.removeItem('paymentData');
-    
-  //   }else{
-  //     setPaymentDataLocal({
-  //       ...paymentData,
-  //       hasData: false
-  //     });
-  //   }
-    
-  //   count++
-    
-  //   console.log("count ====== ", count)
-  // }, []);
-  
-  
-    
-  // useEffect(() => {
-  //   if (paymentData && !hasEmailBeenSent.current) {
-  //     sendEmailResume();
-  //   }
-  // }, [paymentDataLocal, paymentDataLocal.email]);
-  
+
   
   useEffect(() => {
     // Prevenir múltiples cargas (útil con React StrictMode)
@@ -314,14 +252,6 @@ export default function FormResumeVirtual() {
                               </TableRow>
                             </TableHead>
                           
-                        
-                        
-                          {/* {status === "loading" &&  <Box sx={{ width: { xs: '100vw', md: '50%' }, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
-                            <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
-                          </Box>
-                          } */}
-                          
-                        {/* {status === "idle" && <> */}
                         <>
                           <TableBody>
                             <TableRow>

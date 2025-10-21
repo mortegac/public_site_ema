@@ -263,12 +263,12 @@ export default function FormResumeVirtual() {
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.materialsCost?.toLocaleString()} */}
-                                {paymentDataLocal?.materiales_35?.toLocaleString()}
+                                $ {paymentDataLocal?.materiales_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                {paymentDataLocal?.materiales_7?.toLocaleString()}
+                                $ {paymentDataLocal?.materiales_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -283,13 +283,13 @@ export default function FormResumeVirtual() {
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                {paymentDataLocal?.instalacion_35?.toLocaleString()}
+                                $ {paymentDataLocal?.instalacion_35?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
                                 {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                {paymentDataLocal?.instalacion_7?.toLocaleString()}
+                                $ {paymentDataLocal?.instalacion_7?.toLocaleString()}
                                 </Typography>
                               </TableCell>
                             </TableRow>

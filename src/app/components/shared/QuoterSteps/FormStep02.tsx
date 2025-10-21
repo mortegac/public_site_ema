@@ -683,9 +683,10 @@ useEffect(() => {
             !currentForm?.distance || Number(currentForm?.distance) <= 0 ||
             
             // Validación de términos y condiciones
-            !currentForm?.acceptTermAndConditions  ||
+            !currentForm?.acceptTermAndConditions  
+            // ||
             
-            status !== "idle"
+            // status !== "idle"
           }
           onClick={(e) => handlerNextStep(e)}
         >

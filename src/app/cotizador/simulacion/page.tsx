@@ -115,7 +115,7 @@ export default function FormResumeVirtual() {
   useEffect(() => {
     // Prevenir múltiples cargas (útil con React StrictMode)
     if (hasLoadedData.current) {
-      console.log('Datos ya cargados, saltando efecto...');
+      // console.log('Datos ya cargados, saltando efecto...');
       return;
     }
     
@@ -137,6 +137,8 @@ export default function FormResumeVirtual() {
       
       // Limpiar sessionStorage después de leer
       sessionStorage.removeItem('paymentData');
+      sessionStorage.removeItem('persist:root')
+      localStorage.removeItem('persist:root')
     } else {
       setPaymentDataLocal(prev => ({
         ...prev,
@@ -297,13 +299,13 @@ export default function FormResumeVirtual() {
                               <>
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  {/* $ {estimate?.materialsCost?.toLocaleString()} */}
-                                  {formatCurrency(Number(paymentDataLocal?.materiales_35))}
+                                  {paymentDataLocal?.materiales_35}
+                                  
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.materiales_7))}
+                                  {paymentDataLocal?.materiales_7}
                                   </Typography>
                                 </TableCell>
                               </>
@@ -311,7 +313,7 @@ export default function FormResumeVirtual() {
                               {  !paymentDataLocal?.isWallbox && 
                                 <TableCell>
                                     <Typography fontWeight={400} variant="h6">
-                                    {formatCurrency(Number(paymentDataLocal?.materiales_22))}
+                                    {paymentDataLocal?.materiales_22}
                                     </Typography>
                                 </TableCell>
                               }
@@ -330,13 +332,12 @@ export default function FormResumeVirtual() {
                                 <>
                                   <TableCell>
                                     <Typography fontWeight={400} variant="h6">
-                                    {formatCurrency(Number(paymentDataLocal?.instalacion_35))}
+                                    {paymentDataLocal?.instalacion_35}
                                     </Typography>
                                   </TableCell>
                                   <TableCell>
                                     <Typography fontWeight={400} variant="h6">
-                                    {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                    {formatCurrency(Number(paymentDataLocal?.instalacion_7))}
+                                    {paymentDataLocal?.instalacion_7}
                                     </Typography>
                                   </TableCell>  
                                 </>
@@ -344,8 +345,7 @@ export default function FormResumeVirtual() {
                               { !paymentDataLocal?.isWallbox && 
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                  {formatCurrency(Number(paymentDataLocal?.instalacion_22))}
+                                  {paymentDataLocal?.instalacion_22}
                                   </Typography>
                                 </TableCell>
                               }
@@ -364,12 +364,12 @@ export default function FormResumeVirtual() {
                               <>
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.SEC_35))}
+                                  {paymentDataLocal?.SEC_35}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.SEC_7))}
+                                  {paymentDataLocal?.SEC_7}
                                   </Typography>
                                 </TableCell>
                               </>
@@ -377,7 +377,7 @@ export default function FormResumeVirtual() {
                              { !paymentDataLocal?.isWallbox && 
                              <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                {formatCurrency(Number(paymentDataLocal?.SEC_22))}
+                                {paymentDataLocal?.SEC_22}
                                 </Typography>
                             </TableCell>
                             }
@@ -432,7 +432,7 @@ export default function FormResumeVirtual() {
                                 </TableCell>
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.neto_7))}
+                                  {paymentDataLocal?.neto_7}
                                   </Typography>
                                 </TableCell>
                               </>
@@ -440,7 +440,7 @@ export default function FormResumeVirtual() {
                               { !paymentDataLocal?.isWallbox && 
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.neto_22))}
+                                  {paymentDataLocal?.neto_22}
                                   </Typography>
                                 </TableCell>
                               }
@@ -458,12 +458,12 @@ export default function FormResumeVirtual() {
                               <>
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.iva_35))}
+                                  {paymentDataLocal?.iva_35}
                                   </Typography>
                                 </TableCell>
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.iva_7))}
+                                  {paymentDataLocal?.iva_7}
                                   </Typography>
                                 </TableCell>
                               </>
@@ -472,7 +472,7 @@ export default function FormResumeVirtual() {
                               { !paymentDataLocal?.isWallbox && 
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.iva_22))}
+                                  {paymentDataLocal?.iva_22}
                                   </Typography>
                                 </TableCell>
                               }
@@ -495,7 +495,7 @@ export default function FormResumeVirtual() {
                                 </TableCell>
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.bruto_7))}
+                                  {paymentDataLocal?.bruto_7}
                                   </Typography>
                                 </TableCell>
                               </>
@@ -503,7 +503,7 @@ export default function FormResumeVirtual() {
                               { !paymentDataLocal?.isWallbox && 
                                 <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                   <Typography fontWeight={400} variant="h6">
-                                  {formatCurrency(Number(paymentDataLocal?.bruto_22))}
+                                  {paymentDataLocal?.bruto_22}
                                   </Typography>
                                 </TableCell>
                               }
@@ -585,6 +585,10 @@ export default function FormResumeVirtual() {
                             },
                             width: { xs: "100%", md: "auto" },
                           }}
+                          onClick={()=>{
+                            sessionStorage.removeItem('persist:root')
+                            localStorage.removeItem('persist:root')
+                          }}
                             href="/cotizador"
                           // target="_blank"
                         >
@@ -640,6 +644,10 @@ export default function FormResumeVirtual() {
                             width: { xs: '80%', md: '300px' },
                             marginTop: '20px',
                             
+                          }}
+                          onClick={()=>{
+                            sessionStorage.removeItem('persist:root')
+                            localStorage.removeItem('persist:root')
                           }}
                           href="/cotizador"
                         >

@@ -137,7 +137,7 @@ const estimateSlice = createSlice({
           }
         });
         
-        
+        console.log("setEstimate >>> processedData >>>", processedData)
         // Guardar el objeto procesado en estimateData
         state.estimateData = processedData;
         

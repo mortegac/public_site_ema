@@ -12,6 +12,8 @@ import {
   styled
 } from "@mui/material";
 
+import { formatCurrency } from "@/utils/currency";
+
 import {ChargerSVG} from "@/app/components/shared/icons/ChargerSVG";
 import {ChargerSVGTwo} from "@/app/components/shared/icons/ChargerSVGTwo";
 import {HouseSVG} from "@/app/components/shared/icons/HouseSVG";
@@ -80,6 +82,7 @@ export const FormStep02 = (props:any) => {
   const router = useRouter();
   const isFirstRender = useRef(true);
   const hasRedirected = useRef(false);
+  const hasEstimateFetched = useRef(false);
   
   const [ typeOf, setTypeOf] = useState({
     typeOfCharger:"",
@@ -130,12 +133,19 @@ export const FormStep02 = (props:any) => {
   
   
   useEffect(() => {
-        
+    // Prevenir ejecuciones múltiples
+    if (hasEstimateFetched.current) {
+      console.log('setEstimate ya fue ejecutado, saltando...');
+      return;
+    }
+    
     const fetchData = async () => {
       // Solo ejecutar si el formulario fue enviado y existe formId
       if (!isFormSubmitted || !currentForm.formId) return;
       
-      
+      console.log('Ejecutando setEstimate con formId:', currentForm.formId);
+      // Marcar como ejecutado ANTES de hacer la llamada
+      hasEstimateFetched.current = true;
       
       try {
         await Promise.all([
@@ -144,7 +154,6 @@ export const FormStep02 = (props:any) => {
               formId: currentForm.formId
             })
           ),
-          // dispatch(setStep(3))
           setIsSaved(true)
         ]);
         
@@ -153,31 +162,122 @@ export const FormStep02 = (props:any) => {
       } catch (error) {
         console.log('Error en fetchData:', error);
         setIsFormSubmitted(false);
+        // Si falla, permitir reintentar
+        hasEstimateFetched.current = false;
       }
     };
     
     fetchData();
-    
-    
-    
-}, [currentForm.formId, isFormSubmitted, dispatch]);
+}, [isFormSubmitted, currentForm.formId, dispatch]);
 
 
 useEffect(() => {
-   
-  if (!isSaved && status !== "loading") return;
-  // if (!isSaved || !estimateData?.estimateId_7 || !estimateData?.estimateId_35 || !estimateData?.estimateId_22) return;
+  console.log('=== useEffect REDIRECT ===');
+  console.log('isSaved:', isSaved);
+  console.log('status:', status);
+  console.log('estimateData:', estimateData);
+  console.log('currentForm.isWallbox:', currentForm?.isWallbox);
   
-  if (isWallbox && estimateData?.materiales_35 === "" || estimateData?.materiales_7 === "") return;
-  if (!isWallbox && estimateData?.materiales_22 === "") return;
+  // Condición 1: debe estar guardado y no estar cargando
+  if (!isSaved || status === "loading") {
+    console.log('❌ Bloqueado por: !isSaved || status === "loading"');
+    return;
+  }
+  
+  // Condición 2: validar que existan los estimateId según el tipo de cargador
+  if (currentForm?.isWallbox) {
+    if (!estimateData?.estimateId_35 || !estimateData?.estimateId_7) {
+      console.log('❌ Bloqueado: Wallbox sin estimateId_35 o estimateId_7');
+      return;
+    }
+  } else {
+    if (!estimateData?.estimateId_22) {
+      console.log('❌ Bloqueado: Portable sin estimateId_22');
+      return;
+    }
+  }
+  
+  console.log('✅ Todas las condiciones pasaron, programando redirect...');
   
   const timeoutId = setTimeout(() => {
     // Preparar los datos para enviar
     const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
     
+    // ...estimateData,
+    // const paymentData = {                    
+    //   estimateId_22: `${estimateData?.estimateId_22}`,
+    //   estimateId_35: `${estimateData?.estimateId_35}`,
+    //   estimateId_7: `${estimateData?.estimateId_7}`,
+      
+    //   materiales_22: `${estimateData?.materiales_22}`,
+    //   materiales_35: `${estimateData?.materiales_35}`,
+    //   materiales_7: `${estimateData?.materiales_7}`,
+      
+    //   instalacion_22: `${estimateData?.instalacion_22}`,
+    //   instalacion_35: `${estimateData?.instalacion_35}`,
+    //   instalacion_7: `${estimateData?.instalacion_7}`,
+      
+    //   SEC_22: `${estimateData?.SEC_22}`,
+    //   SEC_35: `${estimateData?.SEC_35}`,
+    //   SEC_7: `${estimateData?.SEC_7}`,
+      
+    //   cargador_22: `${estimateData?.cargador_22}`,
+    //   cargador_35: `${estimateData?.cargador_35}`,
+    //   cargador_7: `${estimateData?.cargador_7}`,
+      
+    //   neto_22: `${estimateData?.neto_22}`,
+    //   neto_35: `${estimateData?.neto_35}`,
+    //   neto_7: `${estimateData?.neto_7}`,
+      
+    //   iva_22: `${estimateData?.iva_22}`,
+    //   iva_35: `${estimateData?.iva_35}`,
+    //   iva_7: `${estimateData?.iva_7}`,
+      
+    //   bruto_22: `${estimateData?.bruto_22}`,
+    //   bruto_35: `${estimateData?.bruto_35}`,
+    //   bruto_7: `${estimateData?.bruto_7}`,
+      
+    //   isWallbox:currentForm?.isWallbox,
+    //   mts: `${currentForm?.distance} mts`,
+    //   typeOfResidence: typeOfResidence,
+    //   email: currentForm?.email,
+    //   name: currentForm?.name,
+    // };
+    
     const paymentData = {                    
-      ...estimateData,
-      isWallbox:isWallbox,
+      estimateId_22: `${estimateData?.estimateId_22}`,
+      estimateId_35: `${estimateData?.estimateId_35}`,
+      estimateId_7: `${estimateData?.estimateId_7}`,
+      
+      materiales_22: `${formatCurrency(Number(estimateData?.materiales_22))}`,
+      materiales_35: `${formatCurrency(Number(estimateData?.materiales_35))}`,
+      materiales_7: `${formatCurrency(Number(estimateData?.materiales_7))}`,
+      
+      instalacion_22: `${formatCurrency(Number(estimateData?.instalacion_22))}`,
+      instalacion_35: `${formatCurrency(Number(estimateData?.instalacion_35))}`,
+      instalacion_7: `${formatCurrency(Number(estimateData?.instalacion_7))}`,
+      
+      SEC_22: `${formatCurrency(Number(estimateData?.SEC_22))}`,
+      SEC_35: `${formatCurrency(Number(estimateData?.SEC_35))}`,
+      SEC_7: `${formatCurrency(Number(estimateData?.SEC_7))}`,
+      
+      cargador_22: `${formatCurrency(Number(estimateData?.cargador_22))}`,
+      cargador_35: `${formatCurrency(Number(estimateData?.cargador_35))}`,
+      cargador_7: `${formatCurrency(Number(estimateData?.cargador_7))}`,
+      
+      neto_22: `${formatCurrency(Number(estimateData?.neto_22))}`,
+      neto_35: `${formatCurrency(Number(estimateData?.neto_35))}`,
+      neto_7: `${formatCurrency(Number(estimateData?.neto_7))}`,
+      
+      iva_22: `${formatCurrency(Number(estimateData?.iva_22))}`,
+      iva_35: `${formatCurrency(Number(estimateData?.iva_35))}`,
+      iva_7: `${formatCurrency(Number(estimateData?.iva_7))}`,
+      
+      bruto_22: `${formatCurrency(Number(estimateData?.bruto_22))}`,
+      bruto_35: `${formatCurrency(Number(estimateData?.bruto_35))}`,
+      bruto_7: `${formatCurrency(Number(estimateData?.bruto_7))}`,
+      
+      isWallbox:currentForm?.isWallbox,
       mts: `${currentForm?.distance} mts`,
       typeOfResidence: typeOfResidence,
       email: currentForm?.email,
@@ -196,45 +296,21 @@ useEffect(() => {
 
   return () => clearTimeout(timeoutId);
   
-}, [isSaved, estimateData?.estimateId_7, estimateData?.estimateId_35, estimateData?.estimateId_22]);
+}, [isSaved, status, estimateData, currentForm?.isWallbox, currentForm?.isHouse, currentForm?.distance, currentForm?.email, currentForm?.name, router]);
 
 
   return (  
     <>
-    {/* // materiales_22: estimateData?.materialsCost?.toLocaleString(),
-      // materiales_35: estimateData?.materialsCost?.toLocaleString(),
-      // materiales_7: estimateData?.materialsCost?.toLocaleString(),
-      
-      // instalacion_22: estimateData?.installationCost?.toLocaleString(),
-      // instalacion_35: estimateData?.installationCost?.toLocaleString(),
-      // instalacion_7: estimateData?.installationCost?.toLocaleString(),
-      
-      // SEC_22: estimateData?.SECCost?.toLocaleString(),
-      // SEC_35: estimateData?.SECCost?.toLocaleString(),
-      // SEC_7: estimateData?.SECCost?.toLocaleString(),
-      
-      // cargador_22: 0,
-      // cargador_35: 0,
-      // cargador_7: 0,
-      
-      // neto_22: `$ ${estimateData?.netPrice?.toLocaleString()}`,
-      // neto_35: `$ ${estimateData?.netPrice?.toLocaleString()}`,
-      // neto_7: `$ ${estimateData?.netPrice?.toLocaleString()}`,
-      
-      // iva_22: `$ ${estimateData?.VAT?.toLocaleString()}`,
-      // iva_35: `$ ${estimateData?.VAT?.toLocaleString()}`,
-      // iva_7: `$ ${estimateData?.VAT?.toLocaleString()}`,
-      
-      // bruto_22: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
-      // bruto_35: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
-      // bruto_7: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
-       */}
+    
     {/* <pre>isSaved = {JSON.stringify(isSaved, null, 2)}</pre>
     <pre>estimateData = {JSON.stringify(isSaved, null, 2)}</pre>
     <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>
     */}
     {/* <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre> 
-    <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre> */}
+    */}
+    {/* 
+    <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre>  */}
+    {/* <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>  */}
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 

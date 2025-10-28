@@ -259,9 +259,9 @@ useEffect(() => {
       instalacion_35: `${Number(estimateData?.instalacion_35) === 0 ? "n/a" : formatCurrency(Number(estimateData?.instalacion_35))}`,
       instalacion_7: `${Number(estimateData?.instalacion_7) === 0 ? "n/a" : formatCurrency(Number(estimateData?.instalacion_7))}`,
 
-      SEC_22: `${Number(estimateData?.SEC_22) === 0 ? "n/a" : formatCurrency(Number(estimateData?.SEC_22))}`,
-      SEC_35: `${Number(estimateData?.SEC_35) === 0 ? "n/a" : formatCurrency(Number(estimateData?.SEC_35))}`,
-      SEC_7: `${Number(estimateData?.SEC_7) === 0 ? "n/a" : formatCurrency(Number(estimateData?.SEC_7))}`,
+      SEC_22: `${estimateData?.estimateId_22 === "" ? "n/a" : formatCurrency(Number(estimateData?.SEC_22))}`,
+      SEC_35: `${estimateData?.estimateId_35 === "" ? "n/a" : formatCurrency(Number(estimateData?.SEC_35))}`,
+      SEC_7: `${estimateData?.estimateId_7 === "" ? "n/a" : formatCurrency(Number(estimateData?.SEC_7))}`,
 
       cargador_22: `${Number(estimateData?.cargador_22) === 0 ? "n/a" : formatCurrency(Number(estimateData?.cargador_22))}`,
       cargador_35: `${Number(estimateData?.cargador_35) === 0 ? "n/a" : formatCurrency(Number(estimateData?.cargador_35))}`,
@@ -645,7 +645,7 @@ useEffect(() => {
         }
         
         {
-               status === "loading" || !showButton &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
+               !showButton &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
                  <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
                </Box>
         }
@@ -659,7 +659,11 @@ useEffect(() => {
       >Generando su Simulación ...</Typography>}
         
       </Box>
-      {/* <pre>{JSON.stringify(currentForm, null, 2 )}</pre> */}
+      
+      {/* <pre>isSaved = {JSON.stringify(isSaved, null, 2 )}</pre>
+      <pre>showButton = {JSON.stringify(showButton, null, 2 )}</pre>
+      <pre>status = {JSON.stringify(status, null, 2 )}</pre> */}
+      
     </>      
   );
 };

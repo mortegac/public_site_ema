@@ -233,8 +233,8 @@ useEffect(() => {
     <pre>estimateData = {JSON.stringify(isSaved, null, 2)}</pre>
     <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>
     */}
-    <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre> 
-    <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>
+    {/* <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre> 
+    <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre> */}
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 

@@ -71,7 +71,9 @@ const estimateSlice = createSlice({
         
         // Procesar cada estimate y crear objeto con todas las potencias
         const processedData: Estimate = {
-          estimateId: "",
+          estimateId_22: "",
+          estimateId_35: "",
+          estimateId_7: "",
           materiales_22: "0",
           materiales_35: "0",
           materiales_7: "0",

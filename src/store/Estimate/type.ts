@@ -122,6 +122,7 @@ export type Estimate = {
   estimateId_22: string;
   estimateId_35: string;
   estimateId_7: string;
+  
   materiales_22: string;
   materiales_35: string;
   materiales_7: string;
@@ -156,9 +157,12 @@ export type Estimate = {
 
 }
 
-
+  
 export const emptyEstimate: Estimate = {
-  estimateId: "",
+  estimateId_22: "",
+  estimateId_35: "",
+  estimateId_7: "",
+  
   materiales_22:  "",
   materiales_35:  "",
   materiales_7:  "",

@@ -47,7 +47,7 @@ export const createEstimate = async (input: estimateInput): Promise<any> => {
        
         
         // const estimate = processResult?.data?.ProcessEstimate?.estimates[0]
-        resolve(processResult?.data?.ProcessEstimate?.estimates[0])
+        resolve(processResult?.data?.ProcessEstimate?.estimates || [])
         
         // if ('data' in processResult && processResult.data?.ProcessEstimate) {
         //   const { data: estimate } = await client.models.Estimate.get({ 

@@ -24,9 +24,18 @@ import CustomFormLabel from '@/app/components/shared/CalendarSteps/CustomFormLab
 // import { CustomRadio} from '@/app/components/forms/CustomRadio';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, setFormClient, selectClientForms, setDataForm, setTypeOfCharger, setTypeOfBuilder, setToggleChargerStatus } from "@/store/ClientForms/slice";
+import { 
+  setStep, 
+  setFormClient, 
+  selectClientForms, 
+  setDataForm, 
+  setTypeOfCharger, 
+  setTypeOfBuilder, 
+  setToggleChargerStatus 
+} from "@/store/ClientForms/slice";
 // import { selectClientForms, , setDataForm, setStep } from "@/store/ClientForms/slice";
-import { setEstimate, selectEstimate } from "@/store/Estimate/slice";
+import { setEstimate, selectEstimate 
+} from "@/store/Estimate/slice";
 
 
 
@@ -83,6 +92,7 @@ export const FormStep02 = (props:any) => {
   const { 
     currentStep,
     currentForm,
+    isWallbox
   } = useAppSelector(selectClientForms);
   const { 
     estimate,
@@ -125,6 +135,8 @@ export const FormStep02 = (props:any) => {
       // Solo ejecutar si el formulario fue enviado y existe formId
       if (!isFormSubmitted || !currentForm.formId) return;
       
+      
+      
       try {
         await Promise.all([
           dispatch(
@@ -153,56 +165,76 @@ export const FormStep02 = (props:any) => {
 
 useEffect(() => {
    
-  if (!isSaved || !estimateData?.estimateId) return;
+  if (!isSaved && status !== "loading") return;
+  // if (!isSaved || !estimateData?.estimateId_7 || !estimateData?.estimateId_35 || !estimateData?.estimateId_22) return;
+  
+  if (isWallbox && estimateData?.materiales_35 === "" || estimateData?.materiales_7 === "") return;
+  if (!isWallbox && estimateData?.materiales_22 === "") return;
   
   const timeoutId = setTimeout(() => {
     // Preparar los datos para enviar
     const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
     
     const paymentData = {                    
-      materiales_35: estimateData?.materialsCost?.toLocaleString(),
-      materiales_7: estimateData?.materialsCost?.toLocaleString(),
-      instalacion_35: estimateData?.installationCost?.toLocaleString(),
-      instalacion_7: estimateData?.installationCost?.toLocaleString(),
-      SEC_35: estimateData?.SECCost?.toLocaleString(),
-      SEC_7: estimateData?.SECCost?.toLocaleString(),
-      cargador_35: 0,
-      cargador_7: 0,
-      neto_35: `$ ${estimateData?.netPrice?.toLocaleString()}`,
-      neto_7: `$ ${estimateData?.netPrice?.toLocaleString()}`,
-      iva_35: `$ ${estimateData?.VAT?.toLocaleString()}`,
-      iva_7: `$ ${estimateData?.VAT?.toLocaleString()}`,
-      bruto_35: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
-      bruto_7: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+      ...estimateData,
+      isWallbox:isWallbox,
       mts: `${currentForm?.distance} mts`,
       typeOfResidence: typeOfResidence,
       email: currentForm?.email,
-      name: currentForm?.email,
+      name: currentForm?.name,
     };
     
     console.log("---paymentData---", paymentData)
     // Guardar en sessionStorage
     sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-    
     // Redirigir según el estado
     console.log("----REDIRECT--- /cotizador/simulacion")
         
     router.push('/cotizador/simulacion');
-        
    
   }, 3000);
 
   return () => clearTimeout(timeoutId);
   
-}, [isSaved, estimateData?.estimateId]);
+}, [isSaved, estimateData?.estimateId_7, estimateData?.estimateId_35, estimateData?.estimateId_22]);
 
 
   return (  
     <>
+    {/* // materiales_22: estimateData?.materialsCost?.toLocaleString(),
+      // materiales_35: estimateData?.materialsCost?.toLocaleString(),
+      // materiales_7: estimateData?.materialsCost?.toLocaleString(),
+      
+      // instalacion_22: estimateData?.installationCost?.toLocaleString(),
+      // instalacion_35: estimateData?.installationCost?.toLocaleString(),
+      // instalacion_7: estimateData?.installationCost?.toLocaleString(),
+      
+      // SEC_22: estimateData?.SECCost?.toLocaleString(),
+      // SEC_35: estimateData?.SECCost?.toLocaleString(),
+      // SEC_7: estimateData?.SECCost?.toLocaleString(),
+      
+      // cargador_22: 0,
+      // cargador_35: 0,
+      // cargador_7: 0,
+      
+      // neto_22: `$ ${estimateData?.netPrice?.toLocaleString()}`,
+      // neto_35: `$ ${estimateData?.netPrice?.toLocaleString()}`,
+      // neto_7: `$ ${estimateData?.netPrice?.toLocaleString()}`,
+      
+      // iva_22: `$ ${estimateData?.VAT?.toLocaleString()}`,
+      // iva_35: `$ ${estimateData?.VAT?.toLocaleString()}`,
+      // iva_7: `$ ${estimateData?.VAT?.toLocaleString()}`,
+      
+      // bruto_22: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+      // bruto_35: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+      // bruto_7: `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+       */}
     {/* <pre>isSaved = {JSON.stringify(isSaved, null, 2)}</pre>
     <pre>estimateData = {JSON.stringify(isSaved, null, 2)}</pre>
     <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>
-    <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre> */}
+    */}
+    <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre> 
+    <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 
@@ -342,7 +374,7 @@ useEffect(() => {
               paddingTop: "32px",
             }}
         >
-            <CustomFormLabel>Deseas añadir el valor del cargador a la simulación:</CustomFormLabel>
+            {/* <CustomFormLabel>Deseas añadir el valor del cargador a la simulación:</CustomFormLabel>
             <FullWidthButtonWithIcons variant="contained" 
               sx={{
                 background:`${currentForm?.hasOwnCharger ? "#ECF2FF" : "#FFF"} `
@@ -363,7 +395,7 @@ useEffect(() => {
             </BoxLeft>
             
             <LargeRightIcon><OwnchargerSVG /></LargeRightIcon>
-          </FullWidthButtonWithIcons>
+          </FullWidthButtonWithIcons> */}
           
           {/* <FullWidthButtonWithIcons variant="contained"
            sx={{
@@ -490,44 +522,47 @@ useEffect(() => {
         justifyContent: "center",
         alignItems: "center",
       }}>
-        <Button 
-        id="btn"
-          type="submit" 
-          variant="contained" 
-          color="primary"
-          sx={{
-            width: { xs: "90%", md: "50%" },
-            padding: "10px",
-            marginTop:"24px",
-          }}
-          disabled={
-            // Validación del tipo de cargador (debe ser uno u otro, no ambos)
-            !((currentForm?.isPortable && !currentForm?.isWallbox) || (!currentForm?.isPortable && currentForm?.isWallbox)) ||
-            
-            // Validación del tipo de residencia (debe ser uno u otro, no ambos)
-            !((currentForm?.isHouse && !currentForm?.isBuilding) || (!currentForm?.isHouse && currentForm?.isBuilding)) ||
-            
-            // Validación del estado del cargador (debe ser uno u otro, no ambos)
-            !((currentForm?.hasOwnCharger && !currentForm?.needsCharger) || (!currentForm?.hasOwnCharger && currentForm?.needsCharger)) ||
-            
-            // Validación de la distancia
-            !currentForm?.distance || Number(currentForm?.distance) <= 0 ||
-            
-            // Validación de términos y condiciones
-            !currentForm?.acceptTermAndConditions  
-            // ||
-            
-            // status !== "idle"
-          }
-          onClick={(e) => handlerNextStep(e)}
-        >
-          Siguiente
-          {
-              status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
-                <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
-              </Box>
-          }
-        </Button>
+        
+        {status !== "loading" &&
+         <Button 
+         id="btn"
+           type="submit" 
+           variant="contained" 
+           color="primary"
+           sx={{
+             width: { xs: "90%", md: "50%" },
+             padding: "10px",
+             marginTop:"24px",
+           }}
+           disabled={
+             // Validación del tipo de cargador (debe ser uno u otro, no ambos)
+             !((currentForm?.isPortable && !currentForm?.isWallbox) || (!currentForm?.isPortable && currentForm?.isWallbox)) ||
+             
+             // Validación del tipo de residencia (debe ser uno u otro, no ambos)
+             !((currentForm?.isHouse && !currentForm?.isBuilding) || (!currentForm?.isHouse && currentForm?.isBuilding)) ||
+             
+             // Validación del estado del cargador (debe ser uno u otro, no ambos)
+             !((currentForm?.hasOwnCharger && !currentForm?.needsCharger) || (!currentForm?.hasOwnCharger && currentForm?.needsCharger)) ||
+             
+             // Validación de la distancia
+             !currentForm?.distance || Number(currentForm?.distance) <= 0 ||
+             
+             // Validación de términos y condiciones
+             !currentForm?.acceptTermAndConditions  
+           }
+           onClick={(e) => handlerNextStep(e)}
+         >
+           Siguiente
+           
+         </Button>
+        }
+        
+        {
+               status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
+                 <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
+               </Box>
+           }
+       
         
       </Box>
       {/* <pre>{JSON.stringify(currentForm, null, 2 )}</pre> */}

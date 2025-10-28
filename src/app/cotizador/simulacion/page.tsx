@@ -11,6 +11,10 @@ import {
   Button,
 } from "@mui/material";
 
+import HpHeader from '@/app/components/shared/header/HpHeader';
+import Footer from '@/app/components/shared/footer';
+import ScrollToTop from '@/app/components/shared/scroll-to-top';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -33,20 +37,36 @@ let currentForm: any;
 
 export default function FormResumeVirtual() {
   const [paymentDataLocal,setPaymentDataLocal,] = useState({ 
+    isWallbox:"",
+    
     materiales_35: "",
     materiales_7: "",
+    materiales_22: "",
+    
     instalacion_35: "",
     instalacion_7: "",
+    instalacion_22: "",
+    
     SEC_35: "",
     SEC_7: "",
+    SEC_22: "",
+    
     cargador_35: "",
     cargador_7: "",
+    cargador_22: "",
+    
     neto_35: "",
     neto_7: "",
+    neto_22: "",
+    
     iva_35: "",
     iva_7: "",
+    iva_22: "",
+    
     bruto_35: "",
     bruto_7: "",
+    bruto_22: "",
+    
     mts: "",
     typeOfResidence: "",
     email: "",
@@ -130,6 +150,8 @@ export default function FormResumeVirtual() {
         title="Retorno de Pago"
         description="Procesando el retorno de pago"
       >
+        <HpHeader /> 
+        
         <Box
           sx={{
             display: "flex",
@@ -238,16 +260,27 @@ export default function FormResumeVirtual() {
                                     padding={'normal'}
                                   >Descripción      
                                   </TableCell>
-                                  <TableCell        
-                                    align={'left'}
-                                    padding={'normal'}
-                                  >3,5 kW      
-                                  </TableCell>
-                                  <TableCell        
-                                    align={'left'}
-                                    padding={'normal'}
-                                  >7 kW      
-                                  </TableCell>
+                                  {  paymentDataLocal?.isWallbox && 
+                                  <>
+                                    <TableCell        
+                                      align={'left'}
+                                      padding={'normal'}
+                                      >3,5 kW      
+                                    </TableCell>
+                                    <TableCell        
+                                      align={'left'}
+                                      padding={'normal'}
+                                      >7 kW      
+                                    </TableCell>
+                                  </>
+                                  }
+                                  {  !paymentDataLocal?.isWallbox && 
+                                    <TableCell        
+                                      align={'left'}
+                                      padding={'normal'}
+                                    >22 kW      
+                                    </TableCell>
+                                  }
                               
                               </TableRow>
                             </TableHead>
@@ -260,17 +293,29 @@ export default function FormResumeVirtual() {
                                 Materiales
                                 </Typography>
                               </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.materialsCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.materiales_35?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                $ {paymentDataLocal?.materiales_7?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
+                              {  paymentDataLocal?.isWallbox && 
+                              <>
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {/* $ {estimate?.materialsCost?.toLocaleString()} */}
+                                  {formatCurrency(Number(paymentDataLocal?.materiales_35))}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.materiales_7))}
+                                  </Typography>
+                                </TableCell>
+                              </>
+                              }
+                              {  !paymentDataLocal?.isWallbox && 
+                                <TableCell>
+                                    <Typography fontWeight={400} variant="h6">
+                                    {formatCurrency(Number(paymentDataLocal?.materiales_22))}
+                                    </Typography>
+                                </TableCell>
+                              }
+                              
                             </TableRow>
                           </TableBody>
                           <TableBody>
@@ -280,18 +325,31 @@ export default function FormResumeVirtual() {
                                 Instalación
                                 </Typography>
                               </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.instalacion_35?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                                $ {paymentDataLocal?.instalacion_7?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
+                              
+                              {  paymentDataLocal?.isWallbox && 
+                                <>
+                                  <TableCell>
+                                    <Typography fontWeight={400} variant="h6">
+                                    {formatCurrency(Number(paymentDataLocal?.instalacion_35))}
+                                    </Typography>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Typography fontWeight={400} variant="h6">
+                                    {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
+                                    {formatCurrency(Number(paymentDataLocal?.instalacion_7))}
+                                    </Typography>
+                                  </TableCell>  
+                                </>
+                              }
+                              { !paymentDataLocal?.isWallbox && 
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
+                                  {formatCurrency(Number(paymentDataLocal?.instalacion_22))}
+                                  </Typography>
+                                </TableCell>
+                              }
+                            
                             </TableRow>
                           </TableBody>
                           <TableBody>
@@ -301,17 +359,28 @@ export default function FormResumeVirtual() {
                                 Trámites SEC	
                                 </Typography>
                               </TableCell>
-                              <TableCell>
+                              
+                              { paymentDataLocal?.isWallbox && 
+                              <>
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.SEC_35))}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.SEC_7))}
+                                  </Typography>
+                                </TableCell>
+                              </>
+                              }
+                             { !paymentDataLocal?.isWallbox && 
+                             <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.TE6Cost?.toLocaleString()} */}
-                                {paymentDataLocal?.SEC_35?.toLocaleString()}
+                                {formatCurrency(Number(paymentDataLocal?.SEC_22))}
                                 </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                {paymentDataLocal?.SEC_7?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
+                            </TableCell>
+                            }
                             </TableRow>
                           </TableBody>
                           <TableBody>
@@ -321,17 +390,30 @@ export default function FormResumeVirtual() {
                                 Cargador referencial 7kW
                                 </Typography>
                               </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.TE6Cost?.toLocaleString()} */}
-                                0
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography fontWeight={400} variant="h6">
-                                0
-                                </Typography>
-                              </TableCell>
+                              
+                              { paymentDataLocal?.isWallbox && 
+                              <>
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  0
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  0
+                                  </Typography>
+                                </TableCell>
+                              </>
+                              }
+                              
+                              { !paymentDataLocal?.isWallbox && 
+                                <TableCell>
+                                  <Typography fontWeight={400} variant="h6">
+                                  0
+                                  </Typography>
+                                </TableCell>
+                              }
+                              
                             </TableRow>
                           </TableBody>
                           <TableBody>
@@ -341,38 +423,60 @@ export default function FormResumeVirtual() {
                                 Total neto
                                 </Typography>
                               </TableCell>
-                              <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.netCost?.toLocaleString()} */}
-                                {paymentDataLocal?.neto_35?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
-                              <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
-                                <Typography fontWeight={400} variant="h6">
-                                {paymentDataLocal?.neto_7?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
+                              { paymentDataLocal?.isWallbox && 
+                              <>
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {paymentDataLocal?.neto_35?.toLocaleString()}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.neto_7))}
+                                  </Typography>
+                                </TableCell>
+                              </>
+                              }
+                              { !paymentDataLocal?.isWallbox && 
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.neto_22))}
+                                  </Typography>
+                                </TableCell>
+                              }
+                              
                             </TableRow>
                           </TableBody>
                           <TableBody>
                             <TableRow>
                               <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                                 <Typography fontWeight={400} variant="h6">
-                                {/* IVA {estimate?.vatPercentage}% */}
-                                IVA $ 19%
+                                IVA 19%
                                 </Typography>
                               </TableCell>
-                              <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.vat?.toLocaleString()} */}
-                                {paymentDataLocal?.iva_35?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
-                              <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
-                                <Typography fontWeight={400} variant="h6">
-                                {paymentDataLocal?.iva_7?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
+                              { paymentDataLocal?.isWallbox && 
+                              <>
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.iva_35))}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.iva_7))}
+                                  </Typography>
+                                </TableCell>
+                              </>
+                              }
+                              
+                              { !paymentDataLocal?.isWallbox && 
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.iva_22))}
+                                  </Typography>
+                                </TableCell>
+                              }
+                              
                             </TableRow>
                           </TableBody>
                           <TableBody>
@@ -382,25 +486,32 @@ export default function FormResumeVirtual() {
                                 Total bruto
                                 </Typography>
                               </TableCell>
-                              <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.totalInstallationGross?.toLocaleString()} */}
-                                {paymentDataLocal?.bruto_35?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
-                              <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
-                                <Typography fontWeight={400} variant="h6">
-                                {/* $ {estimate?.totalInstallationGross?.toLocaleString()} */}
-                                {paymentDataLocal?.bruto_7?.toLocaleString()}
-                                </Typography>
-                              </TableCell>
+                              { paymentDataLocal?.isWallbox && 
+                              <>
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {paymentDataLocal?.bruto_35?.toLocaleString()}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.bruto_7))}
+                                  </Typography>
+                                </TableCell>
+                              </>
+                              }
+                              { !paymentDataLocal?.isWallbox && 
+                                <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
+                                  <Typography fontWeight={400} variant="h6">
+                                  {formatCurrency(Number(paymentDataLocal?.bruto_22))}
+                                  </Typography>
+                                </TableCell>
+                              }
                             </TableRow>
                           </TableBody>
                         </>
                         
                         
-                        
-                        {/* // } */}
                           <TableBody>
                           </TableBody>
                           </Table>
@@ -561,8 +672,10 @@ export default function FormResumeVirtual() {
             </Box>
           </Box>
         </Box>
-        {/* <Footer /> */}
-        {/* <ScrollToTop /> */}
+        
+        <Footer />
+        <ScrollToTop />
+        
       </PageContainer>
     </>
   );

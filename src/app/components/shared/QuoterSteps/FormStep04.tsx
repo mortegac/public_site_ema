@@ -44,36 +44,43 @@ export const FormStep04 = (props:any) => {
   const theme = useTheme();
   const borderColor = theme.palette.divider;
   
+  // Obtener el primer estimate del array (siempre es un array ahora)
+  const firstEstimate = Array.isArray(estimateData) && estimateData.length > 0 ? estimateData[0] : null;
+  
   
   async function sendEmailResume(){
-    // Validar que exista estimateData antes de enviar
-    if (!estimateData) {
-      console.warn('No se puede enviar email: estimateData no existe');
+    // Validar que exista estimateData (array) antes de enviar
+    if (!estimateData || !Array.isArray(estimateData) || estimateData.length === 0) {
+      console.warn('No se puede enviar email: estimateData no existe o está vacío');
       return;
     }
     
+    // Usar el primer elemento del array (siempre es un array ahora)
+    const firstEstimate = estimateData[0];
+    
     console.log('Enviando email con resumen de estimación:', {
       estimateData,
+      firstEstimate,
       currentForm,
       email: currentForm?.email
     });
     const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
-    // estimateData
+    
     const objEmail = {
-          "materiales_35": estimateData?.materialsCost?.toLocaleString(),
-          "materiales_7": estimateData?.materialsCost?.toLocaleString(),
-          "instalacion_35": estimateData?.installationCost?.toLocaleString(),
-          "instalacion_7": estimateData?.installationCost?.toLocaleString(),
-          "SEC_35": estimateData?.SECCost?.toLocaleString(),
-          "SEC_7": estimateData?.SECCost?.toLocaleString(),
+          "materiales_35": firstEstimate?.materialsCost?.toLocaleString(),
+          "materiales_7": firstEstimate?.materialsCost?.toLocaleString(),
+          "instalacion_35": firstEstimate?.installationCost?.toLocaleString(),
+          "instalacion_7": firstEstimate?.installationCost?.toLocaleString(),
+          "SEC_35": firstEstimate?.SECCost?.toLocaleString(),
+          "SEC_7": firstEstimate?.SECCost?.toLocaleString(),
           "cargador_35": "0",
           "cargador_7": "0",
-          "neto_35": `$ ${estimateData?.netPrice?.toLocaleString()}`,
-          "neto_7": `$ ${estimateData?.netPrice?.toLocaleString()}`,
-          "iva_35": `$ ${estimateData?.VAT?.toLocaleString()}`,
-          "iva_7": `$ ${estimateData?.VAT?.toLocaleString()}`,
-          "bruto_35": `$ ${estimateData?.grossPrice?.toLocaleString()}`,
-          "bruto_7": `$ ${estimateData?.grossPrice?.toLocaleString()}`,
+          "neto_35": `$ ${firstEstimate?.netPrice?.toLocaleString()}`,
+          "neto_7": `$ ${firstEstimate?.netPrice?.toLocaleString()}`,
+          "iva_35": `$ ${firstEstimate?.VAT?.toLocaleString()}`,
+          "iva_7": `$ ${firstEstimate?.VAT?.toLocaleString()}`,
+          "bruto_35": `$ ${firstEstimate?.grossPrice?.toLocaleString()}`,
+          "bruto_7": `$ ${firstEstimate?.grossPrice?.toLocaleString()}`,
           "mts": `${currentForm?.distance} mts`,
           "typeOfResidence": typeOfResidence,
           "email": currentForm?.email,
@@ -203,7 +210,7 @@ export const FormStep04 = (props:any) => {
                   </Box>
                   }
                   
-                {status === "idle" && <>
+                {status === "idle" && firstEstimate && <>
                   <TableBody>
                     <TableRow>
                       <TableCell>
@@ -214,12 +221,12 @@ export const FormStep04 = (props:any) => {
                       <TableCell>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.materialsCost?.toLocaleString()} */}
-                        $ {estimateData?.materialsCost?.toLocaleString()}
+                        $ {firstEstimate?.materialsCost?.toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography fontWeight={400} variant="h6">
-                        $ {estimateData?.materialsCost?.toLocaleString()}
+                        $ {firstEstimate?.materialsCost?.toLocaleString()}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -234,13 +241,13 @@ export const FormStep04 = (props:any) => {
                       <TableCell>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                        $ {estimateData?.installationCost?.toLocaleString()}
+                        $ {firstEstimate?.installationCost?.toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.manpowerCost?.toLocaleString()} */}
-                        $ {estimateData?.installationCost?.toLocaleString()}
+                        $ {firstEstimate?.installationCost?.toLocaleString()}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -255,12 +262,12 @@ export const FormStep04 = (props:any) => {
                       <TableCell>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.TE6Cost?.toLocaleString()} */}
-                        $ {estimateData?.SECCost?.toLocaleString()}
+                        $ {firstEstimate?.SECCost?.toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography fontWeight={400} variant="h6">
-                        $ {estimateData?.SECCost?.toLocaleString()}
+                        $ {firstEstimate?.SECCost?.toLocaleString()}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -295,12 +302,12 @@ export const FormStep04 = (props:any) => {
                       <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.netCost?.toLocaleString()} */}
-                        $ {estimateData?.netPrice?.toLocaleString()}
+                        $ {firstEstimate?.netPrice?.toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                         <Typography fontWeight={400} variant="h6">
-                        $ {estimateData?.netPrice?.toLocaleString()}
+                        $ {firstEstimate?.netPrice?.toLocaleString()}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -316,12 +323,12 @@ export const FormStep04 = (props:any) => {
                       <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.vat?.toLocaleString()} */}
-                        $ {estimateData?.VAT?.toLocaleString()}
+                        $ {firstEstimate?.VAT?.toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                         <Typography fontWeight={400} variant="h6">
-                        $ {estimateData?.VAT?.toLocaleString()}
+                        $ {firstEstimate?.VAT?.toLocaleString()}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -336,13 +343,13 @@ export const FormStep04 = (props:any) => {
                       <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.totalInstallationGross?.toLocaleString()} */}
-                        $ {estimateData?.grossPrice?.toLocaleString()}
+                        $ {firstEstimate?.grossPrice?.toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ backgroundColor: '#f3f3f3' }}>
                         <Typography fontWeight={400} variant="h6">
                         {/* $ {estimate?.totalInstallationGross?.toLocaleString()} */}
-                        $ {estimateData?.grossPrice?.toLocaleString()}
+                        $ {firstEstimate?.grossPrice?.toLocaleString()}
                         </Typography>
                       </TableCell>
                     </TableRow>

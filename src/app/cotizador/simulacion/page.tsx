@@ -280,7 +280,7 @@ export default function FormResumeVirtual() {
                                     <TableCell        
                                       align={'left'}
                                       padding={'normal'}
-                                    >22 kW      
+                                    >2,2 kW      
                                     </TableCell>
                                   }
                               

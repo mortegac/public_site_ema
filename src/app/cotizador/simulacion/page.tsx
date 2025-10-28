@@ -387,7 +387,7 @@ export default function FormResumeVirtual() {
                             <TableRow>
                               <TableCell>
                                 <Typography fontWeight={400} variant="h6">
-                                Cargador referencial 7kW
+                                Cargador referencial
                                 </Typography>
                               </TableCell>
                               
@@ -395,12 +395,12 @@ export default function FormResumeVirtual() {
                               <>
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  0
+                                  {paymentDataLocal?.cargador_35}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  0
+                                  {paymentDataLocal?.cargador_7}
                                   </Typography>
                                 </TableCell>
                               </>
@@ -409,7 +409,7 @@ export default function FormResumeVirtual() {
                               { !paymentDataLocal?.isWallbox && 
                                 <TableCell>
                                   <Typography fontWeight={400} variant="h6">
-                                  0
+                                  {paymentDataLocal?.cargador_22}
                                   </Typography>
                                 </TableCell>
                               }

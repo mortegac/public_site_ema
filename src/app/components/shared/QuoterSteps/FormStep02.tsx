@@ -278,35 +278,6 @@ useEffect(() => {
       bruto_22: `${Number(estimateData?.bruto_22) === 0 ? "n/a" : formatCurrency(Number(estimateData?.bruto_22))}`,
       bruto_35: `${Number(estimateData?.bruto_35) === 0 ? "n/a" : formatCurrency(Number(estimateData?.bruto_35))}`,
       bruto_7: `${Number(estimateData?.bruto_7) === 0 ? "n/a" : formatCurrency(Number(estimateData?.bruto_7))}`,
-            
-      // materiales_22: `${formatCurrency(Number(estimateData?.materiales_22))}`,
-      // materiales_35: `${formatCurrency(Number(estimateData?.materiales_35))}`,
-      // materiales_7: `${formatCurrency(Number(estimateData?.materiales_7))}`,
-      
-      // instalacion_22: `${formatCurrency(Number(estimateData?.instalacion_22))}`,
-      // instalacion_35: `${formatCurrency(Number(estimateData?.instalacion_35))}`,
-      // instalacion_7: `${formatCurrency(Number(estimateData?.instalacion_7))}`,
-      
-      // SEC_22: `${formatCurrency(Number(estimateData?.SEC_22))}`,
-      // SEC_35: `${formatCurrency(Number(estimateData?.SEC_35))}`,
-      // SEC_7: `${formatCurrency(Number(estimateData?.SEC_7))}`,
-      
-      // cargador_22: `${formatCurrency(Number(estimateData?.cargador_22))}`,
-      // cargador_35: `${formatCurrency(Number(estimateData?.cargador_35))}`,
-      // cargador_7: `${formatCurrency(Number(estimateData?.cargador_7))}`,
-      
-      // neto_22: `${formatCurrency(Number(estimateData?.neto_22))}`,
-      // neto_35: `${formatCurrency(Number(estimateData?.neto_35))}`,
-      // neto_7: `${formatCurrency(Number(estimateData?.neto_7))}`,
-      
-      // iva_22: `${formatCurrency(Number(estimateData?.iva_22))}`,
-      // iva_35: `${formatCurrency(Number(estimateData?.iva_35))}`,
-      // iva_7: `${formatCurrency(Number(estimateData?.iva_7))}`,
-      
-      // bruto_22: `${formatCurrency(Number(estimateData?.bruto_22))}`,
-      // bruto_35: `${formatCurrency(Number(estimateData?.bruto_35))}`,
-      // bruto_7: `${formatCurrency(Number(estimateData?.bruto_7))}`,
-      
       isWallbox:currentForm?.isWallbox,
       mts: `${currentForm?.distance} mts`,
       typeOfResidence: typeOfResidence,
@@ -340,8 +311,9 @@ useEffect(() => {
     */}
     {/* 
     <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre>  */}
-    {/* <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>  */}
-    
+    {/* <pre>estimateData = {JSON.stringify(estimateData?.cargador_22, null, 2)}</pre> 
+    <pre>estimateData = {Number(estimateData?.cargador_22)}</pre>  */}
+    {/* Number(estimateData?.cargador_22) === 0 */}
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 
@@ -616,23 +588,14 @@ useEffect(() => {
                     </Typography> */}
                   </BoxLeft>
             </FullWidthButtonWithIcons>
-            <Typography variant="caption" 
-              
-              >
-                 <Button
-                          variant="text"
-                          color="primary"
-                          size="large"
-                          sx={{
-                            paddingX: 4,
-                            paddingY: 1.5,
-                          }}
-                            href="https://energica.city/t-y-c-cotizador"
-                          target="_blank"
-                        >
-                Revise nuestros términos y condiciones<b>aquí</b>
-                        </Button>
-            </Typography>
+             <Typography variant="caption" sx={{
+                        fontSize:"15px",
+                      }}>
+               Revise nuestros términos y condiciones{" "}
+               <a href="https://energica.city/t-y-c-cotizador" target="_blank" rel="noopener noreferrer" style={{ color: '#2A3547', textDecoration: 'none', fontWeight: 'bold' }}>
+                 aquí
+               </a>
+             </Typography>
         </Container>
           
       </Box>

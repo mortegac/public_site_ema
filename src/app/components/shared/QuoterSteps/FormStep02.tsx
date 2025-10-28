@@ -90,6 +90,7 @@ export const FormStep02 = (props:any) => {
   })
   
   const [isSaved, setIsSaved] = React.useState(false);
+  const [showButton, setShowButton] = React.useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
   
   const { 
@@ -109,6 +110,7 @@ export const FormStep02 = (props:any) => {
      
     try {
       setIsFormSubmitted(true);
+      setShowButton(false);
       
       // Ejecutar setFormClient primero para obtener el formId
       await dispatch(
@@ -289,7 +291,7 @@ useEffect(() => {
     sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
     // Redirigir según el estado
     console.log("----REDIRECT--- /cotizador/simulacion")
-        
+    // setShowButton(false);
     router.push('/cotizador/simulacion');
    
   }, 3000);
@@ -311,6 +313,7 @@ useEffect(() => {
     {/* 
     <pre>currentForm = {JSON.stringify(currentForm, null, 2)}</pre>  */}
     {/* <pre>estimateData = {JSON.stringify(estimateData, null, 2)}</pre>  */}
+    
       <Box 
         id="boxCentral" 
         bgcolor="#ffffff" 
@@ -599,7 +602,7 @@ useEffect(() => {
         alignItems: "center",
       }}>
         
-        {status !== "loading" &&
+        {status !== "loading" && showButton &&  
          <Button 
          id="btn"
            type="submit" 
@@ -634,11 +637,18 @@ useEffect(() => {
         }
         
         {
-               status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
+               status === "loading" || !showButton &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
                  <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
                </Box>
-           }
-       
+        }
+        {/* <pre>showButton = {JSON.stringify(showButton, null, 2)}</pre>  */}
+        
+       { showButton && isSaved &&
+       <Typography sx={{
+                  fontSize: "18px",
+                  color: "#2A3547",
+                }}
+      >Generando su Simulación ...</Typography>}
         
       </Box>
       {/* <pre>{JSON.stringify(currentForm, null, 2 )}</pre> */}

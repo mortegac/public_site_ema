@@ -609,7 +609,6 @@ useEffect(() => {
         justifyContent: "center",
         alignItems: "center",
       }}>
-<<<<<<< HEAD
         
         {status !== "loading" && showButton &&  
          <Button 
@@ -658,46 +657,6 @@ useEffect(() => {
                   color: "#2A3547",
                 }}
       >Generando su Simulación ...</Typography>}
-=======
-        <Button 
-        id="btn"
-          type="submit" 
-          variant="contained" 
-          color="primary"
-          sx={{
-            width: { xs: "90%", md: "50%" },
-            padding: "10px",
-            marginTop:"24px",
-          }}
-          disabled={
-            // Validación del tipo de cargador (debe ser uno u otro, no ambos)
-            !((currentForm?.isPortable && !currentForm?.isWallbox) || (!currentForm?.isPortable && currentForm?.isWallbox)) ||
-            
-            // Validación del tipo de residencia (debe ser uno u otro, no ambos)
-            !((currentForm?.isHouse && !currentForm?.isBuilding) || (!currentForm?.isHouse && currentForm?.isBuilding)) ||
-            
-            // Validación del estado del cargador (debe ser uno u otro, no ambos)
-            !((currentForm?.hasOwnCharger && !currentForm?.needsCharger) || (!currentForm?.hasOwnCharger && currentForm?.needsCharger)) ||
-            
-            // Validación de la distancia
-            !currentForm?.distance || Number(currentForm?.distance) <= 0 ||
-            
-            // Validación de términos y condiciones
-            !currentForm?.acceptTermAndConditions  
-            // ||
-            
-            // status !== "idle"
-          }
-          onClick={(e) => handlerNextStep(e)}
-        >
-          Siguiente
-          {
-              status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
-                <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
-              </Box>
-          }
-        </Button>
->>>>>>> 5161ec2 (fix loading data)
         
       </Box>
       

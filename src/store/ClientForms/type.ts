@@ -69,7 +69,7 @@ export const emptyClientForm: ClientForm = {
     // NEWS
   acceptTermAndConditions: false,
   isBuilding: false,
-  hasOwnCharger: false,
+  hasOwnCharger: true,
   needsCharger: false,
 };
 

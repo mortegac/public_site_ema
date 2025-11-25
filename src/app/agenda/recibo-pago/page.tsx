@@ -383,8 +383,8 @@ const Invoice = () => {
                 },
                 width: { xs: '100%', md: 'auto' }
               }}
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfMaGlC8UlSWZxTZgpTmD1sCftJJFv2EvAD_v5W0eIWzgwrkQ/viewform"
-              target='_blank'
+              href="/cotizador"
+              // target='_blank'
             >
               Simular costo de instalación
             </Button>

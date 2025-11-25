@@ -9,6 +9,7 @@ interface ClientFormsState {
   currentForm: ClientForm;
   loading: boolean;
   error: string | null;
+  isWallbox: boolean | null;
 }
 
 const initialState: ClientFormsState = {
@@ -17,14 +18,16 @@ const initialState: ClientFormsState = {
   currentForm: emptyClientForm,
   loading: false,
   error: null,
+  isWallbox: false,
 };
 
 export const setFormClient = createAsyncThunk(
     "FORMCLIENT/createFormClient ",
-    async (objFilter: clientFormInput) => {
+    async (objFilter: clientFormInput, thunkAPI) => {
       try {
         const response:any = await createClientForm({ ...objFilter });
-        return response;
+        // Retornar tanto la response como objFilter para actualizar isWallbox
+        return { response, objFilter };
       } catch (error) {
         console.error(">>>>ERROR FETCH setFormClient", error)
         return Promise.reject(error);
@@ -115,13 +118,17 @@ const clientFormsSlice = createSlice({
       })
       .addCase(setFormClient.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(">>> setFormClient >> action.payload >>", action.payload.data)
-        state.currentForm.formId = action?.payload?.data?.formId;
-        state.currentForm.customerId = action?.payload?.data?.customerId;
+        console.log(">>> setFormClient >> action.payload >>", action.payload)
         
+    
         
-        if (action?.payload?.data?.formId) {
-          
+        // Actualizar formId y customerId desde la response
+        state.currentForm.formId = action?.payload?.response?.data?.formId;
+        state.currentForm.customerId = action?.payload?.response?.data?.customerId;
+        
+        // Actualizar isWallbox desde objFilter
+        if (action?.payload?.objFilter?.isWallbox !== undefined) {
+          state.isWallbox = action.payload.objFilter.isWallbox;
         }
       })
       .addCase(setFormClient.rejected, (state, action) => {

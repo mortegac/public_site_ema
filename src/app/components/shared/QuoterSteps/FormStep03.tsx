@@ -310,6 +310,8 @@ export const FormStep03 = (props:any) => {
                   position: "relative",
                 }}
               >
+                
+                HOLA
                 <FullWidthButtonWithIcons 
                   variant="contained"
                   sx={{

@@ -7,9 +7,10 @@ import { ExtendedOptions } from "./variants/ExtendedOptions"
 const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice, index, slices, context }) => {
   const { variation } = slice;
   
-  const typeOfComponents = {
+  const typeOfComponents: Record<"default" | "extendedOptions" | "simpleOptions", FC<CarrouselOptionsProps>> = {
     ["default"]: Default,
     ["extendedOptions"]: ExtendedOptions,
+    ["simpleOptions"]: Default,
   };
 
   const TypeOfVariants = typeOfComponents[variation] || Default;

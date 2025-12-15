@@ -76,7 +76,7 @@ useEffect(() => {
       
       <C2a/>
       
-      <Footer />
+      {/* <Footer /> */}
       <ScrollToTop />
     </PageContainer>
   );

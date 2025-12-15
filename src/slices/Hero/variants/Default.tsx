@@ -22,7 +22,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
   
     return(
       <Box id="container" bgcolor="#ffffff" pt={7} pb={{ xs: 0, md: 7 }}
-      data-slice-type={slice.slice_type}
+        data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
     >
       <Container
@@ -32,15 +32,23 @@ export const Default: FC<HeroProps> = ({ slice }) => {
         }}
       >
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
-          <Box sx={{ textAlign: 'left', display:'flex', flexDirection:'col', alignItems:'center' }}>
+          <Box 
+            id="box-header" 
+            sx={{ 
+              textAlign: 'left', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'flex-start',
+              justifyContent: "center",
+              gap: 3
+            }}
+          >
             <Stack
-              my={3}
-              direction={{ xs: "column", sm: "column", xl:"column" }}
-              spacing="20px"
-              alignItems="center"
-              justifyContent="left"
+              direction="column"
+              spacing={2}
+              alignItems="flex-start"
+              justifyContent="flex-start"
             >
-
               <Typography
                 id="title-hero"
                 variant="h1"
@@ -80,18 +88,16 @@ export const Default: FC<HeroProps> = ({ slice }) => {
                   components={defaultComponents}
                 />                
               </Typography>
-             
-
             </Stack>
+            
             <Stack
               direction={{ xs: "column", sm: "row" }}
-              alignItems="left"
+              alignItems="flex-start"
               spacing={3}
-              mb={4}
-              justifyContent="left"
+              justifyContent="flex-start"
+              marginTop={6}
             >
-              
-             {primary?.buttononetext && <Button
+              {primary?.buttononetext && <Button
                 color="primary"
                 size="large"
                 variant="contained"
@@ -108,17 +114,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
               >
                  {primary.buttontwotext}
               </Button>}
-            
             </Stack>
-            {/* <Stack
-              direction="row"
-              flexWrap="wrap"
-              alignItems="center"
-              spacing={3}
-              mb={8}
-              justifyContent="center"
-            >
-            </Stack> */}
           </Box>
           
           {/* image */}

@@ -35,11 +35,11 @@ const footerLinks = [
               titleText: 'Cotizador',
               link: '/cotizador',
           },
-          // {
-          //     title: false,
-          //     titleText: 'FAQs',
-          //     link: '/faqs',
-          // },
+          {
+              title: false,
+              titleText: 'Venta de cargadores',
+              link: '/venta-cargadores',
+          },
           // {
           //     title: false,
           //     titleText: 'Contactanos',

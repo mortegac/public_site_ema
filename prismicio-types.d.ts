@@ -269,6 +269,16 @@ export type AllDocumentTypes = BlogDocument | PageDocument;
  */
 export interface CarrouselOptionsSliceDefaultPrimaryOptionsItem {
   /**
+   * IDdatabase field in *CarrouselOptions → Default → Primary → options*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Id interno de la base de datos
+   * - **API ID Path**: carrousel_options.default.primary.options[].iddatabase
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  iddatabase: prismic.KeyTextField;
+
+  /**
    * image field in *CarrouselOptions → Default → Primary → options*
    *
    * - **Field Type**: Image
@@ -522,6 +532,67 @@ export interface CarrouselOptionsSliceExtendedOptionsPrimaryOptionsItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   htmlfeatures: prismic.KeyTextField;
+
+  /**
+   * IDdatabase field in *CarrouselOptions → ExtendedOptions → Primary → options*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.extendedOptions.primary.options[].iddatabase
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  iddatabase: prismic.KeyTextField;
+}
+
+/**
+ * Item in *CarrouselOptions → SimpleOptions → Primary → options*
+ */
+export interface CarrouselOptionsSliceSimpleOptionsPrimaryOptionsItem {
+  /**
+   * image field in *CarrouselOptions → SimpleOptions → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.simpleOptions.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * buttonText field in *CarrouselOptions → SimpleOptions → Primary → options*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.simpleOptions.primary.options[].buttontext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontext: prismic.KeyTextField;
+
+  /**
+   * buttonLink field in *CarrouselOptions → SimpleOptions → Primary → options*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.simpleOptions.primary.options[].buttonlink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttonlink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * title field in *CarrouselOptions → SimpleOptions → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.simpleOptions.primary.options[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
 }
 
 /**
@@ -625,11 +696,42 @@ export type CarrouselOptionsSliceExtendedOptions = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *CarrouselOptions → SimpleOptions → Primary*
+ */
+export interface CarrouselOptionsSliceSimpleOptionsPrimary {
+  /**
+   * options field in *CarrouselOptions → SimpleOptions → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.simpleOptions.primary.options[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  options: prismic.GroupField<
+    Simplify<CarrouselOptionsSliceSimpleOptionsPrimaryOptionsItem>
+  >;
+}
+
+/**
+ * SimpleOptions variation for CarrouselOptions Slice
+ *
+ * - **API ID**: `simpleOptions`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type CarrouselOptionsSliceSimpleOptions = prismic.SharedSliceVariation<
+  "simpleOptions",
+  Simplify<CarrouselOptionsSliceSimpleOptionsPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *CarrouselOptions*
  */
 type CarrouselOptionsSliceVariation =
   | CarrouselOptionsSliceDefault
-  | CarrouselOptionsSliceExtendedOptions;
+  | CarrouselOptionsSliceExtendedOptions
+  | CarrouselOptionsSliceSimpleOptions;
 
 /**
  * CarrouselOptions Shared Slice
@@ -1373,6 +1475,67 @@ export interface OptionsContentSliceDefaultPrimaryOptionsItem {
 }
 
 /**
+ * Item in *OptionsContent → TwoColumns → Primary → options*
+ */
+export interface OptionsContentSliceTwoColumnsPrimaryOptionsItem {
+  /**
+   * title field in *OptionsContent → TwoColumns → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumns.primary.options[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * subtitle field in *OptionsContent → TwoColumns → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumns.primary.options[].subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+
+  /**
+   * image field in *OptionsContent → TwoColumns → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumns.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * buttontext field in *OptionsContent → TwoColumns → Primary → options*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumns.primary.options[].buttontext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontext: prismic.KeyTextField;
+
+  /**
+   * buttonlink field in *OptionsContent → TwoColumns → Primary → options*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumns.primary.options[].buttonlink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttonlink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
  * Primary content in *OptionsContent → Default → Primary*
  */
 export interface OptionsContentSliceDefaultPrimary {
@@ -1423,9 +1586,41 @@ export type OptionsContentSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *OptionsContent → TwoColumns → Primary*
+ */
+export interface OptionsContentSliceTwoColumnsPrimary {
+  /**
+   * options field in *OptionsContent → TwoColumns → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumns.primary.options[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  options: prismic.GroupField<
+    Simplify<OptionsContentSliceTwoColumnsPrimaryOptionsItem>
+  >;
+}
+
+/**
+ * TwoColumns variation for OptionsContent Slice
+ *
+ * - **API ID**: `twoColumns`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type OptionsContentSliceTwoColumns = prismic.SharedSliceVariation<
+  "twoColumns",
+  Simplify<OptionsContentSliceTwoColumnsPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *OptionsContent*
  */
-type OptionsContentSliceVariation = OptionsContentSliceDefault;
+type OptionsContentSliceVariation =
+  | OptionsContentSliceDefault
+  | OptionsContentSliceTwoColumns;
 
 /**
  * OptionsContent Shared Slice
@@ -1600,9 +1795,12 @@ declare module "@prismicio/client" {
       CarrouselOptionsSliceDefaultPrimary,
       CarrouselOptionsSliceExtendedOptionsPrimaryOptionsItem,
       CarrouselOptionsSliceExtendedOptionsPrimary,
+      CarrouselOptionsSliceSimpleOptionsPrimaryOptionsItem,
+      CarrouselOptionsSliceSimpleOptionsPrimary,
       CarrouselOptionsSliceVariation,
       CarrouselOptionsSliceDefault,
       CarrouselOptionsSliceExtendedOptions,
+      CarrouselOptionsSliceSimpleOptions,
       ContentWithImageSlice,
       ContentWithImageSliceDefaultPrimary,
       ContentWithImageSliceWithIconsPrimaryListItem,
@@ -1630,8 +1828,11 @@ declare module "@prismicio/client" {
       OptionsContentSlice,
       OptionsContentSliceDefaultPrimaryOptionsItem,
       OptionsContentSliceDefaultPrimary,
+      OptionsContentSliceTwoColumnsPrimaryOptionsItem,
+      OptionsContentSliceTwoColumnsPrimary,
       OptionsContentSliceVariation,
       OptionsContentSliceDefault,
+      OptionsContentSliceTwoColumns,
       ResumeBlogSlice,
       ResumeBlogSliceDefaultPrimaryOptionsItem,
       ResumeBlogSliceDefaultPrimary,

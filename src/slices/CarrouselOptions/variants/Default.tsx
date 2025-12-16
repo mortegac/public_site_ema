@@ -28,6 +28,12 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { CarrouselOptionsProps } from "../types"
 
 export const Default: FC<CarrouselOptionsProps> = ({ slice }) => {
+  // Type guard to ensure we're dealing with default variation
+  if (slice.variation !== "default") {
+    return null;
+  }
+  // After the type guard, TypeScript knows slice has default variation
+  const primary = (slice as Extract<typeof slice, { variation: "default" }>).primary;
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: false,
     slidesToScroll: 1,
@@ -111,7 +117,7 @@ export const Default: FC<CarrouselOptionsProps> = ({ slice }) => {
                   }}
                 >
             <PrismicRichText
-              field={slice?.primary?.title} 
+              field={primary.title} 
               components={defaultComponents}
             />                
           </Typography>
@@ -131,7 +137,7 @@ export const Default: FC<CarrouselOptionsProps> = ({ slice }) => {
             }}
           >
             <PrismicRichText
-              field={slice?.primary?.description} 
+              field={primary.description} 
               components={defaultComponents}
             />                
           </Typography>
@@ -208,7 +214,7 @@ export const Default: FC<CarrouselOptionsProps> = ({ slice }) => {
               
               
             }}>
-              {slice?.primary?.options?.map((option, index) => (
+              {primary.options?.map((option, index) => (
                 <Box 
                   key={index}
                   className="embla__slide" 

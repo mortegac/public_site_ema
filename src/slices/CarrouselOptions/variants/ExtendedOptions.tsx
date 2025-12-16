@@ -22,7 +22,12 @@ import { formatCurrency } from "@/utils/currency";
 import { CarrouselOptionsProps } from "../types"
 
 export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
-  const { primary } = slice;
+  // Type guard to ensure we're dealing with extendedOptions variation
+  if (slice.variation !== "extendedOptions") {
+    return null;
+  }
+  // After the type guard, TypeScript knows slice has extendedOptions variation
+  const primary = (slice as Extract<typeof slice, { variation: "extendedOptions" }>).primary;
   const imageIsRight = (primary as any)?.imageisright;
   const [mounted, setMounted] = useState(false);
 
@@ -70,7 +75,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                       }}
                     >
                 <PrismicRichText
-                  field={slice?.primary?.title} 
+                  field={primary.title} 
                   components={defaultComponents}
                 />                
               </Typography>
@@ -91,7 +96,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                 }}
               >
                 <PrismicRichText
-                  field={slice?.primary?.description} 
+                  field={primary.description} 
                   components={defaultComponents}
                 />                
               </Typography>
@@ -115,7 +120,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
               }}
             >
               
-              {slice?.primary?.options?.map((option:any, index) => (
+              {primary.options?.map((option:any, index) => (
                 <Grid 
                 size={{ xs: 12, sm: 6 }}
                 key={index}
@@ -600,7 +605,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
           </Box>
               
             {/* </Box>   */}
-          {/* <pre>{JSON.stringify(slice?.primary?.options, null, 2 )}</pre> */}
+          {/* <pre>{JSON.stringify(primary.options, null, 2 )}</pre> */}
         </Container>
     </Box>
     

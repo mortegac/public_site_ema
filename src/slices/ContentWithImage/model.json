@@ -74,6 +74,14 @@
             "placeholder_true": "true",
             "default_value": true
           }
+        },
+        "image": {
+          "type": "Image",
+          "config": {
+            "label": "image",
+            "constraint": {},
+            "thumbnails": []
+          }
         }
       },
       "items": {}

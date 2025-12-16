@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 export const components = {
   carrousel_options: dynamic(() => import("./CarrouselOptions")),
+  contact_form: dynamic(() => import("./ContactForm")),
   content_with_image: dynamic(() => import("./ContentWithImage")),
   hero: dynamic(() => import("./Hero")),
   ideas: dynamic(() => import("./Ideas")),

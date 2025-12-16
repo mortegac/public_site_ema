@@ -5,7 +5,8 @@ import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { asText } from "@prismicio/client";
 import { SliceZone } from "@prismicio/react";
 
-import HpHeader from '@/app/components/shared/header/HpHeader';
+// import HpHeader from '@/app/components/shared/header/HpHeader';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
 
 import { createClient } from "@/prismicio";
@@ -51,7 +52,7 @@ export default async function Page() {
   return <>
    <SchemaMarkup type="Organization" data={organizationSchema} />
     {/* <PageContainer title="" description=""> */}
-      <HpHeader /> 
+      <HpHeaderNew /> 
       <Container
         id="container-page"
         sx={{

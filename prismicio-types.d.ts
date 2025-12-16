@@ -196,6 +196,8 @@ export type BlogDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<BlogDocumentData>, "blog", Lang>;
 
 type PageDocumentDataSlicesSlice =
+  | ContactFormSlice
+  | LabelsSlice
   | ResumeBlogSlice
   | CarrouselOptionsSlice
   | HeroSlice
@@ -746,6 +748,101 @@ export type CarrouselOptionsSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *ContactForm → Default → Primary*
+ */
+export interface ContactFormSliceDefaultPrimary {
+  /**
+   * title field in *ContactForm → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.default.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * subtitle field in *ContactForm → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.default.primary.subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+
+  /**
+   * name field in *ContactForm → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.default.primary.name
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  name: prismic.KeyTextField;
+
+  /**
+   * phone field in *ContactForm → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.default.primary.phone
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  phone: prismic.KeyTextField;
+
+  /**
+   * email field in *ContactForm → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.default.primary.email
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  email: prismic.KeyTextField;
+
+  /**
+   * message field in *ContactForm → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.default.primary.message
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  message: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for ContactForm Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ContactFormSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ContactFormSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *ContactForm*
+ */
+type ContactFormSliceVariation = ContactFormSliceDefault;
+
+/**
+ * ContactForm Shared Slice
+ *
+ * - **API ID**: `contact_form`
+ * - **Description**: ContactForm
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ContactFormSlice = prismic.SharedSlice<
+  "contact_form",
+  ContactFormSliceVariation
+>;
+
+/**
  * Item in *ContentWithImage → withIcons → Primary → list*
  */
 export interface ContentWithImageSliceWithIconsPrimaryListItem {
@@ -866,6 +963,16 @@ export interface ContentWithImageSliceDefaultPrimary {
    * - **Documentation**: https://prismic.io/docs/fields/boolean
    */
   imageisright: prismic.BooleanField;
+
+  /**
+   * image field in *ContentWithImage → Default → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.default.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
 }
 
 /**
@@ -1801,6 +1908,10 @@ declare module "@prismicio/client" {
       CarrouselOptionsSliceDefault,
       CarrouselOptionsSliceExtendedOptions,
       CarrouselOptionsSliceSimpleOptions,
+      ContactFormSlice,
+      ContactFormSliceDefaultPrimary,
+      ContactFormSliceVariation,
+      ContactFormSliceDefault,
       ContentWithImageSlice,
       ContentWithImageSliceDefaultPrimary,
       ContentWithImageSliceWithIconsPrimaryListItem,

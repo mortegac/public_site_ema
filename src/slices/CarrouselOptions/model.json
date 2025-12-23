@@ -339,6 +339,34 @@
         }
       },
       "items": {}
+    },
+    {
+      "id": "logoList",
+      "name": "LogoList",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "options": {
+          "type": "Group",
+          "config": {
+            "label": "options",
+            "repeat": true,
+            "fields": {
+              "image": {
+                "type": "Image",
+                "config": {
+                  "label": "image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
     }
   ]
 }

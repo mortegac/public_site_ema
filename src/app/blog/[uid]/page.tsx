@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from 'next/image'
 
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
+
 import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { asText } from "@prismicio/client";
 import { SliceZone } from "@prismicio/react";
@@ -63,40 +65,138 @@ console.log("--page--", page)
 
 
 
-export default async function Page({ params }: { params: Promise<Params> }) {
-  const { uid } = await params;
-  const client = createClient();
-  const page = await client.getByUID("blog", uid).catch(() => notFound());
+// export default async function Page({ params }: { params: Promise<Params> }) {
+//   const { uid } = await params;
+//   const client = createClient();
+//   const page = await client.getByUID("blog", uid).catch(() => notFound());
 
     
-  const DOMAIN_PAGE:string=`${DOMAIN}/blog${page.url}`;
+//   const DOMAIN_PAGE:string=`${DOMAIN}/blog${page.url}`;
 
 
-  console.log("--page--", page)
+//   console.log("--page--", page)
   
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Energica City",
-    "url": `${DOMAIN_PAGE}`,
-    "logo": `${DOMAIN_PAGE}`,
-    "description": page?.data.meta_description ?? "",
-    "sameAs": [
-      "https://www.instagram.com/energicacity/",
-      "https://www.linkedin.com/company/energicacity"
-    ]
-  };
+//   const organizationSchema = {
+//     "@context": "https://schema.org",
+//     "@type": "Organization",
+//     "name": "Energica City",
+//     "url": `${DOMAIN_PAGE}`,
+//     "logo": `${DOMAIN_PAGE}`,
+//     "description": page?.data.meta_description ?? "",
+//     "sameAs": [
+//       "https://www.instagram.com/energicacity/",
+//       "https://www.linkedin.com/company/energicacity"
+//     ]
+//   };
+  
+//   return <>
+//     <SchemaMarkup type="Organization" data={organizationSchema} />
+//     <PageContainer title="" description="">
+//       <Container
+//         sx={{
+//           maxWidth: "1200px !important",
+//           position: "relative",
+//         }}
+//       >
+//         <Box
+//           id="imageSlice"
+//           sx={{
+//             marginTop:'26px',
+//             width: '100%',
+//             maxWidth: '1200px',
+//             height: 'auto',
+//             position: 'relative',
+//             '& img': {
+//               width: '100%',
+//               height: 'auto',
+//             }
+//           }}
+//         >
+//         <Image
+//           src={page?.data?.image?.url || ""}
+//           alt={page?.data?.image?.alt || ""}
+//           width={1200}
+//           height={300}
+//           priority
+//           unoptimized
+//           style={{
+//             maxWidth: '100%',
+//             height: 'auto',
+//           }}
+          
+//           // src={page?.data?.image?.url}
+//           // alt={"Miniswimmer Academy"}
+//           // layout="fill"
+//           // objectFit="cover"
+//           // objectPosition="center"
+//           // priority
+//         /> 
+                
+//               </Box>
+//         {/* <pre>{JSON.stringify(page?.data, null, 2 )}</pre> */}
+//         <SliceZone slices={page.data.slices} components={components} />;
+//       </Container>
+//     </PageContainer>
+//   </>
+// }
+
+export default async function Page({ params }: { params: Promise<Params> }) {
+  const { uid } = await params;
+    const client = createClient();
+    const page = await client.getByUID("blog", uid).catch(() => notFound());
+  
+      
+    const DOMAIN_PAGE:string=`${DOMAIN}/blog${page.url}`;
+  
+  
+    // console.log("--page--", page)
+    
+    const organizationSchema = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Energica City",
+      "url": `${DOMAIN_PAGE}`,
+      "logo": `${DOMAIN_PAGE}`,
+      "description": page?.data.meta_description ?? "",
+      "sameAs": [
+        "https://www.instagram.com/energicacity/",
+        "https://www.linkedin.com/company/energicacity"
+      ]
+    };
   
   return <>
     <SchemaMarkup type="Organization" data={organizationSchema} />
-    <PageContainer title="" description="">
+    {/* <PageContainer title="" description=""> */}
+      {/* <HpHeader />  */}
+      <HpHeaderNew /> 
       <Container
+        id="container-page"
         sx={{
-          maxWidth: "1200px !important",
-          position: "relative",
+          padding: 0,
+          margin: 0,
+          width: "100%",
+          maxWidth: "none !important",
+          paddingLeft: "0 !important",
+          paddingRight: "0 !important",
+          "&.MuiContainer-root": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
+          "@media (min-width: 600px)": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
+          "@media (min-width: 900px)": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
+          "@media (min-width: 1200px)": {
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+          },
         }}
       >
-        <Box
+             <Box
           id="imageSlice"
           sx={{
             marginTop:'26px',
@@ -131,10 +231,10 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         /> 
                 
               </Box>
-        {/* <pre>{JSON.stringify(page?.data, null, 2 )}</pre> */}
+        {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
         <SliceZone slices={page.data.slices} components={components} />;
       </Container>
-    </PageContainer>
+    {/* </PageContainer> */}
   </>
 }
 

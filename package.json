@@ -41,6 +41,7 @@
     "emailjs-com": "^3.2.0",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-auto-scroll": "8.6.0",
     "embla-carousel-react": "^8.6.0",
     "emoji-picker-react": "^4.5.2",
     "formik": "2.2.9",

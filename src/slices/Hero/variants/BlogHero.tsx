@@ -5,6 +5,8 @@ import { SliceComponentProps } from "@prismicio/react";
 import { PrismicRichText } from "@prismicio/react";
 import { defaultComponents } from "@/app/components/PrismicRichText";
 
+import { Text } from "@/app/components/shared/text";
+
 import {
   Box,
   Stack,
@@ -64,7 +66,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
             justifyContent: 'center'
           }}>
             {/* Tu contenido existente aquí */}
-             <Typography
+             {/* <Typography
                     id="title-hero"
                     variant="h1"
                     fontWeight={700}
@@ -76,10 +78,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
                       },
                     }}
                   >
-                    {/* <PrismicRichText
-                      field={slice.primary.title} 
-                      components={defaultComponents}
-                    />                 */}
+                    
                      <PrismicRichText
                       field={slice.primary.title} 
                       components={{
@@ -92,7 +91,10 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
                         ),
                       }}
                     />  
-            </Typography>
+            </Typography> */}
+                
+                <Text textObject={slice?.primary?.title} /> 
+
                 
             {/* </Stack> */}
             <Stack

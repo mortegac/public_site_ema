@@ -598,6 +598,21 @@ export interface CarrouselOptionsSliceSimpleOptionsPrimaryOptionsItem {
 }
 
 /**
+ * Item in *CarrouselOptions → LogoList → Primary → options*
+ */
+export interface CarrouselOptionsSliceLogoListPrimaryOptionsItem {
+  /**
+   * image field in *CarrouselOptions → LogoList → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.logoList.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+}
+
+/**
  * Primary content in *CarrouselOptions → Default → Primary*
  */
 export interface CarrouselOptionsSliceDefaultPrimary {
@@ -728,12 +743,43 @@ export type CarrouselOptionsSliceSimpleOptions = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *CarrouselOptions → LogoList → Primary*
+ */
+export interface CarrouselOptionsSliceLogoListPrimary {
+  /**
+   * options field in *CarrouselOptions → LogoList → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carrousel_options.logoList.primary.options[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  options: prismic.GroupField<
+    Simplify<CarrouselOptionsSliceLogoListPrimaryOptionsItem>
+  >;
+}
+
+/**
+ * LogoList variation for CarrouselOptions Slice
+ *
+ * - **API ID**: `logoList`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type CarrouselOptionsSliceLogoList = prismic.SharedSliceVariation<
+  "logoList",
+  Simplify<CarrouselOptionsSliceLogoListPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *CarrouselOptions*
  */
 type CarrouselOptionsSliceVariation =
   | CarrouselOptionsSliceDefault
   | CarrouselOptionsSliceExtendedOptions
-  | CarrouselOptionsSliceSimpleOptions;
+  | CarrouselOptionsSliceSimpleOptions
+  | CarrouselOptionsSliceLogoList;
 
 /**
  * CarrouselOptions Shared Slice
@@ -1044,6 +1090,32 @@ export interface ContentWithImageSliceWithIconsPrimary {
   list: prismic.GroupField<
     Simplify<ContentWithImageSliceWithIconsPrimaryListItem>
   >;
+
+  /**
+   * buttonText field in *ContentWithImage → withIcons → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.withIcons.primary.buttontext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontext: prismic.KeyTextField;
+
+  /**
+   * buttonLink field in *ContentWithImage → withIcons → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.withIcons.primary.buttonlink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttonlink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
 }
 
 /**
@@ -1060,11 +1132,132 @@ export type ContentWithImageSliceWithIcons = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *ContentWithImage → HorizontalImage → Primary*
+ */
+export interface ContentWithImageSliceHorizontalImagePrimary {
+  /**
+   * title field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * image field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * text01 field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.text01
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  text01: prismic.RichTextField;
+
+  /**
+   * text02 field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.text02
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  text02: prismic.RichTextField;
+
+  /**
+   * buttonOneText field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.buttononetext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttononetext: prismic.KeyTextField;
+
+  /**
+   * buttonOneLink field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.buttononelink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttononelink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * buttonTwoText field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.buttontwotext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontwotext: prismic.KeyTextField;
+
+  /**
+   * buttonTwoLink field in *ContentWithImage → HorizontalImage → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.horizontalImage.primary.buttontwolink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttontwolink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * HorizontalImage variation for ContentWithImage Slice
+ *
+ * - **API ID**: `horizontalImage`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ContentWithImageSliceHorizontalImage = prismic.SharedSliceVariation<
+  "horizontalImage",
+  Simplify<ContentWithImageSliceHorizontalImagePrimary>,
+  never
+>;
+
+/**
  * Slice variation for *ContentWithImage*
  */
 type ContentWithImageSliceVariation =
   | ContentWithImageSliceDefault
-  | ContentWithImageSliceWithIcons;
+  | ContentWithImageSliceWithIcons
+  | ContentWithImageSliceHorizontalImage;
 
 /**
  * ContentWithImage Shared Slice
@@ -1643,6 +1836,163 @@ export interface OptionsContentSliceTwoColumnsPrimaryOptionsItem {
 }
 
 /**
+ * Item in *OptionsContent → Founding team → Primary → options*
+ */
+export interface OptionsContentSliceFoundingTeamPrimaryOptionsItem {
+  /**
+   * image field in *OptionsContent → Founding team → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * name field in *OptionsContent → Founding team → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.options[].name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  name: prismic.RichTextField;
+
+  /**
+   * position field in *OptionsContent → Founding team → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.options[].position
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  position: prismic.RichTextField;
+
+  /**
+   * buttonLink field in *OptionsContent → Founding team → Primary → options*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.options[].buttonlink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttonlink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * buttonImage field in *OptionsContent → Founding team → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.options[].buttonimage
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  buttonimage: prismic.ImageField<never>;
+}
+
+/**
+ * Item in *OptionsContent → TwoColumnsText → Primary → options*
+ */
+export interface OptionsContentSliceTwoColumnsTextPrimaryOptionsItem {
+  /**
+   * image field in *OptionsContent → TwoColumnsText → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumnsText.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * title field in *OptionsContent → TwoColumnsText → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumnsText.primary.options[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * subtitle field in *OptionsContent → TwoColumnsText → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumnsText.primary.options[].subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+}
+
+/**
+ * Item in *OptionsContent → Team → Primary → options*
+ */
+export interface OptionsContentSliceTeamPrimaryOptionsItem {
+  /**
+   * image field in *OptionsContent → Team → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.options[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * name field in *OptionsContent → Team → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.options[].name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  name: prismic.RichTextField;
+
+  /**
+   * position field in *OptionsContent → Team → Primary → options*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.options[].position
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  position: prismic.RichTextField;
+
+  /**
+   * buttonLink field in *OptionsContent → Team → Primary → options*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.options[].buttonlink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttonlink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * buttonImage field in *OptionsContent → Team → Primary → options*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.options[].buttonimage
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  buttonimage: prismic.ImageField<never>;
+}
+
+/**
  * Primary content in *OptionsContent → Default → Primary*
  */
 export interface OptionsContentSliceDefaultPrimary {
@@ -1723,11 +2073,164 @@ export type OptionsContentSliceTwoColumns = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *OptionsContent → Founding team → Primary*
+ */
+export interface OptionsContentSliceFoundingTeamPrimary {
+  /**
+   * title field in *OptionsContent → Founding team → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *OptionsContent → Founding team → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * options field in *OptionsContent → Founding team → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.foundingTeam.primary.options[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  options: prismic.GroupField<
+    Simplify<OptionsContentSliceFoundingTeamPrimaryOptionsItem>
+  >;
+}
+
+/**
+ * Founding team variation for OptionsContent Slice
+ *
+ * - **API ID**: `foundingTeam`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type OptionsContentSliceFoundingTeam = prismic.SharedSliceVariation<
+  "foundingTeam",
+  Simplify<OptionsContentSliceFoundingTeamPrimary>,
+  never
+>;
+
+/**
+ * Primary content in *OptionsContent → TwoColumnsText → Primary*
+ */
+export interface OptionsContentSliceTwoColumnsTextPrimary {
+  /**
+   * options field in *OptionsContent → TwoColumnsText → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumnsText.primary.options[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  options: prismic.GroupField<
+    Simplify<OptionsContentSliceTwoColumnsTextPrimaryOptionsItem>
+  >;
+
+  /**
+   * title field in *OptionsContent → TwoColumnsText → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumnsText.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *OptionsContent → TwoColumnsText → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.twoColumnsText.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+}
+
+/**
+ * TwoColumnsText variation for OptionsContent Slice
+ *
+ * - **API ID**: `twoColumnsText`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type OptionsContentSliceTwoColumnsText = prismic.SharedSliceVariation<
+  "twoColumnsText",
+  Simplify<OptionsContentSliceTwoColumnsTextPrimary>,
+  never
+>;
+
+/**
+ * Primary content in *OptionsContent → Team → Primary*
+ */
+export interface OptionsContentSliceTeamPrimary {
+  /**
+   * title field in *OptionsContent → Team → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *OptionsContent → Team → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * options field in *OptionsContent → Team → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: options_content.team.primary.options[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  options: prismic.GroupField<
+    Simplify<OptionsContentSliceTeamPrimaryOptionsItem>
+  >;
+}
+
+/**
+ * Team variation for OptionsContent Slice
+ *
+ * - **API ID**: `team`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type OptionsContentSliceTeam = prismic.SharedSliceVariation<
+  "team",
+  Simplify<OptionsContentSliceTeamPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *OptionsContent*
  */
 type OptionsContentSliceVariation =
   | OptionsContentSliceDefault
-  | OptionsContentSliceTwoColumns;
+  | OptionsContentSliceTwoColumns
+  | OptionsContentSliceFoundingTeam
+  | OptionsContentSliceTwoColumnsText
+  | OptionsContentSliceTeam;
 
 /**
  * OptionsContent Shared Slice
@@ -1904,10 +2407,13 @@ declare module "@prismicio/client" {
       CarrouselOptionsSliceExtendedOptionsPrimary,
       CarrouselOptionsSliceSimpleOptionsPrimaryOptionsItem,
       CarrouselOptionsSliceSimpleOptionsPrimary,
+      CarrouselOptionsSliceLogoListPrimaryOptionsItem,
+      CarrouselOptionsSliceLogoListPrimary,
       CarrouselOptionsSliceVariation,
       CarrouselOptionsSliceDefault,
       CarrouselOptionsSliceExtendedOptions,
       CarrouselOptionsSliceSimpleOptions,
+      CarrouselOptionsSliceLogoList,
       ContactFormSlice,
       ContactFormSliceDefaultPrimary,
       ContactFormSliceVariation,
@@ -1916,9 +2422,11 @@ declare module "@prismicio/client" {
       ContentWithImageSliceDefaultPrimary,
       ContentWithImageSliceWithIconsPrimaryListItem,
       ContentWithImageSliceWithIconsPrimary,
+      ContentWithImageSliceHorizontalImagePrimary,
       ContentWithImageSliceVariation,
       ContentWithImageSliceDefault,
       ContentWithImageSliceWithIcons,
+      ContentWithImageSliceHorizontalImage,
       HeroSlice,
       HeroSliceDefaultPrimary,
       HeroSliceBgPrimaryPrimary,
@@ -1941,9 +2449,18 @@ declare module "@prismicio/client" {
       OptionsContentSliceDefaultPrimary,
       OptionsContentSliceTwoColumnsPrimaryOptionsItem,
       OptionsContentSliceTwoColumnsPrimary,
+      OptionsContentSliceFoundingTeamPrimaryOptionsItem,
+      OptionsContentSliceFoundingTeamPrimary,
+      OptionsContentSliceTwoColumnsTextPrimaryOptionsItem,
+      OptionsContentSliceTwoColumnsTextPrimary,
+      OptionsContentSliceTeamPrimaryOptionsItem,
+      OptionsContentSliceTeamPrimary,
       OptionsContentSliceVariation,
       OptionsContentSliceDefault,
       OptionsContentSliceTwoColumns,
+      OptionsContentSliceFoundingTeam,
+      OptionsContentSliceTwoColumnsText,
+      OptionsContentSliceTeam,
       ResumeBlogSlice,
       ResumeBlogSliceDefaultPrimaryOptionsItem,
       ResumeBlogSliceDefaultPrimary,

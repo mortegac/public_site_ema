@@ -24,7 +24,7 @@ export const NavLinks = [
   },
   {
     title: "Instalación de cargadores",
-    href: "/cargadores-vehiculos-electricos",
+    href: "/venta-cargadores",
   },
   {
     title: "Carga en edificios",

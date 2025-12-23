@@ -5,6 +5,9 @@ import { SliceComponentProps } from "@prismicio/react";
 import { PrismicRichText } from "@prismicio/react";
 import { defaultComponents } from "@/app/components/PrismicRichText";
 
+
+import { Text } from "@/app/components/shared/text";
+
 import {
   Box,
   Stack,
@@ -49,7 +52,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
               alignItems="flex-start"
               justifyContent="flex-start"
             >
-              <Typography
+              {/* <Typography
                 id="title-hero"
                 variant="h1"
                 fontWeight={700}
@@ -65,9 +68,11 @@ export const Default: FC<HeroProps> = ({ slice }) => {
                   field={slice.primary.title} 
                   components={defaultComponents}
                 />                
-              </Typography>    
+              </Typography>     */}
+              <Text textObject={slice?.primary?.title} /> 
+              
                 
-              <Typography
+              {/* <Typography
                 id="title-description"
                 variant="body1"
                 fontWeight={200}
@@ -87,7 +92,10 @@ export const Default: FC<HeroProps> = ({ slice }) => {
                   field={(slice?.primary as any)?.description} 
                   components={defaultComponents}
                 />                
-              </Typography>
+              </Typography> */}
+              
+              <Text textObject={(slice?.primary as any)?.description}/> 
+
             </Stack>
             
             <Stack

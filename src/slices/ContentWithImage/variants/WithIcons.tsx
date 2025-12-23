@@ -11,6 +11,8 @@ import {
   Grid,
   Button,
 } from "@mui/material";
+import { Text } from "@/app/components/shared/text";
+
 
 import { ContentWithImageProps } from "../types"
 
@@ -69,15 +71,15 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                 alignItems="start"
                 justifyContent="start"
               >
-                <Typography
+                 {/* <Typography
                   id="title-hero"
                   variant="h2"
                   fontWeight={700}
                   lineHeight="1.2"
                   sx={{
                     fontSize: {
-                      xs: "20px",
-                      sm: "20px",
+                      xs: "32px",
+                      sm: "32px",
                     },
                   }}
                 >
@@ -85,9 +87,10 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                     field={slice.primary.title} 
                     components={defaultComponents}
                   />                
-                </Typography>
+                </Typography> */}
+                <Text textObject={slice?.primary?.title} /> 
                 
-                <Typography
+                {/* <Typography
                   id="title-description"
                   variant="body1"
                   fontWeight={200}
@@ -104,7 +107,8 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                     field={(slice?.primary as any)?.description} 
                     components={defaultComponents}
                   />                
-                </Typography>
+                </Typography> */}
+                <Text textObject={(slice?.primary as any)?.description} /> 
                 
                 <Box 
                   id="boxListFeatures" 
@@ -124,7 +128,8 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                       />
                     )}
                     <Box>
-                      <Typography
+                    <Text textObject={item?.title} /> 
+                      {/* <Typography
                         id="title-description"
                         variant="body1"
                         fontWeight={200}
@@ -140,8 +145,8 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                         field={item.title} 
                         components={defaultComponents}
                       />                
-                      </Typography>
-                      <Typography
+                      </Typography> */}
+                      {/* <Typography
                       id="title-description"
                       variant="body1"
                       fontWeight={200}
@@ -157,7 +162,8 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                       field={item.description} 
                       components={defaultComponents}
                       />                
-                      </Typography>
+                      </Typography> */}
+                      <Text textObject={item?.description} /> 
                     </Box>
                     </Box>
                   ))}

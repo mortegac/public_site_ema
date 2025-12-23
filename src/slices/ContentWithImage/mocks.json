@@ -58,7 +58,6 @@
 				}
 			},
 			"image": {
-				"__TYPE__": "ImageContent",
 				"origin": {
 					"id": "main",
 					"url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6",
@@ -77,6 +76,8 @@
 					"background": "transparent"
 				},
 				"alt": "fairly",
+				"credits": null,
+				"__TYPE__": "ImageContent",
 				"thumbnails": {}
 			}
 		},
@@ -198,6 +199,127 @@
 				"credits": null,
 				"__TYPE__": "ImageContent",
 				"thumbnails": {}
+			},
+			"buttontext": {
+				"__TYPE__": "FieldContent",
+				"value": "exactly",
+				"type": "Text"
+			},
+			"buttonlink": {
+				"key": "901c29f4-b386-43ce-9b01-7013b37a1f33",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://prismic.io",
+					"text": "account"
+				}
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "horizontalImage",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Culpa Lorem dolor tempor sint eiusmod nulla."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Amet do dolor dolore ex dolore officia nulla sint. Lorem anim ea ad do excepteur aliquip ea do tempor non cupidatat est ipsum."
+						}
+					}
+				]
+			},
+			"buttononetext": {
+				"__TYPE__": "FieldContent",
+				"value": "liquid",
+				"type": "Text"
+			},
+			"buttononelink": {
+				"key": "b3947579-6953-4a05-a92b-3b715d475462",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://google.com",
+					"text": "agree"
+				}
+			},
+			"buttontwotext": {
+				"__TYPE__": "FieldContent",
+				"value": "either",
+				"type": "Text"
+			},
+			"buttontwolink": {
+				"key": "25cef92e-290d-437e-a4bb-8dfb9436c544",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://prismic.io",
+					"text": "blank"
+				}
+			},
+			"image": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+					"width": 3882,
+					"height": 2584
+				},
+				"url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+				"width": 3882,
+				"height": 2584,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"alt": "cloth",
+				"credits": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			},
+			"text01": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Exercitation sint duis do. Elit proident magna minim sunt officia."
+						}
+					}
+				]
+			},
+			"text02": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Irure commodo aliqua cillum cillum aliquip ea ex esse. Officia nostrud amet occaecat nulla aliqua mollit dolore laborum do tempor reprehenderit sit laboris occaecat. Ut irure elit commodo ea."
+						}
+					}
+				]
 			}
 		},
 		"items": [

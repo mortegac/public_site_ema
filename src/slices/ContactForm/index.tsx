@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+import { Text, H2, H3, Paragraph } from "@/app/components/shared/text";
+
 // Inicializar emailjs
 init("Csc41asZklkk5HTWk");
 
@@ -48,16 +50,270 @@ const validationSchema = yup.object({
 const PageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "white",
   minHeight: "400px",
+  padding: "64px",
 }));
 
 const SectionContainer = styled(Container)(({ theme }) => ({
-  padding: theme.spacing(4),
-  maxWidth: "800px",
+  maxWidth: "640px",
+  width: "100%",
+  background: "white",
+  border: "1px solid rgba(0, 17, 51, 0.15)",
+  borderRadius: "24px",
+  padding: "48px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start",
+  alignItems: "flex-start",
+  position: "relative",
+  
   "& h2": {
-    marginBottom: theme.spacing(2),
+    fontSize: "32px",
+    lineHeight: "28px",
+    fontWeight: 500,
+    color: "rgba(0, 17, 51, 0.8)",
+    textAlign: "left",
+    margin: 0,
+    letterSpacing: 0,
+    marginBottom: "12px",
   },
+  
   "& p": {
-    marginBottom: theme.spacing(3),
+    fontSize: theme.typography.body1.fontSize || "16px",
+    lineHeight: theme.typography.body1.lineHeight || "24px",
+    fontWeight: theme.typography.body1.fontWeight || 400,
+    color: theme.palette.text.secondary,
+    fontFamily: theme.typography.fontFamily,
+    marginTop: "14px",
+    marginBottom: "32px",
+    letterSpacing: 0,
+  },
+  
+  "& label": {
+    fontSize: theme.typography.body1.fontSize || "16px",
+    lineHeight: theme.typography.body1.lineHeight || "24px",
+    fontWeight: theme.typography.body1.fontWeight || 400,
+    color: theme.palette.text.secondary,
+    fontFamily: theme.typography.fontFamily,
+    marginTop: "14px",
+    letterSpacing: 0,
+    marginBottom: "5px",
+  },
+  
+  "& input": {
+    height: "48px",
+    width: "100%",
+    border: "1px solid rgba(0, 17, 51, 0.15)",
+    borderRadius: "6px",
+    padding: "13px",
+    color: "rgba(0, 17, 51, 0.8)",
+    fontFamily: theme.typography.fontFamily,
+    fontWeight: 400,
+    fontSize: "14px",
+    transition: "all 0.4s ease",
+    outline: "none",
+    boxShadow: "0 0 0 0 transparent",
+    "&:focus": {
+      boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
+    },
+    "&.error": {
+      border: "1px solid #ff3355",
+    },
+  },
+  
+  "& textarea": {
+    minHeight: "48px",
+    width: "100%",
+    border: "1px solid rgba(0, 17, 51, 0.15)",
+    borderRadius: "6px",
+    padding: "13px",
+    color: "rgba(0, 17, 51, 0.8)",
+    fontFamily: theme.typography.fontFamily,
+    fontWeight: 400,
+    fontSize: "14px",
+    transition: "all 0.4s ease",
+    outline: "none",
+    boxShadow: "0 0 0 0 transparent",
+    "&:focus": {
+      boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
+    },
+    "&.error": {
+      border: "1px solid #ff3355",
+    },
+  },
+  
+  "& span": {
+    fontFamily: theme.typography.fontFamily,
+    color: "#ff3355",
+    marginTop: "4px",
+    marginBottom: "4px",
+    fontSize: "12px",
+    lineHeight: "16px",
+    minHeight: "22px",
+    "&.last": {
+      minHeight: "unset",
+    },
+  },
+  
+  "& input[type='submit']": {
+    marginTop: "26px",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "8px 16px",
+    fontWeight: "bold",
+    borderRadius: "24px",
+    fontFamily: theme.typography.fontFamily,
+    fontSize: "16px",
+    lineHeight: "24px",
+    cursor: "pointer",
+    transition: "background 0.3s ease",
+    height: "48px",
+    width: "100%",
+    background: theme.palette.primary.main,
+    border: `1px solid ${theme.palette.primary.main}`,
+    color: "#ffffff",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.dark,
+      color: "#ffffff",
+    },
+    appearance: "none",
+  },
+  
+  "& .dateText": {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    "& span": {
+      width: "100%",
+      marginLeft: "22px",
+      marginTop: "14px",
+      letterSpacing: 0,
+      marginBottom: "5px",
+      fontSize: theme.typography.body1.fontSize || "16px",
+      lineHeight: theme.typography.body1.lineHeight || "24px",
+      fontWeight: theme.typography.body1.fontWeight || 400,
+      color: theme.palette.text.secondary,
+      fontFamily: theme.typography.fontFamily,
+    },
+    "& .tui-datepicker-input > input": {
+      height: "48px",
+      width: "100%",
+      border: "1px solid rgba(0, 17, 51, 0.15)",
+      borderRadius: "6px",
+      padding: "13px",
+      color: "rgba(0, 17, 51, 0.8)",
+      fontFamily: theme.typography.fontFamily,
+      fontWeight: 400,
+      fontSize: "14px",
+      transition: "all 0.4s ease",
+      outline: "none",
+      boxShadow: "0 0 0 0 transparent",
+      "&:focus": {
+        boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
+      },
+      "&.error": {
+        border: "1px solid #ff3355",
+      },
+    },
+  },
+  
+  "& .country-dropdown": {
+    position: "relative",
+    width: "100%",
+    "& .error": {
+      color: "#ff3355",
+    },
+    "& input": {
+      marginTop: "5px",
+    },
+    "& ul": {
+      top: "39px",
+    },
+    "& span.error": {
+      fontSize: "12px",
+      lineHeight: "16px",
+      padding: "5px 0",
+      minHeight: "22px",
+    },
+  },
+  
+  "& .dial-dropdown": {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    "& .dial-items": {
+      position: "relative",
+      display: "flex",
+      flexDirection: "row",
+      width: "100%",
+      "& input#phone": {
+        marginLeft: "117px",
+        zIndex: 2,
+      },
+    },
+    "& span": {
+      color: "#ff3355",
+      marginTop: "4px",
+      marginBottom: "4px",
+      fontSize: "12px",
+      lineHeight: "16px",
+      minHeight: "22px",
+    },
+  },
+  
+  "& .checkbox-container": {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    border: "none",
+    "& input[type='checkbox']": {
+      height: "24px",
+      width: "24px",
+      margin: 0,
+      padding: "0 5px",
+      "&:focus": {
+        boxShadow: "0 0 0 0 transparent",
+      },
+    },
+    "& p": {
+      margin: "0 0 0 10px",
+    },
+    "& a": {
+      textDecoration: "none",
+      fontWeight: 600,
+      color: theme.palette.text.primary,
+      transition: "all 0.3s ease",
+      "&:hover": {
+        color: theme.palette.primary.main,
+      },
+    },
+  },
+  
+  [theme.breakpoints.down("sm")]: {
+    padding: "24px",
+  },
+  
+  "@media (max-width: 400px)": {
+    border: "none",
+  },
+  
+  "@media (max-width: 768px)": {
+    "& input[type='submit']": {
+      marginBottom: "16px",
+    },
+  },
+  
+  "@media (max-width: 500px)": {
+    "& input[type='submit']": {
+      marginBottom: 0,
+    },
+    "& .checkbox-container p": {
+      width: "300px",
+    },
   },
 }));
 
@@ -169,12 +425,19 @@ const ContactForm: FC<ContactFormProps> = ({ slice }) => {
         data-slice-variation={slice.variation}
       >
         <SectionContainer>
-          <Typography variant="h2" component="h2">
+          {/* <Typography variant="h2" component="h2">
             {isSentEmail.title}
-          </Typography>
-          <Typography variant="body1" component="p">
+          </Typography> */}
+          
+          {/* <Text textObject={isSentEmail?.title} />  */}
+          <H2 text={isSentEmail?.title}/>
+          
+          {/* <Typography variant="body1" component="p">
             {isSentEmail.text}
-          </Typography>
+          </Typography> */}
+           
+           <Paragraph text={isSentEmail?.text}/>
+           
           {isSentEmail.isFailure && (
             <Alert severity="error" sx={{ mt: 2 }}>
               Por favor, intente nuevamente o contacte a soporte.
@@ -197,18 +460,35 @@ const ContactForm: FC<ContactFormProps> = ({ slice }) => {
     >
       <SectionContainer>
         <form onSubmit={formik.handleSubmit} noValidate>
-          <Typography variant="h2" component="h2" gutterBottom>
+          {/* <Typography variant="h2" component="h2" gutterBottom>
             {title && title.length > 0 ? (
               asText(title)
             ) : (
               "Contáctanos"
             )}
-          </Typography>
+          </Typography> */}
+          
+          {/* <H2 text={title && title.length > 0 ? (
+              asText(title)
+            ) : (
+              "Contáctanos"
+            )}/> */}
 
+          {title && title.length > 0 && (
+            // <Typography variant="body1" component="p" sx={{ mb: 3 }}>
+            //   {asText(subtitle)}
+            // </Typography>
+            <H2>
+              {asText(title)}
+            </H2>
+          )}
           {subtitle && subtitle.length > 0 && (
-            <Typography variant="body1" component="p" sx={{ mb: 3 }}>
+            // <Typography variant="body1" component="p" sx={{ mb: 3 }}>
+            //   {asText(subtitle)}
+            // </Typography>
+            <Paragraph>
               {asText(subtitle)}
-            </Typography>
+            </Paragraph>
           )}
 
           <FormContainer>

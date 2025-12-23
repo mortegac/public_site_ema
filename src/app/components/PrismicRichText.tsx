@@ -6,26 +6,155 @@ import {
   } from "@prismicio/react";
   import { PrismicNextLink } from "@prismicio/next";
   
+  import {
+    Typography,
+  } from "@mui/material";
 //   import { Heading } from "./Heading";
   
-export const defaultComponents: JSXMapSerializer = {
+
+
+const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializer => ({
     heading1: ({ children }) => (
-      <>{children}</>
+      <Typography
+        id="title-options"
+        variant="h1"
+        fontWeight={400}
+        lineHeight="1.2"
+        sx={{
+          fontSize: {
+            xs: "26px",
+            sm: "30px",
+            md: "34px",
+            lg: "38px",
+          },
+          color: textColor || 'inherit',
+          padding: "0 0 8px 0",
+        }}
+      >
+    {children}
+    </Typography>
     ),
     heading2: ({ children }) => (
-      <>{children}</>
+      <Typography
+      id="title-options"
+      variant="h2"
+      fontWeight={400}
+      lineHeight="1.2"
+      sx={{
+        fontSize: {
+          xs: "22px",
+          sm: "26px",
+          md: "30px",
+          lg: "34px",
+        },
+        padding: "0 0 6px 0",
+        color: textColor || 'inherit',
+      }}
+    >
+  {children}
+  </Typography>
     ),
     heading3: ({ children }) => (
-      <>{children}</>
+      <Typography
+      id="title-options"
+      variant="h3"
+      fontWeight={400}
+      lineHeight="1.2"
+      sx={{
+        fontSize: {
+          xs: "20px",
+          sm: "22px",
+          md: "26px",
+          lg: "30px",
+        },
+        padding: "0 0 4px 0",
+        color: textColor || 'inherit',
+      }}
+    >
+  {children}
+  </Typography>
     ),
     heading4: ({ children }) => (
-      <>{children}</>
+      <Typography
+      id="title-options"
+      variant="h4"
+      fontWeight={400}
+      lineHeight="1.2"
+      sx={{
+        fontSize: {
+          xs: "18px",
+          sm: "20px",
+          md: "22px",
+          lg: "26px",
+        },
+        padding: "0 0 4px 0",
+        color: textColor || 'inherit',
+      }}
+    >
+  {children}
+  </Typography>
     ),
     heading5: ({ children }) => (
-      <>{children}</>
+      <Typography
+      id="title-options"
+      variant="h5"
+      fontWeight={400}
+      lineHeight="1.2"
+      sx={{
+        fontSize: {
+          xs: "16px",
+          sm: "18px",
+          md: "20px",
+          lg: "22px",
+        },
+        padding: "0 0 4px 0",
+        color: textColor || 'inherit',
+      }}
+    >
+  {children}
+  </Typography>
+    ),
+    heading6: ({ children }) => (
+      <Typography
+      id="title-options"
+      variant="h6"
+      fontWeight={300}
+      lineHeight="1.2"
+      sx={{
+        fontSize: {
+          xs: "16px",
+          sm: "16px",
+          md: "18px",
+          lg: "18px",
+        },
+        padding: "0 0 4px 0",
+        color: textColor || 'inherit',
+      }}
+    >
+  {children}
+  </Typography>
     ),
     paragraph: ({ children }) => (
-      <span style={{ color: 'inherit' }}>{children}</span>
+      // fontSize: {
+      //   xs: "16px",
+      //   sm: "17px",
+      //   md: "18px",
+      //   lg: "18px",
+      // },
+      <Typography
+        component="p"
+        sx={{
+          fontSize: fontSize || "18px",
+          lineHeight: 1.6,
+          padding: "0 0 4px 0",
+          color: textColor || 'inherit',
+          fontStyle: "normal",
+          fontWeight: 400,
+          textDecoration: "none",
+        }}
+      >
+        {children}
+      </Typography>
     ),
     em: ({ children }) => (
       <em style={{ 
@@ -61,17 +190,28 @@ export const defaultComponents: JSXMapSerializer = {
         {children}
       </PrismicNextLink>
     ),
-  };
+});
+
+export const defaultComponents = createComponents();
+
+export interface PrismicRichTextCustomProps extends PrismicRichTextProps {
+  color?: string;
+  fontSize?: string;
+}
+
+export function PrismicRichText({
+  components,
+  color,
+  fontSize,
+  ...props
+}: PrismicRichTextCustomProps) {
+  const customComponents = (color || fontSize) ? createComponents(color, fontSize) : defaultComponents;
   
-  export function PrismicRichText({
-    components,
-    ...props
-  }: PrismicRichTextProps) {
-    return (
-      <BasePrismicRichText
-        components={{ ...defaultComponents, ...components }}
-        {...props}
-      />
-    );
-  }
+  return (
+    <BasePrismicRichText
+      components={{ ...customComponents, ...components }}
+      {...props}
+    />
+  );
+}
   

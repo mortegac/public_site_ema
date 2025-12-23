@@ -16,6 +16,8 @@ import {
   Chip,
 } from "@mui/material";
 
+import { Text } from "@/app/components/shared/text";
+
 import { OptionsContentProps } from "../types"
 
 export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
@@ -83,7 +85,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
               }}
             >
              
-              <Typography
+              {/* <Typography
                 id="title-options"
                 variant="h2"
                 fontWeight={200}
@@ -100,8 +102,12 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
                   field={option.title} 
                   components={defaultComponents}
                 />                
-              </Typography>
-              <Typography
+              </Typography> */}
+              
+              <Text textObject={option.title} /> 
+
+
+              {/* <Typography
                 id="subtitle-options"
                 variant="body1"
                 fontWeight={200}
@@ -118,7 +124,9 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
                   field={option.subtitle} 
                   components={defaultComponents}
                 />                
-              </Typography>
+              </Typography> */}
+              <Text textObject={option.subtitle} /> 
+              
                 
               {/* Imagen de la card */}
               <CardMedia

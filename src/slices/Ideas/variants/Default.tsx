@@ -3,7 +3,9 @@ import { FC } from "react";
 import { Content } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
 import { PrismicRichText } from "@prismicio/react";
+import { PrismicNextLink } from "@prismicio/next";
 import { defaultComponents } from "@/app/components/PrismicRichText";
+import { Text } from "@/app/components/shared/text";
 
 import {
   Box,
@@ -64,7 +66,7 @@ export const Default: FC<IdeasProps> = ({ slice }) => {
             justifyContent: 'center'
           }}>
             {/* Tu contenido existente aquí */}
-             <Typography
+             {/* <Typography
                     id="title-hero"
                     variant="h1"
                     fontWeight={700}
@@ -75,12 +77,12 @@ export const Default: FC<IdeasProps> = ({ slice }) => {
                         sm: "48px",
                       },
                     }}
-                  >
+                  > */}
                     {/* <PrismicRichText
                       field={slice.primary.title} 
                       components={defaultComponents}
                     />                 */}
-                     <PrismicRichText
+                     {/* <PrismicRichText
                       field={slice.primary.title} 
                       components={{
                         ...defaultComponents,
@@ -90,11 +92,62 @@ export const Default: FC<IdeasProps> = ({ slice }) => {
                             fontStyle:'normal',
                           }}>{children}</em>
                         ),
+                        hyperlink: ({ children, node }) => (
+                          <PrismicNextLink
+                            field={node.data}
+                            style={{
+                              textDecoration: 'none',
+                              color: '#2A3547',
+                            }}
+                          >
+                            {children}
+                          </PrismicNextLink>
+                        ),
                       }}
-                    />  
-            </Typography>
-                
-            {/* </Stack> */}
+                    />   */}
+                    <Text textObject={slice.primary.title} /> 
+            {/* </Typography> */}
+             {/*    
+            {slice.primary.subtitle && (
+              <Typography
+                id="subtitle-hero"
+                variant="body1"
+                fontWeight={400}
+                lineHeight="1.5"
+                sx={{
+                  fontSize: {
+                    xs: "18px",
+                    sm: "18px",
+                  },
+                  mt: 2,
+                }}
+              >
+                <PrismicRichText
+                  field={slice.primary.subtitle} 
+                  components={{
+                    ...defaultComponents,
+                    em: ({ children }) => (
+                      <em style={{ 
+                        color: '#ffffff',
+                        fontStyle:'normal',
+                      }}>{children}</em>
+                    ),
+                    hyperlink: ({ children, node }) => (
+                      <PrismicNextLink
+                        field={node.data}
+                        style={{
+                          textDecoration: 'none',
+                          color: '#2A3547',
+                        }}
+                      >
+                        {children}
+                      </PrismicNextLink>
+                    ),
+                  }}
+                />  
+              </Typography>
+            )}
+            </Stack> */}
             <Stack
               sx={{
                 flexDirection:{ xs: "column", sm: "row" },

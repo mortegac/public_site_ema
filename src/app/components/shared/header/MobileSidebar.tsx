@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Logo from "@/app/components/shared/logo/Logo";
-import { NavLinks } from "./Navigations";
+import { NavLinks } from "./NavigationsNew";
 import { Chip } from "@mui/material";
 
 const MobileSidebar = () => {

@@ -3,6 +3,7 @@ import { FC } from "react";
 import { ContentWithImageProps } from "./types"
 import { Default } from "./variants/Default"
 import { WithIcons } from "./variants/WithIcons"
+import { HorizontalImage } from "./variants/HorizontalImage"
 
 const ContentWithImage: FC<ContentWithImageProps> = ({ slice, index, slices, context }) => {
   const { variation } = slice;
@@ -10,6 +11,7 @@ const ContentWithImage: FC<ContentWithImageProps> = ({ slice, index, slices, con
   const typeOfComponents = {
     ["default"]: Default,
     ["withIcons"]: WithIcons,
+    ["horizontalImage"]: HorizontalImage,
   };
 
   const TypeOfVariants = typeOfComponents[variation] || Default;

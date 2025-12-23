@@ -2,15 +2,17 @@
 import { FC } from "react";
 import { CarrouselOptionsProps } from "./types"
 import { Default } from "./variants/Default"
+import { LogoList } from "./variants/LogoList"
 import { ExtendedOptions } from "./variants/ExtendedOptions"
 
 const CarrouselOptions: FC<CarrouselOptionsProps> = ({ slice, index, slices, context }) => {
   const { variation } = slice;
   
-  const typeOfComponents: Record<"default" | "extendedOptions" | "simpleOptions", FC<CarrouselOptionsProps>> = {
+  const typeOfComponents: Record<string, FC<CarrouselOptionsProps>> = {
     ["default"]: Default,
     ["extendedOptions"]: ExtendedOptions,
     ["simpleOptions"]: Default,
+    ["logoList"]: LogoList,
   };
 
   const TypeOfVariants = typeOfComponents[variation] || Default;

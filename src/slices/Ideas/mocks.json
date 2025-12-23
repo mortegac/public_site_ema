@@ -3,11 +3,6 @@
 		"__TYPE__": "SharedSliceContent",
 		"variation": "default",
 		"primary": {
-			"subtitle": {
-				"__TYPE__": "FieldContent",
-				"value": "angry",
-				"type": "Text"
-			},
 			"title": {
 				"__TYPE__": "StructuredTextContent",
 				"value": [
@@ -39,13 +34,18 @@
 				"type": "Text"
 			},
 			"buttontwolink": {
-				"__TYPE__": "LinkContent",
 				"key": "80970314-0cd2-4c08-bf61-9a2eb48ae32d",
+				"__TYPE__": "LinkContent",
 				"value": {
 					"__TYPE__": "ExternalLink",
 					"url": "https://slicemachine.dev",
 					"text": "movie"
 				}
+			},
+			"subtitle": {
+				"__TYPE__": "FieldContent",
+				"value": "accurate",
+				"type": "Text"
 			}
 		},
 		"items": []

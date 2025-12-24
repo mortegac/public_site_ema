@@ -4,7 +4,7 @@ import { supportTicketInput } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
 
 import emailjs, { init } from "emailjs-com";
-init("lUerPXXiKXnrvLlVw");
+
 
 
 import { Amplify } from "aws-amplify";
@@ -82,7 +82,7 @@ export const sendEmail = async (objEmail: any) => {
         const SERVICE = "service_wkx5k4h";
         const TEMPLATE = "template_ocmugt4";
         init("HAIyMD2QIHEqXcHvd");
-        
+        // init("lUerPXXiKXnrvLlVw");
         await emailjs.send(SERVICE, TEMPLATE, { ...objEmail }).then(
             function (response) {
                 console.log('EMail enviado', { ...objEmail })

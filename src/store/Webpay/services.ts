@@ -5,7 +5,7 @@ import * as MAIN from "../../../amplify/data/main.schema";
 import { webpayInput } from './type';
 
 import emailjs, { init } from "emailjs-com";
-init("lUerPXXiKXnrvLlVw");
+
 
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
@@ -170,7 +170,7 @@ export const sendEmail = async (objEmail: any, type="eve") => {
       
       await emailjs.send(SERVICE, TEMPLATE, { ...objEmail }).then(
           function (response) {
-              console.log('EMail enviado', { ...objEmail })
+              console.log('Email enviado', { ...objEmail })
               // LogRocket.log("-Email enviado: ",response);
               
           }

@@ -4,7 +4,7 @@ import { estimateInput } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
 
 import emailjs, { init } from "emailjs-com";
-init("UYcrSeCqLGW8xqT4S");
+
 
 // Configurar Amplify con la configuración del entorno correspondiente
 configureAmplify();
@@ -84,6 +84,7 @@ export const createEstimate = async (input: estimateInput): Promise<any> => {
         const SERVICE = "service_dbrrm6b"; // Gmail-ema.energica@gmail.com
         const TEMPLATE = "template_eysyecb";
         init("UYcrSeCqLGW8xqT4S");
+        
         
         await emailjs.send(SERVICE, TEMPLATE, { ...objEmail }).then(
             function (response) {

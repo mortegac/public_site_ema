@@ -19,7 +19,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
         id="title-options"
         variant="h1"
         fontWeight={400}
-        lineHeight="1.2"
+        lineHeight="1.4"
         sx={{
           fontSize: {
             xs: "26px",
@@ -39,7 +39,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
       id="title-options"
       variant="h2"
       fontWeight={400}
-      lineHeight="1.2"
+       lineHeight="1.4"
       sx={{
         fontSize: {
           xs: "22px",
@@ -59,7 +59,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
       id="title-options"
       variant="h3"
       fontWeight={400}
-      lineHeight="1.2"
+       lineHeight="1.4"
       sx={{
         fontSize: {
           xs: "20px",
@@ -79,7 +79,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
       id="title-options"
       variant="h4"
       fontWeight={400}
-      lineHeight="1.2"
+       lineHeight="1.4"
       sx={{
         fontSize: {
           xs: "18px",
@@ -99,7 +99,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
       id="title-options"
       variant="h5"
       fontWeight={400}
-      lineHeight="1.2"
+       lineHeight="1.4"
       sx={{
         fontSize: {
           xs: "16px",
@@ -119,7 +119,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
       id="title-options"
       variant="h6"
       fontWeight={300}
-      lineHeight="1.2"
+       lineHeight="1.4"
       sx={{
         fontSize: {
           xs: "16px",
@@ -145,7 +145,7 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
         component="p"
         sx={{
           fontSize: fontSize || "18px",
-          lineHeight: 1.6,
+          lineHeight: 1.8,
           padding: "0 0 4px 0",
           color: textColor || 'inherit',
           fontStyle: "normal",

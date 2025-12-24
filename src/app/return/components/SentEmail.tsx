@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 import emailjs, { init } from "emailjs-com";
-const SERVICE = "service_ucb8wga";  // welcome@mini..
+const SERVICE = "service_ucb8wga";  // 
 const TEMPLATE = "template_rbmzu0w"; // Comprobante WP
-init("Csc41asZklkk5HTWk");
+
 
 export const SentEmail = (props:any) =>{
     const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export const SentEmail = (props:any) =>{
             reply_to:data?.usersPaymentTransactionsId,
             to_client_email:data?.usersPaymentTransactionsId,
         }
-        
+        init("UYcrSeCqLGW8xqT4S");
         emailjs.send(SERVICE, TEMPLATE, dataEmail).then(
           function (response) {
             // console.log("ENVIADO...", response);

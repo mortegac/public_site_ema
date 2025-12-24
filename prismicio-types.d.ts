@@ -872,9 +872,109 @@ export type ContactFormSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *ContactForm → GretaContactForm → Primary*
+ */
+export interface ContactFormSliceGretaContactFormPrimary {
+  /**
+   * title field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * subtitle field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+
+  /**
+   * company field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.company
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  company: prismic.KeyTextField;
+
+  /**
+   * name field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.name
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  name: prismic.KeyTextField;
+
+  /**
+   * phone field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.phone
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  phone: prismic.KeyTextField;
+
+  /**
+   * email field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.email
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  email: prismic.KeyTextField;
+
+  /**
+   * numberOfVehicles field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.numberofvehicles
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  numberofvehicles: prismic.KeyTextField;
+
+  /**
+   * message field in *ContactForm → GretaContactForm → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.gretaContactForm.primary.message
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  message: prismic.KeyTextField;
+}
+
+/**
+ * GretaContactForm variation for ContactForm Slice
+ *
+ * - **API ID**: `gretaContactForm`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ContactFormSliceGretaContactForm = prismic.SharedSliceVariation<
+  "gretaContactForm",
+  Simplify<ContactFormSliceGretaContactFormPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *ContactForm*
  */
-type ContactFormSliceVariation = ContactFormSliceDefault;
+type ContactFormSliceVariation =
+  | ContactFormSliceDefault
+  | ContactFormSliceGretaContactForm;
 
 /**
  * ContactForm Shared Slice
@@ -2416,8 +2516,10 @@ declare module "@prismicio/client" {
       CarrouselOptionsSliceLogoList,
       ContactFormSlice,
       ContactFormSliceDefaultPrimary,
+      ContactFormSliceGretaContactFormPrimary,
       ContactFormSliceVariation,
       ContactFormSliceDefault,
+      ContactFormSliceGretaContactForm,
       ContentWithImageSlice,
       ContentWithImageSliceDefaultPrimary,
       ContentWithImageSliceWithIconsPrimaryListItem,

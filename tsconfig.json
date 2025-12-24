@@ -29,6 +29,6 @@
       "@error": ["src/utils/error.ts"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/slices/ContactForm/indextxt2"],
   "exclude": ["node_modules"]
 }

@@ -66,131 +66,133 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
             justifyContent: 'center'
           }}
         >
-          {primary?.options?.map((option: any, index: number) => (
-            <Card 
-              key={index}
-              sx={{ 
-                width: { xs: '100%', md: 'calc(38% - 10px)' },
-                maxWidth: { xs: '100%', md: 'none' },
-                position: 'relative',
-                boxShadow: 3,
-                backgroundColor: '#ffffff',
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  boxShadow: 6,
-                  transform: 'translateY(-4px)',
-                  backgroundColor: '#f5f5f5',
-                  transition: 'all 0.3s ease-in-out'
-                }
-              }}
-            >
+          {primary?.options?.map((option: any, index: number) => {
+            const isFirstTwo = index < 2;
+            const cardBackground = isFirstTwo ? '#FFFFFF' : '#F8F8F8';
+            
+            return (
+           <Card 
+           key={index}
+           sx={{ 
+             width: { xs: '100%', md: 'calc(38% - 10px)' },
+             maxWidth: { xs: '100%', md: 'none' },
+             minHeight: '480px',
+             position: 'relative',
+             boxShadow: 3,
+             backgroundColor: cardBackground,
+             display: 'flex',
+             flexDirection: 'column',
+             transition: 'all 0.3s ease-in-out',
+             borderRadius: '20px',
+             padding: 0,
+             overflow: 'hidden',
+             '&:hover': {
+               boxShadow: 6,
+               transform: 'translateY(-4px)',
+               backgroundColor: isFirstTwo ? '#f5f5f5' : '#e8e8e8',
+               transition: 'all 0.3s ease-in-out'
+             }
+           }}
+         >
+            
+             {/* Imagen de la card */}
+             <CardMedia
+               component="div"
+               sx={{
+                 height: 288,
+                 padding: 0,
+                 margin: 0,
+                 position: 'relative',
+                 overflow: 'hidden',
+                 display: 'flex',
+                 alignItems: 'flex-start',
+                 justifyContent: 'center',
+                 width: '100%',
+                 ...(option.texttopbanner && { marginTop: '32px' })
+               }}
+             >
+               {option.image?.url && (
+                 <Image
+                   src={option.image.url}
+                   alt={option.image.alt || `Option ${index + 1}`}
+                   width={503}
+                   height={295}
+                   style={{
+                     objectFit: 'contain',
+                     width: '100%',
+                     height: 'auto',
+                     display: 'block'
+                   }}
+                   unoptimized
+                 />
+               )}
+               
+               
+             </CardMedia>
              
-              {/* <Typography
-                id="title-options"
-                variant="h2"
-                fontWeight={200}
-                lineHeight="1.5"
-                align="center"
-                sx={{
-                  fontSize: {
-                    xs: "32px",
-                    sm: "32px",
-                  },
-                }}
-              >
-                <PrismicRichText
-                  field={option.title} 
-                  components={defaultComponents}
-                />                
-              </Typography> */}
-              
-              <Text textObject={option.title} /> 
+             <Box
+               sx={{
+                 marginTop: 'auto',
+                 display: 'flex',
+                 flexDirection: 'column',
+                 alignItems: 'center',
+                 justifyContent: 'center',
+                 width: '100%',
+                 
+                 paddingX: 6,
+                 paddingY: 2,
+                 gap: 1
+               }}
+             >
+               <Text textObject={option.title} /> 
 
+               <Text textObject={option.subtitle} /> 
+             </Box>
+             
+             <Box
+               sx={{
+                 marginTop: 'auto',
+                 display: 'flex',
+                 flexDirection: 'column',
+                 alignItems: 'center',
+                 justifyContent: 'center',
+                 width: '100%',
+                 padding: 2,
+                 gap: 1
+               }}
+             >
+               
+               {option.buttontext && (
+                 <Button
+                   variant="contained"
+                   size="large"
+                   sx={{
+                     paddingX: 4,
+                     paddingY: 1.5,
+                     borderRadius: '24px',
+                     background: isFirstTwo ? "#E81A68" : "transparent",
+                     color: isFirstTwo ? "#FFFFFF" : "#E81A68",
+                     fontSize: '18px',
+                    //  color:"#FFFFFF",
+                     border: isFirstTwo ? "1px solid #E81A68" : "1px solid #E81A68",
+                     width: '90%',
+                     '&:hover': {
+                       background: isFirstTwo ? "#C2185B" : "#6A6A6A",
+                       border: isFirstTwo ? "1px solid #C2185B" : "1px solid #6A6A6A",
+                     }
+                   }}
+                   href={(option?.buttonlink as any)?.url || "#"}
+                   // onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
+                 >
+                   {option.buttontext}
+                 </Button>
+               )}
+             </Box>
 
-              {/* <Typography
-                id="subtitle-options"
-                variant="body1"
-                fontWeight={200}
-                lineHeight="1.5"
-                align="center"
-                sx={{
-                  fontSize: {
-                    xs: "16px",
-                    sm: "16px",
-                  },
-                }}
-              >
-                <PrismicRichText
-                  field={option.subtitle} 
-                  components={defaultComponents}
-                />                
-              </Typography> */}
-              <Text textObject={option.subtitle} /> 
-              
-                
-              {/* Imagen de la card */}
-              <CardMedia
-                component="div"
-                sx={{
-                  height: 288,
-                  position: 'relative',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  ...(option.texttopbanner && { marginTop: '32px' })
-                }}
-              >
-                {option.image?.url && (
-                  <Image
-                    src={option.image.url}
-                    alt={option.image.alt || `Option ${index + 1}`}
-                    width={288}
-                    height={252}
-                    style={{
-                      objectFit: 'contain',
-                      borderRadius: '8px'
-                    }}
-                    unoptimized
-                  />
-                )}
-                
-                {/* {option.buttontext && <Button
-                color="primary"
-                size="large"
-                variant="contained"
-                href={(primary?.buttononelink as any)?.url || "#"}
-              >
-                {primary.buttononetext}
-              </Button>} */}
-              
-              {option.buttontext &&    <Button
-              variant="contained"
-              size="large"
-              sx={{
-                paddingX: 4,
-                paddingY: 1.5,
-                borderRadius: '24px',
-                background:"#E81A68",
-                color:"#FFFFFF",
-                border: "1px solid #E81A68",
-                width: { xs: '100%', md: 'auto' }
-              }}
-              href={(option?.buttonlink as any)?.url || "#"}
-              // onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
-            >
-             {option.buttontext}``
-            </Button>
-}
-              </CardMedia>
-
-              {/* Contenido de la card */}
-              {/* <CardContent sx={{ padding: '16px' }}>
-                
-                </CardContent> */}
-                {/* <pre>{JSON.stringify(option, null, 2 )}</pre> */}
-            </Card>
-          ))}
+            
+           </Card>
+            );
+          })}
         </Box>
       </Box>
           {/* <pre>{JSON.stringify(slice?.primary?.options, null, 2 )}</pre> */}

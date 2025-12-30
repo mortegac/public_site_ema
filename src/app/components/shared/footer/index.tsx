@@ -127,8 +127,9 @@ const Footer = () => {
     <>
     <Box
       // bgcolor="#4BBFD9"
+      // background: '#f0f4f6'
       sx={{
-        background: '#f0f4f6'
+        background: '#9e9e9e'
       }}
       borderRadius={0}
       textAlign="center"
@@ -217,17 +218,28 @@ const Footer = () => {
           display="flex"
           justifyContent="space-between"
         >
-          <Stack direction="row" gap={1} alignItems="center">
-            <Image
-              src="/images/logos/energica.png"
-              width={20}
-              height={20}
-              alt="logo"
-            />
-            <Typography variant="body1" fontSize="15px">
-            {" "} Copyright © 2024
-            </Typography>
+          <Stack direction="column" gap={1} alignItems="start">
+          
+            <Box sx={{
+              padding: '0px',
+              display: 'flex',
+              flexDirection:'column',
+              justifyContent: 'start',
+            }}>
+                <Image
+                  src="https://images.prismic.io/energica-public-site/aVRORnNYClf9otOl_logo-energica-blanco.png?auto=format,compress"
+                  width={200}
+                  height={32}
+                  alt="logo"
+                />
+                <Typography variant="body1" fontSize="15px" sx={{ textAlign:'left', paddingTop:'8px', color:'#ffffff'}}>Copyright © 2024</Typography>
+            </Box>
+            
+            <Typography variant="body1" fontSize="15px"  sx={{ textAlign:'left', paddingTop:'2px', color:'#ffffff'}}>Te ayudamos a concretar tu proyecto de electromovilidad industrial o inmobiliario de manera rentable.</Typography>
+            
           </Stack>
+          
+          
           <Typography variant="body1" fontSize="15px">
           
             <Typography component={Link} color="primary.main" href="/privacidad">

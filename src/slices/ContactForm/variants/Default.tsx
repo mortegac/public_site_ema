@@ -662,7 +662,6 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
           </FormContainer>
         </form>
       </SectionContainer>
-       <pre>{JSON.stringify(slice?.primary, null, 2 )}</pre>
     </PageContainer>
   );
 };

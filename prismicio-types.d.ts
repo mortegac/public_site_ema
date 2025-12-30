@@ -1024,6 +1024,52 @@ export interface ContentWithImageSliceWithIconsPrimaryListItem {
 }
 
 /**
+ * Item in *ContentWithImage → SmallImagesWithTitle → Primary → items*
+ */
+export interface ContentWithImageSliceSmallImagesWithTitlePrimaryItemsItem {
+  /**
+   * title field in *ContentWithImage → SmallImagesWithTitle → Primary → items*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.items[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *ContentWithImage → SmallImagesWithTitle → Primary → items*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.items[].description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * imageIsRight field in *ContentWithImage → SmallImagesWithTitle → Primary → items*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: true
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.items[].imageisright
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  imageisright: prismic.BooleanField;
+
+  /**
+   * image field in *ContentWithImage → SmallImagesWithTitle → Primary → items*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.items[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+}
+
+/**
  * Primary content in *ContentWithImage → Default → Primary*
  */
 export interface ContentWithImageSliceDefaultPrimary {
@@ -1352,12 +1398,64 @@ export type ContentWithImageSliceHorizontalImage = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *ContentWithImage → SmallImagesWithTitle → Primary*
+ */
+export interface ContentWithImageSliceSmallImagesWithTitlePrimary {
+  /**
+   * title field in *ContentWithImage → SmallImagesWithTitle → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *ContentWithImage → SmallImagesWithTitle → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * items field in *ContentWithImage → SmallImagesWithTitle → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_with_image.smallImagesWithTitle.primary.items[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  items: prismic.GroupField<
+    Simplify<ContentWithImageSliceSmallImagesWithTitlePrimaryItemsItem>
+  >;
+}
+
+/**
+ * SmallImagesWithTitle variation for ContentWithImage Slice
+ *
+ * - **API ID**: `smallImagesWithTitle`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ContentWithImageSliceSmallImagesWithTitle =
+  prismic.SharedSliceVariation<
+    "smallImagesWithTitle",
+    Simplify<ContentWithImageSliceSmallImagesWithTitlePrimary>,
+    never
+  >;
+
+/**
  * Slice variation for *ContentWithImage*
  */
 type ContentWithImageSliceVariation =
   | ContentWithImageSliceDefault
   | ContentWithImageSliceWithIcons
-  | ContentWithImageSliceHorizontalImage;
+  | ContentWithImageSliceHorizontalImage
+  | ContentWithImageSliceSmallImagesWithTitle;
 
 /**
  * ContentWithImage Shared Slice
@@ -2525,10 +2623,13 @@ declare module "@prismicio/client" {
       ContentWithImageSliceWithIconsPrimaryListItem,
       ContentWithImageSliceWithIconsPrimary,
       ContentWithImageSliceHorizontalImagePrimary,
+      ContentWithImageSliceSmallImagesWithTitlePrimaryItemsItem,
+      ContentWithImageSliceSmallImagesWithTitlePrimary,
       ContentWithImageSliceVariation,
       ContentWithImageSliceDefault,
       ContentWithImageSliceWithIcons,
       ContentWithImageSliceHorizontalImage,
+      ContentWithImageSliceSmallImagesWithTitle,
       HeroSlice,
       HeroSliceDefaultPrimary,
       HeroSliceBgPrimaryPrimary,

@@ -76,7 +76,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
            sx={{ 
              width: { xs: '100%', md: 'calc(38% - 10px)' },
              maxWidth: { xs: '100%', md: 'none' },
-             minHeight: '480px',
+             minHeight: '510px',
              position: 'relative',
              boxShadow: 3,
              backgroundColor: cardBackground,

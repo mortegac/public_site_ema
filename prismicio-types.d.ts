@@ -196,6 +196,7 @@ export type BlogDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<BlogDocumentData>, "blog", Lang>;
 
 type PageDocumentDataSlicesSlice =
+  | StepWizardSlice
   | ContactFormSlice
   | LabelsSlice
   | ResumeBlogSlice
@@ -264,7 +265,72 @@ interface PageDocumentData {
 export type PageDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 
-export type AllDocumentTypes = BlogDocument | PageDocument;
+type ProductsDocumentDataSlicesSlice = CarrouselOptionsSlice;
+
+/**
+ * Content for Products documents
+ */
+interface ProductsDocumentData {
+  /**
+   * Slice Zone field in *Products*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: products.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices: prismic.SliceZone<ProductsDocumentDataSlicesSlice> /**
+   * Meta Title field in *Products*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: products.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */;
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *Products*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: products.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *Products*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: products.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Products document from Prismic
+ *
+ * - **API ID**: `products`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type ProductsDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<
+    Simplify<ProductsDocumentData>,
+    "products",
+    Lang
+  >;
+
+export type AllDocumentTypes = BlogDocument | PageDocument | ProductsDocument;
 
 /**
  * Item in *CarrouselOptions → Default → Primary → options*
@@ -2570,6 +2636,86 @@ export type ResumeBlogSlice = prismic.SharedSlice<
   ResumeBlogSliceVariation
 >;
 
+/**
+ * Item in *StepWizard → Default → Primary → steps*
+ */
+export interface StepWizardSliceDefaultPrimaryStepsItem {
+  /**
+   * number field in *StepWizard → Default → Primary → steps*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: *None*
+   * - **API ID Path**: step_wizard.default.primary.steps[].number
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  number: prismic.NumberField;
+
+  /**
+   * title field in *StepWizard → Default → Primary → steps*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: step_wizard.default.primary.steps[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *StepWizard → Default → Primary → steps*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: step_wizard.default.primary.steps[].description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+}
+
+/**
+ * Primary content in *StepWizard → Default → Primary*
+ */
+export interface StepWizardSliceDefaultPrimary {
+  /**
+   * steps field in *StepWizard → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: step_wizard.default.primary.steps[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  steps: prismic.GroupField<Simplify<StepWizardSliceDefaultPrimaryStepsItem>>;
+}
+
+/**
+ * Default variation for StepWizard Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type StepWizardSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<StepWizardSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *StepWizard*
+ */
+type StepWizardSliceVariation = StepWizardSliceDefault;
+
+/**
+ * StepWizard Shared Slice
+ *
+ * - **API ID**: `step_wizard`
+ * - **Description**: StepWizard
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type StepWizardSlice = prismic.SharedSlice<
+  "step_wizard",
+  StepWizardSliceVariation
+>;
+
 declare module "@prismicio/client" {
   interface CreateClient {
     (
@@ -2597,6 +2743,9 @@ declare module "@prismicio/client" {
       PageDocument,
       PageDocumentData,
       PageDocumentDataSlicesSlice,
+      ProductsDocument,
+      ProductsDocumentData,
+      ProductsDocumentDataSlicesSlice,
       AllDocumentTypes,
       CarrouselOptionsSlice,
       CarrouselOptionsSliceDefaultPrimaryOptionsItem,
@@ -2669,6 +2818,11 @@ declare module "@prismicio/client" {
       ResumeBlogSliceDefaultPrimary,
       ResumeBlogSliceVariation,
       ResumeBlogSliceDefault,
+      StepWizardSlice,
+      StepWizardSliceDefaultPrimaryStepsItem,
+      StepWizardSliceDefaultPrimary,
+      StepWizardSliceVariation,
+      StepWizardSliceDefault,
     };
   }
 }

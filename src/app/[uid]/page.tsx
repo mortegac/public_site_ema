@@ -136,7 +136,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         }}
       >
             
-        {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
+        {/* <pre>{JSON.stringify(page.data.slices, null, 2 )}</pre> */}
         <SliceZone slices={page.data.slices} components={components} />;
       </Container>
     {/* </PageContainer> */}

@@ -1,0 +1,53 @@
+{
+  "id": "step_wizard",
+  "type": "SharedSlice",
+  "name": "StepWizard",
+  "description": "StepWizard",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "steps": {
+          "type": "Group",
+          "config": {
+            "label": "steps",
+            "repeat": true,
+            "fields": {
+              "number": {
+                "type": "Number",
+                "config": {
+                  "label": "number",
+                  "placeholder": ""
+                }
+              },
+              "title": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "title",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "description": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "description",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

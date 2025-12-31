@@ -11,4 +11,5 @@ export const components = {
   labels: dynamic(() => import("./Labels")),
   options_content: dynamic(() => import("./OptionsContent")),
   resume_blog: dynamic(() => import("./ResumeBlog")),
+  step_wizard: dynamic(() => import("./StepWizard")),
 };

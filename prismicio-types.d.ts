@@ -195,6 +195,71 @@ interface BlogDocumentData {
 export type BlogDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<BlogDocumentData>, "blog", Lang>;
 
+type InstallpackagesDocumentDataSlicesSlice = PackagesSlice;
+
+/**
+ * Content for InstallPackages documents
+ */
+interface InstallpackagesDocumentData {
+  /**
+   * Slice Zone field in *InstallPackages*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: installpackages.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices: prismic.SliceZone<InstallpackagesDocumentDataSlicesSlice> /**
+   * Meta Title field in *InstallPackages*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: installpackages.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */;
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *InstallPackages*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: installpackages.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *InstallPackages*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: installpackages.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * InstallPackages document from Prismic
+ *
+ * - **API ID**: `installpackages`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type InstallpackagesDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<
+    Simplify<InstallpackagesDocumentData>,
+    "installpackages",
+    Lang
+  >;
+
 type PageDocumentDataSlicesSlice =
   | StepWizardSlice
   | ContactFormSlice
@@ -330,7 +395,11 @@ export type ProductsDocument<Lang extends string = string> =
     Lang
   >;
 
-export type AllDocumentTypes = BlogDocument | PageDocument | ProductsDocument;
+export type AllDocumentTypes =
+  | BlogDocument
+  | InstallpackagesDocument
+  | PageDocument
+  | ProductsDocument;
 
 /**
  * Item in *CarrouselOptions → Default → Primary → options*
@@ -600,6 +669,17 @@ export interface CarrouselOptionsSliceExtendedOptionsPrimaryOptionsItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   htmlfeatures: prismic.KeyTextField;
+
+  /**
+   * InstallationIncluded field in *CarrouselOptions → ExtendedOptions → Primary → options*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: carrousel_options.extendedOptions.primary.options[].installationincluded
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  installationincluded: prismic.BooleanField;
 
   /**
    * IDdatabase field in *CarrouselOptions → ExtendedOptions → Primary → options*
@@ -2509,6 +2589,86 @@ export type OptionsContentSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Item in *Packages → Default → Primary → items*
+ */
+export interface PackagesSliceDefaultPrimaryItemsItem {
+  /**
+   * mts field in *Packages → Default → Primary → items*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: *None*
+   * - **API ID Path**: packages.default.primary.items[].mts
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  mts: prismic.NumberField;
+
+  /**
+   * price35kW field in *Packages → Default → Primary → items*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: Valor para 3.5 kW
+   * - **API ID Path**: packages.default.primary.items[].price35kw
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  price35kw: prismic.NumberField;
+
+  /**
+   * price7kW field in *Packages → Default → Primary → items*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: Valor
+   * - **API ID Path**: packages.default.primary.items[].price7kw
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  price7kw: prismic.NumberField;
+}
+
+/**
+ * Primary content in *Packages → Default → Primary*
+ */
+export interface PackagesSliceDefaultPrimary {
+  /**
+   * items field in *Packages → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: packages.default.primary.items[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  items: prismic.GroupField<Simplify<PackagesSliceDefaultPrimaryItemsItem>>;
+}
+
+/**
+ * Default variation for Packages Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type PackagesSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<PackagesSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Packages*
+ */
+type PackagesSliceVariation = PackagesSliceDefault;
+
+/**
+ * Packages Shared Slice
+ *
+ * - **API ID**: `packages`
+ * - **Description**: Packages
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type PackagesSlice = prismic.SharedSlice<
+  "packages",
+  PackagesSliceVariation
+>;
+
+/**
  * Item in *ResumeBlog → Default → Primary → options*
  */
 export interface ResumeBlogSliceDefaultPrimaryOptionsItem {
@@ -2651,6 +2811,16 @@ export interface StepWizardSliceDefaultPrimaryStepsItem {
   number: prismic.NumberField;
 
   /**
+   * stepComponent field in *StepWizard → Default → Primary → steps*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: *None*
+   * - **API ID Path**: step_wizard.default.primary.steps[].stepcomponent
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  stepcomponent: prismic.NumberField;
+
+  /**
    * title field in *StepWizard → Default → Primary → steps*
    *
    * - **Field Type**: Rich Text
@@ -2675,6 +2845,17 @@ export interface StepWizardSliceDefaultPrimaryStepsItem {
  * Primary content in *StepWizard → Default → Primary*
  */
 export interface StepWizardSliceDefaultPrimary {
+  /**
+   * installationIncluded field in *StepWizard → Default → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: step_wizard.default.primary.installationincluded
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  installationincluded: prismic.BooleanField;
+
   /**
    * steps field in *StepWizard → Default → Primary*
    *
@@ -2740,6 +2921,9 @@ declare module "@prismicio/client" {
       BlogDocument,
       BlogDocumentData,
       BlogDocumentDataSlicesSlice,
+      InstallpackagesDocument,
+      InstallpackagesDocumentData,
+      InstallpackagesDocumentDataSlicesSlice,
       PageDocument,
       PageDocumentData,
       PageDocumentDataSlicesSlice,
@@ -2813,6 +2997,11 @@ declare module "@prismicio/client" {
       OptionsContentSliceFoundingTeam,
       OptionsContentSliceTwoColumnsText,
       OptionsContentSliceTeam,
+      PackagesSlice,
+      PackagesSliceDefaultPrimaryItemsItem,
+      PackagesSliceDefaultPrimary,
+      PackagesSliceVariation,
+      PackagesSliceDefault,
       ResumeBlogSlice,
       ResumeBlogSliceDefaultPrimaryOptionsItem,
       ResumeBlogSliceDefaultPrimary,

@@ -44,10 +44,22 @@
 										}
 									]
 								}
+							],
+							[
+								"stepcomponent",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "76",
+									"type": "Number"
+								}
 							]
 						]
 					}
 				]
+			},
+			"installationincluded": {
+				"__TYPE__": "BooleanContent",
+				"value": false
 			}
 		},
 		"items": []

@@ -1,0 +1,43 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"items": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"mts",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "70",
+									"type": "Number"
+								}
+							],
+							[
+								"price35kw",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "46",
+									"type": "Number"
+								}
+							],
+							[
+								"price7kw",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "89",
+									"type": "Number"
+								}
+							]
+						]
+					}
+				]
+			}
+		},
+		"items": []
+	}
+]

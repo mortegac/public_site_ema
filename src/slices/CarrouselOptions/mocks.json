@@ -351,6 +351,13 @@
 									"value": "language",
 									"type": "Text"
 								}
+							],
+							[
+								"installationincluded",
+								{
+									"__TYPE__": "BooleanContent",
+									"value": true
+								}
 							]
 						]
 					}

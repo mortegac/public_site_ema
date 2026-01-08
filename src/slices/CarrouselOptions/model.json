@@ -272,6 +272,15 @@
                   "placeholder": ""
                 }
               },
+              "installationincluded": {
+                "type": "Boolean",
+                "config": {
+                  "label": "InstallationIncluded",
+                  "placeholder_false": "false",
+                  "placeholder_true": "false",
+                  "default_value": false
+                }
+              },
               "iddatabase": {
                 "type": "Text",
                 "config": {

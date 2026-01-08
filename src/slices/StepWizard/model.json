@@ -12,6 +12,15 @@
       "description": "Default",
       "imageUrl": "",
       "primary": {
+        "installationincluded": {
+          "type": "Boolean",
+          "config": {
+            "label": "installationIncluded",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": false
+          }
+        },
         "steps": {
           "type": "Group",
           "config": {
@@ -22,6 +31,13 @@
                 "type": "Number",
                 "config": {
                   "label": "number",
+                  "placeholder": ""
+                }
+              },
+              "stepcomponent": {
+                "type": "Number",
+                "config": {
+                  "label": "stepComponent",
                   "placeholder": ""
                 }
               },

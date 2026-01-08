@@ -17,118 +17,48 @@ import {
   Chip,
 } from "@mui/material";
 
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { setStep, selectWizard } from "@/store/Wizard/wizardSlice";
+
 
 import { Text } from "@/app/components/shared/text";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Image from "next/image";
 
 import { StepWizardProps } from "../types"
-import { JsonPath } from "aws-cdk-lib/aws-stepfunctions";
+import { Step01 } from "../components/Step01"
+import { Step02 } from "../components/Step02"
+import { Step03 } from "../components/Step03"
+import { Step04 } from "../components/Step04"
+import { Step05 } from "../components/Step05"
 
 
-const currentStep = 1;
+const typeOfForm: any = {
+  ["0"]: Step01,
+  ["1"]: Step01,
+  ["2"]: Step02,
+  ["3"]: Step03, 
+  ["4"]: Step04,
+  ["5"]: Step05,
+};
+
+// const currentStep = 1;
 
 export const Default: FC<StepWizardProps> = ({ slice }) => {
   const {primary} = slice;
   const primaryDefault = primary as any;
   
-    // return(
-    //   <Box bgcolor="#ffffff" pt={2} pb={7}
-    //   data-slice-type={slice.slice_type}
-    //     data-slice-variation={slice.variation}
-    // >
-    //   <Container
-    //     sx={{
-    //       maxWidth: "1400px !important",
-    //       position: "relative",
-    //     }}
-    //   >
-    //     <Box id="boxOPtions" sx={{ 
-    //       textAlign: 'left', 
-    //       display: 'flex', 
-    //       flexDirection: 'column', 
-    //       alignItems: 'center', 
-    //       justifyContent: 'center', 
-    //       width: '100%' 
-    //     }}>
-    //       <Stack
-    //         my={3}
-    //         direction={{ xs: "column", sm: "column", xl:"column" }}
-    //         spacing="20px"
-    //         alignItems="center"
-    //         justifyContent="center"
-    //       >
-    //         <Text textObject={primaryDefault?.title}/>
-    //         <Text textObject={primaryDefault?.description}/>        
-    //       </Stack>
-          
-    //       <Stack
-    //         id="listOptions"
-    //         my={3}
-    //         direction={{ xs: "column", sm: "row" }}
-    //         spacing="20px"
-    //         alignItems="start"
-    //         justifyContent="center"
-    //         sx={{ width: '100%' }}
-    //       >
-    //         {primaryDefault?.items?.map((option: any, index: number) => (
-    //           <Card 
-    //             key={index}
-    //             sx={{ 
-    //               // maxWidth: 345,
-    //               minHeight: '460px', 
-    //               padding:'22px',
-    //               width: '100%',
-    //               position: 'relative',
-    //               boxShadow: 3,
-    //               '&:hover': {
-    //                 boxShadow: 6,
-    //                 transform: 'translateY(-4px)',
-    //                 transition: 'all 0.3s ease-in-out'
-    //               }
-    //             }}
-    //           >
-    //             {/* Banner superior gris si existe texttopbanner */}
-    //             {option.texttopbanner && option.texttopbanner.length > 0 && (
-    //               <Box
-    //                 sx={{
-    //                   textAlign: 'center'
-    //                 }}
-    //               >
-    //                  {option.image?.url && (
-    //                 <Image
-    //                   src={option.image.url}
-    //                   alt={option.image.alt || `Option ${index + 1}`}
-    //                   width={100}
-    //                   height={100}
-    //                   style={{
-    //                     objectFit: 'contain',
-    //                     borderRadius: '8px',
-    //                     marginBottom: '22px',
-    //                   }}
-    //                   unoptimized
-    //                 />
-    //               )}
-    //                <Box
-    //                 sx={{
-    //                  marginBottom: '22px',
-    //                   textAlign: 'center'
-    //                 }}
-    //               >
-    //                 <Text textObject={option.title}/>  
-    //               </Box>
-    //                 <Text textObject={option.texttopbanner} fontSize="16px"/>  
-    //               </Box>
-    //             )}
+  const dispatch = useAppDispatch();
+  const handleStepClick = (stepIndex: number, stepName: string) => {
+    
+    dispatch(setStep(stepIndex));
+  };
   
-    //           </Card>
-    //         ))}
-    //       </Stack>
-    //     </Box>
-          
-    //      {/* <pre>{JSON.stringify(slice?.primary?.options, null, 2 )}</pre> */}
-    //   </Container>
-    //   </Box>
+  const { 
+    currentStep,
+  } = useAppSelector(selectWizard);
+  
+  const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
+  
+  
     return (
       <Box bgcolor="#ffffff" pt={4} pb={2}>
         <Container
@@ -138,6 +68,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
             paddingBottom:'56px',
           }}
         >
+          <span>currentStep={currentStep}</span>
         <Stepper 
           activeStep={currentStep}
           sx={{
@@ -176,11 +107,12 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
             const labelProps: {
               optional?: React.ReactNode;
               onClick?: () => void;
-            } = {
-              // onClick: () => handleStepClick(index, label)
-            };
+            } = { onClick: () => handleStepClick(label?.stepcomponent, label) };
             return (
               <Step key={label?.title?.text} {...stepProps}>
+                  
+                  <pre>{JSON.stringify(label?.stepcomponent, null, 2 )}</pre>
+                  
                 <StepLabel 
                   {...labelProps}
                   className={label === "Resumen cotización" ? "no-hover" : ""}
@@ -202,6 +134,21 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
         </Stepper>
         </Container>
         {/* <pre>{JSON.stringify(slice, null, 2 )}</pre> */}
+        
+        <Container
+        sx={{
+          maxWidth: "1400px !important",
+          position: "relative",
+          height: { xs: '100%', md: 'auto' },
+          // minHeight: { xs: 'calc(100vh - 140px)', md: 'auto' }, // 140px para padding top/bottom
+        }}
+      >
+        <FormStep 
+          installationincluded={slice?.primary?.installationincluded || false}
+              // onChangeSetStore={onChangeSetStore}
+            />
+      </Container>
+      
       </Box>
     );
   }

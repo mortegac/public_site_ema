@@ -10,6 +10,7 @@ export const components = {
   ideas: dynamic(() => import("./Ideas")),
   labels: dynamic(() => import("./Labels")),
   options_content: dynamic(() => import("./OptionsContent")),
+  packages: dynamic(() => import("./Packages")),
   resume_blog: dynamic(() => import("./ResumeBlog")),
   step_wizard: dynamic(() => import("./StepWizard")),
 };

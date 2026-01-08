@@ -1,0 +1,49 @@
+{
+  "id": "packages",
+  "type": "SharedSlice",
+  "name": "Packages",
+  "description": "Packages",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "items": {
+          "type": "Group",
+          "config": {
+            "label": "items",
+            "repeat": true,
+            "fields": {
+              "mts": {
+                "type": "Number",
+                "config": {
+                  "label": "mts",
+                  "placeholder": ""
+                }
+              },
+              "price35kw": {
+                "type": "Number",
+                "config": {
+                  "label": "price35kW",
+                  "placeholder": "Valor para 3.5 kW"
+                }
+              },
+              "price7kw": {
+                "type": "Number",
+                "config": {
+                  "label": "price7kW",
+                  "placeholder": "Valor "
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

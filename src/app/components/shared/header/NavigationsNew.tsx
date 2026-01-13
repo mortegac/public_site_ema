@@ -15,10 +15,6 @@ export const NavLinks = [
     href: "/",
   },
   {
-    title: "Somos Energica",
-    href: "/que-es-energica-city",
-  },
-  {
     title: "Electrificación de flotas",
     href: "/asesoria-electrificacion-flotas",
   },
@@ -27,8 +23,12 @@ export const NavLinks = [
     href: "/venta-cargadores",
   },
   {
-    title: "Carga en edificios",
+    title: "Electrolineras en edificios",
     href: "/cargadores-en-edificios",
+  },
+  {
+    title: "Sobre Energica",
+    href: "/que-es-energica-city",
   },
   // {
   //   title: "¿Dudas?",

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from "../store";
-import StepWizard from '../../slices/StepWizard/index';
+
+// import StepWizard from '../../slices/StepWizard/index';
 
 interface WizardState {
   currentStep: number;

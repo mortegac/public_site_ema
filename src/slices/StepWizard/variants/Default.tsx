@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, selectWizard } from "@/store/Wizard/wizardSlice";
+import { setStep, selectWizard } from "@/store/Wizard/slice";
 
 
 import { Text } from "@/app/components/shared/text";

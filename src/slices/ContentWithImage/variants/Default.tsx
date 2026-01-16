@@ -82,43 +82,7 @@ export const Default: FC<ContentWithImageProps> = ({ slice }) => {
                 alignItems="start"
                 justifyContent="start"
               >
-                {/* <Typography
-                  id="title-hero"
-                  variant="h2"
-                  fontWeight={700}
-                  lineHeight="1.2"
-                  sx={{
-                    fontSize: {
-                      xs: "32px",
-                      sm: "32px",
-                    },
-                  }}
-                >
-                  <PrismicRichText
-                    field={slice.primary.title} 
-                    components={defaultComponents}
-                  />                
-                </Typography> */}
                 <Text textObject={slice?.primary?.title} /> 
-                
-                {/* <Typography
-                  id="title-description"
-                  variant="body1"
-                  fontWeight={200}
-                  lineHeight="1.5"
-                  sx={{
-                    mt:"24px",
-                    fontSize: {
-                      xs: "18px",
-                      sm: "18px",
-                    },
-                  }}
-                >
-                  <PrismicRichText
-                    field={(slice?.primary as any)?.description} 
-                    components={defaultComponents}
-                  />                
-                </Typography> */}
                 <Text textObject={(slice?.primary as any)?.description} /> 
                 
                 <Box 
@@ -158,6 +122,24 @@ export const Default: FC<ContentWithImageProps> = ({ slice }) => {
                     </Box>
                     </Box>
                   ))}
+                   <Box
+                id="contactButton"
+                sx={{
+                  marginTop: '24px'
+                }}
+              >
+                { (primary as any)?.buttononetext &&
+                 <Button
+                    color="primary"
+                    size="large"
+                    variant="contained"
+                    href={(primary as any)?.buttononelink?.url || "#"}
+                  >
+                    {(primary as any).buttononetext}
+                  </Button>
+                }
+              </Box>
+              
                 </Box>
                 
               </Stack>
@@ -197,12 +179,17 @@ export const Default: FC<ContentWithImageProps> = ({ slice }) => {
                     }}
                   />
                 }
+                
+                
               </Box>
             </Box>
         
           </Box>
+             
           
         </Container>
+        
+        {/* <pre>{JSON.stringify((primary as any)?.buttononelink?.url , null, 2 )}</pre> */}
       </Box>
     </>
   );

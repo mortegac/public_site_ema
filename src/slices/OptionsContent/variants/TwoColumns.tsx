@@ -33,7 +33,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
   }
   
   return(
-    <Box bgcolor="#ffffff" pt={7} pb={7}
+    <Box bgcolor="#ffffff" pt={0} pb={7}
     data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
   >
@@ -50,9 +50,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
         alignItems: 'center', 
         justifyContent: 'center', 
         width: '100%' 
-      }}>
-       
-        
+      }}> 
         <Box
           id="listOptions"
           sx={{
@@ -68,7 +66,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
         >
           {primary?.options?.map((option: any, index: number) => {
             const isFirstTwo = index < 2;
-            const cardBackground = isFirstTwo ? '#FFFFFF' : '#F8F8F8';
+            const cardBackground = option?.hasbackgroundcolor ? '#F8F8F8' : '#FFFFFF';
             
             return (
            <Card 
@@ -94,7 +92,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
              }
            }}
          >
-            
+            {/* <pre>{JSON.stringify(option?.hasbackgroundcolor, null, 2 )}</pre> */}
              {/* Imagen de la card */}
              <CardMedia
                component="div"
@@ -170,15 +168,15 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
                      paddingX: 4,
                      paddingY: 1.5,
                      borderRadius: '24px',
-                     background: isFirstTwo ? "#E81A68" : "transparent",
-                     color: isFirstTwo ? "#FFFFFF" : "#E81A68",
+                     background: option?.hasbackgroundcolor ? "transparent" : "#E81A68",
+                     color: option?.hasbackgroundcolor ? "#E81A68" : "#FFFFFF",
                      fontSize: '18px',
-                    //  color:"#FFFFFF",
-                     border: isFirstTwo ? "1px solid #E81A68" : "1px solid #E81A68",
+                     border: "1px solid #E81A68",
                      width: '90%',
                      '&:hover': {
-                       background: isFirstTwo ? "#C2185B" : "#6A6A6A",
-                       border: isFirstTwo ? "1px solid #C2185B" : "1px solid #6A6A6A",
+                       background: option?.hasbackgroundcolor ? "#C0C0C0" : "#C2185B",
+                       border: option?.hasbackgroundcolor ? "1px solid #C0C0C0" : "1px solid #E81A68",
+                       color: option?.hasbackgroundcolor ? "#000000": "#FFFFFF",
                      }
                    }}
                    href={(option?.buttonlink as any)?.url || "#"}

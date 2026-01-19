@@ -175,6 +175,13 @@
 										"text": "boy"
 									}
 								}
+							],
+							[
+								"hasbackgroundcolor",
+								{
+									"__TYPE__": "BooleanContent",
+									"value": true
+								}
 							]
 						]
 					}

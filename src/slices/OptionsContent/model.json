@@ -125,6 +125,15 @@
                   "allowText": true,
                   "repeat": false
                 }
+              },
+              "hasbackgroundcolor": {
+                "type": "Boolean",
+                "config": {
+                  "label": "hasBackgroundColor",
+                  "placeholder_false": "false",
+                  "placeholder_true": "false",
+                  "default_value": false
+                }
               }
             }
           }

@@ -54,6 +54,44 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
             gap: 3, 
             mb: 4 
           }}>
+            {/* Imagen */}
+            <Box 
+              id="imageSlice"
+              sx={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              order: { xs: 1, lg: imageIsRight ? 2 : 1 }
+            }}>
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth: '500px',
+                  height: 'auto',
+                  position: 'relative',
+                  '& img': {
+                    width: '100%',
+                    height: 'auto',
+                  }
+                }}
+              >
+                { (primary as any)?.image?.url &&
+                  <Image
+                    src={(primary as any)?.image?.url || ""}
+                    alt={(primary as any)?.image?.alt || ""}
+                    width={500}
+                    height={380}
+                    priority
+                    unoptimized
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }}
+                  />
+                }
+              </Box>
+            </Box>
+            
             {/* Contenido de texto */}
             <Box 
               id="boxText"
@@ -63,7 +101,7 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
                 flexDirection: 'column', 
                 alignItems: 'start', 
                 justifyContent: 'start',
-                order: imageIsRight ? 1 : 2
+                order: { xs: 2, lg: imageIsRight ? 1 : 2 }
               }}>
               <Stack
                 my={3}
@@ -172,42 +210,7 @@ export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
               </Stack>
             </Box>
 
-            {/* Imagen */}
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              alignItems: 'center',
-              order: imageIsRight ? 2 : 1
-            }}>
-              <Box
-                id="imageSlice"
-                sx={{
-                  width: '100%',
-                  maxWidth: '500px',
-                  height: 'auto',
-                  position: 'relative',
-                  '& img': {
-                    width: '100%',
-                    height: 'auto',
-                  }
-                }}
-              >
-                { (primary as any)?.image?.url &&
-                  <Image
-                    src={(primary as any)?.image?.url || ""}
-                    alt={(primary as any)?.image?.alt || ""}
-                    width={500}
-                    height={380}
-                    priority
-                    unoptimized
-                    style={{
-                      maxWidth: '100%',
-                      height: 'auto',
-                    }}
-                  />
-                }
-              </Box>
-            </Box>
+            
         
           </Box>
           

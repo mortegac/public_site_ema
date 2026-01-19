@@ -20,7 +20,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import { HeroProps } from "../types"
 
-export const Default: FC<HeroProps> = ({ slice }) => {
+export const SinTextoResponsive: FC<HeroProps> = ({ slice }) => {
   const {primary} = slice;
   
     return(
@@ -32,9 +32,10 @@ export const Default: FC<HeroProps> = ({ slice }) => {
         sx={{
           maxWidth: "1200px !important",
           position: "relative",
+          
         }}
       >
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
+        <Box sx={{  display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
           <Box 
             id="box-header" 
             sx={{ 
@@ -53,7 +54,9 @@ export const Default: FC<HeroProps> = ({ slice }) => {
               justifyContent="flex-start"
             >
               <Text textObject={slice?.primary?.title} /> 
-              <Text textObject={(slice?.primary as any)?.description}/> 
+              <Box id="description" sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Text textObject={(slice?.primary as any)?.description}/> 
+              </Box>
 
             </Stack>
             
@@ -63,7 +66,10 @@ export const Default: FC<HeroProps> = ({ slice }) => {
               spacing={3}
               justifyContent="flex-start"
               marginTop={6}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
+              sx={{ 
+                width: { xs: "100%", sm: "auto" }, 
+                display: { xs: 'none', sm: 'block' },
+              }}
             >
               {primary?.buttononetext && <Button
                 color="primary"
@@ -98,7 +104,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
           </Box>
           
           {/* image */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box id="imageBox" sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
             <Box
               id="boxImage"
               sx={{

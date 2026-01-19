@@ -149,7 +149,7 @@ interface BlogDocumentData {
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/slices
    */
-  slices: prismic.SliceZone<BlogDocumentDataSlicesSlice> /**
+  slices: prismic.SliceZone<BlogDocumentDataSlicesSlice>; /**
    * Meta Title field in *blog*
    *
    * - **Field Type**: Text
@@ -157,7 +157,7 @@ interface BlogDocumentData {
    * - **API ID Path**: blog.meta_title
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/text
-   */;
+   */
   meta_title: prismic.KeyTextField;
 
   /**
@@ -210,7 +210,7 @@ interface InstallpackagesDocumentData {
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/slices
    */
-  slices: prismic.SliceZone<InstallpackagesDocumentDataSlicesSlice> /**
+  slices: prismic.SliceZone<InstallpackagesDocumentDataSlicesSlice>; /**
    * Meta Title field in *InstallPackages*
    *
    * - **Field Type**: Text
@@ -218,7 +218,7 @@ interface InstallpackagesDocumentData {
    * - **API ID Path**: installpackages.meta_title
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/text
-   */;
+   */
   meta_title: prismic.KeyTextField;
 
   /**
@@ -284,7 +284,7 @@ interface PageDocumentData {
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/slices
    */
-  slices: prismic.SliceZone<PageDocumentDataSlicesSlice> /**
+  slices: prismic.SliceZone<PageDocumentDataSlicesSlice>; /**
    * Meta Title field in *Page*
    *
    * - **Field Type**: Text
@@ -292,7 +292,7 @@ interface PageDocumentData {
    * - **API ID Path**: page.meta_title
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/text
-   */;
+   */
   meta_title: prismic.KeyTextField;
 
   /**
@@ -345,7 +345,7 @@ interface ProductsDocumentData {
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/slices
    */
-  slices: prismic.SliceZone<ProductsDocumentDataSlicesSlice> /**
+  slices: prismic.SliceZone<ProductsDocumentDataSlicesSlice>; /**
    * Meta Title field in *Products*
    *
    * - **Field Type**: Text
@@ -353,7 +353,7 @@ interface ProductsDocumentData {
    * - **API ID Path**: products.meta_title
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/text
-   */;
+   */
   meta_title: prismic.KeyTextField;
 
   /**
@@ -1896,12 +1896,113 @@ export type HeroSliceBlogHero = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *Hero → SinTextoResponsive → Primary*
+ */
+export interface HeroSliceSinTextoResponsivePrimary {
+  /**
+   * title field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * image field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * buttonOneText field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.buttononetext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttononetext: prismic.KeyTextField;
+
+  /**
+   * buttonOneLink field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.buttononelink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttononelink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * buttonTwoText field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.buttontwotext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontwotext: prismic.KeyTextField;
+
+  /**
+   * buttonTwoLink field in *Hero → SinTextoResponsive → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.sinTextoResponsive.primary.buttontwolink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttontwolink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * SinTextoResponsive variation for Hero Slice
+ *
+ * - **API ID**: `sinTextoResponsive`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSliceSinTextoResponsive = prismic.SharedSliceVariation<
+  "sinTextoResponsive",
+  Simplify<HeroSliceSinTextoResponsivePrimary>,
+  never
+>;
+
+/**
  * Slice variation for *Hero*
  */
 type HeroSliceVariation =
   | HeroSliceDefault
   | HeroSliceBgPrimary
-  | HeroSliceBlogHero;
+  | HeroSliceBlogHero
+  | HeroSliceSinTextoResponsive;
 
 /**
  * Hero Shared Slice
@@ -2177,6 +2278,17 @@ export interface OptionsContentSliceTwoColumnsPrimaryOptionsItem {
     prismic.FieldState,
     never
   >;
+
+  /**
+   * hasBackgroundColor field in *OptionsContent → TwoColumns → Primary → options*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: options_content.twoColumns.primary.options[].hasbackgroundcolor
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  hasbackgroundcolor: prismic.BooleanField;
 }
 
 /**
@@ -2967,10 +3079,12 @@ declare module "@prismicio/client" {
       HeroSliceDefaultPrimary,
       HeroSliceBgPrimaryPrimary,
       HeroSliceBlogHeroPrimary,
+      HeroSliceSinTextoResponsivePrimary,
       HeroSliceVariation,
       HeroSliceDefault,
       HeroSliceBgPrimary,
       HeroSliceBlogHero,
+      HeroSliceSinTextoResponsive,
       IdeasSlice,
       IdeasSliceDefaultPrimary,
       IdeasSliceVariation,

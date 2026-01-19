@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -11,6 +11,7 @@ import {
   Stack,
   useTheme,
   useMediaQuery,
+  keyframes,
 } from '@mui/material';
 import { IconX } from '@tabler/icons-react';
 
@@ -18,10 +19,38 @@ interface FloatingVisitWidgetProps {
   onClose?: () => void;
 }
 
+// Animación de entrada desde la derecha
+const slideInFromRight = keyframes`
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
+
 const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  useEffect(() => {
+    // Esperar 20 segundos antes de mostrar el widget
+    const timer = setTimeout(() => {
+      setShouldRender(true);
+      // Pequeño delay para activar la animación después de renderizar
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 50);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -41,7 +70,7 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
     window.open(imageTrackingUrl, '_parent');
   };
 
-  if (!isVisible) return null;
+  if (!shouldRender) return null;
 
   return (
     <Box
@@ -55,6 +84,10 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
         height: { xs: 'auto', sm: '295px' },
         zIndex: 99999,
         pointerEvents: 'auto',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
+        animation: isVisible ? `${slideInFromRight} 0.6s ease-out forwards` : 'none',
+        transition: 'opacity 0.3s ease-out, transform 0.6s ease-out',
       }}
     >
       <Card

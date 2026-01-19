@@ -20,8 +20,16 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import { HeroProps } from "../types"
 
+// Type guard function para verificar que primary tiene la propiedad image
+function hasImageProperty(primary: any): primary is { image: { url?: string; alt?: string } } {
+  return primary && typeof primary === 'object' && 'image' in primary;
+}
+
 export const SinTextoResponsive: FC<HeroProps> = ({ slice }) => {
   const {primary} = slice;
+  // Verificar que primary tiene la propiedad image usando type guard
+  const imageUrl = hasImageProperty(primary) ? primary.image?.url : undefined;
+  const imageAlt = hasImageProperty(primary) ? primary.image?.alt : undefined;
   
     return(
       <Box id="container" bgcolor="#ffffff" pt={7} pb={{ xs: 0, md: 7 }}
@@ -120,8 +128,8 @@ export const SinTextoResponsive: FC<HeroProps> = ({ slice }) => {
               }}
             >
               <Image
-                src={primary?.image?.url || "/images/headers/contacto-energica.png"}
-                alt={primary?.image?.alt || "Cargador eléctrico"}
+                src={imageUrl || "/images/headers/contacto-energica.png"}
+                alt={imageAlt || "Cargador eléctrico"}
                 width={500}
                 height={300}
                 priority

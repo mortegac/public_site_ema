@@ -311,5 +311,72 @@
 				"value": []
 			}
 		]
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "withVideo",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Quis exercitation sint velit ipsum sit. Quis Lorem est ad non amet occaecat tempor irure id sint."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Enim commodo nostrud magna nostrud Lorem ipsum do adipisicing enim pariatur incididunt nostrud labore."
+						}
+					}
+				]
+			},
+			"buttononetext": {
+				"__TYPE__": "FieldContent",
+				"value": "before",
+				"type": "Text"
+			},
+			"buttononelink": {
+				"key": "8870f4c8-942e-487e-98cd-45d25b857913",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "gave"
+				}
+			},
+			"buttontwotext": {
+				"__TYPE__": "FieldContent",
+				"value": "total",
+				"type": "Text"
+			},
+			"buttontwolink": {
+				"key": "cafb195c-15d3-47b3-8ae0-d77c60b46b98",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "planned"
+				}
+			},
+			"videourl": {
+				"__TYPE__": "FieldContent",
+				"value": "reason",
+				"type": "Text"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
 	}
 ]

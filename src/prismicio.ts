@@ -13,6 +13,17 @@ export const repositoryName =
   process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 /**
+ * Extended fetch options that include Next.js specific cache options
+ */
+type NextFetchOptions = RequestInit & {
+  next?: {
+    tags?: string[];
+    revalidate?: number;
+  };
+  cache?: RequestCache;
+};
+
+/**
  * A list of Route Resolver objects that define how a document's `url` field is resolved.
  *
  * {@link https://prismic.io/docs/route-resolver#route-resolver}
@@ -29,12 +40,14 @@ const routes: Route[] = [
  * @param config - Configuration for the Prismic client.
  */
 export const createClient = (config: ClientConfig = {}) => {
+  const fetchOptions: NextFetchOptions =
+    process.env.NODE_ENV === "production"
+      ? { next: { tags: ["prismic"] }, cache: "force-cache" }
+      : { next: { revalidate: 5 } };
+
   const client = baseCreateClient(repositoryName, {
     routes,
-    fetchOptions:
-      process.env.NODE_ENV === "production"
-        ? { next: { tags: ["prismic"] }, cache: "force-cache" }
-        : { next: { revalidate: 5 } },
+    fetchOptions: fetchOptions as any,
     ...config,
   });
 

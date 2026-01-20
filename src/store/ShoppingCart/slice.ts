@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyShoppingCart, shoppingCartInput, ShoppingCart } from './type';
+import { emptyShoppingCart, shoppingCartInput, ShoppingCart, CartProduct } from './type';
 import { RootState } from "../store";
 import { fecthShoppingCart } from './services';
 
@@ -45,6 +45,24 @@ const shoppingCartSlice = createSlice({
     setData: (state, action: PayloadAction<ShoppingCart>) => {
       state.shoppingCart = {...state.shoppingCart, ...action.payload};
     },
+    addProduct: (state, action: PayloadAction<CartProduct>) => {
+      if (!state.shoppingCart.productos) {
+        state.shoppingCart.productos = [];
+      }
+      
+      // Verificar si el producto ya existe en el carrito
+      const existingProductIndex = state.shoppingCart.productos.findIndex(
+        (product) => product.productId === action.payload.productId
+      );
+      
+      if (existingProductIndex >= 0) {
+        // Si existe, incrementar la cantidad
+        state.shoppingCart.productos[existingProductIndex].cantidad += action.payload.cantidad;
+      } else {
+        // Si no existe, agregar el nuevo producto
+        state.shoppingCart.productos.push(action.payload);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -73,7 +91,8 @@ const shoppingCartSlice = createSlice({
 // export default clientFormsSlice.reducer;
 
 export const {
-    setData
+    setData,
+    addProduct
   } = shoppingCartSlice.actions;
   
 export const selectShoppingCart= (state: RootState) => state.shoppingCart;

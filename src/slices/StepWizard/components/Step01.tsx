@@ -18,7 +18,10 @@ import {
   IconButton,
 } from "@mui/material";
 import { formatCurrency } from "@/utils/currency";
-import * as prismic from "@prismicio/client"
+import * as prismic from "@prismicio/client";
+import { useDispatch } from "react-redux";
+import { addProduct } from "@/store/ShoppingCart/slice";
+import { CartProduct } from "@/store/ShoppingCart/type";
 
 
 const createPrismicClient = () => {
@@ -56,11 +59,24 @@ type DocumentData = {
 export const Step01: FC<any> = (props:any) => {
   
   const { installationincluded } = props;
+  const dispatch = useDispatch();
   
   const [data, setData] = useState<DocumentData | null>(null);
   const [primary, setPrimary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const handleAddToCart = (option: any) => {
+    const product: CartProduct = {
+      productId: option.iddatabase || "",
+      valor: Number(option?.pricetopvalue || 0),
+      cantidad: 1,
+      descripcionProducto: option?.brand || "",
+      imagenProducto: option?.image?.url || "",
+    };
+    
+    dispatch(addProduct(product));
+  };
   
   useEffect(() => {
     const fetchContent = async () => {
@@ -384,6 +400,7 @@ export const Step01: FC<any> = (props:any) => {
                           position: 'relative'
                         }}
                       >
+                        {/* <pre>{JSON.stringify(primary.options, null, 2 )}</pre> */}
                         {/* Imagen - Parte izquierda */}
                         <Box sx={{ 
                           flex: 1,
@@ -431,6 +448,7 @@ export const Step01: FC<any> = (props:any) => {
                               width: '100%',
                               fontSize: '14px',
                             }}
+                            onClick={() => handleAddToCart(option)}
                           >
                             Comprar
                           </Button>
@@ -637,6 +655,7 @@ export const Step01: FC<any> = (props:any) => {
                               width: '100%',
                               fontSize: '14px',
                             }}
+                            onClick={() => handleAddToCart(option)}
                           >
                             Comprar
                           </Button>

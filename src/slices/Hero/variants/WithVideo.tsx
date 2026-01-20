@@ -101,20 +101,12 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
               <Text textObject={(slice?.primary as any)?.description} color="#FFFFFF"/> 
 
             </Stack>
-            
-            {/* <Stack
-              direction={{ xs: "column", sm: "row" }}
-              alignItems="flex-start"
-              spacing={3}
-              justifyContent="flex-start"
-              marginTop={6}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
-            > */}
+          
             <Stack
-              direction="row"
+              direction={{ xs: "column", sm: "row" }}
               spacing={2}
               alignItems="flex-start"
-              justifyContent="flex-between"
+              justifyContent="flex-start"
               sx={{ 
                 paddingY: '12px',
                 width: '100%',

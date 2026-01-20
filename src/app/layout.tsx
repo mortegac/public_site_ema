@@ -8,7 +8,7 @@ import MyApp from "./[uid]/app";
 import HpHeader from '@/app/components/shared/header/HpHeader';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
-import FloatingVisitWidget from '@/app/components/shared/floating-visit-widget';
+import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget';
 
 
 import { configureAmplify } from "@/utils/amplify-config";
@@ -52,7 +52,7 @@ export default function RootLayout({
               <ScrollToTop />
             </MyApp>
             
-            <FloatingVisitWidget />
+            <ConditionalFloatingVisitWidget />
           <PrismicPreview repositoryName={repositoryName} />
         </Providers>
       </body>

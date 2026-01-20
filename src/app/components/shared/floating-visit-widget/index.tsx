@@ -37,8 +37,19 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  // Clave para sessionStorage
+  const STORAGE_KEY = 'floatingVisitWidgetClosed';
+
   useEffect(() => {
-    // Esperar 20 segundos antes de mostrar el widget
+    // Verificar si el widget fue cerrado previamente en esta sesión
+    const wasClosed = sessionStorage.getItem(STORAGE_KEY) === 'true';
+    
+    if (wasClosed) {
+      // Si fue cerrado, no mostrar el widget
+      return;
+    }
+
+    // Esperar 2 segundos antes de mostrar el widget
     const timer = setTimeout(() => {
       setShouldRender(true);
       // Pequeño delay para activar la animación después de renderizar
@@ -54,6 +65,8 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
 
   const handleClose = () => {
     setIsVisible(false);
+    // Guardar en sessionStorage que el widget fue cerrado
+    sessionStorage.setItem(STORAGE_KEY, 'true');
     onClose?.();
   };
 
@@ -111,16 +124,15 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
             zIndex: 10,
             padding: 0.5,
             minWidth: 'auto',
-            width: 24,
-            height: 24,
+            width: 34,
+            height: 34,
             color: 'black',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.05)',
-            },
+            backgroundColor: 'rgba(0, 0, 0, 0.05)',
+            '&:hover': {},
           }}
           aria-label="Cerrar"
         >
-          <IconX size={16} />
+          <IconX size={30} />
         </IconButton>
 
         <Stack

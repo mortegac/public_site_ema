@@ -156,12 +156,72 @@ const createComponents = (textColor?: string, fontSize?: string): JSXMapSerializ
         {children}
       </Typography>
     ),
-    em: ({ children }) => (
-      <em style={{ 
-        color: '#E81A68',
-        fontStyle:'normal',
-      }}>{children}</em>
-    ),
+    em: ({ children }) => {
+      // Función recursiva para extraer todo el texto
+      const extractText = (node: any): string => {
+        if (typeof node === 'string') return node;
+        if (typeof node === 'number') return String(node);
+        if (Array.isArray(node)) return node.map(extractText).join('');
+        if (React.isValidElement(node)) {
+          const props = node.props as { children?: any };
+          if (props?.children) {
+            return extractText(props.children);
+          }
+        }
+        return '';
+      };
+
+      // Función recursiva para procesar y eliminar ~ del inicio y final
+      const processChildren = (node: any): any => {
+        if (typeof node === 'string') {
+          // Si el string completo comienza y termina con ~, eliminar ambos
+          if (node.startsWith('~') && node.endsWith('~') && node.length > 1) {
+            return node.substring(1, node.length - 1);
+          }
+          return node;
+        }
+        if (typeof node === 'number') {
+          return node;
+        }
+        if (Array.isArray(node)) {
+          const processed = node.map(processChildren);
+          // Si hay elementos, procesar el primero y último para eliminar ~
+          if (processed.length > 0) {
+            const first = processed[0];
+            const last = processed[processed.length - 1];
+            
+            if (typeof first === 'string' && first.startsWith('~')) {
+              processed[0] = first.substring(1);
+            }
+            if (typeof last === 'string' && last.endsWith('~')) {
+              processed[processed.length - 1] = last.substring(0, last.length - 1);
+            }
+          }
+          return processed;
+        }
+        if (React.isValidElement(node)) {
+          const props = node.props as { children?: any };
+          const processedChildren = processChildren(props?.children);
+          return React.cloneElement(node, {}, processedChildren);
+        }
+        return node;
+      };
+
+      const textContent = extractText(children);
+      const hasTildes = textContent.startsWith('~') && textContent.endsWith('~') && textContent.length > 1;
+      const processedChildren = hasTildes ? processChildren(children) : children;
+      
+        return (
+        <em style={{ 
+          color: '#E81A68',
+          fontStyle: 'normal',
+          backgroundColor: hasTildes ? 'white' : 'transparent',
+          // marginTop: hasTildes ? '-26px' : '',
+          // paddingTop: hasTildes ? '6px' : '',
+          
+        }}>{processedChildren}</em>
+      );
+    },
     oList: ({ children }) => (
       <ol className="mb-7 pl-4 last:mb-0 md:pl-6">{children}</ol>
     ),

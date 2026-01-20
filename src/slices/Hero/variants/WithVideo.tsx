@@ -24,7 +24,6 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
   const {primary} = slice;
   
     return(
-      // <Box id="container" bgcolor="#ffffff" pt={7} pb={{ xs: 0, md: 7 }}
       <Box id="hero" bgcolor="#f1f1f1"
       sx={{ 
         width: '100%',
@@ -85,10 +84,6 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
               alignItems: 'flex-start',
               justifyContent: "center",
               gap: 3,
-              
-              // background: 'rgb(0,0,0,0.3)',
-              // paddingX: '24px',
-              // paddingY: '16px',
             }}
           >
             <Stack
@@ -97,8 +92,7 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
               alignItems="flex-start"
               justifyContent="flex-start"
               sx={{ 
-                
-                background: 'rgb(0,0,0,0.3)',
+                background: 'rgb(0,0,0,0.6)',
                 paddingX: '24px',
                 paddingY: '16px',
               }}
@@ -108,13 +102,23 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
 
             </Stack>
             
-            <Stack
+            {/* <Stack
               direction={{ xs: "column", sm: "row" }}
               alignItems="flex-start"
               spacing={3}
               justifyContent="flex-start"
               marginTop={6}
               sx={{ width: { xs: "100%", sm: "auto" } }}
+            > */}
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems="flex-start"
+              justifyContent="flex-between"
+              sx={{ 
+                paddingY: '12px',
+                width: '100%',
+              }}
             >
               {primary?.buttononetext && <Button
                 color="primary"
@@ -124,7 +128,7 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
                 sx={{ 
                   width: { xs: "100%", sm: "auto" }, 
                   paddingY: 2,
-                  fontSize: "1.2rem",
+                  fontSize: "1.1rem",
                   fontWeight: 500
                 }}
               >
@@ -139,7 +143,7 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
                 sx={{ 
                   width: { xs: "100%", sm: "auto" }, 
                   paddingY: 2,
-                  fontSize: "1.2rem",
+                  fontSize: "1.1rem",
                   fontWeight: 500,
                   background: '#FFFFFF',
                 }}

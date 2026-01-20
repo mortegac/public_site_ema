@@ -56,6 +56,7 @@ interface ScheduleOneInstallerResponse {
       calendarId: string;
       startDate: string;
       state: string;
+      order: string;
       userId: string;
     }>;
   };
@@ -172,6 +173,7 @@ export const fetchLastScheduleInstallers = async () => {
             items {
               userId
               name
+              order
               CalendarVisits(
                 filter: {
                   startDate: {

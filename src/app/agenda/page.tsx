@@ -10,25 +10,15 @@ import {
 } from "@mui/material";
 
 
-import dynamic from 'next/dynamic';
 import PageContainer from '@/app/components/container/PageContainer';
 import Banner from '@/app/components/shared/banner/Banner';
 import HeaderENV from '@/app/components/shared/header/HeaderENV';
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
+import CalendarSteps from '@/app/components/shared/CalendarSteps';
+import Steps from '@/app/components/AgendaWizard/Steps';
+import C2a from '@/app/components/shared/c2a';
+import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
-
-// Dynamic imports para componentes pesados
-const CalendarSteps = dynamic(() => import('@/app/components/shared/CalendarSteps'), {
-  loading: () => <Box sx={{ minHeight: '400px' }} />,
-  ssr: true,
-});
-const Steps = dynamic(() => import('@/app/components/AgendaWizard/Steps'), {
-  loading: () => <Box sx={{ minHeight: '200px' }} />,
-  ssr: true,
-});
-const C2a = dynamic(() => import('@/app/components/shared/c2a'), {
-  ssr: true,
-});
 import { isProduction } from '@/utils/amplify-config';
 import { useAnalytics } from '@/hooks/useAnalytics';
 

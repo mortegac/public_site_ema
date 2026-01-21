@@ -5,17 +5,10 @@ import MyApp from "./[uid]/app";
 // import PageContainer from '@/app/components/container/PageContainer';
 // import Banner from '@/app/components/shared/banner/Banner';
 // import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
-import dynamic from 'next/dynamic';
 import HpHeader from '@/app/components/shared/header/HpHeader';
+import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
-
-// Dynamic imports para componentes no críticos
-const Footer = dynamic(() => import('@/app/components/shared/footer'), {
-  ssr: true,
-});
-const ConditionalFloatingVisitWidget = dynamic(() => import('@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget'), {
-  ssr: true,
-});
+import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget';
 
 
 import { configureAmplify } from "@/utils/amplify-config";

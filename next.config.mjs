@@ -26,63 +26,6 @@ const nextConfig = {
     },
     // Configuración SWC para eliminar legacy JavaScript
     swcMinify: true,
-    // Configuración de transpilación moderna
-    transpilePackages: [],
-    // Optimización de webpack para mejor code splitting
-    webpack: (config, { isServer }) => {
-      if (!isServer) {
-        config.optimization = {
-          ...config.optimization,
-          moduleIds: 'deterministic',
-          runtimeChunk: 'single',
-          splitChunks: {
-            chunks: 'all',
-            cacheGroups: {
-              default: false,
-              vendors: false,
-              // Vendor chunks separados para mejor caching
-              mui: {
-                name: 'mui',
-                test: /[\\/]node_modules[\\/]@mui[\\/]/,
-                priority: 30,
-                reuseExistingChunk: true,
-              },
-              datePickers: {
-                name: 'date-pickers',
-                test: /[\\/]node_modules[\\/]@mui[\\/]x-date-pickers[\\/]/,
-                priority: 25,
-                reuseExistingChunk: true,
-              },
-              apexcharts: {
-                name: 'apexcharts',
-                test: /[\\/]node_modules[\\/](apexcharts|react-apexcharts)[\\/]/,
-                priority: 20,
-                reuseExistingChunk: true,
-              },
-              embla: {
-                name: 'embla',
-                test: /[\\/]node_modules[\\/]embla-carousel[\\/]/,
-                priority: 20,
-                reuseExistingChunk: true,
-              },
-              reactBigCalendar: {
-                name: 'react-big-calendar',
-                test: /[\\/]node_modules[\\/]react-big-calendar[\\/]/,
-                priority: 20,
-                reuseExistingChunk: true,
-              },
-              vendor: {
-                name: 'vendor',
-                test: /[\\/]node_modules[\\/]/,
-                priority: 10,
-                reuseExistingChunk: true,
-              },
-            },
-          },
-        };
-      }
-      return config;
-    },
     // Headers de seguridad y performance
     async headers() {
       return [

@@ -25,7 +25,7 @@ const MyApp = ({ children }: { children: React.ReactNode; }) => {
         <>
             <Script
                 src={`https://maps.googleapis.com/maps/api/js?key=${KEY}&libraries=places&loading=async`}
-                strategy="lazyOnload"
+                strategy="afterInteractive"
                 onLoad={() => {
                     if (process.env.NODE_ENV === 'development') {
                         console.log('Google Maps script loaded');

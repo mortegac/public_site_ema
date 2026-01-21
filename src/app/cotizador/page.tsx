@@ -9,17 +9,26 @@ import {
   Button,
 } from "@mui/material";
 
+import dynamic from 'next/dynamic';
 import PageContainer from '@/app/components/container/PageContainer';
 import { isProduction } from '@/utils/amplify-config';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import HeaderENV from '@/app/components/shared/header/HeaderENV';
-
-import QuoterSteps from '@/app/components/shared/QuoterSteps';
-import Steps from '@/app/components/CotizadorWizard/Steps';
-import C2a from '@/app/components/shared/c2a';
-import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
+
+// Dynamic imports para componentes pesados
+const QuoterSteps = dynamic(() => import('@/app/components/shared/QuoterSteps'), {
+  loading: () => <Box sx={{ minHeight: '400px' }} />,
+  ssr: true,
+});
+const Steps = dynamic(() => import('@/app/components/CotizadorWizard/Steps'), {
+  loading: () => <Box sx={{ minHeight: '200px' }} />,
+  ssr: true,
+});
+const C2a = dynamic(() => import('@/app/components/shared/c2a'), {
+  ssr: true,
+});
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, setStep, decrement, selectClientForms, setDataForm } from "@/store/ClientForms/slice";

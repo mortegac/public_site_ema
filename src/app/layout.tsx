@@ -5,10 +5,17 @@ import MyApp from "./[uid]/app";
 // import PageContainer from '@/app/components/container/PageContainer';
 // import Banner from '@/app/components/shared/banner/Banner';
 // import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
+import dynamic from 'next/dynamic';
 import HpHeader from '@/app/components/shared/header/HpHeader';
-import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
-import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget';
+
+// Dynamic imports para componentes no críticos
+const Footer = dynamic(() => import('@/app/components/shared/footer'), {
+  ssr: true,
+});
+const ConditionalFloatingVisitWidget = dynamic(() => import('@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget'), {
+  ssr: false,
+});
 
 
 import { configureAmplify } from "@/utils/amplify-config";
@@ -23,13 +30,21 @@ import { Inter } from "next/font/google";
 import { PrismicNextLink, PrismicPreview } from "@prismicio/next";
 
 import { createClient, repositoryName } from "@/prismicio";
+import type { Metadata } from "next";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 });
 
+export const metadata: Metadata = {
+  other: {
+    'dns-prefetch': 'https://images.prismic.io',
+  },
+};
 
 export default function RootLayout({
   children,
@@ -41,6 +56,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://images.prismic.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.prismic.io" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body className="overflow-x-hidden antialiased">
         <GoogleTagManager />

@@ -141,7 +141,6 @@ const Banner = (props:any) => {
                 width={500}
                 height={300}
                 priority
-                unoptimized
                 style={{
                   maxWidth: '100%',
                   height: 'auto',

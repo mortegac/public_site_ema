@@ -39,10 +39,12 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning className={inter.variable}>
       <head>
-        <GoogleTagManager />
-        <GoogleAnalytics />
+        <link rel="preconnect" href="https://images.prismic.io" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://images.prismic.io" />
       </head>
       <body className="overflow-x-hidden antialiased">
+        <GoogleTagManager />
+        <GoogleAnalytics />
         <GoogleTagManagerNoScript />
           <Providers>
             

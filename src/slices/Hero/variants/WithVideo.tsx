@@ -53,7 +53,7 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
         loop
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         sx={{
           position: 'absolute',
           top: 0,
@@ -66,7 +66,7 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
       >
         <source src={primary?.videourl || undefined} type="video/webm" />
         <source src={primary?.videourl || undefined} type="video/mp4" />
-        <source src={primary?.videourl || undefined}type="video/ogg" />
+        <source src={primary?.videourl || undefined} type="video/ogg" />
       </Box>
       <Container
         sx={{

@@ -40,7 +40,7 @@ const typeOfForm: any = {
 
 
 
-const CalendarSteps = (props:any) => {
+const QuoterSteps = (props:any) => {
   const { 
     currentStep,
     calendarVisits,
@@ -117,4 +117,4 @@ const CalendarSteps = (props:any) => {
   );
 };
 
-export default CalendarSteps;
+export default QuoterSteps;

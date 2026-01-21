@@ -383,7 +383,13 @@ export default function BookingCalendar() {
               
               
               { Array.isArray(lastScheduleInstallers) && 
-                lastScheduleInstallers.map((installer: InstallerWithCalendar, index:number) => (
+                [...lastScheduleInstallers]
+                  .sort((a: any, b: any) => {
+                    const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
+                    const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
+                    return orderA - orderB;
+                  })
+                  .map((installer: InstallerWithCalendar, index:number) => (
                 <Box
                 key={installer?.userId}
                 sx={{
@@ -397,7 +403,8 @@ export default function BookingCalendar() {
                       gap: { xs: 2, md: 0.5 }
                     }}
                 >
-                 {/* <pre>{JSON.stringify(installer.calendarId, null, 2)}</pre> */}
+                 {/* <pre>{JSON.stringify(installer, null, 2)}</pre> */}
+                 {/* <pre>{JSON.stringify(lastScheduleInstallers.length, null, 2)}</pre> */}
                   <Button 
                     key={installer.userId}
                     id={installer.userId}
@@ -420,15 +427,11 @@ export default function BookingCalendar() {
                     {/* {`Instalador ${++index}`}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
                     {/* {`Instalador ${++index}`} */}
                     
-                    {environment === 'PROD' && `Instalador ${++index}` }
+                    {environment === 'PROD' && `Instalador ${lastScheduleInstallers.length > 1 ? ++index : ""}` }
                     
                     {/* <p>{installer?.userId.split('@')[0].toUpperCase()}</p> */}
                     
-                    {/* {environment !== 'PROD' && installer.userId.split('@')[0] || installer.userId } */}
-                       {/* {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
-                    {/* <Typography sx={{ display: 'block', mt: 0.5, fontSize:"0.6rem" }}>
-                      {installer?.userId?.split('.')[0] || installer?.userId}
-                    </Typography> */}
+                 
                   </Button>
                   <Typography 
                     variant="caption" 
@@ -584,7 +587,7 @@ export default function BookingCalendar() {
                               display: { xs: 'none', md: 'block' } // Visible en móviles, oculto en desktop
                             }}
                           >
-                            Sin <br/> fechas
+                            Agenda <br/> completa
                           </Typography>
                         )}
                       </Box>
@@ -616,7 +619,7 @@ export default function BookingCalendar() {
                     component="span"
         >
           VALOR VISITA TÉCNICA: $10.000
-      </Typography>
+          </Typography>
       <Typography
         align="left"
                     sx={{
@@ -646,7 +649,7 @@ export default function BookingCalendar() {
         >
           Servicio disponible sólo en RM y provincias específicas de V y VI Región.
       </Typography>
-      <Link href={`https://energica.city/t-y-c-cotizador`}>
+                <Link href={`https://energica.city/t-y-c-cotizador`}>
                       <Typography
                         sx={{
                           display: "block",
@@ -662,7 +665,7 @@ export default function BookingCalendar() {
                       >
                         Conozca aquí nuestros términos y condiciones
                       </Typography>
-      </Link>
+                    </Link>
     </Box>
   );
 }

@@ -13,7 +13,7 @@ import {
 import PageContainer from '@/app/components/container/PageContainer';
 import Banner from '@/app/components/shared/banner/Banner';
 import HeaderENV from '@/app/components/shared/header/HeaderENV';
-import HpHeader from '@/app/components/shared/header/HpHeader';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import CalendarSteps from '@/app/components/shared/CalendarSteps';
 import Steps from '@/app/components/AgendaWizard/Steps';
 import C2a from '@/app/components/shared/c2a';
@@ -40,7 +40,7 @@ useEffect(() => {
   return (
     <PageContainer title="Agenda" description="Agenda tú Visita técnica">
       {!isProduction() && <HeaderENV />}
-      <HpHeader /> 
+      <HpHeaderNew /> 
      
       { currentStep !== 3 &&
         <>

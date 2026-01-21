@@ -13,15 +13,19 @@ export const getCustomerService = async (input: customerInput): Promise<any> => 
     try {
       const { customerId } = input;
       
-      const { data: existingCustomers, errors } = await client.models.Customer.list({ 
-        filter: { customerId: { eq: customerId || undefined } } 
+      if (!customerId) {
+        resolve(null);
+        return;
+      }
+      
+      const { data: customer, errors } = await client.models.Customer.get({ 
+        customerId: customerId
     });
-    let customer: any  = existingCustomers?.[0];
     
       console.log("--getCustomer--", customer)
   
       if (errors) {
-        console.log("--customer--errors", customer)
+        console.log("--customer--errors", errors)
         reject({
           errorMessage: errors.map(e => e.message).join(', ')
         });

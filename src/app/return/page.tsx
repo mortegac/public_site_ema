@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import PageContainer from '@/app/components/container/PageContainer';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
-import HpHeader from '@/app/components/shared/header/HpHeader';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
@@ -503,7 +503,7 @@ const ReturnPage = () => {
   
   return (
     <PageContainer title="Retorno de Pago" description="Procesando el retorno de pago">
-      <HpHeader />
+      <HpHeaderNew />
       {/* <pre>paymentTransaction = {JSON.stringify(paymentTransaction, null, 2 )}</pre>
       <pre>resTransaction = {JSON.stringify(resTransaction, null, 2 )}</pre>   */}
       {/* 

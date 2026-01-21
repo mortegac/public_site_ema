@@ -1,5 +1,5 @@
 # Descripción del sitio
-Enérgica es una startup chilena especializada en soluciones de electromovilidad y transporte sostenible. Se enfocan en la instalación y gestión de cargadores para vehículos eléctricos, ofreciendo sus servicios tanto a particulares como a empresas.
+Es una empresa especializada en electromovilidad y energía. Enfocada en resolver de forma integral los desafíos de la transición hacia la movilidad eléctrica, desde la toma de decisión hasta la operación de infraestructura.
 
 Además, ayudan a las empresas a descarbonizar sus flotas de vehículos mediante la transición a opciones eléctricas, trabajando con industrias como la minería, el transporte y la logística. También desarrollan plataformas de software para automatizar la gestión de sus servicios y proveen soporte técnico.
 
@@ -20,6 +20,11 @@ Además, ayudan a las empresas a descarbonizar sus flotas de vehículos mediante
 - 
 [cite_start]**Soporte Técnico**: Proveemos soporte técnico para los cargadores que instalamos y gestionamos[cite: 22].
 
+[cite_start]**Soporte Técnico**: Asesoría experta en electrificación de flotas
+
+[cite_start]**Asesoría en electrificación de flotas: Evaluamos, diseñamos y optimizamos la electrificación de tu flota con foco operativo y económico.[cite: 22].
+[cite_start]**Electrolineras comunitarias para edificios: Permite a los residentes cargar sus vehículos eléctricos sin cablear cada estacionamiento ni realizar grandes obras, utilizando de forma eficiente la capacidad eléctrica disponible del edificio..[cite: 22].
+
 # Audiencia principal
 
 [cite_start]Nuestros servicios están dirigidos tanto a **empresas** que buscan electrificar sus flotas como a **personas** que necesitan un cargador en su hogar o edificio[cite: 26, 31].
@@ -31,3 +36,5 @@ Además, ayudan a las empresas a descarbonizar sus flotas de vehículos mediante
 - Transporte sostenible y descarbonización
 - Cargadores para casas, edificios y empresas
 - Protocolo OCPP
+- Asesoría en electrificación de flotas
+- Electrolineras comunitarias para edificios

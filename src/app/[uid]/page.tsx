@@ -12,7 +12,7 @@ import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import PageContainer from '@/app/components/container/PageContainer';
 
-const DOMAIN:string="https://ema.energica.city";
+const DOMAIN:string="https://energica.city";
 
 type Params = { uid: string };
 

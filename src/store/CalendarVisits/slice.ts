@@ -79,6 +79,7 @@ export const getLastScheduleInstallers = createAsyncThunk(
           return {
             userId: installer.userId,
             name: installer.name,
+            order: installer.order,
             startDate: closestDate.startDate,
             state: closestDate.state,
             calendarId: closestDate.calendarId

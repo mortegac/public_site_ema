@@ -12,7 +12,7 @@ import {
 import PageContainer from '@/app/components/container/PageContainer';
 import { isProduction } from '@/utils/amplify-config';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import HpHeader from '@/app/components/shared/header/HpHeader';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import HeaderENV from '@/app/components/shared/header/HeaderENV';
 
 import QuoterSteps from '@/app/components/shared/QuoterSteps';
@@ -42,7 +42,7 @@ const QuoterPage = () => {
   return (
     <PageContainer title="Cotiza tú Instalación" description="Ingresa tus datos y en pocos pasos calcularemos un valor estimado de tu instalación">
       {!isProduction() && <HeaderENV />}
-      <HpHeader /> 
+      <HpHeaderNew /> 
       { currentStep !== 3 &&
         <>
         <Box bgcolor="#ffffff" pt={4} pb={0}>
@@ -78,7 +78,7 @@ const QuoterPage = () => {
       
       <C2a/>
       
-      <Footer />
+      {/* <Footer /> */}
       <ScrollToTop />
     </PageContainer>
   );

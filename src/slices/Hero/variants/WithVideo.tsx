@@ -21,7 +21,12 @@ import Image from "next/image";
 import { HeroProps } from "../types"
 
 export const WithVideo: FC<HeroProps> = ({ slice }) => {
-  const {primary} = slice;
+  // Type guard para asegurar que es la variación withVideo
+  if (slice.variation !== "withVideo") {
+    return null;
+  }
+  
+  const primary = slice.primary as Content.HeroSliceWithVideoPrimary;
   
     return(
       <Box id="hero" bgcolor="#f1f1f1"
@@ -59,9 +64,9 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
           zIndex: 0,
         }}
       >
-        <source src="https://energica.city/hubfs/Videos/autopista-moderna-con-autos.mp4" type="video/webm" />
-        <source src="https://energica.city/hubfs/Videos/autopista-moderna-con-autos.mp4" type="video/mp4" />
-        <source src="https://energica.city/hubfs/Videos/autopista-moderna-con-autos.mp4" type="video/ogg" />
+        <source src={primary?.videourl || undefined} type="video/webm" />
+        <source src={primary?.videourl || undefined} type="video/mp4" />
+        <source src={primary?.videourl || undefined}type="video/ogg" />
       </Box>
       <Container
         sx={{
@@ -147,8 +152,8 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
           
         </Box>
        
+          {/* <pre>{JSON.stringify(primary?.videourl, null,2 )}</pre> */}
       </Container> 
-          {/* <pre>{JSON.stringify(primary, null,2 )}</pre> */}
     </Box>
     )
   }

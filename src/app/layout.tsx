@@ -14,7 +14,7 @@ const Footer = dynamic(() => import('@/app/components/shared/footer'), {
   ssr: true,
 });
 const ConditionalFloatingVisitWidget = dynamic(() => import('@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget'), {
-  ssr: false,
+  ssr: true,
 });
 
 

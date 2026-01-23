@@ -151,10 +151,11 @@ export default function FormResumeVirtual() {
       <PageContainer
         title="Retorno de Pago"
         description="Procesando el retorno de pago"
-      >
+        >
         <HpHeaderNew /> 
         
         <Box
+          id="simulacion-pagina"
           sx={{
             display: "flex",
             justifyContent: "center",

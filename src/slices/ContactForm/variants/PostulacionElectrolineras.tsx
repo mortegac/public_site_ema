@@ -16,6 +16,10 @@ import {
   TextField,
   Button,
   Alert,
+  Select,
+  MenuItem,
+  FormControl,
+  FormHelperText,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -31,8 +35,8 @@ const SERVICE:string = "service_dbrrm6b";
 const TEMPLATE:string = "template_ey97i29";
 // const TEMPLATE = "template_ey97i29";
 // const CONTENT_TITLE = "Formulario de Diagnóstico: Transición a Movilidad Eléctrica."; // contentTitle
-const CONTENT_TITLE:string = "Solicitud de Transición Energética y Gestión de Flota Eléctrica."; // contentTitle
-const CONTENT_WELCOME:string = "Hemos recibido tu información para la evaluación de potencial de electrificación de tu flota. En nuestra startup nos especializamos en potenciar esta transición mediante software para automatizar servicios y plataformas de gestión de carga. Ya sea para el recambio total o parcial de vehículos de combustión, nuestro equipo experto te guiará en cada paso del camino. Recibirás una respuesta de nuestros consultores lo antes posible."; // contentWelcomeText
+const CONTENT_TITLE:string = "Postulación Cargadores Comunitarios"; // contentTitle
+const CONTENT_WELCOME:string = "Nuestro equipo evaluará la factibilidad técnica y la coordinación con la administración o entidad responsable.💡 Este programa está orientado a comunidades, establecimientos y espacios de alto tránsito que busquen fomentar la movilidad eléctrica y compartir el beneficio entre sus residentes, huéspedes, clientes o colaboradores. Recibirás una respuesta de nuestros consultores lo antes posible."; // contentWelcomeText
 
 
 
@@ -469,36 +473,36 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                                     Nombre de la empresa: <b>${values?.company ? values.company:""}</b></p>
                                 
                                 <p >
-                                    Nombre: <b>${values?.firstname ? values.firstname:""}</b></p>
+                                    Nombre completo del solicitante: <b>${values?.firstname ? values.firstname:""}</b></p>
                                 
                                 <p >
-                                    Cargo: <b>${values?.position ? values.position:""}</b></p>
+                                    Cargo/Rol: <b>${values?.position ? values.position:""}</b></p>
                                 
                                 <p >
-                                    Correo: <b>${values?.email ? values.email:""}</b></p>
+                                    Correo electrónico: <b>${values?.email ? values.email:""}</b></p>
                                 
                                 <p >
-                                    Número de teléfono de WhatsApp: <b>${values?.phone ? values.phone:""}</b></p>
+                                   Teléfono de contacto: <b>${values?.phone ? values.phone:""}</b></p>
                                 
                                 <p >
-                                    Tipo de residencia: <b>${values?.typeofresidence ? values.typeofresidence:""}</b></p>
+                                    Tipo de establecimiento: <b>${values?.typeofresidence ? values.typeofresidence:""}</b></p>
                                 
                                 <p >
-                                    Nombre de la residencia: <b>${values?.nameofresidence ? values.nameofresidence:""}</b></p>
+                                    Nombre del establecimiento / comunidad: <b>${values?.nameofresidence ? values.nameofresidence:""}</b></p>
                                 
                                 <p >
-                                    Dirección: <b>${values?.address ? values.address:""}</b></p>
+                                    Dirección completa: <b>${values?.address ? values.address:""}</b></p>
                                 
                                 <p >
                                   Cantidad de vehículos: <b>${values?.numberofvehicles ? values.numberofvehicles:""}</b>
                                 </p>
                                 
                                 <p >
-                                  Estado de estacionamiento para visitantes: <b>${values?.visitorparkingstatus ? values.visitorparkingstatus:""}</b>
+                                  ¿Tiene estacionamientos de visita?: <b>${values?.visitorparkingstatus ? values.visitorparkingstatus:""}</b>
                                 </p>
                                 
                                 <p >
-                                  Cantidad de usuarios EV: <b>${values?.evusercount ? values.evusercount:""}</b>
+                                  ¿Cantidad de usuarios con auto eléctrico?: <b>${values?.evusercount ? values.evusercount:""}</b>
                                 </p>
                                 
                                 <p >
@@ -838,16 +842,48 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   ? typeofresidence
                   : "Tipo de residencia"}
               </Typography>
-              <TextField
-                fullWidth
-                id="typeofresidence"
-                name="typeofresidence"
-                value={formik.values.typeofresidence}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+              <FormControl 
+                fullWidth 
                 error={formik.touched.typeofresidence && Boolean(formik.errors.typeofresidence)}
-                helperText={formik.touched.typeofresidence && formik.errors.typeofresidence}
-              />
+              >
+                <Select
+                  id="typeofresidence"
+                  name="typeofresidence"
+                  value={formik.values.typeofresidence}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  displayEmpty
+                  sx={{
+                    height: "48px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.typeofresidence && Boolean(formik.errors.typeofresidence)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.typeofresidence && Boolean(formik.errors.typeofresidence)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.typeofresidence && Boolean(formik.errors.typeofresidence)
+                        ? "1px solid #ff3355"
+                        : `2px solid ${formik.touched.typeofresidence && Boolean(formik.errors.typeofresidence) ? "#ff3355" : "rgba(0, 17, 51, 0.15)"}`,
+                    },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>Seleccione una opción</em>
+                  </MenuItem>
+                  <MenuItem value="Edificio residencial (departamentos)">Edificio residencial (departamentos)</MenuItem>
+                  <MenuItem value="Condominio residencial (casas)">Condominio residencial (casas)</MenuItem>
+                  <MenuItem value="Edificio de oficinas">Edificio de oficinas</MenuItem>
+                  <MenuItem value="Otro">Otro</MenuItem>
+                </Select>
+                {formik.touched.typeofresidence && formik.errors.typeofresidence && (
+                  <FormHelperText>{formik.errors.typeofresidence}</FormHelperText>
+                )}
+              </FormControl>
             </Box>
             
             <Box>
@@ -935,16 +971,46 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   ? visitorparkingstatus
                   : "Estado de estacionamiento para visitantes"}
               </Typography>
-              <TextField
-                fullWidth
-                id="visitorparkingstatus"
-                name="visitorparkingstatus"
-                value={formik.values.visitorparkingstatus}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+              <FormControl 
+                fullWidth 
                 error={formik.touched.visitorparkingstatus && Boolean(formik.errors.visitorparkingstatus)}
-                helperText={formik.touched.visitorparkingstatus && formik.errors.visitorparkingstatus}
-              />
+              >
+                <Select
+                  id="visitorparkingstatus"
+                  name="visitorparkingstatus"
+                  value={formik.values.visitorparkingstatus}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  displayEmpty
+                  sx={{
+                    height: "48px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.visitorparkingstatus && Boolean(formik.errors.visitorparkingstatus)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.visitorparkingstatus && Boolean(formik.errors.visitorparkingstatus)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.visitorparkingstatus && Boolean(formik.errors.visitorparkingstatus)
+                        ? "1px solid #ff3355"
+                        : `2px solid ${formik.touched.visitorparkingstatus && Boolean(formik.errors.visitorparkingstatus) ? "#ff3355" : "rgba(0, 17, 51, 0.15)"}`,
+                    },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>Seleccione una opción</em>
+                  </MenuItem>
+                  <MenuItem value="No tiene">No tiene</MenuItem>
+                  <MenuItem value="Si tiene">Si tiene</MenuItem>
+                </Select>
+                {formik.touched.visitorparkingstatus && formik.errors.visitorparkingstatus && (
+                  <FormHelperText>{formik.errors.visitorparkingstatus}</FormHelperText>
+                )}
+              </FormControl>
             </Box>
             
             <Box>
@@ -959,17 +1025,49 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   ? evusercount
                   : "Cantidad de usuarios EV"}
               </Typography>
-              <TextField
-                fullWidth
-                id="evusercount"
-                name="evusercount"
-                type="number"
-                value={formik.values.evusercount}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+              <FormControl 
+                fullWidth 
                 error={formik.touched.evusercount && Boolean(formik.errors.evusercount)}
-                helperText={formik.touched.evusercount && formik.errors.evusercount}
-              />
+              >
+                <Select
+                  id="evusercount"
+                  name="evusercount"
+                  value={formik.values.evusercount}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  displayEmpty
+                  sx={{
+                    height: "48px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.evusercount && Boolean(formik.errors.evusercount)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.evusercount && Boolean(formik.errors.evusercount)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.evusercount && Boolean(formik.errors.evusercount)
+                        ? "1px solid #ff3355"
+                        : `2px solid ${formik.touched.evusercount && Boolean(formik.errors.evusercount) ? "#ff3355" : "rgba(0, 17, 51, 0.15)"}`,
+                    },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>Seleccione una opción</em>
+                  </MenuItem>
+                  <MenuItem value="No lo sé">No lo sé</MenuItem>
+                  <MenuItem value="Si hay, pero no se cuantos">Si hay, pero no se cuantos</MenuItem>
+                  <MenuItem value="Si hay, 2 o menos">Si hay, 2 o menos</MenuItem>
+                  <MenuItem value="Si hay, más de 2">Si hay, más de 2</MenuItem>
+                  <MenuItem value="No hay">No hay</MenuItem>
+                </Select>
+                {formik.touched.evusercount && formik.errors.evusercount && (
+                  <FormHelperText>{formik.errors.evusercount}</FormHelperText>
+                )}
+              </FormControl>
             </Box>
 
             <Box sx={{
@@ -1002,15 +1100,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                 helperText={formik.touched.message && formik.errors.message}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    // "& fieldset": {
-                    //   border: "none",
-                    // },
-                    // "&:hover fieldset": {
-                    //   border: "none",
-                    // },
-                    // "&.Mui-focused fieldset": {
-                    //   border: "none",
-                    // },
                   },
                   "& .MuiInputBase-input": {
                     border: "none",

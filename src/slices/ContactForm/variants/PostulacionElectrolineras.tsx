@@ -1025,7 +1025,7 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             </Button>
           </FormContainer>
         </form>
-        <pre>{JSON.stringify(slice.primary, null, 2)}</pre>
+        {/* <pre>{JSON.stringify(slice.primary, null, 2)}</pre> */}
       </SectionContainer>
     </PageContainer>
   );

@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mui/material";
 
-import HpHeader from '@/app/components/shared/header/HpHeader';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 
@@ -152,7 +152,7 @@ export default function FormResumeVirtual() {
         title="Retorno de Pago"
         description="Procesando el retorno de pago"
       >
-        <HpHeader /> 
+        <HpHeaderNew /> 
         
         <Box
           sx={{
@@ -681,7 +681,7 @@ export default function FormResumeVirtual() {
           </Box>
         </Box>
         
-        <Footer />
+        {/* <Footer /> */}
         <ScrollToTop />
         
       </PageContainer>

@@ -131,6 +131,105 @@
         }
       },
       "items": {}
+    },
+    {
+      "id": "postulacionElectrolineras",
+      "name": "postulacion-electrolineras",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "subtitle": {
+          "type": "StructuredText",
+          "config": {
+            "label": "subtitle",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "name": {
+          "type": "Text",
+          "config": {
+            "label": "name",
+            "placeholder": ""
+          }
+        },
+        "position": {
+          "type": "Text",
+          "config": {
+            "label": "position",
+            "placeholder": ""
+          }
+        },
+        "email": {
+          "type": "Text",
+          "config": {
+            "label": "email",
+            "placeholder": ""
+          }
+        },
+        "phone": {
+          "type": "Text",
+          "config": {
+            "label": "phone",
+            "placeholder": ""
+          }
+        },
+        "typeofresidence": {
+          "type": "Text",
+          "config": {
+            "label": "typeOfResidence",
+            "placeholder": ""
+          }
+        },
+        "nameofresidence": {
+          "type": "Text",
+          "config": {
+            "label": "nameOfResidence",
+            "placeholder": ""
+          }
+        },
+        "message": {
+          "type": "Text",
+          "config": {
+            "label": "message",
+            "placeholder": ""
+          }
+        },
+        "address": {
+          "type": "Text",
+          "config": {
+            "label": "address",
+            "placeholder": ""
+          }
+        },
+        "visitorparkingstatus": {
+          "type": "Text",
+          "config": {
+            "label": "visitorParkingStatus",
+            "placeholder": ""
+          }
+        },
+        "evusercount": {
+          "type": "Text",
+          "config": {
+            "label": "evUserCount",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
     }
   ]
 }

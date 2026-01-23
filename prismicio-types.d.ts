@@ -1116,11 +1116,151 @@ export type ContactFormSliceGretaContactForm = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *ContactForm → postulacion-electrolineras → Primary*
+ */
+export interface ContactFormSlicePostulacionElectrolinerasPrimary {
+  /**
+   * title field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * subtitle field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+
+  /**
+   * name field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.name
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  name: prismic.KeyTextField;
+
+  /**
+   * position field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.position
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  position: prismic.KeyTextField;
+
+  /**
+   * email field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.email
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  email: prismic.KeyTextField;
+
+  /**
+   * phone field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.phone
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  phone: prismic.KeyTextField;
+
+  /**
+   * typeOfResidence field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.typeofresidence
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  typeofresidence: prismic.KeyTextField;
+
+  /**
+   * nameOfResidence field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.nameofresidence
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  nameofresidence: prismic.KeyTextField;
+
+  /**
+   * message field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.message
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  message: prismic.KeyTextField;
+
+  /**
+   * address field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.address
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  address: prismic.KeyTextField;
+
+  /**
+   * visitorParkingStatus field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.visitorparkingstatus
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  visitorparkingstatus: prismic.KeyTextField;
+
+  /**
+   * evUserCount field in *ContactForm → postulacion-electrolineras → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: contact_form.postulacionElectrolineras.primary.evusercount
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  evusercount: prismic.KeyTextField;
+}
+
+/**
+ * postulacion-electrolineras variation for ContactForm Slice
+ *
+ * - **API ID**: `postulacionElectrolineras`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ContactFormSlicePostulacionElectrolineras =
+  prismic.SharedSliceVariation<
+    "postulacionElectrolineras",
+    Simplify<ContactFormSlicePostulacionElectrolinerasPrimary>,
+    never
+  >;
+
+/**
  * Slice variation for *ContactForm*
  */
 type ContactFormSliceVariation =
   | ContactFormSliceDefault
-  | ContactFormSliceGretaContactForm;
+  | ContactFormSliceGretaContactForm
+  | ContactFormSlicePostulacionElectrolineras;
 
 /**
  * ContactForm Shared Slice
@@ -3161,9 +3301,11 @@ declare module "@prismicio/client" {
       ContactFormSlice,
       ContactFormSliceDefaultPrimary,
       ContactFormSliceGretaContactFormPrimary,
+      ContactFormSlicePostulacionElectrolinerasPrimary,
       ContactFormSliceVariation,
       ContactFormSliceDefault,
       ContactFormSliceGretaContactForm,
+      ContactFormSlicePostulacionElectrolineras,
       ContentWithImageSlice,
       ContentWithImageSliceDefaultPrimary,
       ContentWithImageSliceWithIconsPrimaryListItem,

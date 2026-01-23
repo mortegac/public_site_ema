@@ -111,5 +111,89 @@
 				"value": []
 			}
 		]
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "postulacionElectrolineras",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Magna eu cillum officia consectetur sint minim anim enim laboris magna excepteur. Sint officia elit incididunt nisi adipisicing."
+						}
+					}
+				]
+			},
+			"subtitle": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Cupidatat irure esse duis magna nulla ullamco eu nostrud sunt. Duis irure fugiat ipsum nulla velit est est id. Excepteur amet qui laboris incididunt consequat cillum velit duis deserunt eu tempor Lorem non enim."
+						}
+					}
+				]
+			},
+			"name": {
+				"__TYPE__": "FieldContent",
+				"value": "zoo",
+				"type": "Text"
+			},
+			"phone": {
+				"__TYPE__": "FieldContent",
+				"value": "nothing",
+				"type": "Text"
+			},
+			"email": {
+				"__TYPE__": "FieldContent",
+				"value": "select",
+				"type": "Text"
+			},
+			"message": {
+				"__TYPE__": "FieldContent",
+				"value": "scientist",
+				"type": "Text"
+			},
+			"position": {
+				"__TYPE__": "FieldContent",
+				"value": "motor",
+				"type": "Text"
+			},
+			"typeofresidence": {
+				"__TYPE__": "FieldContent",
+				"value": "electricity",
+				"type": "Text"
+			},
+			"nameofresidence": {
+				"__TYPE__": "FieldContent",
+				"value": "introduced",
+				"type": "Text"
+			},
+			"address": {
+				"__TYPE__": "FieldContent",
+				"value": "hide",
+				"type": "Text"
+			},
+			"visitorparkingstatus": {
+				"__TYPE__": "FieldContent",
+				"value": "glad",
+				"type": "Text"
+			},
+			"evusercount": {
+				"__TYPE__": "FieldContent",
+				"value": "stage",
+				"type": "Text"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
 	}
 ]

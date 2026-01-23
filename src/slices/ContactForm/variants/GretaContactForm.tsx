@@ -77,6 +77,12 @@ const PageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "white",
   minHeight: "400px",
   padding: "22px 64px 0 64px",
+  [theme.breakpoints.down("md")]: {
+    padding: "22px 24px 0 24px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    padding: "22px 16px 0 16px",
+  },
 }));
 
 const SectionContainer = styled(Container)(({ theme }) => ({
@@ -91,6 +97,11 @@ const SectionContainer = styled(Container)(({ theme }) => ({
   justifyContent: "flex-start",
   alignItems: "flex-start",
   position: "relative",
+  
+  [theme.breakpoints.down("md")]: {
+    width: "100%",
+    padding: "32px",
+  },
   
   // "& h2": {
   //   fontSize: "32px",
@@ -423,13 +434,20 @@ const ButtonContainer = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
+
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { selectCustomer, setCustomer, setCustomerData, getCustomer } from "@/store/Customer/slice";
+
+
 export const GretaContactForm: FC<ContactFormProps> = ({ slice }) => {
   const { title, subtitle, email, message, name } = slice.primary;
   const primaryDefault = slice.primary as any;
   const company = primaryDefault?.company;
   const phone = primaryDefault?.phone;
   const numberofvehicles = primaryDefault?.numberofvehicles;
-
+  const dispatch = useAppDispatch();
+  const {  customer, existCustomer } = useAppSelector(selectCustomer); 
+  
   const [isSentEmail, setIsSentEmail] = useState<EmailState>({
     sentEmail: false,
     isFailure: false,
@@ -616,7 +634,17 @@ export const GretaContactForm: FC<ContactFormProps> = ({ slice }) => {
               borderRadius: "24px",
               padding: "48px",
               fontSize: '24px',
-              lineHeight: '2rem', }}>
+              lineHeight: '2rem',
+              "@media (max-width: 960px)": {
+                minWidth: "auto",
+                width: "100%",
+                padding: "32px",
+              },
+              "@media (max-width: 600px)": {
+                padding: "24px",
+                fontSize: '20px',
+              },
+            }}>
               {/* <p style={{ fontSize: '32px', textAlign:'center' }}>😱</p> */}
               <p style={{ fontSize: '32px', textAlign:'center' }}>{isSentEmail.title}</p>
               <p style={{ fontSize: '18px', textAlign:'center' }}>{isSentEmail.text}</p>
@@ -662,6 +690,12 @@ export const GretaContactForm: FC<ContactFormProps> = ({ slice }) => {
             borderRadius: "24px",
             marginTop: '22px',
             padding: "48px",
+            "@media (max-width: 960px)": {
+              padding: "32px",
+            },
+            "@media (max-width: 600px)": {
+              padding: "24px",
+            },
           }}>
             <Box>
               <Typography
@@ -736,10 +770,21 @@ export const GretaContactForm: FC<ContactFormProps> = ({ slice }) => {
                 name="email"
                 type="email"
                 value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                placeholder="email@dominio.com"
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
+                // onBlur={formik.handleBlur}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  formik.setFieldValue('email', e.target.value);
+                  dispatch(setCustomerData({
+                    customerId: e.target.value
+                  }))
+                }}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  dispatch(getCustomer({
+                    customerId: e.target.value
+                  }))
+                }}
               />
             </Box>
             

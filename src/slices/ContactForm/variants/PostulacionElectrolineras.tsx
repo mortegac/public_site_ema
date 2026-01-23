@@ -23,8 +23,16 @@ import { ContactFormProps } from "../types"
 
 // Inicializar emailjs
 import emailjs, { init } from "emailjs-com";
-const CONTENT_TITLE:string = "Formulario de contacto"; // contentTitle
-const CONTENT_WELCOME:string = "Hemos recibido tu información. Recibirás una respuesta de nuestros consultores lo antes posible."; // contentWelcomeText
+
+// init("Csc41asZklkk5HTWk");
+
+// const SERVICE = "service_1ufc0ju";
+const SERVICE:string = "service_dbrrm6b";
+const TEMPLATE:string = "template_ey97i29";
+// const TEMPLATE = "template_ey97i29";
+// const CONTENT_TITLE = "Formulario de Diagnóstico: Transición a Movilidad Eléctrica."; // contentTitle
+const CONTENT_TITLE:string = "Solicitud de Transición Energética y Gestión de Flota Eléctrica."; // contentTitle
+const CONTENT_WELCOME:string = "Hemos recibido tu información para la evaluación de potencial de electrificación de tu flota. En nuestra startup nos especializamos en potenciar esta transición mediante software para automatizar servicios y plataformas de gestión de carga. Ya sea para el recambio total o parcial de vehículos de combustión, nuestro equipo experto te guiará en cada paso del camino. Recibirás una respuesta de nuestros consultores lo antes posible."; // contentWelcomeText
 
 
 
@@ -39,9 +47,17 @@ interface EmailState {
 }
 
 const validationSchema = yup.object({
+  company: yup
+    .string()
+    .min(2, "La empresa debe tener al menos 2 caracteres")
+    .required("Campo obligatorio"),
   firstname: yup
     .string()
     .min(2, "El nombre debe tener al menos 2 caracteres")
+    .required("Campo obligatorio"),
+  position: yup
+    .string()
+    .min(2, "El cargo debe tener al menos 2 caracteres")
     .required("Campo obligatorio"),
   email: yup
     .string()
@@ -51,11 +67,34 @@ const validationSchema = yup.object({
     .string()
     .min(5, "El teléfono debe tener al menos 9 digitos")
     .required("Campo obligatorio"),
+  typeofresidence: yup
+    .string()
+    .required("Campo obligatorio"),
+  nameofresidence: yup
+    .string()
+    .min(2, "El nombre de la residencia debe tener al menos 2 caracteres")
+    .required("Campo obligatorio"),
+  address: yup
+    .string()
+    .min(5, "La dirección debe tener al menos 5 caracteres")
+    .required("Campo obligatorio"),
+  numberofvehicles: yup
+    .string()
+    .min(1, "Debe ingresar la cantidad de vehículos")
+    .required("Campo obligatorio"),
+  visitorparkingstatus: yup
+    .string()
+    .required("Campo obligatorio"),
+  evusercount: yup
+    .string()
+    .min(1, "Debe ingresar la cantidad de usuarios EV")
+    .required("Campo obligatorio"),
   message: yup
     .string()
     .min(5, "El mensaje debe tener al menos 5 caracteres")
     .required("Campo obligatorio"),
 });
+
 const PageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "white",
   minHeight: "400px",
@@ -85,28 +124,6 @@ const SectionContainer = styled(Container)(({ theme }) => ({
     width: "100%",
     padding: "32px",
   },
-  
-  // "& h2": {
-  //   fontSize: "32px",
-  //   lineHeight: "28px",
-  //   fontWeight: 500,
-  //   color: "rgba(0, 17, 51, 0.8)",
-  //   textAlign: "left",
-  //   margin: 0,
-  //   letterSpacing: 0,
-  //   marginBottom: "12px",
-  // },
-  
-  // "& p": {
-  //   fontSize: theme.typography.body1.fontSize || "16px",
-  //   lineHeight: theme.typography.body1.lineHeight || "24px",
-  //   fontWeight: theme.typography.body1.fontWeight || 400,
-  //   color: theme.palette.text.secondary,
-  //   fontFamily: theme.typography.fontFamily,
-  //   marginTop: "14px",
-  //   marginBottom: "32px",
-  //   letterSpacing: 0,
-  // },
   
   "& label": {
     fontSize: theme.typography.body1.fontSize || "16px",
@@ -141,19 +158,6 @@ const SectionContainer = styled(Container)(({ theme }) => ({
   },
   
   "& textarea": {
-    // border: 'none !important',
-    // boxShadow: 'none !important',
-    // outline: 'none !important',
-    // minHeight: "48px",
-    // width: "100%",
-    
-
-    // fontFamily: theme.typography.fontFamily,
-    // fontWeight: 400,
-    // fontSize: "14px",
-    // transition: "all 0.4s ease",
-    // outline: "none",
-    // boxShadow: "0 0 0 0 transparent",
     "&:focus": {
       boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
     },
@@ -166,38 +170,7 @@ const SectionContainer = styled(Container)(({ theme }) => ({
     borderRadius: "6px",
     padding: "13px",
     color: "rgba(0, 17, 51, 0.8)",
-    // fontFamily: theme.typography.fontFamily,
-    // fontWeight: 400,
-    // fontSize: "14px",
-    // transition: "all 0.4s ease",
-    // outline: "none",
-    // boxShadow: "0 0 0 0 transparent",
-    // "&:focus": {
-    //   boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
-    // },
-    // "&.error": {
-    //   border: "1px solid #ff3355",
-    // },
   },
-  
-  // "& span": {
-  //   fontFamily: theme.typography.fontFamily,
-  //   color: "#ff3355",
-  //   marginTop: "4px",
-  //   marginBottom: "4px",
-  //   fontSize: "12px",
-  //   lineHeight: "16px",
-  //   minHeight: "22px",
-  //   "&.last": {
-  //     minHeight: "unset",
-  //   },
-  // },
-  
-  // "& input[type='textarea']": {
-  //   border: 'none',
-  //   boxShadow: 'none',
-    
-  // },
   "& input[type='submit']": {
     marginTop: "26px",
     display: "flex",
@@ -223,46 +196,6 @@ const SectionContainer = styled(Container)(({ theme }) => ({
     },
     appearance: "none",
   },
-  
-  // "& .dateText": {
-  //   display: "flex",
-  //   flexDirection: "row",
-  //   justifyContent: "flex-start",
-  //   alignItems: "center",
-  //   "& span": {
-  //     width: "100%",
-  //     marginLeft: "22px",
-  //     marginTop: "14px",
-  //     letterSpacing: 0,
-  //     marginBottom: "5px",
-  //     fontSize: theme.typography.body1.fontSize || "16px",
-  //     lineHeight: theme.typography.body1.lineHeight || "24px",
-  //     fontWeight: theme.typography.body1.fontWeight || 400,
-  //     color: theme.palette.text.secondary,
-  //     fontFamily: theme.typography.fontFamily,
-  //   },
-  //   "& .tui-datepicker-input > input": {
-  //     height: "48px",
-  //     width: "100%",
-  //     border: "1px solid rgba(0, 17, 51, 0.15)",
-  //     borderRadius: "6px",
-  //     padding: "13px",
-  //     color: "rgba(0, 17, 51, 0.8)",
-  //     fontFamily: theme.typography.fontFamily,
-  //     fontWeight: 400,
-  //     fontSize: "14px",
-  //     transition: "all 0.4s ease",
-  //     outline: "none",
-  //     boxShadow: "0 0 0 0 transparent",
-  //     "&:focus": {
-  //       boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
-  //     },
-  //     "&.error": {
-  //       border: "1px solid #ff3355",
-  //     },
-  //   },
-  // },
-  
   "& .country-dropdown": {
     position: "relative",
     width: "100%",
@@ -417,13 +350,27 @@ const ButtonContainer = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-export const Default: FC<ContactFormProps> = ({ slice }) => {
+
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { selectCustomer, setCustomer, setCustomerData, getCustomer } from "@/store/Customer/slice";
+import { setWebContactForm } from "@/store/WebContactForm/slice";
+
+
+export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
   const { title, subtitle, email, message, name } = slice.primary;
   const primaryDefault = slice.primary as any;
   const company = primaryDefault?.company;
   const phone = primaryDefault?.phone;
+  const position = primaryDefault?.position;
+  const typeofresidence = primaryDefault?.typeofresidence;
+  const nameofresidence = primaryDefault?.nameofresidence;
+  const address = primaryDefault?.address;
   const numberofvehicles = primaryDefault?.numberofvehicles;
-
+  const visitorparkingstatus = primaryDefault?.visitorparkingstatus;
+  const evusercount = primaryDefault?.evusercount;
+  const dispatch = useAppDispatch();
+  const {  customer, existCustomer } = useAppSelector(selectCustomer); 
+  
   const [isSentEmail, setIsSentEmail] = useState<EmailState>({
     sentEmail: false,
     isFailure: false,
@@ -435,13 +382,51 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
     initialValues: {
       company: "",
       firstname: "",
+      position: "",
       email: "",
       phone: "",
+      typeofresidence: "",
+      nameofresidence: "",
+      address: "",
       numberofvehicles: "",
+      visitorparkingstatus: "",
+      evusercount: "",
       message: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      
+      await Promise.all([
+        dispatch(
+          setCustomer({
+            customerId: values?.email,
+            existCustomer: Boolean(existCustomer),
+            name: values?.firstname,
+            email: values?.email,
+            phone: values?.phone,
+            typeOfResidence: values?.typeofresidence || "other",
+            address: values?.address,
+          })
+        ),
+        dispatch(
+          setWebContactForm({
+            webContactFormId: crypto.randomUUID(),
+            date: new Date().toISOString(),
+            type: "OTHER",
+            name: values?.firstname,
+            email: values?.email,
+            phone: values?.phone,
+            whatsapp: values?.phone,
+            message: values?.message,
+            subject: `Formulario de Postulación Electrolineras - ${values?.company}`,
+            category: "ELECTROLINERAS",
+            companyName: values?.company,
+            cantidadVehiculos: parseInt(values?.numberofvehicles) || 0,
+            customerId: values?.email,
+          })
+        ),
+      ]);
+      
       setIsSentEmail({
         sentEmail: true,
         isFailure: false,
@@ -481,7 +466,13 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
                                 <hr/>
                                 
                                 <p >
+                                    Nombre de la empresa: <b>${values?.company ? values.company:""}</b></p>
+                                
+                                <p >
                                     Nombre: <b>${values?.firstname ? values.firstname:""}</b></p>
+                                
+                                <p >
+                                    Cargo: <b>${values?.position ? values.position:""}</b></p>
                                 
                                 <p >
                                     Correo: <b>${values?.email ? values.email:""}</b></p>
@@ -490,7 +481,28 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
                                     Número de teléfono de WhatsApp: <b>${values?.phone ? values.phone:""}</b></p>
                                 
                                 <p >
-                                  Mensaje: <b>${values?.message ? values?.message:""}</b>
+                                    Tipo de residencia: <b>${values?.typeofresidence ? values.typeofresidence:""}</b></p>
+                                
+                                <p >
+                                    Nombre de la residencia: <b>${values?.nameofresidence ? values.nameofresidence:""}</b></p>
+                                
+                                <p >
+                                    Dirección: <b>${values?.address ? values.address:""}</b></p>
+                                
+                                <p >
+                                  Cantidad de vehículos: <b>${values?.numberofvehicles ? values.numberofvehicles:""}</b>
+                                </p>
+                                
+                                <p >
+                                  Estado de estacionamiento para visitantes: <b>${values?.visitorparkingstatus ? values.visitorparkingstatus:""}</b>
+                                </p>
+                                
+                                <p >
+                                  Cantidad de usuarios EV: <b>${values?.evusercount ? values.evusercount:""}</b>
+                                </p>
+                                
+                                <p >
+                                  Mensaje: <b>${values?.message ? values.message:""}</b>
                                 </p>
                                
                             </td>
@@ -658,7 +670,7 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
            </Box>
           )}
 
-<FormContainer sx={{
+          <FormContainer sx={{
             border: "1px solid rgba(0, 17, 51, 0.15)",
             borderRadius: "24px",
             marginTop: '22px',
@@ -670,6 +682,33 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
               padding: "24px",
             },
           }}>
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="company"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {name && Array.isArray(company) && company.length > 0
+                  ? asText(company as any)
+                  : typeof company === "string"
+                  ? company
+                  : "Empresa"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="company"
+                name="company"
+                value={formik.values.company}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.company && Boolean(formik.errors.company)
+                }
+                helperText={
+                  formik.touched.company && formik.errors.company
+                }
+              />
+            </Box>
             <Box>
               <Typography
                 component="label"
@@ -697,6 +736,34 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
                 }
               />
             </Box>
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="position"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {position && Array.isArray(position) && position.length > 0
+                  ? asText(position as any)
+                  : typeof position === "string"
+                  ? position
+                  : "Cargo"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="position"
+                name="position"
+                value={formik.values.position}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.position && Boolean(formik.errors.position)
+                }
+                helperText={
+                  formik.touched.position && formik.errors.position
+                }
+              />
+            </Box>
 
             <Box>
               <Typography
@@ -716,10 +783,21 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
                 name="email"
                 type="email"
                 value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                placeholder="email@dominio.com"
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
+                // onBlur={formik.handleBlur}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  formik.setFieldValue('email', e.target.value);
+                  dispatch(setCustomerData({
+                    customerId: e.target.value
+                  }))
+                }}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  dispatch(getCustomer({
+                    customerId: e.target.value
+                  }))
+                }}
               />
             </Box>
             
@@ -747,7 +825,153 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
                 helperText={formik.touched.phone && formik.errors.phone}
               />
             </Box>
-  
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="typeofresidence"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {typeofresidence && Array.isArray(typeofresidence) && typeofresidence.length > 0
+                  ? asText(typeofresidence as any)
+                  : typeof typeofresidence === "string"
+                  ? typeofresidence
+                  : "Tipo de residencia"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="typeofresidence"
+                name="typeofresidence"
+                value={formik.values.typeofresidence}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.typeofresidence && Boolean(formik.errors.typeofresidence)}
+                helperText={formik.touched.typeofresidence && formik.errors.typeofresidence}
+              />
+            </Box>
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="nameofresidence"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {nameofresidence && Array.isArray(nameofresidence) && nameofresidence.length > 0
+                  ? asText(nameofresidence as any)
+                  : typeof nameofresidence === "string"
+                  ? nameofresidence
+                  : "Nombre de la residencia"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="nameofresidence"
+                name="nameofresidence"
+                value={formik.values.nameofresidence}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.nameofresidence && Boolean(formik.errors.nameofresidence)}
+                helperText={formik.touched.nameofresidence && formik.errors.nameofresidence}
+              />
+            </Box>
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="address"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {address && Array.isArray(address) && address.length > 0
+                  ? asText(address as any)
+                  : typeof address === "string"
+                  ? address
+                  : "Dirección"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="address"
+                name="address"
+                value={formik.values.address}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.address && Boolean(formik.errors.address)}
+                helperText={formik.touched.address && formik.errors.address}
+              />
+            </Box>
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="numberofvehicles"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {numberofvehicles && Array.isArray(numberofvehicles) && numberofvehicles.length > 0
+                  ? asText(numberofvehicles as any)
+                  : typeof numberofvehicles === "string"
+                  ? numberofvehicles
+                  : "Cantidad de vehículos"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="numberofvehicles"
+                name="numberofvehicles"
+                type="number"
+                value={formik.values.numberofvehicles}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.numberofvehicles && Boolean(formik.errors.numberofvehicles)}
+                helperText={formik.touched.numberofvehicles && formik.errors.numberofvehicles}
+              />
+            </Box>
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="visitorparkingstatus"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {visitorparkingstatus && Array.isArray(visitorparkingstatus) && visitorparkingstatus.length > 0
+                  ? asText(visitorparkingstatus as any)
+                  : typeof visitorparkingstatus === "string"
+                  ? visitorparkingstatus
+                  : "Estado de estacionamiento para visitantes"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="visitorparkingstatus"
+                name="visitorparkingstatus"
+                value={formik.values.visitorparkingstatus}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.visitorparkingstatus && Boolean(formik.errors.visitorparkingstatus)}
+                helperText={formik.touched.visitorparkingstatus && formik.errors.visitorparkingstatus}
+              />
+            </Box>
+            
+            <Box>
+              <Typography
+                component="label"
+                htmlFor="evusercount"
+                sx={{ display: "block", mb: 0.5 }}
+              >
+                {evusercount && Array.isArray(evusercount) && evusercount.length > 0
+                  ? asText(evusercount as any)
+                  : typeof evusercount === "string"
+                  ? evusercount
+                  : "Cantidad de usuarios EV"}
+              </Typography>
+              <TextField
+                fullWidth
+                id="evusercount"
+                name="evusercount"
+                type="number"
+                value={formik.values.evusercount}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.evusercount && Boolean(formik.errors.evusercount)}
+                helperText={formik.touched.evusercount && formik.errors.evusercount}
+              />
+            </Box>
+
             <Box sx={{
               padding: '0px',
               margin: '0px',
@@ -801,6 +1025,7 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
             </Button>
           </FormContainer>
         </form>
+        <pre>{JSON.stringify(slice.primary, null, 2)}</pre>
       </SectionContainer>
     </PageContainer>
   );

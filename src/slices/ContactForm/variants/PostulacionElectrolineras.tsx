@@ -61,7 +61,6 @@ const validationSchema = yup.object({
     .required("Campo obligatorio"),
   position: yup
     .string()
-    .min(2, "El cargo debe tener al menos 2 caracteres")
     .required("Campo obligatorio"),
   email: yup
     .string()
@@ -81,10 +80,6 @@ const validationSchema = yup.object({
   address: yup
     .string()
     .min(5, "La dirección debe tener al menos 5 caracteres")
-    .required("Campo obligatorio"),
-  numberofvehicles: yup
-    .string()
-    .min(1, "Debe ingresar la cantidad de vehículos")
     .required("Campo obligatorio"),
   visitorparkingstatus: yup
     .string()
@@ -369,7 +364,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
   const typeofresidence = primaryDefault?.typeofresidence;
   const nameofresidence = primaryDefault?.nameofresidence;
   const address = primaryDefault?.address;
-  const numberofvehicles = primaryDefault?.numberofvehicles;
   const visitorparkingstatus = primaryDefault?.visitorparkingstatus;
   const evusercount = primaryDefault?.evusercount;
   const dispatch = useAppDispatch();
@@ -392,7 +386,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
       typeofresidence: "",
       nameofresidence: "",
       address: "",
-      numberofvehicles: "",
       visitorparkingstatus: "",
       evusercount: "",
       message: "",
@@ -425,7 +418,7 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             subject: `Formulario de Postulación Electrolineras - ${values?.company}`,
             category: "ELECTROLINERAS",
             companyName: values?.company,
-            cantidadVehiculos: parseInt(values?.numberofvehicles) || 0,
+            cantidadVehiculos: 0,
             customerId: values?.email,
           })
         ),
@@ -492,10 +485,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                                 
                                 <p >
                                     Dirección completa: <b>${values?.address ? values.address:""}</b></p>
-                                
-                                <p >
-                                  Cantidad de vehículos: <b>${values?.numberofvehicles ? values.numberofvehicles:""}</b>
-                                </p>
                                 
                                 <p >
                                   ¿Tiene estacionamientos de visita?: <b>${values?.visitorparkingstatus ? values.visitorparkingstatus:""}</b>
@@ -584,7 +573,8 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
           sentEmail: true,
           isFailure: false,
           title: "¡Gracias por dar el primer paso hacia la electromovilidad! 🎉",
-          text: "Hemos recibido tu consulta y pronto un miembro de nuestro equipo de expertos en electromovilidad se pondrá en contacto contigo. Nos especializamos en proyectos de transporte sostenible para personas y empresas, y estamos listos para ayudarte a concretar el tuyo de manera eficiente y rentable.",
+          // text: "Hemos recibido tu consulta y pronto un miembro de nuestro equipo de expertos en electromovilidad se pondrá en contacto contigo. Nos especializamos en proyectos de transporte sostenible para personas y empresas, y estamos listos para ayudarte a concretar el tuyo de manera eficiente y rentable.",
+          text: "Hemos recibido tu consulta y pronto un miembro de nuestro equipo de expertos evaluará la factibilidad técnica y la coordinación con la administración o entidad responsable.💡 Este programa está orientado a comunidades, establecimientos y espacios de alto tránsito que busquen fomentar la movilidad eléctrica y compartir el beneficio entre sus residentes, huéspedes, clientes o colaboradores. Recibirás una respuesta de nuestros consultores lo antes posible.",
           response: JSON.stringify(response),
         });
       } catch (error) {
@@ -753,20 +743,49 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   ? position
                   : "Cargo"}
               </Typography>
-              <TextField
-                fullWidth
-                id="position"
-                name="position"
-                value={formik.values.position}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={
-                  formik.touched.position && Boolean(formik.errors.position)
-                }
-                helperText={
-                  formik.touched.position && formik.errors.position
-                }
-              />
+              <FormControl 
+                fullWidth 
+                error={formik.touched.position && Boolean(formik.errors.position)}
+              >
+                <Select
+                  id="position"
+                  name="position"
+                  value={formik.values.position}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  displayEmpty
+                  sx={{
+                    height: "48px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.position && Boolean(formik.errors.position)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.position && Boolean(formik.errors.position)
+                        ? "1px solid #ff3355"
+                        : "1px solid rgba(0, 17, 51, 0.15)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: formik.touched.position && Boolean(formik.errors.position)
+                        ? "1px solid #ff3355"
+                        : `2px solid ${formik.touched.position && Boolean(formik.errors.position) ? "#ff3355" : "rgba(0, 17, 51, 0.15)"}`,
+                    },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>Seleccione una opción</em>
+                  </MenuItem>
+                  <MenuItem value="Administrador (a)">Administrador (a)</MenuItem>
+                  <MenuItem value="Copropietario (a)">Copropietario (a)</MenuItem>
+                  <MenuItem value="Arrendatario (a)">Arrendatario (a)</MenuItem>
+                  <MenuItem value="Miembro del comité de la comunidad">Miembro del comité de la comunidad</MenuItem>
+                  <MenuItem value="Otro">Otro</MenuItem>
+                </Select>
+                {formik.touched.position && formik.errors.position && (
+                  <FormHelperText>{formik.errors.position}</FormHelperText>
+                )}
+              </FormControl>
             </Box>
 
             <Box>
@@ -931,31 +950,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                 onBlur={formik.handleBlur}
                 error={formik.touched.address && Boolean(formik.errors.address)}
                 helperText={formik.touched.address && formik.errors.address}
-              />
-            </Box>
-            
-            <Box>
-              <Typography
-                component="label"
-                htmlFor="numberofvehicles"
-                sx={{ display: "block", mb: 0.5 }}
-              >
-                {numberofvehicles && Array.isArray(numberofvehicles) && numberofvehicles.length > 0
-                  ? asText(numberofvehicles as any)
-                  : typeof numberofvehicles === "string"
-                  ? numberofvehicles
-                  : "Cantidad de vehículos"}
-              </Typography>
-              <TextField
-                fullWidth
-                id="numberofvehicles"
-                name="numberofvehicles"
-                type="number"
-                value={formik.values.numberofvehicles}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.numberofvehicles && Boolean(formik.errors.numberofvehicles)}
-                helperText={formik.touched.numberofvehicles && formik.errors.numberofvehicles}
               />
             </Box>
             

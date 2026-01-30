@@ -51,10 +51,6 @@ interface EmailState {
 }
 
 const validationSchema = yup.object({
-  company: yup
-    .string()
-    .min(2, "La empresa debe tener al menos 2 caracteres")
-    .required("Campo obligatorio"),
   firstname: yup
     .string()
     .min(2, "El nombre debe tener al menos 2 caracteres")
@@ -358,7 +354,6 @@ import { setWebContactForm } from "@/store/WebContactForm/slice";
 export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
   const { title, subtitle, email, message, name } = slice.primary;
   const primaryDefault = slice.primary as any;
-  const company = primaryDefault?.company;
   const phone = primaryDefault?.phone;
   const position = primaryDefault?.position;
   const typeofresidence = primaryDefault?.typeofresidence;
@@ -378,7 +373,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
 
   const formik = useFormik({
     initialValues: {
-      company: "",
       firstname: "",
       position: "",
       email: "",
@@ -415,9 +409,8 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             phone: values?.phone,
             whatsapp: values?.phone,
             message: values?.message,
-            subject: `Formulario de Postulación Electrolineras - ${values?.company}`,
+            subject: `Formulario de Postulación Electrolineras`,
             category: "ELECTROLINERAS",
-            companyName: values?.company,
             cantidadVehiculos: 0,
             customerId: values?.email,
           })
@@ -461,10 +454,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                             <td  align="left" valign="top">
 
                                 <hr/>
-                                
-                                <p >
-                                    Nombre de la empresa: <b>${values?.company ? values.company:""}</b></p>
-                                
                                 <p >
                                     Nombre completo del solicitante: <b>${values?.firstname ? values.firstname:""}</b></p>
                                 
@@ -676,33 +665,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
               padding: "24px",
             },
           }}>
-            <Box>
-              <Typography
-                component="label"
-                htmlFor="company"
-                sx={{ display: "block", mb: 0.5 }}
-              >
-                {name && Array.isArray(company) && company.length > 0
-                  ? asText(company as any)
-                  : typeof company === "string"
-                  ? company
-                  : "Empresa"}
-              </Typography>
-              <TextField
-                fullWidth
-                id="company"
-                name="company"
-                value={formik.values.company}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={
-                  formik.touched.company && Boolean(formik.errors.company)
-                }
-                helperText={
-                  formik.touched.company && formik.errors.company
-                }
-              />
-            </Box>
             <Box>
               <Typography
                 component="label"

@@ -347,6 +347,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                             </Box>
                             
                           </Box>
+                         
                           <Box
                             id="orderB"
                             sx={{

@@ -1,5 +1,6 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
+import Image from "next/image";
 
 import {
   Box,
@@ -9,182 +10,280 @@ import {
   Card,
   CardContent,
   Link,
+  Divider,
+  Chip,
 } from "@mui/material";
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { selectShoppingCart, getShoppingCart } from "@/store/ShoppingCart/slice";
-import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
+import { selectShoppingCart, removeProduct, getShoppingCart } from "@/store/ShoppingCart/slice";
 import { formatCurrency } from "@/utils/currency";
-
-interface CartItem {
-  shoppingCartDetailId: string;
-  glosa: string;
-  price: number;
-  imageUrl?: string;
-}
 
 export const Step05: FC<any> = () => {
   const dispatch = useAppDispatch();
-  const { shoppingCart } = useAppSelector(selectShoppingCart);
-  const { calendarVisits } = useAppSelector(selectCalendarVisits);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { shoppingCart, loading } = useAppSelector(selectShoppingCart);
 
+  // Obtener el carrito desde la API cuando el componente se monte
   useEffect(() => {
-    const fetchData = async () => {
-      if (calendarVisits?.calendarId) {
-        await dispatch(getShoppingCart({
-          shoppingCartId: calendarVisits?.calendarId,
-        }));
-      }
-    };
-    
-    fetchData();
-  }, [calendarVisits?.calendarId, dispatch]);
+    if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== '') {
+      // dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
+    }
+  }, []); // Solo se ejecuta al montar el componente
 
-  // Datos mock para el ejemplo - reemplazar con datos reales cuando estén disponibles
-  useEffect(() => {
-    // Por ahora usamos datos mock basados en la imagen
-    // Cuando tengas los ShoppingCartDetails reales, reemplaza esto
-    setCartItems([
-      {
-        shoppingCartDetailId: "1",
-        glosa: "Cargador BENY - 7kW",
-        price: 599900,
-        imageUrl: "/images/products/cargador-beny-7kw.jpg", // Ajustar según tu estructura de imágenes
-      },
-    ]);
-  }, []);
-
-  const handleRemoveItem = (itemId: string) => {
-    // Implementar lógica para eliminar item del carrito
-    console.log("Eliminar item:", itemId);
+  const handleRemoveItem = (productId: string) => {
+    dispatch(removeProduct(productId));
   };
 
   const handleContinuePurchase = () => {
     // Implementar lógica para continuar con la compra
-    console.log("Continuar compra");
+    console.log("Continuar compra", shoppingCart);
   };
 
-  // Calcular valores
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price || 0), 0);
+  // Calcular valores desde los productos del carrito persistido
+  const products = shoppingCart?.products || [];
+  const subtotal = products.reduce((sum, product) => 
+    sum + (product.amount * product.quantity), 0);
+  const totalVat = products.reduce((sum, product) => 
+    sum + (product.vatValue * product.quantity), 0);
   const shipping = 12500; // Valor fijo según la imagen, ajustar según tu lógica
   const total = subtotal + shipping;
-  const itemCount = cartItems.length;
+  const itemCount = products.reduce((sum, product) => sum + product.quantity, 0);
+
+  if (loading) {
+    return (
+      <Box bgcolor="#f5f5f5" pt={4} pb={4}>
+        <Container
+          sx={{
+            maxWidth: "1200px !important",
+            position: "relative",
+            paddingBottom: "56px",
+          }}
+        >
+          <Typography>Cargando carrito...</Typography>
+        </Container>
+      </Box>
+    );
+  }
 
   return (
-    <Box bgcolor="#f5f5f5" pt={4} pb={4}>
+    <Box bgcolor="#f5f5f5" pt={4} pb={4} sx={{ width: '100%', overflowX: 'hidden' }}>
       <Container
         sx={{
           maxWidth: "1200px !important",
           position: "relative",
           paddingBottom: "56px",
+          width: '100%',
+          px: { xs: 2, md: 3 },
         }}
       >
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
-            gap: 3,
-          }}
-        >
-          {/* Columna Izquierda - Artículos del Carrito */}
-          <Box>
-            <Card
-              sx={{
-                bgcolor: "#ffffff",
-                borderRadius: "8px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                p: 3,
-              }}
-            >
-              <CardContent sx={{ p: 0 }}>
-                {cartItems.map((item) => (
-                  <Box
-                    key={item.shoppingCartDetailId}
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      mb: 3,
-                      pb: 3,
-                      borderBottom: item !== cartItems[cartItems.length - 1] ? "1px solid #EAEFF4" : "none",
-                    }}
-                  >
-                    {/* Imagen del producto */}
+        {products.length === 0 ? (
+          <Card
+            sx={{
+              bgcolor: "#ffffff",
+              borderRadius: "8px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              p: 3,
+            }}
+          >
+            <CardContent>
+              <Typography variant="h6" align="center" color="text.secondary">
+                El carrito está vacío
+              </Typography>
+            </CardContent>
+          </Card>
+        ) : (
+          <Box
+            id="productsContainer"
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
+              gap: { xs: 2, md: 3 },
+              width: '100%',
+              maxWidth: '100%',
+              mx: 'auto',
+              boxSizing: 'border-box',
+            }}
+          >
+            {/* Columna Izquierda - Artículos del Carrito */}
+            <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+              <Card
+                id="cardProducts"
+                sx={{
+                  bgcolor: "#ffffff",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  p: { xs: 2, md: 3 },
+                  width: '100%',
+                  maxWidth: '100%',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <CardContent sx={{ p: 0 }}>
+                  {products.map((product, index) => (
                     <Box
-                      component="img"
-                      src={item.imageUrl || "/images/placeholder-product.jpg"}
-                      alt={item.glosa}
+                      key={product.productId || index}
                       sx={{
-                        width: 120,
-                        height: 120,
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                        bgcolor: "#ffffff",
-                        mr: 2,
-                        flexShrink: 0,
+                        display: "flex",
+                        alignItems: "flex-start",
+                        mb: { xs: 2, md: 3 },
+                        pb: { xs: 2, md: 3 },
+                        borderBottom: index !== products.length - 1 ? "1px solid #EAEFF4" : "none",
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        width: '100%',
+                        maxWidth: '100%',
                       }}
-                    />
+                    >
+                      {/* Imagen del producto */}
+                      {product.imageUrl ? (
+                        <Box
+                          sx={{
+                            width: { xs: '100%', sm: 120 },
+                            height: { xs: 200, sm: 120 },
+                            borderRadius: "8px",
+                            mr: { xs: 0, sm: 2 },
+                            mb: { xs: 2, sm: 0 },
+                            flexShrink: 0,
+                            position: "relative",
+                            overflow: "hidden",
+                            bgcolor: "#f5f5f5",
+                          }}
+                        >
+                          <Image
+                            src={product.imageUrl}
+                            alt={product.description}
+                            fill
+                            style={{
+                              objectFit: "contain",
+                            }}
+                            unoptimized
+                          />
+                        </Box>
+                      ) : (
+                        <Box
+                          sx={{
+                            width: { xs: '100%', sm: 120 },
+                            height: { xs: 200, sm: 120 },
+                            borderRadius: "8px",
+                            bgcolor: "#f5f5f5",
+                            mr: { xs: 0, sm: 2 },
+                            mb: { xs: 2, sm: 0 },
+                            flexShrink: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography variant="caption" color="text.secondary">
+                            Sin imagen
+                          </Typography>
+                        </Box>
+                      )}
 
-                    {/* Información del producto */}
-                    <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                      {/* Información del producto */}
+                      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontSize: "16px",
+                            fontWeight: 500,
+                            color: "#333333",
+                            mb: 1,
+                          }}
+                        >
+                          {product.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                          <Chip 
+                            label={`Cantidad: ${product.quantity}`} 
+                            size="small" 
+                            variant="outlined"
+                            sx={{ height: '24px', fontSize: '0.75rem' }}
+                          />
+                          <Chip 
+                            label={`Neto: ${formatCurrency(product.netAmount)}`} 
+                            size="small" 
+                            variant="outlined"
+                            sx={{ height: '24px', fontSize: '0.75rem' }}
+                          />
+                          <Chip 
+                            label={`IVA: ${formatCurrency(product.vatValue)}`} 
+                            size="small" 
+                            variant="outlined"
+                            sx={{ height: '24px', fontSize: '0.75rem' }}
+                          />
+                        </Box>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: "12px",
+                            color: "#666666",
+                            mb: 1,
+                          }}
+                        >
+                          ID: {product.productId}
+                        </Typography>
+                        <Link
+                          component="button"
+                          onClick={() => handleRemoveItem(product.productId)}
+                          sx={{
+                            fontSize: "14px",
+                            color: "#4A90E2",
+                            textDecoration: "none",
+                            cursor: "pointer",
+                            alignSelf: "flex-start",
+                            "&:hover": {
+                              textDecoration: "underline",
+                            },
+                          }}
+                        >
+                          Eliminar
+                        </Link>
+                      </Box>
+
+                      {/* Precio total del producto */}
                       <Typography
                         variant="body1"
                         sx={{
                           fontSize: "16px",
                           fontWeight: 500,
                           color: "#333333",
-                          mb: 1,
+                          ml: { xs: 0, sm: 2 },
+                          mt: { xs: 2, sm: 0 },
+                          alignSelf: { xs: 'flex-start', sm: 'flex-start' },
+                          width: { xs: '100%', sm: 'auto' },
+                          textAlign: { xs: 'left', sm: 'right' },
                         }}
                       >
-                        {item.glosa}
+                        {formatCurrency(product.amount * product.quantity)}
                       </Typography>
-                      <Link
-                        component="button"
-                        onClick={() => handleRemoveItem(item.shoppingCartDetailId)}
-                        sx={{
-                          fontSize: "14px",
-                          color: "#4A90E2",
-                          textDecoration: "none",
-                          cursor: "pointer",
-                          alignSelf: "flex-start",
-                          "&:hover": {
-                            textDecoration: "underline",
-                          },
-                        }}
-                      >
-                        Eliminar
-                      </Link>
                     </Box>
-
-                    {/* Precio */}
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: 500,
-                        color: "#333333",
-                        ml: 2,
-                        alignSelf: "flex-start",
-                      }}
-                    >
-                      {formatCurrency(item.price || 0)}
-                    </Typography>
-                  </Box>
-                ))}
-              </CardContent>
-            </Card>
-          </Box>
+                  ))}
+                </CardContent>
+              </Card>
+            </Box>
 
           {/* Columna Derecha - Resumen de Compra */}
-          <Box>
+          <Box sx={{ width: '100%', maxWidth: '100%' }}>
+          <form className="form flex flex-wrap w-full"
+            action={ "https://webpay3gint.transbank.cl/webpayserver/initTransaction"}
+            // action={ "https://webpay3g.transbank.cl:443/webpayserver/initTransaction"}
+            method="POST"
+        >
+          
+          <input id="token_ws" type="hidden" name="token_ws" value={"1231b38d1a9e11a2def3b7dc7d99d1370038ab46b80e9310260a2a4de989e168"} />
+        
+        
+        
             <Card
               sx={{
                 bgcolor: "#ffffff",
                 borderRadius: "8px",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                p: 3,
-                position: "sticky",
-                top: 20,
+                p: { xs: 2, md: 3 },
+                position: { xs: 'relative', md: 'sticky' },
+                top: { md: 20 },
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
               }}
             >
               <CardContent sx={{ p: 0 }}>
@@ -209,12 +308,30 @@ export const Step05: FC<any> = () => {
                   }}
                 >
                   <Typography variant="body2" sx={{ color: "#666666" }}>
-                    Subtotal ({itemCount})
+                    Subtotal ({itemCount} {itemCount === 1 ? 'producto' : 'productos'})
                   </Typography>
                   <Typography variant="body2" sx={{ color: "#333333" }}>
                     {formatCurrency(subtotal)}
                   </Typography>
                 </Box>
+
+                {/* IVA */}
+                {totalVat > 0 && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 2,
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ color: "#666666" }}>
+                      IVA
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "#333333" }}>
+                      {formatCurrency(totalVat)}
+                    </Typography>
+                  </Box>
+                )}
 
                 {/* Envíos */}
                 <Box
@@ -265,10 +382,11 @@ export const Step05: FC<any> = () => {
                 </Box>
 
                 {/* Botón Continuar compra */}
-                <Button
+                {/* <Button
                   variant="contained"
                   fullWidth
                   onClick={handleContinuePurchase}
+                  disabled={products.length === 0}
                   sx={{
                     bgcolor: "#E81A68",
                     color: "#ffffff",
@@ -280,14 +398,89 @@ export const Step05: FC<any> = () => {
                     "&:hover": {
                       bgcolor: "#C7155A",
                     },
+                    "&.Mui-disabled": {
+                      bgcolor: "rgba(0, 0, 0, 0.12)",
+                      color: "rgba(0, 0, 0, 0.26)",
+                    },
                   }}
                 >
                   Continuar compra
-                </Button>
+                </Button> */}
+
+
+                <Button
+                variant="contained"
+                type='submit'
+                color="primary"
+                size="large"
+                // disabled={webpay?.token ? false : true} 
+                endIcon={
+                  <Box
+                    component="span"
+                    sx={{
+                      bgcolor: "#E81A68",
+                      color: "#ffffff",
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      py: 1.5,
+                      borderRadius: "8px",
+                      textTransform: "none",
+                      "&:hover": {
+                        bgcolor: "#C7155A",
+                      },
+                      "&.Mui-disabled": {
+                        bgcolor: "rgba(0, 0, 0, 0.12)",
+                        color: "rgba(0, 0, 0, 0.26)",
+                      },
+                    }}
+                  />
+                }
+                sx={{
+                  paddingX: 4,
+                  paddingY: 1.5,
+                  marginTop: '20px',
+                  borderRadius: '24px',
+                  minWidth: { xs: '100%', md: '170px' }, // 100% en móviles, 170px en desktop
+                  width: { xs: '100%', md: '100%' } // 100% en móviles, 170px en desktop
+                }}
+              >
+                {/* { status === "loading" && <>
+                    <LoadingIcon icon="puff" color="#E81A68" style={{width:"40px", height:"40px"}}/>
+                </>
+                }
+                { status === "idle" && <> */}
+                <span>
+                Pagar compra
+                </span>
+                {/* </>
+                } */}
+              </Button>
+
+
+                {/* Información del cliente si existe */}
+                {shoppingCart?.customer && (
+                  <>
+                    <Divider sx={{ my: 2 }} />
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, fontSize: "14px" }}>
+                        Cliente:
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: "#666666", fontSize: "13px" }}>
+                        {shoppingCart.customer.Name}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: "#666666", fontSize: "12px" }}>
+                        {shoppingCart.customer.Email}
+                      </Typography>
+                    </Box>
+                  </>
+                )}
               </CardContent>
             </Card>
+          
+            </form>
           </Box>
         </Box>
+        )}
       </Container>
     </Box>
   );

@@ -1,6 +1,26 @@
 // import type { Customer } from "../../utils/imports/graphql/API";
 // import type { Customer } from "./type";
 
+export type CartProduct = {
+  productId: string;
+  description: string;
+  netAmount: number;
+  amount: number;
+  vatValue: number;
+  quantity: number;
+  imageUrl?: string;
+};
+
+export type CartCustomer = {
+  customerId: string;
+  Name: string;
+  Email: string;
+  Phone: string;
+  Address?: string;
+  City?: string;
+  State?: string;
+  ReferenceAddress?: string;
+};
 
 export type ShoppingCart = {     
   
@@ -11,6 +31,8 @@ export type ShoppingCart = {
   customerId?: string,
   addressCustomer?: string,
   glosa?: string,
+  products?: CartProduct[];
+  customer?: CartCustomer;
   
 };
 
@@ -22,11 +44,44 @@ export const emptyShoppingCart: ShoppingCart = {
   customerId: "",
   addressCustomer: "",
   glosa: "",
+  products: [],
+  customer: undefined,
 };
 
 
 export type shoppingCartInput = {
   shoppingCartId?: string | null,
+};
+
+export type createShoppingCartInput = {
+  shoppingCartId?: string | null,
+  total?: number | null,
+  vat?: number | null,
+  paymentMethod?: "transbank" | "bank_transfer" | "cash" | "on_site" | null,
+  status?: "pending" | "completed" | "cancelled" | "timed_out" | null,
+  customerId?: string | null,
+  products?: CartProduct[];
+};
+
+export type createShoppingCartDetailInput = {
+  shoppingCartDetailId?: string | null,
+  glosa?: string | null,
+  price?: number | null,
+  typeOfItem?: "product" | "service" | "input" | null,
+  shoppingCartId: string,
+  priceId?: string | null,
+  estimateDetailId?: string | null,
+  calendarId?: string | null,
+};
+
+export type updateShoppingCartInput = {
+  shoppingCartId: string,
+  total?: number | null,
+  vat?: number | null,
+  paymentMethod?: "transbank" | "bank_transfer" | "cash" | "on_site" | null,
+  status?: "pending" | "completed" | "cancelled" | "timed_out" | null,
+  customerId?: string | null,
+  products?: CartProduct[];
 };
 
 

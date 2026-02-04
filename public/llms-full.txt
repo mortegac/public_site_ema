@@ -1,0 +1,90 @@
+# Energica City: Documentación y Contenidos Completos
+
+> Energica City es una startup tecnológica especializada en electromovilidad y descarbonización. Impulsamos la transición energética integrando decisión, ejecución y operación en un solo sistema para empresas, comunidades y personas.
+
+---
+
+## 1. Visión General
+**Fuente:** https://www.energica.city/
+
+Energica City ayuda a resolver de forma integral los desafíos de la transición hacia la movilidad eléctrica. Nuestro enfoque elimina la incertidumbre, la fricción en la instalación y la ineficiencia operativa mediante un servicio escalable y económicamente sostenible.
+
+### Principales Enfoques
+* **Para Empresas:** Soluciones a medida para electrificar o descarbonizar flotas en industrias como minería, transporte, logística, forestal e inmobiliaria.
+* **Para Personas:** Instalación y operación de cargadores en hogares de forma simple, eficiente y confiable.
+
+### Tecnología Propia
+* **GRETA:** Herramienta de modelamiento y asesoría para proyectos de electromovilidad. Permite evaluar y diseñar proyectos de forma rápida y costo-eficiente.
+* **EVE (Electric Vehicle Energizer):** Solución de carga y software para gestionar infraestructura eléctrica en edificios y centros logísticos sin grandes inversiones adicionales. Transforma cargadores en dispositivos inteligentes.
+
+---
+
+## 2. Quiénes Somos
+**Fuente:** https://www.energica.city/que-es-energica-city
+
+Somos una startup chilena nacida para resolver las falencias en la electrificación de flotas en Latinoamérica. Nuestro equipo combina ingeniería experta, desarrollo de software e innovación tecnológica.
+
+### Metodología de Trabajo
+1.  **Comenzar:** Asesoramos a empresas que quieren ser sostenibles pero no saben por dónde empezar.
+2.  **Diseñar:** Creamos proyectos de electromovilidad sostenibles y viables en el tiempo.
+3.  **Licitar:** Diseñamos licitaciones y buscamos proveedores competentes.
+4.  **Implementar:** Acompañamiento completo durante la ejecución del proyecto.
+
+### Experiencia y Proyectos Destacados
+* **Chilexpress:** Electrificación de flotas de última milla (100 furgones). Dimensionamiento de vehículos y operación de infraestructura de carga.
+* **CMP (Minería):** Electrificación de 45 buses de transporte de personal en Atacama. Incluyó electroterminales abiertos a la comunidad.
+* **CMPC:** Electrificación de 130 vehículos de transporte de personas (60% de la flota) manteniendo excelencia operacional y ahorro de costos vs diésel.
+
+---
+
+## 3. Instalación de Cargadores (Home & Business)
+**Fuente:** https://www.energica.city/instalacion_cargadores
+
+Servicio de instalación de cargadores para casas y edificios con técnicos certificados por la SEC.
+
+### Características del Servicio
+* **Todo incluido:** Evaluación, instalación y puesta en marcha normativa.
+* **Seguridad:** Instaladores autorizados y cumplimiento de toda normativa eléctrica vigente.
+* **Precios:** Instalación desde $159.000 en casas y $369.000 en edificios (valores referenciales sujetos a cotización).
+* **Cargadores Inteligentes:** Instalación de equipos con protocolo OCPP.
+
+### Proceso para Edificios
+Para residentes que necesitan carga en su estacionamiento, ofrecemos un acompañamiento integral:
+1.  Búsqueda de la solución técnica más simple y económica.
+2.  Explicación técnica a la administración del edificio para facilitar la aprobación.
+3.  Cumplimiento normativo y ejecución segura.
+
+---
+
+## 4. Asesoría en Electrificación de Flotas
+**Fuente:** https://www.energica.city/asesoria_electrificacion_flotas
+
+Servicio enfocado en optimizar flotas y evaluar el potencial de electrificación mediante análisis técnico y económico.
+
+### Capacidades
+* **Modelamiento con GRETA:** Procesamos datos clave de la flota para simular escenarios reales.
+* **Análisis Técnico-Económico:** Optimización de costos (CAPEX/OPEX), análisis de riesgos y modelos de operación.
+* **Gestión Integral:** Desde el levantamiento de información hasta la supervisión (ITO) de la implementación.
+
+### Resultados Comprobados
+* Hasta un **14% de ahorro** en la operación.
+* Más de **135 vehículos** electrificados bajo nuestra asesoría.
+* Alta tasa de adjudicación en licitaciones elaboradas por nuestro equipo.
+
+---
+
+## 5. Electrolineras Comunitarias para Edificios
+**Fuente:** https://www.energica.city/cargadores-en-edificios
+
+Solución para habilitar carga de vehículos eléctricos en comunidades residenciales sin cablear cada estacionamiento individualmente ni requerir aumentos costosos de empalme.
+
+### Plataforma EVE
+* **Gestión de Energía:** Utiliza la capacidad eléctrica remanente del edificio de forma eficiente (Balanceo de carga).
+* **Gestión de Cobros:** Cada usuario paga solo por lo que consume. La administración define tarifas y el sistema gestiona los pagos automáticamente.
+* **Sin Fricción:** Los usuarios activan la carga mediante código QR.
+* **Escalabilidad:** Permite crecer en demanda futura sin colapsar la infraestructura eléctrica del edificio.
+
+### Beneficios
+* Evita grandes obras civiles.
+* Gestión centralizada para administradores.
+* Compatible con todos los vehículos homologados en Chile (MTT) y cargadores certificados (SEC).

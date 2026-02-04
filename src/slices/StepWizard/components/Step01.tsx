@@ -1,6 +1,7 @@
 "use client";
 import { FC, useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { PrismicRichText } from "@prismicio/react";
 import { PrismicNextLink } from "@prismicio/next";
 import { defaultComponents } from "@/app/components/PrismicRichText";
@@ -19,9 +20,11 @@ import {
 } from "@mui/material";
 import { formatCurrency } from "@/utils/currency";
 import * as prismic from "@prismicio/client";
-import { useDispatch } from "react-redux";
-// import { addProduct } from "@/store/ShoppingCart/slice";
-// import { CartProduct } from "@/store/ShoppingCart/type";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addProduct, selectShoppingCart } from "@/store/ShoppingCart/slice";
+import { CartProduct } from "@/store/ShoppingCart/type";
+import { setStep } from "@/store/Wizard/slice";
+import { createShoppingCartDetail } from "@/store/ShoppingCart/services";
 
 
 const createPrismicClient = () => {
@@ -59,23 +62,60 @@ type DocumentData = {
 export const Step01: FC<any> = (props:any) => {
   
   const { installationincluded } = props;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { shoppingCart } = useAppSelector(selectShoppingCart);
   
   const [data, setData] = useState<DocumentData | null>(null);
   const [primary, setPrimary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  const handleAddToCart = (option: any) => {
-    // const product: CartProduct = {
-    //   productId: option.iddatabase || "",
-    //   valor: Number(option?.pricetopvalue || 0),
-    //   cantidad: 1,
-    //   descripcionProducto: option?.brand || "",
-    //   imagenProducto: option?.image?.url || "",
-    // };
+  const handleAddToCart = async (option: any) => {
+    const amount = Number(option?.pricetopvalue || 0);
+    // Calcular IVA (19% en Chile)
+    const vatRate = 0.19;
+    const netAmount = amount / (1 + vatRate);
+    const vatValue = amount - netAmount;
     
-    // dispatch(addProduct(product));
+    // Construir descripción del producto
+    const description = `${option?.brand || ""} ${option?.capacity || ""}`.trim();
+    
+    const product: CartProduct = {
+      productId: option?.iddatabase || "",
+      description: description,
+      netAmount: Math.round(netAmount * 100) / 100, // Redondear a 2 decimales
+      amount: amount,
+      vatValue: Math.round(vatValue * 100) / 100, // Redondear a 2 decimales
+      quantity: 1,
+      imageUrl: option?.image?.url || "",
+    };
+    
+    console.log("--Agregando producto al carrito--", product);
+    
+    // Si existe shoppingCartId, agregar el item usando la mutation createShoppingCartDetail
+    if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== '') {
+      try {
+        await createShoppingCartDetail({
+          shoppingCartId: shoppingCart.shoppingCartId,
+          glosa: product.description,
+          price: Math.round(product.amount * 100), // Convertir a centavos (integer)
+          typeOfItem: "product",
+        });
+        console.log("--Producto agregado al carrito existente--");
+      } catch (error) {
+        console.error("--Error al agregar producto al carrito--", error);
+      }
+    }
+    
+    // Agregar el producto al store local
+    dispatch(addProduct(product));
+    
+    // Si existe customerId y no está vacío, ir al paso 5 (pago), sino al paso 2 (datos del cliente)
+    if (shoppingCart?.customerId && shoppingCart.customerId.trim() !== '') {
+      dispatch(setStep(5));
+    } else {
+      dispatch(setStep(2));
+    }
   };
   
   useEffect(() => {
@@ -319,8 +359,6 @@ export const Step01: FC<any> = (props:any) => {
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.5px'
                               }}
-                              
-                              
                             >
                               {children}
                             </Typography>
@@ -359,8 +397,6 @@ export const Step01: FC<any> = (props:any) => {
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.5px'
                               }}
-                              
-                              
                             >
                               {children}
                             </Typography>
@@ -453,23 +489,28 @@ export const Step01: FC<any> = (props:any) => {
                             Comprar
                           </Button>
                           
-                          <PrismicNextLink
-                            field={option?.buttontwolink}
-                            style={{ textDecoration: 'none', width: '100%' }}
-                          >
-                            <Button
-                              id="ficha-tecnica"
-                              variant='outlined'
-                              sx={{
-                                background: "white",
-                                minWidth: 'auto',
-                                width: '100%',
-                                fontSize: '14px',
-                              }}
+                          
+                          {option?.buttontwolink?.uid && (
+                            <Link
+                              href={`/${option.buttontwolink.uid}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ textDecoration: 'none', width: '100%' }}
                             >
-                              Ver Ficha
-                            </Button>
-                          </PrismicNextLink>
+                              <Button
+                                id="ficha-tecnica"
+                                variant='outlined'
+                                sx={{
+                                  background: "white",
+                                  minWidth: 'auto',
+                                  width: '100%',
+                                  fontSize: '14px',
+                                }}
+                              >
+                                Ver Ficha
+                              </Button>
+                            </Link>
+                          )}
                         </Box>
                         
                       </Box>
@@ -660,22 +701,26 @@ export const Step01: FC<any> = (props:any) => {
                             Comprar
                           </Button>
                           
-                          <PrismicNextLink
-                            field={option?.buttontwolink}
-                            style={{ textDecoration: 'none', width: '100%' }}
-                          >
-                            <Button
-                              id="ficha-tecnica"
-                              variant='outlined'
-                              sx={{
-                                minWidth: 'auto',
-                                width: '100%',
-                                fontSize: '14px',
-                              }}
+                          {option?.buttontwolink?.uid && (
+                            <Link
+                              href={`/${option.buttontwolink.uid}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ textDecoration: 'none', width: '100%' }}
                             >
-                              Ficha
-                            </Button>
-                          </PrismicNextLink>
+                              <Button
+                                id="ficha-tecnica"
+                                variant='outlined'
+                                sx={{
+                                  minWidth: 'auto',
+                                  width: '100%',
+                                  fontSize: '14px',
+                                }}
+                              >
+                                Ficha
+                              </Button>
+                            </Link>
+                          )}
                         </Box>
                       </Box>
                       

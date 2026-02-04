@@ -19,6 +19,7 @@ import {
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { setStep, selectWizard } from "@/store/Wizard/slice";
+import { addProduct, selectShoppingCart } from "@/store/ShoppingCart/slice";
 
 
 import { Text } from "@/app/components/shared/text";
@@ -52,9 +53,8 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
     dispatch(setStep(stepIndex));
   };
   
-  const { 
-    currentStep,
-  } = useAppSelector(selectWizard);
+  const { currentStep, } = useAppSelector(selectWizard);
+  const { shoppingCart, } = useAppSelector(selectShoppingCart);
   
   const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
   
@@ -68,7 +68,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
             paddingBottom:'56px',
           }}
         >
-          <span>currentStep={currentStep}</span>
+          {/* <span>currentStep={currentStep}</span> */}
         <Stepper 
           activeStep={currentStep}
           sx={{
@@ -108,17 +108,28 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
               optional?: React.ReactNode;
               onClick?: () => void;
             } = { onClick: () => handleStepClick(label?.stepcomponent, label) };
+            const isActiveStep = Number(currentStep) === Number(label?.number);
+            
+            console.log(`${Number(currentStep)} === ${Number(label?.number)  }`)
+            
             return (
               <Step key={label?.title?.text} {...stepProps}>
                   
-                  <pre>{JSON.stringify(label?.stepcomponent, null, 2 )}</pre>
+                  {/* <pre>{JSON.stringify(label?.number, null, 2 )}</pre> */}
                   
                 <StepLabel 
                   {...labelProps}
                   className={label === "Resumen cotización" ? "no-hover" : ""}
                   sx={{
+                    minHeight: '32px',
+                    '& .MuiStepLabel-labelContainer': {
+                      display: { 
+                        xs: isActiveStep ? 'block' : 'none', // Solo mostrar el activo en móvil
+                        md: 'block' // Mostrar todos en desktop
+                      }
+                    },
                     '& .MuiStepIcon-root': {
-                      color: Number(currentStep) === Number(label?.number) ? '#E81A68' : '#b9b9b9'
+                      color: isActiveStep ? '#E81A68' : '#b9b9b9'
                     },
                     '&.no-hover .MuiStepIcon-root:hover': {
                       color: 'inherit'
@@ -126,7 +137,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
                   }}
                 >
                   {/* {label?.title?.text} */}
-                  <Text textObject={label?.title} fontSize="16px"/>  
+                  { isActiveStep && <Text textObject={label?.title} fontSize="16px"/>  }
                 </StepLabel>
               </Step>
             );
@@ -149,6 +160,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
             />
       </Container>
       
+      {/* <pre>{JSON.stringify(shoppingCart, null, 2 )}</pre> */}
       </Box>
     );
   }

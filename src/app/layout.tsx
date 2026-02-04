@@ -53,9 +53,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body className="overflow-x-hidden antialiased">
+        {/* GTM con strategy="beforeInteractive" se carga antes de la interacción */}
         <GoogleTagManager />
-        <GoogleAnalytics />
+        {/* Noscript fallback para GTM - debe estar inmediatamente después de <body> */}
         <GoogleTagManagerNoScript />
+        <GoogleAnalytics />
           <Providers>
             
             <MyApp>

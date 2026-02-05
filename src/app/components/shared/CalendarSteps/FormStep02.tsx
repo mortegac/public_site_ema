@@ -23,7 +23,7 @@ export default function FormStep02() {
   const dispatch = useAppDispatch();
   
   const { customer } = useAppSelector(selectCustomer);
-  const { calendarVisits } = useAppSelector(selectCalendarVisits);
+  const { selectedInstallationDayId, calendarVisits } = useAppSelector(selectCalendarVisits);
   const { shoppingCart } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
   
@@ -50,15 +50,17 @@ export default function FormStep02() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!calendarVisits?.calendarId) return;
+      // Use installationDayId if available, otherwise fall back to calendarId for backward compatibility
+      const cartId = selectedInstallationDayId || (calendarVisits as any)?.installationDayId || calendarVisits?.calendarId;
+      if (!cartId) return;
       
       await dispatch(getShoppingCart({
-        shoppingCartId: calendarVisits?.calendarId,
+        shoppingCartId: cartId,
       }));
     };
     
     fetchData();
-  }, [calendarVisits?.calendarId, dispatch]);
+  }, [selectedInstallationDayId, calendarVisits, dispatch]);
 
   
   return (

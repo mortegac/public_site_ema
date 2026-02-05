@@ -169,14 +169,8 @@ export const FormStep01 = (props:any) => {
               existCustomer: Boolean(existCustomer)
             })
           ),
-          customer?.customerId && 
-          selectedCalendar?.calendarId && 
-            await dispatch(setCalendarVisits({
-              customerId: customer?.customerId,
-              calendarId: selectedCalendar?.calendarId,
-            })),
           
-          dispatch(setStep(2)), // Ir al paso de pago
+          dispatch(setStep(1)), // Ir al calendario
         ]);
       
       } else if (submitButton === 'scheduleNotPay') {
@@ -734,7 +728,10 @@ export const FormStep01 = (props:any) => {
             width: { xs: '100%', md: 'auto' },
           }}
           disabled={status === "loading"}
-          onClick={() => dispatch(setStep(0))}
+          onClick={() => {
+            // No back button on first step
+          }}
+          sx={{ display: 'none' }}
         >
           Volver
         </Button>

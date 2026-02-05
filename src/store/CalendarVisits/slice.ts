@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { emptyCalendarVisit, calendarVisitInput, CalendarVisit } from './type';
+import { emptyCalendarVisit, calendarVisitInput, CalendarVisit, InstallationDay } from './type';
 import { RootState } from "../store";
-import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastScheduleOneInstaller,makeReservation, makeReservationNotPaid } from './services';
+import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastScheduleOneInstaller,makeReservation, makeReservationNotPaid, fetchInstallationDays } from './services';
 import { getShoppingCart } from '../ShoppingCart/slice';
 import { getWebpayStart } from '../Webpay/slice';
 // import { AnyARecord } from 'node:dns';
@@ -20,6 +20,8 @@ interface CalendarVisitsSliceState {
   message: string;
   cartId: string;
   installersData: {[key: string]: string};
+  installationDays: InstallationDay[];
+  selectedInstallationDayId: string;
 }
 
 const initialState: CalendarVisitsSliceState = {
@@ -35,6 +37,8 @@ const initialState: CalendarVisitsSliceState = {
   message: "",
   cartId: "",
   installersData: {},
+  installationDays: [],
+  selectedInstallationDayId: "",
 };
 
 export const getCalendarVisits = createAsyncThunk(
@@ -127,12 +131,35 @@ export const getScheduleInstaller = createAsyncThunk(
       return Promise.reject(error);
     }
   }
+);
+
+export const getInstallationDays = createAsyncThunk(
+  "CalendarVisits/getInstallationDays",
+  async (params: {
+    date?: string;
+    address: string;
+    lat?: number;
+    long?: number;
+  }) => {
+    try {
+      const response = await fetchInstallationDays(params);
+      return response;
+    } catch (error) {
+      console.log(">>>>ERROR FETCH getInstallationDays", error);
+      return Promise.reject(error);
+    }
+  }
 ); 
   
 export const setCalendarVisits = createAsyncThunk(
     "CalendarVisits/updateCalendarVisits ",
     async (objFilter: calendarVisitInput, { dispatch }) => {
       try {
+        // Ensure all required parameters are present
+        if (!objFilter.customerId || !objFilter.installationDayId || !objFilter.startTime || !objFilter.duration || !objFilter.address) {
+          throw new Error('Missing required parameters for reservation');
+        }
+        
         const response:any = await makeReservation({ ...objFilter });
         
         if (response && response.cartId) {
@@ -232,6 +259,9 @@ const calendarVisitsSlice = createSlice({
       setLoading: (state) => {
         state.status = "loading"
       },
+      setSelectedInstallationDayId: (state, action: PayloadAction<string>) => {
+        state.selectedInstallationDayId = action.payload;
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -313,6 +343,21 @@ const calendarVisitsSlice = createSlice({
         state.status = "failed";
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la agenda';
+      })
+      
+    // getInstallationDays
+      .addCase(getInstallationDays.pending, (state) => {
+        state.statusCalendar = "loading";
+        state.error = null;
+      })
+      .addCase(getInstallationDays.fulfilled, (state, action) => {
+        state.statusCalendar = "idle";
+        state.installationDays = action.payload?.installationDays || [];
+      })
+      .addCase(getInstallationDays.rejected, (state, action) => {
+        state.statusCalendar = "failed";
+        state.error = action.error.message || 'Error al obtener días de instalación';
+        state.installationDays = [];
       });
   },
 });
@@ -326,7 +371,8 @@ export const {
     increment,
     setDataForm,
     cleanData,
-    setLoading
+    setLoading,
+    setSelectedInstallationDayId
   } = calendarVisitsSlice.actions;
   
 export const selectCalendarVisits = (state: RootState) => state.calendarVisits;

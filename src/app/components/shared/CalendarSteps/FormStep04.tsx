@@ -76,54 +76,30 @@ export default function FormResumeVirtual() {
   const dispatch = useAppDispatch();
 
   const { customer } = useAppSelector(selectCustomer);
-  const { calendarVisits } = useAppSelector(selectCalendarVisits);
+  const { selectedInstallationDayId, installationDays } = useAppSelector(selectCalendarVisits);
   const { shoppingCart } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
 
-  const [calendarData, setCalendarData] = useState<any | null>(null);
+  const [installationDayData, setInstallationDayData] = useState<any | null>(null);
 
   const PRODUCT_NAME = "Visita Técnica ";
 
-  const toChileTime = (dateSchedule: any) => {
-    const { date, format = "HH:mm" } = dateSchedule;
-    const dateUTC = new Date(date);
-    return dayjs(dateUTC)
-      .tz("America/Santiago")
-      .format(format);
-  };
-
   useEffect(() => {
-    const dataCalendar: any = calendarVisits;
-
     const fetchData = async () => {
-      if (!dataCalendar?.calendarId || !dataCalendar?.data) return;
+      if (!selectedInstallationDayId || !Array.isArray(installationDays)) return;
 
-      // Filtrar el array dataCalendar.data para obtener el item que coincida con calendarId
-      const filteredItem = dataCalendar.data.filter(
-        (item: any) => item.calendarId === dataCalendar.calendarId
+      // Find the installation day that matches the selected ID
+      const selectedDay = installationDays.find(
+        (day: any) => day.installationDayId === selectedInstallationDayId
       );
 
-      console.log("--filteredItem--", filteredItem);
-      // const formattedDay = calendarData?.startDate.format('YYYY-MM-DD');
-      // const timesForDay = weekAvailableTimes[formattedDay] || [];
-
-      if (filteredItem.length > 0) {
-        // Almacenar el item filtrado en setCalendarData
-        setCalendarData({
-          ...filteredItem[0],
-          // date: formattedDay,
-          // date2: toChileTime(calendarData?.startDate),
-        });
-      } else {
-        // Si no se encuentra, usar solo el calendarId
-        setCalendarData({
-          calendarId: dataCalendar.calendarId,
-        });
+      if (selectedDay) {
+        setInstallationDayData(selectedDay);
       }
     };
 
     fetchData();
-  }, [calendarVisits?.calendarId]);
+  }, [selectedInstallationDayId, installationDays]);
 
   return (
     <>
@@ -253,10 +229,10 @@ export default function FormResumeVirtual() {
                               fontWeight: "bold",
                             }}
                           >
-                            {/* {calendarData?.startDate} */}
-                            {dayjs(calendarData?.startDate).format(
-                              "D [de] MMMM"
-                            )}
+                            {installationDayData?.date 
+                              ? dayjs(installationDayData.date).format("D [de] MMMM")
+                              : "Fecha no disponible"
+                            }
                           </Typography>
                         </Box>
                       </Box>
@@ -311,7 +287,7 @@ export default function FormResumeVirtual() {
                               fontWeight: "bold",
                             }}
                           >
-                            {toChileTime({ date: calendarData?.startDate })} hrs
+                            Día completo
                           </Typography>
                         </Box>
                       </Box>

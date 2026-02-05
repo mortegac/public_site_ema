@@ -68,6 +68,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
             "Role": {
               "name": "Role",
               "isArray": false,
@@ -136,6 +143,22 @@
               "isArray": true,
               "type": {
                 "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "userId"
+                ]
+              }
+            },
+            "InstallationDays": {
+              "name": "InstallationDays",
+              "isArray": true,
+              "type": {
+                "model": "InstallationDay"
               },
               "isRequired": false,
               "attributes": [],
@@ -263,15 +286,47 @@
               "isRequired": false,
               "attributes": []
             },
-            "timeAvailable": {
-              "name": "timeAvailable",
-              "isArray": true,
-              "type": {
-                "nonModel": "TimeSlot"
-              },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSTime",
               "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true
+              "attributes": []
+            },
+            "endTime": {
+              "name": "endTime",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             },
             "userId": {
               "name": "userId",
@@ -1315,6 +1370,247 @@
             "sortKeyFieldNames": []
           }
         },
+        "InstallationDay": {
+          "name": "InstallationDay",
+          "fields": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "type": {
+              "name": "type",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "day": {
+              "name": "day",
+              "isArray": false,
+              "type": {
+                "enum": "InstallationDayDay"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "usedTime": {
+              "name": "usedTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "maxTime": {
+              "name": "maxTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "availableTime": {
+              "name": "availableTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "route": {
+              "name": "route",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeDistance": {
+              "name": "routeDistance",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeDuration": {
+              "name": "routeDuration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeTravelTime": {
+              "name": "routeTravelTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeLegs": {
+              "name": "routeLegs",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "User": {
+              "name": "User",
+              "isArray": false,
+              "type": {
+                "model": "User"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "userId"
+                ]
+              }
+            },
+            "CalendarVisits": {
+              "name": "CalendarVisits",
+              "isArray": true,
+              "type": {
+                "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "installationDayId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "InstallationDays",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "installationDayId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "installationDaysByTypeAndDate",
+                "queryField": "InstallationDaysByTypeAndDate",
+                "fields": [
+                  "type",
+                  "date"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "installationDayId",
+            "sortKeyFieldNames": []
+          }
+        },
         "CalendarVisit": {
           "name": "CalendarVisit",
           "fields": {
@@ -1381,6 +1677,27 @@
               "isRequired": false,
               "attributes": []
             },
+            "routeOrder": {
+              "name": "routeOrder",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
             "state": {
               "name": "state",
               "isArray": false,
@@ -1389,6 +1706,28 @@
               },
               "isRequired": false,
               "attributes": []
+            },
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "InstallationDay": {
+              "name": "InstallationDay",
+              "isArray": false,
+              "type": {
+                "model": "InstallationDay"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "installationDayId"
+                ]
+              }
             },
             "customerId": {
               "name": "customerId",
@@ -1449,22 +1788,6 @@
                 ],
                 "targetNames": []
               }
-            },
-            "createdAt": {
-              "name": "createdAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
-            },
-            "updatedAt": {
-              "name": "updatedAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
             }
           },
           "syncable": true,
@@ -1489,6 +1812,28 @@
                 "queryField": "CalendarVisitsByState",
                 "fields": [
                   "state",
+                  "startDate"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "calendarVisitsByStateAndUpdatedAt",
+                "queryField": "CalendarVisitsByStateAndUpdatedAt",
+                "fields": [
+                  "state",
+                  "updatedAt"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "calendarVisitsByInstallationDayIdAndStartDate",
+                "queryField": "CalendarVisitsByInstallationDayId",
+                "fields": [
+                  "installationDayId",
                   "startDate"
                 ]
               }
@@ -1702,6 +2047,38 @@
                 "connectionType": "HAS_MANY",
                 "associatedWith": [
                   "solicitantId"
+                ]
+              }
+            },
+            "CustomerSessions": {
+              "name": "CustomerSessions",
+              "isArray": true,
+              "type": {
+                "model": "CustomerSession"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
+                ]
+              }
+            },
+            "WebContactForms": {
+              "name": "WebContactForms",
+              "isArray": true,
+              "type": {
+                "model": "WebContactForm"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
                 ]
               }
             },
@@ -1938,6 +2315,192 @@
             "sortKeyFieldNames": []
           }
         },
+        "WebContactForm": {
+          "name": "WebContactForm",
+          "fields": {
+            "webContactFormId": {
+              "name": "webContactFormId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "type": {
+              "name": "type",
+              "isArray": false,
+              "type": {
+                "enum": "WebContactFormType"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "name": {
+              "name": "name",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "email": {
+              "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "phone": {
+              "name": "phone",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "whatsapp": {
+              "name": "whatsapp",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "subject": {
+              "name": "subject",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "category": {
+              "name": "category",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "companyName": {
+              "name": "companyName",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "cantidadVehiculos": {
+              "name": "cantidadVehiculos",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "WebContactForms",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "webContactFormId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "webContactFormId",
+            "sortKeyFieldNames": []
+          }
+        },
         "Estimate": {
           "name": "Estimate",
           "fields": {
@@ -2115,6 +2678,13 @@
               "name": "electricRoomFloorNumber",
               "isArray": false,
               "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationCost": {
+              "name": "installationCost",
+              "isArray": false,
+              "type": "Int",
               "isRequired": false,
               "attributes": []
             },
@@ -3289,6 +3859,42 @@
               "isRequired": false,
               "attributes": []
             },
+            "isListed": {
+              "name": "isListed",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "isActive": {
+              "name": "isActive",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "supplierId": {
+              "name": "supplierId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Supplier": {
+              "name": "Supplier",
+              "isArray": false,
+              "type": {
+                "model": "SupplierProduct"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "supplierId"
+                ]
+              }
+            },
             "Prices": {
               "name": "Prices",
               "isArray": true,
@@ -3370,6 +3976,16 @@
               }
             },
             {
+              "type": "key",
+              "properties": {
+                "name": "productsByType",
+                "queryField": "ProductsByType",
+                "fields": [
+                  "type"
+                ]
+              }
+            },
+            {
               "type": "auth",
               "properties": {
                 "rules": [
@@ -3412,6 +4028,205 @@
             "sortKeyFieldNames": []
           }
         },
+        "SupplierProduct": {
+          "name": "SupplierProduct",
+          "fields": {
+            "supplierId": {
+              "name": "supplierId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "rut": {
+              "name": "rut",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "companyName": {
+              "name": "companyName",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "comuna": {
+              "name": "comuna",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "legalRepresentative": {
+              "name": "legalRepresentative",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "contactName": {
+              "name": "contactName",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "contactPhone": {
+              "name": "contactPhone",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "contactEmail": {
+              "name": "contactEmail",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "supportContact": {
+              "name": "supportContact",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "supportPhone": {
+              "name": "supportPhone",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "supportEmail": {
+              "name": "supportEmail",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "supportAddress": {
+              "name": "supportAddress",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "supportComuna": {
+              "name": "supportComuna",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "businessHours": {
+              "name": "businessHours",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Products": {
+              "name": "Products",
+              "isArray": true,
+              "type": {
+                "model": "Product"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "supplierId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SupplierProducts",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "supplierId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "supplierId",
+            "sortKeyFieldNames": []
+          }
+        },
         "Price": {
           "name": "Price",
           "fields": {
@@ -3449,6 +4264,13 @@
               "type": {
                 "enum": "PriceStatus"
               },
+              "isRequired": false,
+              "attributes": []
+            },
+            "isPubliclyListed": {
+              "name": "isPubliclyListed",
+              "isArray": false,
+              "type": "Boolean",
               "isRequired": false,
               "attributes": []
             },
@@ -4484,6 +5306,17 @@
             {
               "type": "key",
               "properties": {
+                "name": "paymentTransactionsByStatusAndDate",
+                "queryField": "listPaymentTransactionByStatusAndDate",
+                "fields": [
+                  "status",
+                  "date"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
                 "name": "paymentTransactionsByToken",
                 "queryField": "listPaymentTransactionByToken",
                 "fields": [
@@ -4531,6 +5364,329 @@
           "primaryKeyInfo": {
             "isCustomPrimaryKey": true,
             "primaryKeyFieldName": "paymentTransactionId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "CustomerSession": {
+          "name": "CustomerSession",
+          "fields": {
+            "sessionId": {
+              "name": "sessionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "endTime": {
+              "name": "endTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "ipAddress": {
+              "name": "ipAddress",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userAgent": {
+              "name": "userAgent",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "deviceType": {
+              "name": "deviceType",
+              "isArray": false,
+              "type": {
+                "enum": "CustomerSessionDeviceType"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "browser": {
+              "name": "browser",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "operatingSystem": {
+              "name": "operatingSystem",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "screenResolution": {
+              "name": "screenResolution",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "CustomerInteractions": {
+              "name": "CustomerInteractions",
+              "isArray": true,
+              "type": {
+                "model": "SessionInteraction"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "sessionId"
+                ]
+              }
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "CustomerSessions",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "sessionId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "sessionId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "SessionInteraction": {
+          "name": "SessionInteraction",
+          "fields": {
+            "interactionId": {
+              "name": "interactionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "type": {
+              "name": "type",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "name": {
+              "name": "name",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "data": {
+              "name": "data",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "sessionId": {
+              "name": "sessionId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "CustomerSession": {
+              "name": "CustomerSession",
+              "isArray": false,
+              "type": {
+                "model": "CustomerSession"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "sessionId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SessionInteractions",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "interactionId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "interactionId",
             "sortKeyFieldNames": []
           }
         },
@@ -4939,6 +6095,18 @@
             "test"
           ]
         },
+        "InstallationDayDay": {
+          "name": "InstallationDayDay",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
+        },
         "CalendarVisitState": {
           "name": "CalendarVisitState",
           "values": [
@@ -4959,6 +6127,15 @@
             "house",
             "appartment",
             "other"
+          ]
+        },
+        "WebContactFormType": {
+          "name": "WebContactFormType",
+          "values": [
+            "EMA",
+            "GRETA",
+            "EVE",
+            "OTHER"
           ]
         },
         "EstimateStateValidation": {
@@ -5011,6 +6188,14 @@
             "input"
           ]
         },
+        "CustomerSessionDeviceType": {
+          "name": "CustomerSessionDeviceType",
+          "values": [
+            "desktop",
+            "mobile",
+            "tablet"
+          ]
+        },
         "MakeEstimateIntoCartPaymentMethod": {
           "name": "MakeEstimateIntoCartPaymentMethod",
           "values": [
@@ -5019,23 +6204,294 @@
             "cash",
             "on_site"
           ]
+        },
+        "CalendarVisitReturnTypeState": {
+          "name": "CalendarVisitReturnTypeState",
+          "values": [
+            "available",
+            "reserved",
+            "payed",
+            "payedAndAgended",
+            "error",
+            "occupied",
+            "stale",
+            "timedOut",
+            "waiting"
+          ]
+        },
+        "InstallationDayReturnTypeDay": {
+          "name": "InstallationDayReturnTypeDay",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
         }
       },
       "nonModels": {
-        "TimeSlot": {
-          "name": "TimeSlot",
+        "EstimateResume": {
+          "name": "EstimateResume",
           "fields": {
-            "start": {
-              "name": "start",
+            "estimateId": {
+              "name": "estimateId",
               "isArray": false,
-              "type": "AWSTime",
+              "type": "String",
               "isRequired": false,
               "attributes": []
             },
-            "end": {
-              "name": "end",
+            "materialsCost": {
+              "name": "materialsCost",
               "isArray": false,
-              "type": "AWSTime",
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationCost": {
+              "name": "installationCost",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "SECCost": {
+              "name": "SECCost",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "referenceChargerPrice": {
+              "name": "referenceChargerPrice",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "netPrice": {
+              "name": "netPrice",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "VAT": {
+              "name": "VAT",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "grossPrice": {
+              "name": "grossPrice",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "chargerPotence": {
+              "name": "chargerPotence",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "CalendarVisitReturnType": {
+          "name": "CalendarVisitReturnType",
+          "fields": {
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "googleEventId": {
+              "name": "googleEventId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "summary": {
+              "name": "summary",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "location": {
+              "name": "location",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "description": {
+              "name": "description",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startDate": {
+              "name": "startDate",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endDate": {
+              "name": "endDate",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "timeZone": {
+              "name": "timeZone",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "state": {
+              "name": "state",
+              "isArray": false,
+              "type": {
+                "enum": "CalendarVisitReturnTypeState"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "InstallationDayReturnType": {
+          "name": "InstallationDayReturnType",
+          "fields": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "day": {
+              "name": "day",
+              "isArray": false,
+              "type": {
+                "enum": "InstallationDayReturnTypeDay"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "usedTime": {
+              "name": "usedTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "maxTime": {
+              "name": "maxTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "availableTime": {
+              "name": "availableTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
               "isRequired": false,
               "attributes": []
             }
@@ -5050,6 +6506,16 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "estimates": {
+              "name": "estimates",
+              "isArray": true,
+              "type": {
+                "nonModel": "EstimateResume"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
             }
           }
         },
@@ -5195,6 +6661,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "shoppingCartId": {
+              "name": "shoppingCartId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "payment_type_code": {
               "name": "payment_type_code",
               "isArray": false,
@@ -5269,6 +6742,20 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "meetLink": {
+              "name": "meetLink",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "googleEventId": {
+              "name": "googleEventId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         },
@@ -5310,8 +6797,8 @@
             }
           }
         },
-        "GenerateTimeSlotsReturnType": {
-          "name": "GenerateTimeSlotsReturnType",
+        "GenerateInstallationDaysReturnType": {
+          "name": "GenerateInstallationDaysReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -5331,6 +6818,28 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            }
+          }
+        },
+        "FetchCalendarForDateReturnType": {
+          "name": "FetchCalendarForDateReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationDays": {
+              "name": "installationDays",
+              "isArray": true,
+              "type": {
+                "nonModel": "InstallationDayReturnType"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
             }
           }
         }
@@ -5396,8 +6905,8 @@
           },
           "isRequired": false,
           "arguments": {
-            "calendarId": {
-              "name": "calendarId",
+            "installationDayId": {
+              "name": "installationDayId",
               "isArray": false,
               "type": "String",
               "isRequired": true
@@ -5407,6 +6916,36 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": true
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
             }
           }
         },
@@ -5547,6 +7086,12 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
             }
           }
         },
@@ -5575,6 +7120,12 @@
               "isArray": false,
               "type": "String",
               "isRequired": false
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
             }
           }
         },
@@ -5600,11 +7151,11 @@
             }
           }
         },
-        "generateTimeSlots": {
-          "name": "generateTimeSlots",
+        "generateInstallationDays": {
+          "name": "generateInstallationDays",
           "isArray": false,
           "type": {
-            "nonModel": "GenerateTimeSlotsReturnType"
+            "nonModel": "GenerateInstallationDaysReturnType"
           },
           "isRequired": false,
           "arguments": {
@@ -5630,17 +7181,51 @@
           },
           "isRequired": false,
           "arguments": {
-            "oldVisitId": {
-              "name": "oldVisitId",
+            "calendarId": {
+              "name": "calendarId",
               "isArray": false,
               "type": "ID",
               "isRequired": true
             },
-            "newVisitId": {
-              "name": "newVisitId",
+            "newInstallationDayId": {
+              "name": "newInstallationDayId",
               "isArray": false,
               "type": "ID",
               "isRequired": true
+            }
+          }
+        },
+        "FetchCalendarForDate": {
+          "name": "FetchCalendarForDate",
+          "isArray": false,
+          "type": {
+            "nonModel": "FetchCalendarForDateReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDate",
+              "isRequired": false
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
             }
           }
         }

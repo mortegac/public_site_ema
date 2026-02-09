@@ -537,6 +537,93 @@ export default function FormResumeVirtual() {
                           Tipo de residencia: <b>{paymentDataLocal?.typeOfResidence}</b>
                         </p>
                       </div>
+                      
+                      {/* <Box
+                        bgcolor="#f8fafc"
+                        width={"100%"}
+                        mt={10}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-evenly",
+                          alignItems: "center",
+                          flexDirection: { xs: "column", md: "row" },
+                          gap: { xs: 2, md: 0 },
+                          background: "#E81A68",
+                          padding: '22px 16px',
+                        }}
+                      > */}
+                      <Paper
+                        variant="elevation"
+                        sx={{
+                          marginTop: { xs: "24px", md: "32px" },
+                          border: `1px solid ${borderColor}`,
+                          padding: { xs: "16px", md: "20px" },
+                          display: "flex",
+                          background: "rgb(77 191 217)",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          flexDirection: { xs: "column", md: "row" },
+                          gap: { xs: 2, md: 0 },
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src="https://images.prismic.io/energica-public-site/aVV1bnNYClf9ouGl_instalacion-venta55.png?auto=format,compress"
+                          alt="Instalación punto de carga"
+                          sx={{
+                            width: { xs: "100%", md: "250px" },
+                            maxWidth: { xs: "220px", md: "250px" },
+                            height: "auto",
+                            flexShrink: 0,
+                            marginRight: { xs: 0, md: "20px" },
+                            marginBottom: { xs: "8px", md: 0 },
+                          }}
+                        />
+                        <Box
+                          width="100%"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-evenly",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            gap: 1,
+                            mt: { xs: 0, md: 10 },
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              color: "#37373c",
+                              fontSize: { xs: "16px", md: "20px" },
+                              lineHeight: { xs: "24px", md: "32px" },
+                              fontWeight: 400,
+                              textAlign: "center",
+                            }}
+                          >
+                            Quieres instalar un punto de carga sin costos en tu edificio u oficina
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            size="large"
+                            sx={{
+                              width: { xs: "100%", md: "70%" },
+                              height: { xs: "48px", md: "60px" },
+                              marginTop: { xs: "8px", md: "20px" },
+                              paddingX: 2,
+                              paddingY: 1.5,
+                              borderRadius: "24px",
+                              background: "rgb(67, 67, 67)",
+                              color: "#FFFFFF",
+                              fontSize: { xs: "16px", md: "18px" },
+                              border: "1px solid rgb(67, 67, 67)",
+                            }}
+                            href="/postulacion-cargadores-edificios"
+                          >
+                            Postula aquí
+                          </Button>
+                        </Box>
+                      </Paper>
+                        {/* </Box> */}
+                      
                       <Box
                         bgcolor="#f8fafc"
                         width={"100%"}

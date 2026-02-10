@@ -3,6 +3,7 @@ import { FC } from "react";
 
 import { HeroProps } from "./types"
 import { Default } from "./variants/Default"
+import { HeroResponsive } from "./variants/HeroResponsive"
 import { WithVideo } from "./variants/WithVideo"
 import { SinTextoResponsive } from "./variants/SinTextoResponsive"
 import { BlogHero } from "./variants/BlogHero"
@@ -17,6 +18,7 @@ const Hero: FC<HeroProps> = ({ slice, index, slices, context }) => {
     ["sinTextoResponsive"]: SinTextoResponsive,
     ["bgPrimary"]: BgPrimary,
     ["blogHero"]: BlogHero, // o el componente que corresponda
+    ["heroResponsive"]: HeroResponsive, // o el componente que corresponda
   };
 
   const TypeOfVariants = typeOfComponents[variation] || Default;

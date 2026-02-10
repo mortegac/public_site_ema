@@ -2236,6 +2236,106 @@ export type HeroSliceWithVideo = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *Hero → heroResponsive → Primary*
+ */
+export interface HeroSliceHeroResponsivePrimary {
+  /**
+   * title field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * description field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * image field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * buttonOneText field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.buttononetext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttononetext: prismic.KeyTextField;
+
+  /**
+   * buttonOneLink field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.buttononelink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttononelink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * buttonTwoText field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.buttontwotext
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  buttontwotext: prismic.KeyTextField;
+
+  /**
+   * buttonTwoLink field in *Hero → heroResponsive → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.heroResponsive.primary.buttontwolink
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  buttontwolink: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * heroResponsive variation for Hero Slice
+ *
+ * - **API ID**: `heroResponsive`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSliceHeroResponsive = prismic.SharedSliceVariation<
+  "heroResponsive",
+  Simplify<HeroSliceHeroResponsivePrimary>,
+  never
+>;
+
+/**
  * Slice variation for *Hero*
  */
 type HeroSliceVariation =
@@ -2243,7 +2343,8 @@ type HeroSliceVariation =
   | HeroSliceBgPrimary
   | HeroSliceBlogHero
   | HeroSliceSinTextoResponsive
-  | HeroSliceWithVideo;
+  | HeroSliceWithVideo
+  | HeroSliceHeroResponsive;
 
 /**
  * Hero Shared Slice
@@ -3324,12 +3425,14 @@ declare module "@prismicio/client" {
       HeroSliceBlogHeroPrimary,
       HeroSliceSinTextoResponsivePrimary,
       HeroSliceWithVideoPrimary,
+      HeroSliceHeroResponsivePrimary,
       HeroSliceVariation,
       HeroSliceDefault,
       HeroSliceBgPrimary,
       HeroSliceBlogHero,
       HeroSliceSinTextoResponsive,
       HeroSliceWithVideo,
+      HeroSliceHeroResponsive,
       IdeasSlice,
       IdeasSliceDefaultPrimary,
       IdeasSliceVariation,

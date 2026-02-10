@@ -60,7 +60,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
   
   
     return (
-      <Box bgcolor="#ffffff" pt={4} pb={2}>
+      <Box bgcolor="#ffffff" pt={{ xs: 0, md: 4 }} pb={2}>
         <Container
           sx={{
             maxWidth: "1200px !important",

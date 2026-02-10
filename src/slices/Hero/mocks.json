@@ -378,5 +378,90 @@
 				"value": []
 			}
 		]
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "heroResponsive",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Ut consectetur pariatur commodo reprehenderit."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Aliquip qui officia aliqua quis nisi dolor voluptate. Ullamco ullamco ex voluptate minim esse nisi pariatur commodo proident commodo cupidatat."
+						}
+					}
+				]
+			},
+			"image": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1587653915936-5623ea0b949a",
+					"width": 4000,
+					"height": 4000
+				},
+				"url": "https://images.unsplash.com/photo-1587653915936-5623ea0b949a",
+				"width": 4000,
+				"height": 4000,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"alt": "forgot",
+				"credits": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			},
+			"buttononetext": {
+				"__TYPE__": "FieldContent",
+				"value": "government",
+				"type": "Text"
+			},
+			"buttononelink": {
+				"key": "4f6f3ff4-72e4-4b1f-9776-86d9452e6156",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://google.com",
+					"text": "scientific"
+				}
+			},
+			"buttontwotext": {
+				"__TYPE__": "FieldContent",
+				"value": "poet",
+				"type": "Text"
+			},
+			"buttontwolink": {
+				"key": "23f1ca14-d7cb-465f-86fb-21b3aecdcfd4",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "influence"
+				}
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
 	}
 ]

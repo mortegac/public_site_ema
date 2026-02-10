@@ -1,36 +1,29 @@
-# Descripción del sitio
-Es una empresa especializada en electromovilidad y energía. Enfocada en resolver de forma integral los desafíos de la transición hacia la movilidad eléctrica, desde la toma de decisión hasta la operación de infraestructura.
+# Energica City
 
-Además, ayudan a las empresas a descarbonizar sus flotas de vehículos mediante la transición a opciones eléctricas, trabajando con industrias como la minería, el transporte y la logística. También desarrollan plataformas de software para automatizar la gestión de sus servicios y proveen soporte técnico.
+> Expertos en electromovilidad y energía en Chile. Soluciones integrales para la transición eléctrica, gestión de flotas, instalación de cargadores y plataformas de software para descarbonización.
 
-# Quiénes somos
+## Sobre Nosotros
+- [Quiénes somos](https://www.energica.city/que-es-energica-city): Startup chilena dedicada a la instalación, gestión y soporte técnico de infraestructura de carga para vehículos eléctricos.
+- [Contacto](https://www.energica.city/contacto): Canales de atención para empresas y particulares.
 
-[cite_start]Somos una startup chilena de expertos en electromovilidad y transporte sostenible[cite: 28, 33]. 
-[cite_start]Nos dedicamos a la instalación, gestión y soporte técnico de cargadores para vehículos eléctricos[cite: 21, 22, 37]. 
-[cite_start]Ofrecemos soluciones personalizadas tanto para empresas como para personas particulares[cite: 26, 31].
+## Servicios y Soluciones
+- [Instalación de Cargadores](https://www.energica.city/instalacion_cargadores): Instalación certificada (SEC) de cargadores inteligentes (OCPP) y básicos para hogares y empresas.
+- [Gestión de Flotas](https://www.energica.city/asesoria_electrificacion_flotas): Asesoría para descarbonizar flotas en minería, transporte y logística.
+- [Software y Plataformas](https://www.energica.city/que-es-energica-city): Soluciones tecnológicas para automatizar la gestión de carga y servicios.
+- [Electrolineras Comunitarias](https://www.energica.city/cargadores-en-edificios): Carga para edificios residenciales optimizando la capacidad eléctrica sin grandes obras.
 
-# Qué hacemos
-- 
-[cite_start]**Instalación de Cargadores**: Instalamos cargadores eléctricos inteligentes (protocolo OCPP) y "tontos" con nuestra propia plataforma[cite: 21, 38]. 
-[cite_start]Contamos con instaladores certificados por la SEC y ofrecemos precios competitivos[cite: 34, 40].
-- 
-[cite_start]**Gestión de Flotas**: Ayudamos a empresas de diversas industrias como minería, transporte, logística e inmobiliaria a descarbonizar su flota y transicionar a vehículos eléctricos de forma eficiente y rentable[cite: 23, 29, 36].
-- 
-[cite_start]**Software y Plataformas**: Creamos plataformas de software para automatizar la gestión de nuestros servicios[cite: 24].
-- 
-[cite_start]**Soporte Técnico**: Proveemos soporte técnico para los cargadores que instalamos y gestionamos[cite: 22].
+## Recursos y Soporte
+- [Soporte Técnico](https://www.energica.city/contacto): Asistencia técnica para hardware y software de carga.
+- [Blog de Electromovilidad](https://www.energica.city/blog): Artículos sobre tendencias, normativa en Chile y transporte sostenible.
 
-[cite_start]**Soporte Técnico**: Asesoría experta en electrificación de flotas
-
-[cite_start]**Asesoría en electrificación de flotas: Evaluamos, diseñamos y optimizamos la electrificación de tu flota con foco operativo y económico.[cite: 22].
-[cite_start]**Electrolineras comunitarias para edificios: Permite a los residentes cargar sus vehículos eléctricos sin cablear cada estacionamiento ni realizar grandes obras, utilizando de forma eficiente la capacidad eléctrica disponible del edificio..[cite: 22].
-
-# Audiencia principal
-
-[cite_start]Nuestros servicios están dirigidos tanto a **empresas** que buscan electrificar sus flotas como a **personas** que necesitan un cargador en su hogar o edificio[cite: 26, 31].
-
-# Temas clave en nuestro sitio
+## Temas Clave
 - Electromovilidad en Chile
+- Protocolo OCPP
+- Descarbonización de flotas
+- Cargadores EV para casas y edificios
+- Eficiencia energética
+
+
 - Instalación de cargadores EV
 - Gestión de flotas eléctricas
 - Transporte sostenible y descarbonización

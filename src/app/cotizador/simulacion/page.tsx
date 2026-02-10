@@ -71,7 +71,10 @@ export default function FormResumeVirtual() {
     typeOfResidence: "",
     email: "",
     name: "",
-    hasData:false,
+    address: "",
+    city: "",
+    state: "",
+    hasData: false,
   });
   const [sendEMailBox, setSendEMailBox] = useState({
     msg:"",
@@ -537,21 +540,6 @@ export default function FormResumeVirtual() {
                           Tipo de residencia: <b>{paymentDataLocal?.typeOfResidence}</b>
                         </p>
                       </div>
-                      
-                      {/* <Box
-                        bgcolor="#f8fafc"
-                        width={"100%"}
-                        mt={10}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-evenly",
-                          alignItems: "center",
-                          flexDirection: { xs: "column", md: "row" },
-                          gap: { xs: 2, md: 0 },
-                          background: "#E81A68",
-                          padding: '22px 16px',
-                        }}
-                      > */}
                       <Paper
                         variant="elevation"
                         sx={{
@@ -622,8 +610,6 @@ export default function FormResumeVirtual() {
                           </Button>
                         </Box>
                       </Paper>
-                        {/* </Box> */}
-                      
                       <Box
                         bgcolor="#f8fafc"
                         width={"100%"}

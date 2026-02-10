@@ -13,6 +13,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { styled } from '@mui/material/styles';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
+import AddressInput from '@/app/components/AddressInput2';
 
 
 import CustomTextField from './CustomTextField';
@@ -67,6 +68,12 @@ const validationSchema = yup.object({
       return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value || "");
     })
     .required('Email es requerido'),
+    address: yup
+    .string()
+    .required('La dirección es requerida')
+    .min(5, 'La dirección debe tener al menos 5 caracteres')
+    .max(200, 'La dirección no puede exceder los 200 caracteres')
+    .trim(),
     phone: yup
     .string()
     .required('El teléfono es requerido')
@@ -115,6 +122,7 @@ export const FormStep01 = (props:any) => {
       initialValues: {
         name: currentForm?.name || '',
         email: currentForm?.email || '',
+        address: customer?.address || '',
         phone: currentForm?.phone ? (currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`) : '+569',
       },
       validationSchema: validationSchema,
@@ -128,8 +136,7 @@ export const FormStep01 = (props:any) => {
       // },
       onSubmit: (values) => {
         // trackEvent('ingreso_datos_cliente', 'COTIZADOR_EMA', 'envio formulario cliente simulador');
-        
-        
+        const addressFromStore = customer?.address ?? values?.address ?? "";
         Promise.all([
           dispatch(
             setCustomer({
@@ -137,9 +144,16 @@ export const FormStep01 = (props:any) => {
               existCustomer: Boolean(existCustomer),
               name: values?.name,
               comune: "",
-              address: "",
+              address: addressFromStore || "-",
               phone: values?.phone,
               typeOfResidence: "other",
+              city: customer?.city || "-",
+              state: customer?.state || "-",
+              zipCode: customer?.zipCode || "-",
+              lat: customer?.lat || "-",
+              long: customer?.long || "-",
+              zoomLevel: customer?.zoomLevel || "15",
+              referenceAddress: customer?.referenceAddress || "-",
             })
           ),
           dispatch(
@@ -239,7 +253,7 @@ export const FormStep01 = (props:any) => {
           bgcolor="#ffffff" 
           pt={4} 
           pb={4} 
-          width={{ xs: "100%", md: "50%" }}
+          width={{ xs: "100%", md: "80%" }}
           mt={4}
           mx="auto"
           sx={{
@@ -267,7 +281,7 @@ export const FormStep01 = (props:any) => {
                   display: 'flex', 
                   justifyContent: 'center', 
                   alignItems: 'flex-start',
-                  width: { xs: '100%', md: '50%' },
+                  width: { xs: '100%', md: '70%' },
                   
                 }}>
                     <VerticalForm sx={{ width: '100%' }}>
@@ -277,7 +291,10 @@ export const FormStep01 = (props:any) => {
                         id="name"
                         name="name"
                         value={formik.values.name}
-                        onChange={formik.handleChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          formik.handleChange(e);
+                          dispatch(setDataForm({ key: 'name', value: e.target.value }));
+                        }}
                         onBlur={formik.handleBlur}
                         placeholder="Juanin Jan Jarri"
                         error={formik.touched.name && Boolean(formik.errors.name)}
@@ -298,6 +315,7 @@ export const FormStep01 = (props:any) => {
                         sx={{ width: '100%' }}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           formik.setFieldValue('email', e.target.value);
+                          dispatch(setDataForm({ key: 'email', value: e.target.value }));
                           dispatch(setCustomerData({
                             customerId: e.target.value
                           }))
@@ -308,19 +326,6 @@ export const FormStep01 = (props:any) => {
                           }))
                         }}
                       />
-                      {/* <CustomFormLabel>Teléfono</CustomFormLabel>
-                      <CustomTextField
-                        fullWidth
-                        id="phone"
-                        name="phone"
-                        value={formik.values.phone}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="+56 9 99 22 999"
-                        error={formik.touched.phone && Boolean(formik.errors.phone)}
-                        helperText={formik.touched.phone && formik.errors.phone}
-                        sx={{ width: '100%' }}
-                      /> */}
                         <CustomFormLabel>Teléfono</CustomFormLabel>
                       <PhoneInput
                         international
@@ -334,6 +339,7 @@ export const FormStep01 = (props:any) => {
                           const formattedValue = value || '+569';
                           formik.setFieldValue('phone', formattedValue);
                           formik.setFieldTouched('phone', true);
+                          dispatch(setDataForm({ key: 'phone', value: formattedValue }));
                           validatePhoneNumber(formattedValue);
                         }}
                         onBlur={() => {
@@ -356,6 +362,33 @@ export const FormStep01 = (props:any) => {
                           {String(formik.errors.phone)}
                         </Typography>
                       )}
+                      
+                       {/* Direccion */}
+                     <Box sx={{ width: { xs: '100%', md: '100%' } }}>
+                      <CustomFormLabel>Dirección</CustomFormLabel>
+                      <Box sx={{ marginTop: '22px' }}>
+                        <AddressInput
+                          onSelectAddress={(addressDetails) => {
+                            if (addressDetails) {
+                              formik.setFieldValue('address', addressDetails.StreetAddress);
+                              formik.setFieldTouched('address', true);
+                              dispatch(setCustomerData({
+                                address: addressDetails?.StreetAddress || "",
+                                city: addressDetails?.City || "",
+                                state: addressDetails?.State || "",
+                                zipCode: addressDetails?.ZipCode || "",
+                                lat: String(addressDetails?.Latitude || ""),
+                                long: String(addressDetails?.Longitude || ""),
+                                zoomLevel: "15"
+                              }))
+                            }
+                          }}
+                          error={formik.touched.address && Boolean(formik.errors.address)}
+                          helperText={formik.touched.address && formik.errors.address ? String(formik.errors.address) : undefined}
+                        />
+                      </Box>
+                    </Box>
+                      
                     </VerticalForm>
                 </Box>
                 
@@ -365,7 +398,7 @@ export const FormStep01 = (props:any) => {
                   display: { xs: 'none', md: 'flex' }, 
                   justifyContent: 'center', 
                   alignItems: 'center',
-                  width: { xs: '0%', md: '50%' }
+                  width: { xs: '0%', md: '30%' }
                 }}>
                   <MiSVG />
                 </Box>

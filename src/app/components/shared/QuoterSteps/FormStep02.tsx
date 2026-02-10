@@ -38,6 +38,7 @@ import {
 // import { selectClientForms, , setDataForm, setStep } from "@/store/ClientForms/slice";
 import { setEstimate, selectEstimate 
 } from "@/store/Estimate/slice";
+import { selectCustomer } from "@/store/Customer/slice";
 
 
 
@@ -103,7 +104,8 @@ export const FormStep02 = (props:any) => {
     estimateData,
     status
   } = useAppSelector(selectEstimate);
-  
+  const { customer } = useAppSelector(selectCustomer);
+
   const dispatch = useAppDispatch();
  
   async function handlerNextStep(event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>){
@@ -205,47 +207,6 @@ useEffect(() => {
     // Preparar los datos para enviar
     const typeOfResidence:string = currentForm?.isHouse ? "Casa" : "Edificio"
     
-    // ...estimateData,
-    // const paymentData = {                    
-    //   estimateId_22: `${estimateData?.estimateId_22}`,
-    //   estimateId_35: `${estimateData?.estimateId_35}`,
-    //   estimateId_7: `${estimateData?.estimateId_7}`,
-      
-    //   materiales_22: `${estimateData?.materiales_22}`,
-    //   materiales_35: `${estimateData?.materiales_35}`,
-    //   materiales_7: `${estimateData?.materiales_7}`,
-      
-    //   instalacion_22: `${estimateData?.instalacion_22}`,
-    //   instalacion_35: `${estimateData?.instalacion_35}`,
-    //   instalacion_7: `${estimateData?.instalacion_7}`,
-      
-    //   SEC_22: `${estimateData?.SEC_22}`,
-    //   SEC_35: `${estimateData?.SEC_35}`,
-    //   SEC_7: `${estimateData?.SEC_7}`,
-      
-    //   cargador_22: `${estimateData?.cargador_22}`,
-    //   cargador_35: `${estimateData?.cargador_35}`,
-    //   cargador_7: `${estimateData?.cargador_7}`,
-      
-    //   neto_22: `${estimateData?.neto_22}`,
-    //   neto_35: `${estimateData?.neto_35}`,
-    //   neto_7: `${estimateData?.neto_7}`,
-      
-    //   iva_22: `${estimateData?.iva_22}`,
-    //   iva_35: `${estimateData?.iva_35}`,
-    //   iva_7: `${estimateData?.iva_7}`,
-      
-    //   bruto_22: `${estimateData?.bruto_22}`,
-    //   bruto_35: `${estimateData?.bruto_35}`,
-    //   bruto_7: `${estimateData?.bruto_7}`,
-      
-    //   isWallbox:currentForm?.isWallbox,
-    //   mts: `${currentForm?.distance} mts`,
-    //   typeOfResidence: typeOfResidence,
-    //   email: currentForm?.email,
-    //   name: currentForm?.name,
-    // };
-    
     const paymentData = {                    
       estimateId_22: `${estimateData?.estimateId_22}`,
       estimateId_35: `${estimateData?.estimateId_35}`,
@@ -282,7 +243,8 @@ useEffect(() => {
       mts: `${currentForm?.distance} mts`,
       typeOfResidence: typeOfResidence,
       email: currentForm?.email,
-      name: currentForm?.name,
+      clientName: currentForm?.name,
+      address: `${customer?.address}, ${customer?.city}, ${customer?.state}`,
     };
     
     console.log("---paymentData---", paymentData)
@@ -297,7 +259,7 @@ useEffect(() => {
 
   return () => clearTimeout(timeoutId);
   
-}, [isSaved, status, estimateData, currentForm?.isWallbox, currentForm?.isHouse, currentForm?.distance, currentForm?.email, currentForm?.name, router]);
+}, [isSaved, status, estimateData, currentForm?.isWallbox, currentForm?.isHouse, currentForm?.distance, currentForm?.email, currentForm?.name, customer?.address, customer?.city, customer?.state, router]);
 
 
   return (  

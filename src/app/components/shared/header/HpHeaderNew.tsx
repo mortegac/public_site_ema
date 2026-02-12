@@ -13,7 +13,8 @@ import Logo from "@/app/components/shared/logo/Logo";
 import NavigationsNew from "./NavigationsNew";
 // import Navigations from "./Navigations";
 import MobileSidebar from "./MobileSidebar";
-import { IconMenu2 } from "@tabler/icons-react";
+import { IconMenu2, IconShoppingCart } from "@tabler/icons-react";
+import Link from "next/link";
 
 const HpHeaderNew = (props: any) => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
@@ -81,13 +82,23 @@ const HpHeaderNew = (props: any) => {
               <Stack spacing={1} direction="row" alignItems="center">
                 <NavigationsNew />
               </Stack>
-              <Button
-                color="primary"
-                variant="contained"
-                href="/contacto"
-              >
-                Contacto
-              </Button>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Button
+                  color="primary"
+                  variant="contained"
+                  href="/contacto"
+                >
+                  Contacto
+                </Button>
+                <IconButton
+                  component={Link}
+                  href="/cargadores-vehiculos-electricos-sin-instalacion?step=3"
+                  color="inherit"
+                  aria-label="Ir al carrito"
+                >
+                  <IconShoppingCart size={22} />
+                </IconButton>
+              </Stack>
               
               {/* <Button
                 color="primary"

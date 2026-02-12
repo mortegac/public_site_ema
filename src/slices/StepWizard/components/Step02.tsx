@@ -644,23 +644,23 @@ export const Step02 = (props:any) => {
                           
                           return (
                             <>
-                              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                                 <Typography variant="body2" color="text.secondary">
                                   Subtotal:
                                 </Typography>
                                 <Typography variant="body2">
                                   {formatCurrency(subtotal)}
                                 </Typography>
-                              </Box>
-                              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              </Box> */}
+                              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                                 <Typography variant="body2" color="text.secondary">
                                   IVA:
                                 </Typography>
                                 <Typography variant="body2">
                                   {formatCurrency(totalVat)}
                                 </Typography>
-                              </Box>
-                              <Divider sx={{ my: 1 }} />
+                              </Box> */}
+                              {/* <Divider sx={{ my: 1 }} /> */}
                               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                                   Total:

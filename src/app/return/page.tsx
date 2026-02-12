@@ -103,8 +103,6 @@ const ReturnPage = () => {
                       throw new Error('Error en getWPCommit');
                   }
                   
-                  /* TODO: @francisco deve devolver el status
-                  */
                   if (commitResponse?.status !== "AUTHORIZED" ) {
                       setResTransaction(prev => ({
                           ...prev,
@@ -114,7 +112,11 @@ const ReturnPage = () => {
                           apiError: true,
                           tbk_token: tbkToken
                       }));
-                      // throw new Error('Error en getWPCommit');
+                      
+                      /** TODO:  CONsultar información del carro para determinar 
+                       * a que pagina de AUTORIZADO O RECHAZADO 
+                       * se debe enviar */
+                      
                   }
     
                   

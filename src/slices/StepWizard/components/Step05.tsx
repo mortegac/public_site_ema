@@ -1,6 +1,7 @@
 "use client";
 import { FC, useEffect } from "react";
 import Image from "next/image";
+import LoadingIcon from "@/app/components/shared/LoadingIcon";
 
 import {
   Box,
@@ -14,23 +15,28 @@ import {
   Chip,
 } from "@mui/material";
 
+const IVA:number = 0.19;
+
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { selectShoppingCart, removeProduct, getShoppingCart } from "@/store/ShoppingCart/slice";
+import { selectShoppingCart, removeProductToCart, getShoppingCart } from "@/store/ShoppingCart/slice";
+import { selectWebpay} from "@/store/Webpay/slice";
 import { formatCurrency } from "@/utils/currency";
 
 export const Step05: FC<any> = () => {
   const dispatch = useAppDispatch();
   const { shoppingCart, loading } = useAppSelector(selectShoppingCart);
-
+  const { webpay, status } = useAppSelector(selectWebpay);
+  
   // Obtener el carrito desde la API cuando el componente se monte
   useEffect(() => {
     if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== '') {
-      // dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
+      dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
     }
   }, []); // Solo se ejecuta al montar el componente
 
   const handleRemoveItem = (productId: string) => {
-    dispatch(removeProduct(productId));
+    dispatch(removeProductToCart({shoppingCartDetailId : productId}));
+    dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
   };
 
   const handleContinuePurchase = () => {
@@ -42,10 +48,17 @@ export const Step05: FC<any> = () => {
   const products = shoppingCart?.products || [];
   const subtotal = products.reduce((sum, product) => 
     sum + (product.amount * product.quantity), 0);
-  const totalVat = products.reduce((sum, product) => 
-    sum + (product.vatValue * product.quantity), 0);
-  const shipping = 12500; // Valor fijo según la imagen, ajustar según tu lógica
-  const total = subtotal + shipping;
+  // const totalVat = products.reduce((sum, product) => 
+  //   sum + (product.vatValue * product.quantity), 0);
+  const shipping = 0; // Valor fijo según la imagen, ajustar según tu lógica
+  const totalNeto = subtotal + shipping;
+  
+  
+  // 2. Calculamos el 19%
+  const totalVat = subtotal * IVA;  
+  const totalAPagar = totalNeto * (1 + IVA / 100);
+  // const totalAPagar = 0
+  
   const itemCount = products.reduce((sum, product) => sum + product.quantity, 0);
 
   if (loading) {
@@ -264,12 +277,10 @@ export const Step05: FC<any> = () => {
           {/* Columna Derecha - Resumen de Compra */}
           <Box sx={{ width: '100%', maxWidth: '100%' }}>
           <form className="form flex flex-wrap w-full"
-            action={ "https://webpay3gint.transbank.cl/webpayserver/initTransaction"}
-            // action={ "https://webpay3g.transbank.cl:443/webpayserver/initTransaction"}
+            action={webpay?.url || ""}
             method="POST"
         >
-          
-          <input id="token_ws" type="hidden" name="token_ws" value={"1231b38d1a9e11a2def3b7dc7d99d1370038ab46b80e9310260a2a4de989e168"} />
+          <input id="token_ws" type="hidden" name="token_ws" value={webpay?.token || ""} />
         
         
         
@@ -308,32 +319,12 @@ export const Step05: FC<any> = () => {
                   }}
                 >
                   <Typography variant="body2" sx={{ color: "#666666" }}>
-                    Subtotal ({itemCount} {itemCount === 1 ? 'producto' : 'productos'})
+                    Neto ({itemCount} {itemCount === 1 ? 'producto' : 'productos'})
                   </Typography>
                   <Typography variant="body2" sx={{ color: "#333333" }}>
                     {formatCurrency(subtotal)}
                   </Typography>
                 </Box>
-
-                {/* IVA */}
-                {totalVat > 0 && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      mb: 2,
-                    }}
-                  >
-                    <Typography variant="body2" sx={{ color: "#666666" }}>
-                      IVA
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: "#333333" }}>
-                      {formatCurrency(totalVat)}
-                    </Typography>
-                  </Box>
-                )}
-
-                {/* Envíos */}
                 <Box
                   sx={{
                     display: "flex",
@@ -345,18 +336,43 @@ export const Step05: FC<any> = () => {
                     Envíos
                   </Typography>
                   <Typography variant="body2" sx={{ color: "#333333" }}>
-                    {formatCurrency(shipping)}
+                    {formatCurrency(0)}
                   </Typography>
                 </Box>
 
+
+
+            {/* IVA */}
+                {totalVat > 0 && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 2,
+                      borderTop: "1px solid #EAEFF4",
+                      mt: 4,
+                      pt: 2,
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ color: "#666666" }}>
+                      IVA (19%)
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "#333333" }}>
+                      {formatCurrency(totalVat)}
+                      
+                    </Typography>
+                  </Box>
+                )}
+                
+                
                 {/* Total */}
                 <Box
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
                     mb: 3,
-                    pt: 2,
-                    borderTop: "1px solid #EAEFF4",
+                    // pt: 2,
+                    // borderTop: "1px solid #EAEFF4",
                   }}
                 >
                   <Typography
@@ -377,7 +393,7 @@ export const Step05: FC<any> = () => {
                       color: "#333333",
                     }}
                   >
-                    {formatCurrency(total)}
+                    {formatCurrency(totalAPagar)}
                   </Typography>
                 </Box>
 
@@ -413,7 +429,7 @@ export const Step05: FC<any> = () => {
                 type='submit'
                 color="primary"
                 size="large"
-                // disabled={webpay?.token ? false : true} 
+                disabled={webpay?.token ? false : true}
                 endIcon={
                   <Box
                     component="span"
@@ -444,16 +460,14 @@ export const Step05: FC<any> = () => {
                   width: { xs: '100%', md: '100%' } // 100% en móviles, 170px en desktop
                 }}
               >
-                {/* { status === "loading" && <>
-                    <LoadingIcon icon="puff" color="#E81A68" style={{width:"40px", height:"40px"}}/>
+                { status === "loading" && <>
+                    <LoadingIcon icon="puff" color="#FFFFFF" style={{width:"40px", height:"40px"}}/>
                 </>
                 }
-                { status === "idle" && <> */}
-                <span>
-                Pagar compra
-                </span>
-                {/* </>
-                } */}
+                { status === "idle" && <>
+                <span>Pagar compra</span>
+                </>
+                }
               </Button>
 
 
@@ -482,6 +496,8 @@ export const Step05: FC<any> = () => {
         </Box>
         )}
       </Container>
+      
+      <pre>{JSON.stringify(shoppingCart, null,2 )}</pre>
     </Box>
   );
 };

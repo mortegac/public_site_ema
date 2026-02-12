@@ -11,6 +11,11 @@ export type CartProduct = {
   imageUrl?: string;
 };
 
+export type DeleteShoppingCartInput = {
+  // shoppingCartId: string;
+  shoppingCartDetailId: string;
+};
+
 export type CartCustomer = {
   customerId: string;
   Name: string;

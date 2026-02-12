@@ -1,17 +1,45 @@
-import { generateClient, SelectionSet } from "aws-amplify/api";
-// Importa el tipo completo de ClientSchema para acceder a los modelos
-import { MainTypes } from "../../../amplify/data/main.schema"; // <--- CAMBIO AQUÍ
-
-// import * as MAIN from "../../../amplify/data/main.schema";
+import { generateClient } from "aws-amplify/api";
+import { GraphQLResult } from "@aws-amplify/api";
+import { MainTypes } from "../../../amplify/data/main.schema";
 import { shoppingCartInput, createShoppingCartInput, createShoppingCartDetailInput, updateShoppingCartInput, CartProduct, CartCustomer } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
-// import { Customer } from '../../utils/queries/Customer/index';
 
-// Configurar Amplify con la configuración del entorno correspondiente
 configureAmplify();
 
-// const client = generateClient<MAIN.MainTypes>();
-const client = generateClient<MainTypes>(); // <--- USA MainTypes AQUÍ
+const client = generateClient<MainTypes>();
+
+/** Respuesta de la query getShoppingCart con detalles y customer anidados */
+interface GetShoppingCartGraphQLResponse {
+  getShoppingCart: {
+    shoppingCartId: string;
+    customerId?: string | null;
+    paymentMethod?: string | null;
+    total?: number | null;
+    vat?: number | null;
+    status?: string | null;
+    estimateId?: string | null;
+    paymentTransactionId?: string | null;
+    createdAt?: string | null;
+    updatedAt?: string | null;
+    ShoppingCartDetails?: {
+      items: Array<{
+        shoppingCartDetailId: string;
+        price?: number | null;
+        glosa?: string | null;
+        priceId?: string | null;
+      }>;
+    } | null;
+    Customer?: {
+      customerId: string;
+      name?: string | null;
+      phone?: string | null;
+      address?: string | null;
+      city?: string | null;
+      state?: string | null;
+      referenceAddress?: string | null;
+    } | null;
+  } | null;
+}
 
 
 
@@ -25,13 +53,57 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
         console.log("--fecthShoppingCart--", input)
     
         if (shoppingCartId) {
-            
-            const { data: getShoppingCart, errors } = await client.models.ShoppingCart.get({ 
-                shoppingCartId: shoppingCartId
-            });
-            
-            const dataCustomer = await getShoppingCart?.Customer();
-            const dataShoppingCartDetails = await getShoppingCart?.ShoppingCartDetails();
+            const response = await client.graphql<GetShoppingCartGraphQLResponse>({
+              query: `
+                query GETShoppingCartDetail($shoppingCartId: ID!) {
+                  getShoppingCart(shoppingCartId: $shoppingCartId) {
+                    shoppingCartId
+                    customerId
+                    paymentMethod
+                    total
+                    vat
+                    status
+                    estimateId
+                    paymentTransactionId
+                    createdAt
+                    updatedAt
+                    ShoppingCartDetails {
+                      items {
+                        shoppingCartDetailId
+                        price
+                        glosa
+                        priceId
+                      }
+                    }
+                    Customer {
+                      customerId
+                      name
+                      phone
+                      address
+                      city
+                      state
+                      referenceAddress
+                    }
+                  }
+                }
+              `,
+              variables: { shoppingCartId },
+            }) as GraphQLResult<GetShoppingCartGraphQLResponse>;
+
+            const { data, errors } = response;
+
+            if (errors?.length) {
+              console.log("--getShoppingCart--errors", errors);
+              reject({
+                errorMessage: errors.map((e: { message?: string }) => e?.message ?? String(e)).join(", "),
+              });
+              return;
+            }
+
+            const getShoppingCart = data?.getShoppingCart ?? null;
+            const dataCustomer = getShoppingCart?.Customer ? { data: getShoppingCart.Customer } : undefined;
+            const detailsItems = getShoppingCart?.ShoppingCartDetails?.items ?? [];
+            const dataShoppingCartDetails = { data: detailsItems };
 
             if (getShoppingCart) {
                 // Transformar ShoppingCartDetails a products
@@ -125,14 +197,6 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                 resolve(response);
                 return;
             }
-            
-            if (errors) {
-              console.log("--getShoppingCart--errors", errors)
-              reject({
-                errorMessage: errors.map(e => e.message).join(', ')
-              });
-              return;
-            }
         }
 
       } catch (err) {
@@ -165,7 +229,7 @@ export const createShoppingCartDetail = async (input: createShoppingCartDetailIn
           glosa: glosa || null,
           price: price || 0,
           typeOfItem: typeOfItem || "product",
-          shoppingCartId: shoppingCartId,
+          shoppingCartId: shoppingCartId
         };
         
         // Solo incluir estos campos si tienen valores (no null/undefined)

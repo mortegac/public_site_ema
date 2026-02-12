@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
-import { emptyShoppingCart, shoppingCartInput, createShoppingCartInput, updateShoppingCartInput, ShoppingCart, CartProduct, CartCustomer } from './type';
+import { emptyShoppingCart, shoppingCartInput, createShoppingCartInput, updateShoppingCartInput, ShoppingCart, CartProduct, DeleteShoppingCartInput, CartCustomer } from './type';
 import { RootState } from "../store";
-import { fecthShoppingCart, createShoppingCart, updateShoppingCart } from './services';
+import { fecthShoppingCart, createShoppingCart, deleteShoppingCartDetail, updateShoppingCart } from './services';
+import { getWebpayStart } from '../Webpay/slice';
 
 interface ShoppingCartState {
   status: "idle" | "loading" | "failed";
@@ -20,9 +21,19 @@ const initialState: ShoppingCartState = {
 
 export const getShoppingCart = createAsyncThunk(
     "SHOPPINGCART/get ",
-    async (objFilter: shoppingCartInput) => {
+    async (objFilter: shoppingCartInput, { dispatch }) => {
       try {
         const response:any = await fecthShoppingCart({ ...objFilter });
+        if (response && response.shoppingCartId) {
+          Promise.all([
+            dispatch(getWebpayStart({ 
+              shoppingCartId: response.shoppingCartId,
+              glosa: response?.glosa || "Cargador Vehiculo Electrico", 
+             }))
+          ])
+          // await dispatch(getShoppingCart({ shoppingCartId: response.cartId }));
+        }
+        
         return response;
       } catch (error) {
         console.log(">>>>ERROR FETCH setShoppingCart", error)
@@ -39,6 +50,19 @@ export const addProduct = createAsyncThunk(
         return product;
       } catch (error) {
         console.log(">>>>ERROR ADD PRODUCT", error)
+        return Promise.reject(error);
+      }
+    }
+);
+
+export const removeProductToCart = createAsyncThunk(
+    "SHOPPINGCART/removeProductToCart",
+    async (objFilter: DeleteShoppingCartInput) => {
+      try {
+        const response: any = await deleteShoppingCartDetail(objFilter.shoppingCartDetailId);
+        return response;
+      } catch (error) {
+        console.log(">>>>ERROR REMOVE PRODUCT", error);
         return Promise.reject(error);
       }
     }
@@ -174,6 +198,26 @@ const shoppingCartSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Error al agregar el producto';
       })
+      
+      
+      // removeProductToCart
+      .addCase(removeProductToCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeProductToCart.fulfilled, (state, action) => {
+        if (state.shoppingCart.products) {
+          state.shoppingCart.products = state.shoppingCart.products.filter(
+            (p) => p.productId !== action.payload.productId
+          );
+        }
+      })
+      .addCase(removeProductToCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error al remover el producto';
+      })
+      
+      
       // setCustomerToCart
       .addCase(setCustomerToCart.pending, (state) => {
         state.loading = true;

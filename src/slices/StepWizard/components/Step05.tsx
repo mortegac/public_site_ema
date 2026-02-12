@@ -208,7 +208,7 @@ export const Step05: FC<any> = () => {
                             variant="outlined"
                             sx={{ height: '24px', fontSize: '0.75rem' }}
                           />
-                          <Chip 
+                          {/* <Chip 
                             label={`Neto: ${formatCurrency(product.netAmount)}`} 
                             size="small" 
                             variant="outlined"
@@ -219,9 +219,9 @@ export const Step05: FC<any> = () => {
                             size="small" 
                             variant="outlined"
                             sx={{ height: '24px', fontSize: '0.75rem' }}
-                          />
+                          /> */}
                         </Box>
-                        <Typography
+                        {/* <Typography
                           variant="body2"
                           sx={{
                             fontSize: "12px",
@@ -230,7 +230,7 @@ export const Step05: FC<any> = () => {
                           }}
                         >
                           ID: {product.productId}
-                        </Typography>
+                        </Typography> */}
                         <Link
                           component="button"
                           onClick={() => handleRemoveItem(product.shoppingCartDetailId ?? product.productId)}
@@ -494,7 +494,7 @@ export const Step05: FC<any> = () => {
         )}
       </Container>
       
-      <pre>{JSON.stringify(shoppingCart, null,2 )}</pre>
+      {/* <pre>{JSON.stringify(shoppingCart, null,2 )}</pre> */}
     </Box>
   );
 };

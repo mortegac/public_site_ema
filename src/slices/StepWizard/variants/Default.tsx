@@ -3,6 +3,7 @@ import { FC } from "react";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import type { StepIconProps } from '@mui/material/StepIcon';
 
 import {
   Box,
@@ -41,7 +42,37 @@ const typeOfForm: any = {
   ["5"]: Step05,
 };
 
-// const currentStep = 1;
+const STEP_COLOR_ACTIVE = '#E81A68';
+const STEP_COLOR_INACTIVE = '#b9b9b9';
+
+interface StepIconNumberProps extends StepIconProps {
+  isActiveStep?: boolean;
+}
+
+const StepIconNumber: FC<StepIconNumberProps> = ({ icon, isActiveStep }) => {
+  const color = isActiveStep ? STEP_COLOR_ACTIVE : STEP_COLOR_INACTIVE;
+  return (
+    <Box
+      component="span"
+      sx={{
+        width: 34,
+        height: 34,
+        borderRadius: '50%',
+        border: '2px solid',
+        borderColor: color,
+        color,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1rem',
+        fontWeight: 600,
+        cursor: 'pointer',
+      }}
+    >
+      {icon}
+    </Box>
+  );
+};
 
 export const Default: FC<StepWizardProps> = ({ slice }) => {
   const {primary} = slice;
@@ -70,7 +101,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
         >
           {/* <span>currentStep={currentStep}</span> */}
         <Stepper 
-          activeStep={currentStep}
+          activeStep={currentStep - 1}
           sx={{
             '& .MuiStepLabel-root': {
               display: 'flex',
@@ -79,6 +110,12 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
               '& .MuiStepLabel-labelContainer': {
                 marginTop: 1,
                 textAlign: 'center',
+                height: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
                 '& .MuiStepLabel-label': {
                   fontSize: '16px',
                   marginTop: '4px'
@@ -86,58 +123,38 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
               },
               '& .MuiStepLabel-iconContainer': {
                 padding: 0,
-                '& .MuiStepIcon-root': {
-                  width: 34,
-                  height: 34,
-                  fontSize: '1.5rem',
-                  cursor: 'pointer',
-                  // '&:hover': {
-                  //   color: Number(currentStep) === 3 ? 'inherit' : 'primary.main'
-                  // }
-                },
-                '& .MuiStepIcon-completed': {
-                  color: '#b9b9b9 !important'
-                }
               }
             }
           }}
         >
-          {primary?.steps?.map((label:any, index:number) => {
-            const stepProps: { completed?: boolean } = {};
+          {primary?.steps?.map((label: any, index: number) => {
+            const stepNumber = index + 1;
+            const stepProps: { completed?: boolean; icon?: number } = { icon: stepNumber };
+            const isActiveStep = Number(currentStep) === Number(label?.stepcomponent);
             const labelProps: {
               optional?: React.ReactNode;
               onClick?: () => void;
-            } = { onClick: () => handleStepClick(label?.stepcomponent, label) };
-            const isActiveStep = Number(currentStep) === Number(label?.number);
-            
-            console.log(`${Number(currentStep)} === ${Number(label?.number)  }`)
-            
+              StepIconComponent?: React.ComponentType<StepIconProps>;
+            } = {
+              onClick: () => handleStepClick(label?.stepcomponent, label),
+              StepIconComponent: (props: StepIconProps) => (
+                <StepIconNumber {...props} isActiveStep={isActiveStep} />
+              ),
+            };
+
             return (
               <Step key={label?.title?.text} {...stepProps}>
-                  
-                  {/* <pre>{JSON.stringify(label?.number, null, 2 )}</pre> */}
-                  
-                <StepLabel 
+                <StepLabel
                   {...labelProps}
                   className={label === "Resumen cotización" ? "no-hover" : ""}
                   sx={{
                     minHeight: '32px',
                     '& .MuiStepLabel-labelContainer': {
-                      display: { 
-                        xs: isActiveStep ? 'block' : 'none', // Solo mostrar el activo en móvil
-                        md: 'block' // Mostrar todos en desktop
-                      }
-                    },
-                    '& .MuiStepIcon-root': {
-                      color: isActiveStep ? '#E81A68' : '#b9b9b9'
-                    },
-                    '&.no-hover .MuiStepIcon-root:hover': {
-                      color: 'inherit'
+                      visibility: isActiveStep ? 'visible' : 'hidden',
                     }
                   }}
                 >
-                  {/* {label?.title?.text} */}
-                  { isActiveStep && <Text textObject={label?.title} fontSize="16px"/>  }
+                  <Text textObject={label?.title} fontSize="16px"/>
                 </StepLabel>
               </Step>
             );

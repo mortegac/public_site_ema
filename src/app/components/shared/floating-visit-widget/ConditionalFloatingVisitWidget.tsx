@@ -17,7 +17,7 @@ const ConditionalFloatingVisitWidget = () => {
     // No mostrar el widget si:
     // 1. Está en /agenda o /cotizador
     // 2. Fue cerrado previamente en esta sesión
-    if (pathname === '/agenda' || pathname === '/cotizador' || wasClosed) {
+    if (pathname === '/agenda' || pathname === '/cotizador' ||  pathname === '/cargadores-vehiculos-electricos-sin-instalacion' || wasClosed) {
       setShouldShow(false);
     } else {
       setShouldShow(true);

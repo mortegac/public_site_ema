@@ -1,7 +1,7 @@
 "use client";
 
 // components/OrderConfirmation.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/es"; // Importa el idioma español
 import timezone from "dayjs/plugin/timezone";
@@ -131,10 +131,18 @@ export default function FormResumeVirtual() {
   //   fetchData();
   // }, [calendarVisits?.calendarId]);
 
+  const hasReadData = useRef(false);
+  
   useEffect(() => {
+    if (hasReadData.current) {
+      console.log("⏭️ Skipping duplicate read (React Strict Mode - already processed)");
+      return;
+    }
+    
     // Recuperar datos de sessionStorage si existen
     const storedData = sessionStorage.getItem('paymentData');
     if (storedData) {
+      hasReadData.current = true; // Set flag BEFORE processing
       const data = JSON.parse(storedData);
       setPaymentData({
         email: data.email || "",
@@ -147,6 +155,7 @@ export default function FormResumeVirtual() {
       // Limpiar sessionStorage después de leer
       sessionStorage.removeItem('paymentData');
     }else{
+      hasReadData.current = true; // Also set flag if no data found
       setPaymentData({
         ...paymentData,
         hasData: false

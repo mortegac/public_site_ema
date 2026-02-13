@@ -189,11 +189,11 @@ export const FormStep01 = (props:any) => {
           // Preparar los datos para enviar
           // const dateSchedule:string = calendarVisit?.startDate || ""
           const paymentData = {                    
-              email: customer?.customerId,
-              date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM"),
-              hour: toChileTime({ date: selectedCalendar?.startDate }),
+              email: customer?.customerId || "",
+              date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM") || "",
+              hour: toChileTime({ date: selectedCalendar?.startDate }) || "",
               address: `${customer?.address}, ${customer?.city}` || "",
-              phone: customer?.phone,
+              phone: customer?.phone || "",
           };
           
           console.log("---calendarVisit---", calendarVisit)

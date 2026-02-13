@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   Box,
   Container,
@@ -48,10 +48,18 @@ const Invoice = () => {
     hasData:false,
   });
   
+  const hasReadData = useRef(false);
+  
   useEffect(() => {
+    if (hasReadData.current) {
+      console.log("⏭️ Skipping duplicate read (React Strict Mode - already processed)");
+      return;
+    }
+    
     // Recuperar datos de sessionStorage si existen
     const storedData = sessionStorage.getItem('paymentData');
     if (storedData) {
+      hasReadData.current = true; // Set flag BEFORE processing
       const data = JSON.parse(storedData);
       setPaymentData({
         glosa: data.glosa || "",
@@ -66,6 +74,7 @@ const Invoice = () => {
       // Limpiar sessionStorage después de leer
       sessionStorage.removeItem('paymentData');
     }else{
+      hasReadData.current = true; // Also set flag if no data found
       setPaymentData({
         ...paymentData,
         hasData: false

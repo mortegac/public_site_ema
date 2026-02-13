@@ -418,15 +418,15 @@ const ReturnPage = () => {
             // Preparar los datos para enviar
             
             const paymentData = {                    
-                glosa: resTransaction?.glosa,
+                glosa: resTransaction?.glosa || "",
                 
-                total: resTransaction?.total,
+                total: resTransaction?.total || "",
                 shoppingCartId: resTransaction?.shoppingCartId || null,
                 // Agregar estos si son necesarios para recibo-pago
-                order: resTransaction?.order,
-                card: resTransaction?.card,
-                typePay: resTransaction?.typePay,
-                email: resTransaction?.to_email,
+                order: resTransaction?.order || "",
+                card: resTransaction?.card || "",
+                typePay: resTransaction?.typePay || "",
+                email: resTransaction?.to_email || "",
             };
             // const paymentData = {                    
             //     glosa: paymentTransaction?.glosa,

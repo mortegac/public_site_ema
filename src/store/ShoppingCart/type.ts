@@ -9,6 +9,8 @@ export type CartProduct = {
   vatValue: number;
   quantity: number;
   imageUrl?: string;
+  priceId?: string | null;
+  shoppingCartDetailId?: string;
 };
 
 export type DeleteShoppingCartInput = {
@@ -58,10 +60,13 @@ export type shoppingCartInput = {
   shoppingCartId?: string | null,
 };
 
+export type TypeOfCart = "product" | "service" | "input" | "visit" | "virtualVisit";
+
 export type createShoppingCartInput = {
   shoppingCartId?: string | null,
   total?: number | null,
   vat?: number | null,
+  typeOfCart?: TypeOfCart | null,
   paymentMethod?: "transbank" | "bank_transfer" | "cash" | "on_site" | null,
   status?: "pending" | "completed" | "cancelled" | "timed_out" | null,
   customerId?: string | null,
@@ -74,6 +79,7 @@ export type createShoppingCartDetailInput = {
   price?: number | null,
   typeOfItem?: "product" | "service" | "input" | null,
   shoppingCartId: string,
+  productId?: string | null,
   priceId?: string | null,
   estimateDetailId?: string | null,
   calendarId?: string | null,
@@ -83,6 +89,7 @@ export type updateShoppingCartInput = {
   shoppingCartId: string,
   total?: number | null,
   vat?: number | null,
+  typeOfCart?: TypeOfCart | null,
   paymentMethod?: "transbank" | "bank_transfer" | "cash" | "on_site" | null,
   status?: "pending" | "completed" | "cancelled" | "timed_out" | null,
   customerId?: string | null,

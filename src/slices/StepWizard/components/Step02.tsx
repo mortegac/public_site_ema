@@ -194,6 +194,7 @@ export const Step02 = (props:any) => {
           customerId: customerId,
           total: subtotal,
           vat: totalVat,
+          typeOfCart: "product",
           status: "pending",
           products: products,
         }));
@@ -203,6 +204,7 @@ export const Step02 = (props:any) => {
           customerId: customerId,
           total: subtotal,
           vat: totalVat,
+          typeOfCart: "product",
           status: "pending",
           products: products,
         }));
@@ -270,6 +272,7 @@ export const Step02 = (props:any) => {
               customerId: customerId,
               total: subtotal,
               vat: totalVat,
+              typeOfCart: "product",
               status: "pending",
               products: products,
             }))

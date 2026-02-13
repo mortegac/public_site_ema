@@ -21,10 +21,12 @@ import {
 import { formatCurrency } from "@/utils/currency";
 import * as prismic from "@prismicio/client";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addProduct, selectShoppingCart } from "@/store/ShoppingCart/slice";
+import { addProduct, selectShoppingCart, updateShoppingCartTotalsThunk } from "@/store/ShoppingCart/slice";
 import { CartProduct } from "@/store/ShoppingCart/type";
 import { setStep } from "@/store/Wizard/slice";
 import { createShoppingCartDetail } from "@/store/ShoppingCart/services";
+import { fetchProductWithPriceAndStock } from "@/utils/queries/Product/fetchProductWithPriceAndStock";
+import type { ProductWithPriceAndStock } from "@/utils/queries/Product/fetchProductWithPriceAndStock";
 
 
 const createPrismicClient = () => {
@@ -69,9 +71,21 @@ export const Step01: FC<any> = (props:any) => {
   const [primary, setPrimary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+  const [productBackend, setProductBackend] = useState<Record<string, ProductWithPriceAndStock>>({});
+
+  const getOptionPrice = (option: any) => {
+    const productId = option?.iddatabase;
+    const backendCost = productId ? productBackend[productId]?.cost : null;
+    return backendCost != null ? backendCost : Number(option?.pricetopvalue || 0);
+  };
+
+  const getOptionStock = (option: any) => {
+    const productId = option?.iddatabase;
+    return productId ? productBackend[productId]?.stock : null;
+  };
+
   const handleAddToCart = async (option: any) => {
-    const amount = Number(option?.pricetopvalue || 0);
+    const amount = getOptionPrice(option);
     // Calcular IVA (19% en Chile)
     const vatRate = 0.19;
     const netAmount = amount / (1 + vatRate);
@@ -80,14 +94,16 @@ export const Step01: FC<any> = (props:any) => {
     // Construir descripción del producto
     const description = `${option?.brand || ""} ${option?.capacity || ""}`.trim();
     
+    const productId = option?.iddatabase || "";
     const product: CartProduct = {
-      productId: option?.iddatabase || "",
+      productId,
       description: description,
       netAmount: Math.round(netAmount * 100) / 100, // Redondear a 2 decimales
       amount: amount,
       vatValue: Math.round(vatValue * 100) / 100, // Redondear a 2 decimales
       quantity: 1,
       imageUrl: option?.image?.url || "",
+      priceId: productBackend[productId]?.priceId ?? undefined,
     };
     
     console.log("--Agregando producto al carrito--", product);
@@ -98,8 +114,10 @@ export const Step01: FC<any> = (props:any) => {
         await createShoppingCartDetail({
           shoppingCartId: shoppingCart.shoppingCartId,
           glosa: product.description,
-          price: Math.round(product.amount * 100), // Convertir a centavos (integer)
+          price: Math.round(product.amount), // mismo formato que total (pesos)
           typeOfItem: "product",
+          productId: product.productId || undefined,
+          priceId: product.priceId || undefined,
         });
         console.log("--Producto agregado al carrito existente--");
       } catch (error) {
@@ -109,9 +127,35 @@ export const Step01: FC<any> = (props:any) => {
     
     // Agregar el producto al store local
     dispatch(addProduct(product));
-    
+
+    // Recalculate totals and update DB (and Redux/persist via thunk)
+    const existing = shoppingCart?.products ?? [];
+    const existingIdx = existing.findIndex((p) => p.productId === product.productId);
+    const newProducts: CartProduct[] =
+      existingIdx >= 0
+        ? existing.map((p, i) =>
+            i === existingIdx ? { ...p, quantity: p.quantity + product.quantity } : p
+          )
+        : [...existing, product];
+    const subtotal = newProducts.reduce((s, p) => s + p.amount * p.quantity, 0);
+    const totalVat = Math.round(
+      newProducts.reduce(
+        (s, p) => s + (p.vatValue ?? p.amount - p.amount / 1.19) * p.quantity,
+        0
+      )
+    );
+    if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== "") {
+      dispatch(
+        updateShoppingCartTotalsThunk({
+          shoppingCartId: shoppingCart.shoppingCartId,
+          total: subtotal,
+          vat: totalVat,
+        })
+      );
+    }
+
     // Si existe customerId y no está vacío, ir al paso 5 (pago), sino al paso 2 (datos del cliente)
-    if (shoppingCart?.customerId && shoppingCart.customerId.trim() !== '') {
+    if (shoppingCart?.customerId && shoppingCart.customerId.trim() !== "") {
       dispatch(setStep(5));
     } else {
       dispatch(setStep(2));
@@ -171,7 +215,33 @@ export const Step01: FC<any> = (props:any) => {
 
     fetchContent();
   }, []);
-  
+
+  // Fetch price and stock from backend for each option that has iddatabase
+  useEffect(() => {
+    const options = primary?.options ?? [];
+    const productIds = options
+      .map((o: any) => o?.iddatabase)
+      .filter((id: string) => id && id.trim() !== "");
+    if (productIds.length === 0) return;
+
+    let cancelled = false;
+    const fetchBackend = async () => {
+      const entries = await Promise.all(
+        productIds.map(async (productId: string) => {
+          const data = await fetchProductWithPriceAndStock(productId);
+          return [productId, data] as const;
+        })
+      );
+      if (!cancelled) {
+        setProductBackend(Object.fromEntries(entries));
+      }
+    };
+    fetchBackend();
+    return () => {
+      cancelled = true;
+    };
+  }, [primary?.options]);
+
   if (isLoading) {
     return (
       <Box bgcolor="#ffffff" pt={4} pb={2}>
@@ -485,6 +555,7 @@ export const Step01: FC<any> = (props:any) => {
                               fontSize: '14px',
                             }}
                             onClick={() => handleAddToCart(option)}
+                            disabled={getOptionStock(option) === 0}
                           >
                             Comprar
                           </Button>
@@ -647,10 +718,23 @@ export const Step01: FC<any> = (props:any) => {
                               sm: "26px",
                             },
                           }}
-                        >{formatCurrency(Number(option?.pricetopvalue || 0))}
+                        >{formatCurrency(getOptionPrice(option))}
                         </Typography>
-                        
-                        
+                        {/* stock from backend */}
+                        {getOptionStock(option) != null && (
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: getOptionStock(option) === 0 ? "error.main" : "text.secondary",
+                              fontSize: "12px",
+                              mt: 0.5,
+                            }}
+                          >
+                            {getOptionStock(option) === 0
+                              ? "Sin stock"
+                              : `En stock (${getOptionStock(option)})`}
+                          </Typography>
+                        )}
                         {/* pricebottomtext */}
                         <Typography
                           id="pricebottomtext-options"
@@ -697,6 +781,7 @@ export const Step01: FC<any> = (props:any) => {
                               fontSize: '14px',
                             }}
                             onClick={() => handleAddToCart(option)}
+                            disabled={getOptionStock(option) === 0}
                           >
                             Comprar
                           </Button>

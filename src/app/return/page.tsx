@@ -112,68 +112,58 @@ const ReturnPage = () => {
                           apiError: true,
                           tbk_token: tbkToken
                       }));
-                      
-                      /** TODO:  CONsultar información del carro para determinar 
-                       * a que pagina de AUTORIZADO O RECHAZADO 
-                       * se debe enviar */
-                      
+
+                      const statusResponse: any = await fetchWebpayStatus({ token });
+                      console.log("---statusResponse-fetchWebpayStatus (rejected)--", statusResponse);
+                      if (!statusResponse || !statusResponse.status) {
+                          throw new Error('Error en getWPStatus o respuesta inválida');
+                      }
+                      setResTransaction((prev) => ({
+                          ...prev,
+                          token_ws: token,
+                          tbk_token: tbkToken,
+                          total: statusResponse?.amount,
+                          order: statusResponse?.buy_order,
+                          card: statusResponse?.card_number,
+                          typePay: statusResponse?.payment_type_code,
+                          to_email: statusResponse?.email,
+                          glosa: statusResponse?.glosa,
+                          shoppingCartId: statusResponse?.shoppingCartId,
+                          statusRedirect: "PAYMENT_REJECTED",
+                      }));
+                      return true;
                   }
-    
-                  
-                  
-                  
-                  const statusResponse:any = await fetchWebpayStatus({ token:token });
-                  console.log("---statusResponse-fetchWebpayStatus--", statusResponse)
+
+                  const statusResponse: any = await fetchWebpayStatus({ token: token });
+                  console.log("---statusResponse-fetchWebpayStatus--", statusResponse);
                   if (!statusResponse || !statusResponse.status) {
                       throw new Error('Error en getWPStatus o respuesta inválida');
                   }
-    
-                //   setResTransaction(({
-                //       ...resTransaction,
-                //       status: statusResponse?.status,
-                //       glosa: statusResponse?.glosa,
-                //       total: statusResponse?.amount,
-                //       order: statusResponse?.buy_order,
-                //       card: statusResponse?.card_number,
-                //       typePay: statusResponse?.payment_type_code,
-                //       to_email: statusResponse?.email,
-                //   }));
-                //   setResTransaction(prev => ({
-                //       ...prev,
-                //       status: statusResponse?.status,
-                //       glosa: statusResponse?.glosa,
-                //       total: statusResponse?.amount,
-                //       order: statusResponse?.buy_order,
-                //       card: statusResponse?.card_number,
-                //       typePay: statusResponse?.payment_type_code,
-                //       to_email: statusResponse?.email,
-                //   }));
-                  
-                  if (commitResponse?.status === "AUTHORIZED" ) {
-                      const objEmail = {
-                          "glosa": statusResponse?.glosa,
-                          "total": statusResponse?.amount,
-                          "order": statusResponse?.buy_order,
-                          "card": statusResponse?.card_number,
-                          "typePay": statusResponse?.payment_type_code,
-                          "to_email": statusResponse?.email,
-                      }
-      
-                      await sendEmail({ ...objEmail })
-                  }           
-                setResTransaction({ 
-                    ...resTransaction , 
-                    token_ws: token,
-                    tbk_token: tbkToken,
-                    total: statusResponse?.amount,
-                    order: statusResponse?.buy_order,
-                    card: statusResponse?.card_number,
-                    typePay: statusResponse?.payment_type_code,
-                    to_email: statusResponse?.email,
-                    glosa: statusResponse?.glosa,
-                    shoppingCartId: statusResponse?.shoppingCartId,
-                    statusRedirect: "PAYMENT_APPROVED"})
-                return true;
+
+                  const objEmail = {
+                      glosa: statusResponse?.glosa,
+                      total: statusResponse?.amount,
+                      order: statusResponse?.buy_order,
+                      card: statusResponse?.card_number,
+                      typePay: statusResponse?.payment_type_code,
+                      to_email: statusResponse?.email,
+                  };
+                  await sendEmail({ ...objEmail });
+
+                  setResTransaction((prev) => ({
+                      ...prev,
+                      token_ws: token,
+                      tbk_token: tbkToken,
+                      total: statusResponse?.amount,
+                      order: statusResponse?.buy_order,
+                      card: statusResponse?.card_number,
+                      typePay: statusResponse?.payment_type_code,
+                      to_email: statusResponse?.email,
+                      glosa: statusResponse?.glosa,
+                      shoppingCartId: statusResponse?.shoppingCartId,
+                      statusRedirect: "PAYMENT_APPROVED",
+                  }));
+                  return true;
               }
               
               // Flujo 2: Transacción Anulada por tiempo de espera |   tbkOrdenCompra y tbkIdSesion

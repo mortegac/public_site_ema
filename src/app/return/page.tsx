@@ -9,26 +9,12 @@ import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
 import { Box, Grid, Typography, Button, Paper } from '@mui/material';
-
-// import {SvgFailed} from "./components/SvgFailed";
-// import {SvgSuccess} from "./components/SvgSuccess";
-// import {SentEmail} from "./components/SentEmail";
-
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-// import { selectCustomer } from "@/store/Customer/slice";
-// import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
-// import { selectShoppingCart, getShoppingCart} from "@/store/ShoppingCart/slice";
 import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentTransaction/slice";
 import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
-
 import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
-  
-
 import Invoice from './components/Invoice';
 import RetryTransaction from './components/RetryTransaction';
-
-
-
 
 
 const ReturnPage = () => {

@@ -122,7 +122,7 @@ export const FormStep01 = (props:any) => {
       initialValues: {
         name: currentForm?.name || '',
         email: currentForm?.email || '',
-        address: customer?.address || '',
+        address: currentForm?.address || '',
         phone: currentForm?.phone ? (currentForm.phone.startsWith('+') ? currentForm.phone : `+56${currentForm.phone}`) : '+569',
       },
       validationSchema: validationSchema,
@@ -175,6 +175,12 @@ export const FormStep01 = (props:any) => {
             setDataForm({
               key: "phone",
               value: values?.phone,
+            })
+          ),
+          dispatch(
+            setDataForm({
+              key: "address",
+              value: values?.address,
             })
           ),
           dispatch(setStep(1)),

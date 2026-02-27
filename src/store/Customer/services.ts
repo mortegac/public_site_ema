@@ -8,19 +8,27 @@ configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
 
+/** Normalize email: lowercase and trim. Used as customerId. */
+export const normalizeCustomerEmail = (email: string | null | undefined): string =>
+  (email ?? '').trim().toLowerCase();
+
 export const getCustomerService = async (input: customerInput): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { customerId } = input;
-      
+      const customerId = normalizeCustomerEmail(input.customerId);
+
       if (!customerId) {
         resolve(null);
         return;
       }
-      
-      const { data: customer, errors } = await client.models.Customer.get({ 
-        customerId: customerId
-    });
+
+      const { data: customer, errors } = await client.models.Customer.get({
+        customerId,
+      }, {
+        selectionSet: [
+          "customerId",
+        ]
+      });
     
       console.log("--getCustomer--", customer)
   
@@ -32,7 +40,7 @@ export const getCustomerService = async (input: customerInput): Promise<any> => 
         return;
       }
       console.log("--getCustomer--resolve", customer)
-      resolve(customer);
+      resolve({ customerId: customer?.customerId ?? null });
         
     } catch (err) {
       console.log("--getCustomer--err", err)
@@ -46,8 +54,14 @@ export const getCustomerService = async (input: customerInput): Promise<any> => 
 export const createCustomer = async (input: customerInput): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     try {
+      const customerId = normalizeCustomerEmail(input.customerId);
+
+      if (!customerId) {
+        reject({ errorMessage: 'Email is required' });
+        return;
+      }
+
       const {
-        customerId,
         name,
         typeOfResidence,
         referenceAddress,
@@ -55,15 +69,10 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         phone,
       } = input;
 
-      if (!customerId || String(customerId).trim() === '') {
-        reject({ errorMessage: 'Email is required' });
-        return;
-      }
-
       console.log("--createCustomer--", input);
 
       const formData: any = {
-        customerId: customerId.trim(),
+        customerId,
         name: name || '-',
         typeOfResidence: typeOfResidence || '-',
         referenceAddress: referenceAddress || '-',

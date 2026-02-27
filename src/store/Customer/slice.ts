@@ -87,14 +87,17 @@ const customerSlice = createSlice({
       .addCase(getCustomer.fulfilled, (state, action) => {
         state.loading = false;
         state.existCustomer = Boolean(action.payload?.customerId && action.payload.customerId.trim() !== '');
-        if (action.payload) {
-          state.customer = { ...state.customer, ...action.payload };
+        if (action.payload?.customerId) {
+          state.customer.customerId = action.payload.customerId;
+        } else {
+          state.customer.customerId = '';
         }
       })
       .addCase(getCustomer.rejected, (state, action) => {
         state.loading = false;
+        state.existCustomer = false;
         state.error = action.error.message || 'Error al actualizar el customer';
-        state.customer={...emptyCustomer}
+        state.customer.customerId = '';
       });
   },
 });

@@ -3,7 +3,13 @@ export type calendarVisitInput = {
     endDate?: string,
     userId?: string,
     customerId?: string,
-    calendarId?: string, 
+    calendarId?: string, // Keep for backward compatibility
+    installationDayId?: string,
+    startTime?: string, // ISO datetime string
+    duration?: number, // Duration in minutes
+    address?: string,
+    lat?: number,
+    long?: number,
 };  
 
 export type CalendarVisit = {
@@ -33,3 +39,28 @@ export const emptyCalendarVisit: CalendarVisit = {
   customerId: "",
   userId: "",
 };
+
+export interface InstallationDay {
+  installationDayId: string;
+  date: string;
+  day: string;
+  usedTime: number;
+  maxTime: number;
+  availableTime: number;
+  userId: string;
+  type?: string;
+  startLocationLatitude?: string;
+  startLocationLongitude?: string;
+  endLocationLatitude?: string;
+  endLocationLongitude?: string;
+  route?: string;
+  routeDistance?: number;
+  routeDuration?: number;
+  routeTravelTime?: number;
+  routeLegs?: string;
+}
+
+export interface FetchCalendarForDateResponse {
+  message: string;
+  installationDays: InstallationDay[];
+}

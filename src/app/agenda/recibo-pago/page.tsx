@@ -277,7 +277,7 @@ const Invoice = () => {
             
           </Paper>
         
-          <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
+          {/* <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
               sx={{
                 display: "flex",
                 justifyContent: "space-evenly",
@@ -332,7 +332,7 @@ const Invoice = () => {
             
             }
           
-          </Box>
+          </Box> */}
           
           <Box bgcolor="#f8fafc" width={"100%"} mt={10} 
             sx={{

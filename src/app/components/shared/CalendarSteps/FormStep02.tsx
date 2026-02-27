@@ -23,9 +23,11 @@ export default function FormStep02() {
   const dispatch = useAppDispatch();
   
   const { customer } = useAppSelector(selectCustomer);
-  const { calendarVisits, cartId } = useAppSelector(selectCalendarVisits);
+  const { selectedInstallationDayId, calendarVisits } = useAppSelector(selectCalendarVisits);
   const { shoppingCart, loading: cartLoading } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
+
+  const cartId = selectedInstallationDayId || (calendarVisits as any)?.installationDayId || calendarVisits?.calendarId;
   
   const PRODUCT_NAME = "Visita Técnica "
   // const PRODUCT_TIME = "09:00 Hrs"
@@ -50,17 +52,16 @@ export default function FormStep02() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Use installationDayId if available, otherwise fall back to calendarId for backward compatibility
       if (!cartId) return;
-
-      await dispatch(
-        getShoppingCart({
-          shoppingCartId: cartId,
-        })
-      );
+      
+      await dispatch(getShoppingCart({
+        shoppingCartId: cartId,
+      }));
     };
 
     fetchData();
-  }, [cartId, dispatch]);
+  }, [selectedInstallationDayId, calendarVisits, dispatch]);
 
   
   return (

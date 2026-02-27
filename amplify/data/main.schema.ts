@@ -23,20 +23,21 @@ export const MainSchema = a
         SupportTickets: a.hasMany("SupportTicket", "employeeId"),
         TicketComments: a.hasMany("TicketComment", "userId"),
         CalendarVisits: a.hasMany("CalendarVisit", "userId"),
+        InstallationDays: a.hasMany("InstallationDay", "userId"),
         companyId: a.id(),
         Company: a.belongsTo("Company", "companyId"),
       })
       .identifier(["userId"]),
 
-    TimeSlot: a.customType({
-      start: a.time(),
-      end: a.time(),
-    }),
-
     UserTimeSlot: a.model({
       userTimeSlotId: a.id().required(),
       day: a.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]), //1 - LUNES, 2 - MARTES ...
-      timeAvailable: a.ref("TimeSlot").array(), // {start: HH:mm:ss:sss, end: HH:mm:ss:ssss}[]
+      startTime: a.time(), // Start time for the day (HH:mm:ss format)
+      endTime: a.time(),   // End time for the day (HH:mm:ss format)
+      startLocationLatitude: a.string(),
+      startLocationLongitude: a.string(),
+      endLocationLatitude: a.string(),
+      endLocationLongitude: a.string(),
       userId: a.id().required(),
       User: a.belongsTo("User", "userId"),
     }).identifier(["userTimeSlotId"]),
@@ -126,16 +127,47 @@ export const MainSchema = a
       })
       .identifier(["ticketCommentId"]),
 
+    InstallationDay: a.model({
+      installationDayId: a.id().required(),
+      type: a.string().default("normal"),
+      day: a.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]),
+      date: a.datetime(),
+      usedTime: a.integer(),
+      maxTime: a.integer(),
+      availableTime: a.integer(),
+      userId: a.id(),
+      startLocationLatitude: a.string(),
+      startLocationLongitude: a.string(),
+      endLocationLatitude: a.string(),
+      endLocationLongitude: a.string(),
+      route: a.string().default(""),
+      routeDistance: a.float().default(0),
+      routeDuration: a.integer().default(0),
+      routeTravelTime: a.integer().default(0),
+      routeLegs: a.string().default(""),
+      User: a.belongsTo("User", "userId"),
+      CalendarVisits: a.hasMany("CalendarVisit", "installationDayId"),
+    }).identifier(["installationDayId"])
+      .secondaryIndexes(index => [
+        index("type").sortKeys(['date']).queryField("InstallationDaysByTypeAndDate"),
+      ]),
+
     CalendarVisit: a.model({
       calendarId: a.id().required(),
       googleEventId: a.id(),
+      googleEventIdUser: a.id(),
+      googleEventIdCustomer: a.id(),
       summary: a.string(),
       location: a.string(),
+      latitude: a.float(),
+      longitude: a.float(),
       description: a.string(),
       startDate: a.datetime(),
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
+      routeOrder: a.integer(),
+      routeDirections: a.string(),
       // Explicitly define the timestamp fields you want to index
       createdAt: a.datetime(),
       updatedAt: a.datetime(),
@@ -150,6 +182,8 @@ export const MainSchema = a
         "timedOut", //expiro
         "waiting", //la transaccion inicio pero no ha terminado; espera a q la transaccion termine asi no es limpiada automaticamente 15m
       ]),
+      installationDayId: a.id(),
+      InstallationDay: a.belongsTo("InstallationDay", "installationDayId"),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
       userId: a.id(),
@@ -160,6 +194,7 @@ export const MainSchema = a
       .secondaryIndexes(index => [
         index('state').sortKeys(['startDate']).queryField("CalendarVisitsByState"),
         index("state").sortKeys(['updatedAt']).queryField("CalendarVisitsByStateAndUpdatedAt"),
+        index("installationDayId").sortKeys(['startDate']).queryField("CalendarVisitsByInstallationDayId"),
       ]),
 
     Customer: a.model({

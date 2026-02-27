@@ -32,8 +32,8 @@ import FormResumeVirtual from "./FormStep04";
 
 
 const typeOfForm: any = {
-  ["0"]: Calendar,
-  ["1"]: FormStep01,
+  ["0"]: FormStep01,
+  ["1"]: Calendar,
   ["2"]: FormStep02,
   ["3"]: FormResumeVirtual, // Resumen agenda virtual
 };

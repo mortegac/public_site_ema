@@ -20,8 +20,8 @@ import { selectCalendarVisits, setStep } from "@/store/CalendarVisits/slice";
 import { useAnalytics } from '@/hooks/useAnalytics';
 
 const steps = [
-  "Selección de la fecha", 
   "Información de contacto", 
+  "Selección de la fecha", 
   "Paga tu reserva"
 ];
 
@@ -107,7 +107,7 @@ export default function HorizontalLinearStepper() {
                 className={label === "Resumen cotización" ? "no-hover" : ""}
                 sx={{
                   '& .MuiStepIcon-root': {
-                    color: Number(currentStep) === Number(index+1) ? '#E81A68' : '#b9b9b9'
+                    color: Number(currentStep) === Number(index) ? '#E81A68' : '#b9b9b9'
                   },
                   '&.no-hover .MuiStepIcon-root:hover': {
                     color: 'inherit'

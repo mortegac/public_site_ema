@@ -149,12 +149,10 @@ export const FormStep01 = (props:any) => {
     validationSchema: validationSchema,
     enableReinitialize: true, 
 
-    onSubmit: async (values:any) => {
-
-
-      
-      
-      // setLoadingPage(true)
+    onSubmit: async (values: any) => {
+      if (!values?.email?.trim()) {
+        return;
+      }
       if (submitButton === 'schedule') {
         // alert("schedule")
         trackEvent('ingreso_datos_cliente', 'AGENDA_EMA', 'envio formulario visita virtual');
@@ -169,14 +167,8 @@ export const FormStep01 = (props:any) => {
               existCustomer: Boolean(existCustomer)
             })
           ),
-          customer?.customerId && 
-          selectedCalendar?.calendarId && 
-            await dispatch(setCalendarVisits({
-              customerId: customer?.customerId,
-              calendarId: selectedCalendar?.calendarId,
-            })),
           
-          dispatch(setStep(2)), // Ir al paso de pago
+          dispatch(setStep(1)), // Ir al calendario
         ]);
       
       } else if (submitButton === 'scheduleNotPay') {
@@ -214,12 +206,13 @@ export const FormStep01 = (props:any) => {
             setCustomer({
               ...customer,
               customerId: values?.email,
+              existCustomer: Boolean(existCustomer),
             })
           ),
-          customer?.customerId && 
-          selectedCalendar?.calendarId && 
+          values?.email &&
+          selectedCalendar?.calendarId &&
           await dispatch(setCalendarNotPay({
-              customerId: customer?.customerId,
+              customerId: values.email,
               calendarId: selectedCalendar?.calendarId,
           })),
           clearTimeout(timeoutId)
@@ -734,7 +727,10 @@ export const FormStep01 = (props:any) => {
             width: { xs: '100%', md: 'auto' },
           }}
           disabled={status === "loading"}
-          onClick={() => dispatch(setStep(0))}
+          onClick={() => {
+            // No back button on first step
+          }}
+          sx={{ display: 'none' }}
         >
           Volver
         </Button>

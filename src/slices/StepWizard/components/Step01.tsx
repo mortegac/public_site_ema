@@ -21,10 +21,12 @@ import {
 import { formatCurrency } from "@/utils/currency";
 import * as prismic from "@prismicio/client";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addProduct, selectShoppingCart } from "@/store/ShoppingCart/slice";
+import { addProduct, selectShoppingCart, updateShoppingCartTotalsThunk } from "@/store/ShoppingCart/slice";
 import { CartProduct } from "@/store/ShoppingCart/type";
 import { setStep } from "@/store/Wizard/slice";
 import { createShoppingCartDetail } from "@/store/ShoppingCart/services";
+import { fetchProductWithPriceAndStock } from "@/utils/queries/Product/fetchProductWithPriceAndStock";
+import type { ProductWithPriceAndStock } from "@/utils/queries/Product/fetchProductWithPriceAndStock";
 
 
 const createPrismicClient = () => {
@@ -69,9 +71,34 @@ export const Step01: FC<any> = (props:any) => {
   const [primary, setPrimary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [productBackend, setProductBackend] = useState<Record<string, ProductWithPriceAndStock>>({});
+
+  const getOptionPrice = (option: any) => {
+    const productId = option?.iddatabase;
+    // If product has database ID, only use DB price (no fallback to Prismic)
+    if (productId) {
+      return productBackend[productId]?.cost ?? null;
+    }
+    // Only use Prismic price when there's no database ID
+    return Number(option?.pricetopvalue || 0);
+  };
+
+  const getOptionStock = (option: any): number | null => {
+    const productId = option?.iddatabase;
+    if (!productId) return null;
+    const stock = productBackend[productId]?.stock;
+    return typeof stock === 'number' ? stock : null;
+  };
   
   const handleAddToCart = async (option: any) => {
-    const amount = Number(option?.pricetopvalue || 0);
+    const amount = getOptionPrice(option);
+    
+    // Don't allow adding to cart if price is not available from DB
+    if (amount == null || amount === 0) {
+      console.warn("Cannot add product to cart: price not available");
+      return;
+    }
+    
     // Calcular IVA (19% en Chile)
     const vatRate = 0.19;
     const netAmount = amount / (1 + vatRate);
@@ -80,14 +107,16 @@ export const Step01: FC<any> = (props:any) => {
     // Construir descripción del producto
     const description = `${option?.brand || ""} ${option?.capacity || ""}`.trim();
     
+    const productId = option?.iddatabase || "";
     const product: CartProduct = {
-      productId: option?.iddatabase || "",
+      productId,
       description: description,
       netAmount: Math.round(netAmount * 100) / 100, // Redondear a 2 decimales
       amount: amount,
       vatValue: Math.round(vatValue * 100) / 100, // Redondear a 2 decimales
       quantity: 1,
       imageUrl: option?.image?.url || "",
+      priceId: productBackend[productId]?.priceId ?? undefined,
     };
     
     console.log("--Agregando producto al carrito--", product);
@@ -98,8 +127,10 @@ export const Step01: FC<any> = (props:any) => {
         await createShoppingCartDetail({
           shoppingCartId: shoppingCart.shoppingCartId,
           glosa: product.description,
-          price: Math.round(product.amount * 100), // Convertir a centavos (integer)
+          price: Math.round(product.amount), // mismo formato que total (pesos)
           typeOfItem: "product",
+          productId: product.productId || undefined,
+          priceId: product.priceId || undefined,
         });
         console.log("--Producto agregado al carrito existente--");
       } catch (error) {
@@ -109,6 +140,32 @@ export const Step01: FC<any> = (props:any) => {
     
     // Agregar el producto al store local
     dispatch(addProduct(product));
+
+    // Recalculate totals and update DB (and Redux/persist via thunk)
+    const existing = shoppingCart?.products ?? [];
+    const existingIdx = existing.findIndex((p) => p.productId === product.productId);
+    const newProducts: CartProduct[] =
+      existingIdx >= 0
+        ? existing.map((p, i) =>
+            i === existingIdx ? { ...p, quantity: p.quantity + product.quantity } : p
+          )
+        : [...existing, product];
+    const subtotal = newProducts.reduce((s, p) => s + p.amount * p.quantity, 0);
+    const totalVat = Math.round(
+      newProducts.reduce(
+        (s, p) => s + (p.vatValue ?? p.amount - p.amount / 1.19) * p.quantity,
+        0
+      )
+    );
+    if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== "") {
+      dispatch(
+        updateShoppingCartTotalsThunk({
+          shoppingCartId: shoppingCart.shoppingCartId,
+          total: subtotal,
+          vat: totalVat,
+        })
+      );
+    }
     
     // Si existe customerId y no está vacío, ir al paso 5 (pago), sino al paso 2 (datos del cliente)
     if (shoppingCart?.customerId && shoppingCart.customerId.trim() !== '') {
@@ -171,6 +228,32 @@ export const Step01: FC<any> = (props:any) => {
 
     fetchContent();
   }, []);
+
+  // Fetch price and stock from backend for each option that has iddatabase
+  useEffect(() => {
+    const options = primary?.options ?? [];
+    const productIds = options
+      .map((o: any) => o?.iddatabase)
+      .filter((id: string) => id && id.trim() !== "");
+    if (productIds.length === 0) return;
+
+    let cancelled = false;
+    const fetchBackend = async () => {
+      const entries = await Promise.all(
+        productIds.map(async (productId: string) => {
+          const data = await fetchProductWithPriceAndStock(productId);
+          return [productId, data] as const;
+        })
+      );
+      if (!cancelled) {
+        setProductBackend(Object.fromEntries(entries));
+      }
+    };
+    fetchBackend();
+    return () => {
+      cancelled = true;
+    };
+  }, [primary?.options]);
   
   if (isLoading) {
     return (
@@ -485,6 +568,7 @@ export const Step01: FC<any> = (props:any) => {
                               fontSize: '14px',
                             }}
                             onClick={() => handleAddToCart(option)}
+                            disabled={getOptionStock(option) === 0 || (option?.iddatabase && getOptionPrice(option) == null)}
                           >
                             Comprar
                           </Button>
@@ -632,7 +716,7 @@ export const Step01: FC<any> = (props:any) => {
                           />                
                         </Typography>
                         
-                        {/* pricetopvalue */}
+                        {/* pricetopvalue - from DB when iddatabase exists, otherwise from Prismic */}
                         <Typography
                           id="pricetovalue-options"
                           variant="body1"
@@ -647,38 +731,67 @@ export const Step01: FC<any> = (props:any) => {
                               sm: "26px",
                             },
                           }}
-                        >{formatCurrency(Number(option?.pricetopvalue || 0))}
-                        </Typography>
-                        
-                        
-                        {/* pricebottomtext */}
-                        <Typography
-                          id="pricebottomtext-options"
-                          variant="body1"
-                          fontWeight={200}
-                          lineHeight="1.5"
-                          align="left"
-                          sx={{
-                            // width:'100%',
-                            color:'#68AD00',
-                            paddingBottom: '12px',
-                            // textAlign: 'center',
-                            display:'flex',
-                            flexDirection: 'column',
-                            justifyContent:'center',
-                            alignItems:'center',
-                            
-                            fontSize: {
-                              xs: "12px",
-                              sm: "12px",
-                            },
-                          }}
                         >
-                          <PrismicRichText
-                            field={option.pricebottomtext} 
-                            components={defaultComponents}
-                          />                
+                          {option?.iddatabase 
+                            ? (getOptionPrice(option) != null 
+                                ? formatCurrency(getOptionPrice(option)!)
+                                : "Cargando precio...")
+                            : (() => {
+                                const price = getOptionPrice(option);
+                                return price != null ? formatCurrency(price) : formatCurrency(0);
+                              })()
+                          }
                         </Typography>
+                        
+                        {/* stock from backend - always show when iddatabase exists */}
+                        {option?.iddatabase && (
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: getOptionStock(option) === 0 ? "error.main" : "text.secondary",
+                              fontSize: "12px",
+                              mt: 0.5,
+                            }}
+                          >
+                            {getOptionStock(option) === null
+                              ? "Cargando stock..."
+                              : getOptionStock(option) === 0
+                              ? "Sin stock"
+                              : `${getOptionStock(option)} ${getOptionStock(option) === 1 ? 'unidad' : 'unidades'} en stock`
+                            }
+                          </Typography>
+                        )}
+                        
+                        {/* pricebottomtext - hide when iddatabase exists (using DB stock instead) */}
+                        {!option?.iddatabase && (
+                          <Typography
+                            id="pricebottomtext-options"
+                            variant="body1"
+                            fontWeight={200}
+                            lineHeight="1.5"
+                            align="left"
+                            sx={{
+                              // width:'100%',
+                              color:'#68AD00',
+                              paddingBottom: '12px',
+                              // textAlign: 'center',
+                              display:'flex',
+                              flexDirection: 'column',
+                              justifyContent:'center',
+                              alignItems:'center',
+                              
+                              fontSize: {
+                                xs: "12px",
+                                sm: "12px",
+                              },
+                            }}
+                          >
+                            <PrismicRichText
+                              field={option.pricebottomtext} 
+                              components={defaultComponents}
+                            />                
+                          </Typography>
+                        )}
 
                           {/* Botones DESKTOP- Parte derecha */}
                           <Box 
@@ -697,6 +810,7 @@ export const Step01: FC<any> = (props:any) => {
                               fontSize: '14px',
                             }}
                             onClick={() => handleAddToCart(option)}
+                            disabled={getOptionStock(option) === 0 || (option?.iddatabase && getOptionPrice(option) == null)}
                           >
                             Comprar
                           </Button>

@@ -13,6 +13,7 @@ interface GetShoppingCartGraphQLResponse {
   getShoppingCart: {
     shoppingCartId: string;
     customerId?: string | null;
+    typeOfCart?: string | null;
     paymentMethod?: string | null;
     total?: number | null;
     vat?: number | null;
@@ -59,6 +60,7 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                   getShoppingCart(shoppingCartId: $shoppingCartId) {
                     shoppingCartId
                     customerId
+                    typeOfCart
                     paymentMethod
                     total
                     vat
@@ -108,8 +110,8 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
             if (getShoppingCart) {
                 // Transformar ShoppingCartDetails a products
                 const productsPromises = (dataShoppingCartDetails?.data || []).map(async (detail: any) => {
-                  // El price viene en centavos (integer), convertir a decimal
-                  const amount = detail.price ? detail.price / 100 : 0;
+                  // price está en pesos (misma unidad que total)
+                  const amount = detail.price ?? 0;
                   // Calcular netAmount y vatValue (asumiendo 19% IVA)
                   const netAmount = amount / 1.19;
                   const vatValue = amount - netAmount;
@@ -147,6 +149,7 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                     quantity: 1, // Por defecto 1, ajustar según tu lógica
                     imageUrl: imageUrl, // Se puede obtener del Product si está disponible
                     shoppingCartDetailId: detail.shoppingCartDetailId, // Incluir el ID del detalle
+                    priceId: detail.priceId ?? undefined,
                   };
                 });
                 
@@ -181,6 +184,7 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                   vat: getShoppingCart.vat || 0,
                   status: getShoppingCart.status || 'pending',
                   customerId: getShoppingCart.customerId || '',
+                  typeOfCart: getShoppingCart.typeOfCart || null,
                   addressCustomer: addressCustomer,
                   glosa: dataShoppingCartDetails?.data?.[0]?.glosa || '',
                   products: products,
@@ -217,6 +221,7 @@ export const createShoppingCartDetail = async (input: createShoppingCartDetailIn
             price,
             typeOfItem,
             shoppingCartId,
+            productId,
             priceId,
             estimateDetailId,
             calendarId,
@@ -234,6 +239,9 @@ export const createShoppingCartDetail = async (input: createShoppingCartDetailIn
         
         // Solo incluir estos campos si tienen valores (no null/undefined)
         // Esto evita errores con índices GSI que requieren valores no nulos
+        if (productId) {
+          formData.productId = productId;
+        }
         if (priceId) {
           formData.priceId = priceId;
         }
@@ -276,6 +284,7 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
             shoppingCartId,
             total,
             vat,
+            typeOfCart,
             paymentMethod,
             status,
             customerId,
@@ -288,6 +297,7 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
           shoppingCartId: shoppingCartId || crypto.randomUUID(),
           total: total || 0,
           vat: vat || 0,
+          typeOfCart: typeOfCart || "product",
           paymentMethod: paymentMethod || null,
           status: status || "pending",
           customerId: customerId || null,
@@ -318,6 +328,8 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
                 glosa: product.description,
                 price: Math.round(product.amount), // product.amount ya viene en el formato correcto
                 typeOfItem: "product",
+                productId: product.productId || undefined,
+                priceId: product.priceId || undefined,
               };
               
               const detailData = await createShoppingCartDetail(detailInput);
@@ -385,6 +397,7 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
             shoppingCartId,
             total,
             vat,
+            typeOfCart,
             paymentMethod,
             status,
             customerId,
@@ -396,6 +409,7 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
         const formData:any = {
           total: total !== undefined ? total : undefined,
           vat: vat !== undefined ? vat : undefined,
+          typeOfCart: typeOfCart !== undefined ? typeOfCart : undefined,
           paymentMethod: paymentMethod !== undefined ? paymentMethod : undefined,
           status: status !== undefined ? status : undefined,
           customerId: customerId !== undefined ? customerId : undefined,
@@ -410,10 +424,11 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
         
         console.log("--formData ShoppingCart Update--", formData)
         
-        const { data: shoppingCartData, errors } = await client.models.ShoppingCart.update(
-          { shoppingCartId },
-          formData
-        );
+        // Amplify expects a single input object with identifier + fields to update
+        const { data: shoppingCartData, errors } = await client.models.ShoppingCart.update({
+          shoppingCartId,
+          ...formData,
+        });
         console.log("--updateShoppingCart--data", shoppingCartData)
         
         if (errors) {
@@ -421,6 +436,13 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
           reject({
             errorMessage: errors.map(e => e.message).join(', ')
           });
+          return;
+        }
+
+        // When products is not provided, only update the cart header (total/vat) and return
+        if (products === undefined) {
+          console.log("--updateShoppingCart--resolve (header only)")
+          resolve(shoppingCartData);
           return;
         }
 
@@ -451,8 +473,10 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
               const detailInput: createShoppingCartDetailInput = {
                 shoppingCartId: shoppingCartData.shoppingCartId,
                 glosa: product.description,
-                price: Math.round(product.amount * 100), // Convertir a centavos (integer)
+                price: Math.round(product.amount), // mismo formato que total (pesos)
                 typeOfItem: "product",
+                productId: product.productId || undefined,
+                priceId: product.priceId || undefined,
               };
               
               const detailData = await createShoppingCartDetail(detailInput);

@@ -188,21 +188,23 @@ export const Step02 = (props:any) => {
                                  shoppingCart.shoppingCartId.trim() !== '';
 
       if (hasShoppingCartId) {
-        // Actualizar el carrito existente
+        // Actualizar el carrito existente (product flow: ensure typeOfCart is product)
         await dispatch(updateOrCreateShoppingCartThunk({
           shoppingCartId: shoppingCart.shoppingCartId,
           customerId: customerId,
           total: subtotal,
           vat: totalVat,
+          typeOfCart: "product",
           status: "pending",
           products: products,
         }));
       } else {
-        // Crear un nuevo carrito
+        // Crear un nuevo carrito (product flow)
         await dispatch(updateOrCreateShoppingCartThunk({
           customerId: customerId,
           total: subtotal,
           vat: totalVat,
+          typeOfCart: "product",
           status: "pending",
           products: products,
         }));
@@ -226,7 +228,14 @@ export const Step02 = (props:any) => {
     validationSchema: validationSchema,
     enableReinitialize: true, 
 
-    onSubmit: async (values:any) => {
+    onSubmit: async (values: any) => {
+      if (!values?.email?.trim()) {
+        return;
+      }
+      if (shoppingCart?.customer) {
+        await handlePayShoppingCart();
+        return;
+      }
       // Preparar datos del customer para el carrito
       const cartCustomer: CartCustomer = {
         customerId: values?.email || customer?.customerId || '',
@@ -270,6 +279,7 @@ export const Step02 = (props:any) => {
               customerId: customerId,
               total: subtotal,
               vat: totalVat,
+              typeOfCart: "product",
               status: "pending",
               products: products,
             }))
@@ -478,9 +488,14 @@ export const Step02 = (props:any) => {
                      <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
                       <AddressInput 
+                        value={formik.values.address ?? ''}
+                        onAddressChange={(value) => {
+                          formik.setFieldValue('address', value);
+                          formik.setFieldTouched('address', true);
+                        }}
                         onSelectAddress={(addressDetails) => {
                           if (addressDetails) {
-                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldValue('address', addressDetails.StreetAddress ?? '');
                             formik.setFieldTouched('address', true);
                             dispatch(setCustomerData({              
                                 address: addressDetails?.StreetAddress || "",
@@ -766,13 +781,8 @@ export const Step02 = (props:any) => {
         <Button
           id="PayShoppingCart"
           variant="contained"
-          type={shoppingCart?.customer ? "button" : "submit"}
+          type="submit"
           size="large"
-          onClick={async () => {
-            if (shoppingCart?.customer) {
-              await handlePayShoppingCart();
-            } 
-          }}
           endIcon={
             <Box
               component="span"

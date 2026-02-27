@@ -26,6 +26,10 @@ interface Props {
     Latitude: number | null;
     Longitude: number | null;
   } | null) => void;
+  /** Controlled value (e.g. from formik). When provided, typed input is synced back via onAddressChange. */
+  value?: string;
+  /** Called when the user types in the address field so parent (e.g. formik) can keep address in sync for validation. */
+  onAddressChange?: (value: string) => void;
   error?: boolean;
   helperText?: string;
 }
@@ -69,8 +73,8 @@ const loadGoogleMapsScript = (): Promise<void> => {
   });
 };
 
-const AddressInput: React.FC<Props> = ({ onSelectAddress, error, helperText }) => {
-  const [address, setAddress] = useState('');
+const AddressInput: React.FC<Props> = ({ onSelectAddress, value: controlledValue, onAddressChange, error, helperText }) => {
+  const [address, setAddress] = useState(controlledValue ?? '');
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const autoCompleteRef = useRef<HTMLInputElement>(null);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
@@ -147,8 +151,17 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress, error, helperText }) =
     }
   }, [isScriptLoaded, onSelectAddress, autocomplete]);
 
+  const displayValue = controlledValue !== undefined ? controlledValue : address;
+  useEffect(() => {
+    if (controlledValue !== undefined && controlledValue !== address) {
+      setAddress(controlledValue);
+    }
+  }, [controlledValue]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(event.target.value);
+    const v = event.target.value;
+    setAddress(v);
+    onAddressChange?.(v);
   };
 
   return (
@@ -177,7 +190,7 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress, error, helperText }) =
         id="address"
         tabIndex={4} 
         placeholder="Ingresa una dirección en Santiago de Chile"
-        value={address}
+        value={displayValue}
         onChange={handleChange}
         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         style={{

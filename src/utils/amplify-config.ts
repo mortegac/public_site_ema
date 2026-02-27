@@ -6,6 +6,7 @@ export const getAmplifyConfig = () => {
   const env = process.env.NEXT_PUBLIC_ENVIRONMENT?.trim();
   const useProd = env === 'PROD';
 
+  console.log("USANDO AMBIENTE ", env )
   try {
     let outputs;
     if (useProd) {
@@ -13,7 +14,7 @@ export const getAmplifyConfig = () => {
     } else {
       outputs = require('../../amplify_outputs_dev.json');
     }
-    
+    console.log("OUTPUTS ", outputs)
     return outputs;
   } catch (error) {
     console.error('Error loading Amplify configuration:', error);

@@ -9,6 +9,8 @@ export type CartProduct = {
   vatValue: number;
   quantity: number;
   imageUrl?: string;
+  priceId?: string;
+  shoppingCartDetailId?: string;
 };
 
 export type DeleteShoppingCartInput = {
@@ -27,8 +29,7 @@ export type CartCustomer = {
   ReferenceAddress?: string;
 };
 
-export type ShoppingCart = {     
-  
+export type ShoppingCart = {
   shoppingCartId?: string,
   total?: string,
   vat?: string,  // paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]), //metodo de pago
@@ -36,9 +37,9 @@ export type ShoppingCart = {
   customerId?: string,
   addressCustomer?: string,
   glosa?: string,
+  typeOfCart?: "product" | "service" | "input" | "visit" | "virtualVisit" | null,
   products?: CartProduct[];
   customer?: CartCustomer;
-  
 };
 
 export const emptyShoppingCart: ShoppingCart = {
@@ -62,6 +63,7 @@ export type createShoppingCartInput = {
   shoppingCartId?: string | null,
   total?: number | null,
   vat?: number | null,
+  typeOfCart?: "product" | "service" | "input" | "visit" | "virtualVisit" | null,
   paymentMethod?: "transbank" | "bank_transfer" | "cash" | "on_site" | null,
   status?: "pending" | "completed" | "cancelled" | "timed_out" | null,
   customerId?: string | null,
@@ -72,8 +74,9 @@ export type createShoppingCartDetailInput = {
   shoppingCartDetailId?: string | null,
   glosa?: string | null,
   price?: number | null,
-  typeOfItem?: "product" | "service" | "input" | null,
+  typeOfItem?: "product" | "service" | "input" | "visit" | "virtualVisit" | null,
   shoppingCartId: string,
+  productId?: string | null,
   priceId?: string | null,
   estimateDetailId?: string | null,
   calendarId?: string | null,
@@ -83,6 +86,7 @@ export type updateShoppingCartInput = {
   shoppingCartId: string,
   total?: number | null,
   vat?: number | null,
+  typeOfCart?: "product" | "service" | "input" | "visit" | "virtualVisit" | null,
   paymentMethod?: "transbank" | "bank_transfer" | "cash" | "on_site" | null,
   status?: "pending" | "completed" | "cancelled" | "timed_out" | null,
   customerId?: string | null,

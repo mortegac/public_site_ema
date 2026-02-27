@@ -73,7 +73,7 @@ import AddressInput from '@/app/components/AddressInput2';
 // import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCustomer, setCustomer, getCustomer, setCustomerData } from "@/store/Customer/slice";
-import { selectCalendarVisits, setStep, setCalendarVisits, setCalendarNotPay, setLoading } from "@/store/CalendarVisits/slice";
+import { setLoading } from "@/store/CalendarVisits/slice";
 import { setCustomerToCart, selectShoppingCart, createShoppingCartThunk, updateOrCreateShoppingCartThunk } from "@/store/ShoppingCart/slice";
 import { CartCustomer } from "@/store/ShoppingCart/type";
 import { formatCurrency } from "@/utils/currency";
@@ -165,137 +165,89 @@ export const Step02 = (props:any) => {
     return dayjs(dateUTC).tz("America/Santiago").format(format);
   };
 
-  const handleContinuePurchase = () => {
-    // Si existe el cliente en el carrito persistido, navegar directamente al paso 5 sin validación
-    if (shoppingCart?.customer) {
-      dispatch(setWizardStep(5));
-    }
-  };
-
-  const handlePayShoppingCart = async () => {
-    try {
-      // Calcular totales del carrito
-      const products = shoppingCart?.products || [];
-      const subtotal = products.reduce((sum, product) => 
-        sum + (product.amount * product.quantity), 0);
-      const totalVat = Math.round(products.reduce((sum, product) => 
-        sum + (product.vatValue * product.quantity), 0));
-      
-      const customerId = shoppingCart?.customer?.customerId || customer?.customerId || '';
-
-      // Verificar si existe shoppingCartId y no está vacío
-      const hasShoppingCartId = shoppingCart?.shoppingCartId && 
-                                 shoppingCart.shoppingCartId.trim() !== '';
-
-      if (hasShoppingCartId) {
-        // Actualizar el carrito existente
-        await dispatch(updateOrCreateShoppingCartThunk({
-          shoppingCartId: shoppingCart.shoppingCartId,
-          customerId: customerId,
-          total: subtotal,
-          vat: totalVat,
-          status: "pending",
-          products: products,
-        }));
-      } else {
-        // Crear un nuevo carrito
-        await dispatch(updateOrCreateShoppingCartThunk({
-          customerId: customerId,
-          total: subtotal,
-          vat: totalVat,
-          status: "pending",
-          products: products,
-        }));
-      }
-
-      // Navegar al paso 5 después de actualizar/crear
-      dispatch(setWizardStep(5));
-    } catch (error) {
-      console.error("Error al procesar el carrito:", error);
-    }
-  };
-  
   const formik = useFormik({
     initialValues: {
-      name: customer?.name || '',
-      email: customer?.customerId || '',
-      address: customer?.address,
-      phone: customer?.phone ? (customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`) : '+569',
-      residenceType: customer?.residenceType || '',
+      name: '',
+      email: '',
+      address: '',
+      phone: '+569',
+      residenceType: '',
+      AddressReference: '',
     },
     validationSchema: validationSchema,
-    enableReinitialize: true, 
+    enableReinitialize: false, 
 
-    onSubmit: async (values:any) => {
-      // Preparar datos del customer para el carrito
+    onSubmit: async (values: any) => {
+      if (!values?.email?.trim()) {
+        return;
+      }
+      // Always use form values — no bypass. Address and all fields are validated before onSubmit runs.
       const cartCustomer: CartCustomer = {
-        customerId: values?.email || customer?.customerId || '',
-        Name: values?.name || customer?.name || '',
-        Email: values?.email || customer?.customerId || '',
-        Phone: values?.phone || customer?.phone || '',
-        Address: values?.address || customer?.address || '',
+        customerId: values?.email || '',
+        Name: values?.name || '',
+        Email: values?.email || '',
+        Phone: values?.phone || '',
+        Address: values?.address || '',
         City: customer?.city || '',
         State: customer?.state || '',
-        ReferenceAddress: values?.AddressReference || customer?.referenceAddress || '',
+        ReferenceAddress: values?.AddressReference || '',
       };
 
-      // Calcular totales del carrito
-      const customerId = values?.email || customer?.customerId || '';
+      const customerId = values?.email || '';
       const products = shoppingCart?.products || [];
-      const subtotal = products.reduce((sum, product) => 
+      const subtotal = products.reduce((sum, product) =>
         sum + (product.amount * product.quantity), 0);
-      const totalVat = Math.round(products.reduce((sum, product) => 
+      const totalVat = Math.round(products.reduce((sum, product) =>
         sum + (product.vatValue * product.quantity), 0));
 
-     trackEvent('ingreso_datos_cliente', 'VENTA_CARGADORES', 'envio formulario datos cliente');
-        
-         const promises: any[] = [
-          dispatch(setLoading()),
-          dispatch(
-            setCustomer({
-              ...customer,
-              customerId: values?.email,
-              existCustomer: Boolean(existCustomer)
-            })
-          ),
-          dispatch(setCustomerToCart(cartCustomer)),
-        ];
+      trackEvent('ingreso_datos_cliente', 'VENTA_CARGADORES', 'envio formulario datos cliente');
 
-        // Crear el shopping cart solo si no existe uno previo
-        // console.log("!shoppingCart?.shoppingCartId && customerId && products.length > 0 = ", !shoppingCart?.shoppingCartId && customerId && products.length > 0)
-        
-        if (!shoppingCart?.shoppingCartId && customerId && products.length > 0) {
-          promises.push(
-            dispatch(createShoppingCartThunk({
-              customerId: customerId,
-              total: subtotal,
-              vat: totalVat,
-              status: "pending",
-              products: products,
-            }))
-          );
-        }
+      const promises: any[] = [
+        dispatch(setLoading()),
+        dispatch(
+          setCustomer({
+            ...customer,
+            customerId: values?.email,
+            existCustomer: Boolean(existCustomer)
+          })
+        ),
+        dispatch(setCustomerToCart(cartCustomer)),
+      ];
 
-        promises.push(dispatch(setStep(5))); // Ir al paso de pago
+      const hasShoppingCartId = shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== '';
 
-        await Promise.all(promises);
-      
+      if (hasShoppingCartId && customerId && products.length > 0) {
+        promises.push(
+          dispatch(updateOrCreateShoppingCartThunk({
+            shoppingCartId: shoppingCart.shoppingCartId,
+            customerId: customerId,
+            total: subtotal,
+            vat: totalVat,
+            typeOfCart: "product",
+            status: "pending",
+            products: products,
+          }))
+        );
+      } else if (!hasShoppingCartId && customerId && products.length > 0) {
+        promises.push(
+          dispatch(createShoppingCartThunk({
+            customerId: customerId,
+            total: subtotal,
+            vat: totalVat,
+            typeOfCart: "product",
+            status: "pending",
+            products: products,
+          }))
+        );
+      }
 
+      promises.push(dispatch(setWizardStep(5)));
+
+      await Promise.all(promises);
     },
     }); 
     
-    useEffect(() => {
-      if (!customer?.phone) {
-        formik.setFieldValue('phone', '+569');
-      } else {
-        // Asegurarse de que el número tenga el formato correcto
-        const phoneNumber = customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`;
-        formik.setFieldValue('phone', phoneNumber);
-      }
-    }, [customer?.phone]);
-    
-    
-
+  
   
   const validatePhoneNumber = (value:any) => {
     setPhoneInput(value);
@@ -478,9 +430,14 @@ export const Step02 = (props:any) => {
                      <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
                       <AddressInput 
+                        value={formik.values.address ?? ''}
+                        onAddressChange={(value) => {
+                          formik.setFieldValue('address', value);
+                          formik.setFieldTouched('address', true);
+                        }}
                         onSelectAddress={(addressDetails) => {
                           if (addressDetails) {
-                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldValue('address', addressDetails.StreetAddress ?? '');
                             formik.setFieldTouched('address', true);
                             dispatch(setCustomerData({              
                                 address: addressDetails?.StreetAddress || "",
@@ -758,7 +715,7 @@ export const Step02 = (props:any) => {
             width: { xs: '100%', md: 'auto' },
           }}
           disabled={cartLoading}
-          onClick={() => dispatch(setStep(0))}
+          onClick={() => dispatch(setWizardStep(0))}
         >
           Volver
         </Button>
@@ -766,13 +723,8 @@ export const Step02 = (props:any) => {
         <Button
           id="PayShoppingCart"
           variant="contained"
-          type={shoppingCart?.customer ? "button" : "submit"}
+          type="submit"
           size="large"
-          onClick={async () => {
-            if (shoppingCart?.customer) {
-              await handlePayShoppingCart();
-            } 
-          }}
           endIcon={
             <Box
               component="span"

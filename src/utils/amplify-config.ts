@@ -1,24 +1,26 @@
 import { Amplify } from "aws-amplify";
 
 // Función para obtener la configuración de Amplify según el entorno
+// Si NEXT_PUBLIC_ENVIRONMENT no está definido o está vacío, usa DEV
 export const getAmplifyConfig = () => {
-  const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || 'DEV';
-  
+  const env = process.env.NEXT_PUBLIC_ENVIRONMENT?.trim();
+  const useProd = env === 'PROD';
+
+  console.log("USANDO AMBIENTE ", env )
   try {
     let outputs;
-    
-    
-    if (environment === 'PROD') {
+    if (useProd) {
       outputs = require('../../amplify_outputs.json');
     } else {
       outputs = require('../../amplify_outputs_dev.json');
     }
-    
     return outputs;
   } catch (error) {
     console.error('Error loading Amplify configuration:', error);
-    // Fallback a la configuración por defecto
-    return require('../../amplify_outputs.json');
+    // Fallback: intentar el otro archivo (dev por defecto si el principal falló)
+    return useProd
+      ? require('../../amplify_outputs_dev.json')
+      : require('../../amplify_outputs.json');
   }
 };
 
@@ -31,7 +33,7 @@ export const configureAmplify = () => {
 
 // Función para verificar si estamos en producción
 export const isProduction = () => {
-  return process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD';
+  return process.env.NEXT_PUBLIC_ENVIRONMENT?.trim() === 'PROD';
 };
 
 // Función para verificar si estamos en desarrollo

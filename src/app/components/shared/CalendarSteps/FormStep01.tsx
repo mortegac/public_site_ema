@@ -128,26 +128,16 @@ export const FormStep01 = (props:any) => {
     return dayjs(dateUTC).tz("America/Santiago").format(format);
   };
   
-  useEffect(() => {
-    if (!customer?.phone) {
-      formik.setFieldValue('phone', '+569');
-    } else {
-      // Asegurarse de que el número tenga el formato correcto
-      const phoneNumber = customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`;
-      formik.setFieldValue('phone', phoneNumber);
-    }
-  }, [customer?.phone]);
-
   const formik = useFormik({
     initialValues: {
-      name: customer?.name || '',
-      email: customer?.customerId || '',
-      address: customer?.address,
-      phone: customer?.phone ? (customer.phone.startsWith('+') ? customer.phone : `+56${customer.phone}`) : '+569',
-      residenceType: customer?.residenceType || '',
+      name: '',
+      email: '',
+      address: '',
+      phone: '+569',
+      residenceType: '',
     },
     validationSchema: validationSchema,
-    enableReinitialize: true, 
+    enableReinitialize: false, 
 
     onSubmit: async (values:any) => {
 
@@ -169,14 +159,13 @@ export const FormStep01 = (props:any) => {
               existCustomer: Boolean(existCustomer)
             })
           ),
-          customer?.customerId && 
-          selectedCalendar?.calendarId && 
+          values?.email &&
+          selectedCalendar?.calendarId &&
             await dispatch(setCalendarVisits({
-              customerId: customer?.customerId,
+              customerId: values?.email,
               calendarId: selectedCalendar?.calendarId,
             })),
-          
-          dispatch(setStep(2)), // Ir al paso de pago
+          dispatch(setStep(2)),
         ]);
       
       } else if (submitButton === 'scheduleNotPay') {
@@ -186,14 +175,12 @@ export const FormStep01 = (props:any) => {
         trackEvent('agendar_visita_virtual', 'AGENDA_EMA', 'envio formulario visita fisica');
     
         const timeoutId = selectedCalendar?.calendarId && setTimeout(() => {
-          // Preparar los datos para enviar
-          // const dateSchedule:string = calendarVisit?.startDate || ""
-          const paymentData = {                    
-              email: customer?.customerId,
+          const paymentData = {
+              email: values?.email,
               date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM"),
               hour: toChileTime({ date: selectedCalendar?.startDate }),
-              address: `${customer?.address}, ${customer?.city}` || "",
-              phone: customer?.phone,
+              address: `${values?.address || ''}, ${customer?.city || ''}`.trim() || "",
+              phone: values?.phone,
           };
           
           console.log("---calendarVisit---", calendarVisit)
@@ -216,10 +203,10 @@ export const FormStep01 = (props:any) => {
               customerId: values?.email,
             })
           ),
-          customer?.customerId && 
-          selectedCalendar?.calendarId && 
+          values?.email &&
+          selectedCalendar?.calendarId &&
           await dispatch(setCalendarNotPay({
-              customerId: customer?.customerId,
+              customerId: values?.email,
               calendarId: selectedCalendar?.calendarId,
           })),
           clearTimeout(timeoutId)

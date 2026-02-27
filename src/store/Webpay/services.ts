@@ -100,7 +100,11 @@ export const fetchWebpayCommit = async (objFilter: webpayInput) => {
             message
             buy_order
             email
+            amount
+            card
+            payment_type_code
             status
+            typeOfCart
           }
         }
       `,
@@ -130,16 +134,18 @@ export const fetchWebpayStatus= async (objFilter: webpayInput) => {
           WebpayStatus(
             token: $token
           ) {
-              message
-              buy_order
-              email
-              shoppingCartId
-              amount
-              card_number
-              payment_type_code
-              paymentTransactionId
-              glosa
-              status
+            paymentTransactionId
+            shoppingCartId
+            payment_type_code
+            buy_order
+            amount
+            glosa
+            card_number
+            usersPaymentTransactionsId
+            status
+            email
+            message
+            typeOfCart
           }
         }
       `,

@@ -15,6 +15,7 @@ export type clientFormInput = {
   name?: string,
   email?: string,
   phone?: string,
+  address?: string,
   customerId?: string | null,
   isHouse?: boolean,
   isPortable?: boolean,
@@ -40,7 +41,8 @@ export type ClientForm = {
   name?: string,
   email?: string,
   phone?: string,
-  
+  address?: string,
+
   // NEWS
   acceptTermAndConditions: boolean,
   isBuilding?: boolean,
@@ -60,6 +62,7 @@ export const emptyClientForm: ClientForm = {
   customerId: "",
   distance: 0,
   formId: "",
+  address: "",
   isHouse: false,
   isPortable: false,
   isWallbox: false,

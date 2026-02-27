@@ -1,6 +1,6 @@
 "use client";
 // components/OrderConfirmation.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/navigation';
 import dayjs from "dayjs";
 import "dayjs/locale/es"; // Importa el idioma español
@@ -125,12 +125,23 @@ const RetryTransaction = () => {
     shoppingCartId:"",
     hasData:false,
    });
+
+  const hasReadData = useRef(false);
   
   useEffect(() => {
+    // Prevent double-read in React Strict Mode (enabled by default in Next.js dev mode)
+    if (hasReadData.current) {
+      console.log("⏭️ Skipping duplicate read (React Strict Mode - already processed)");
+      return;
+    }
+    
     // Recuperar datos de sessionStorage si existen
     const storedData = sessionStorage.getItem('paymentData');
+    console.log("📥 Reading from sessionStorage 'paymentData':", storedData);
     if (storedData) {
+      hasReadData.current = true;
       const data = JSON.parse(storedData);
+      console.log("✅ Parsed paymentData:", data);
       setPaymentData({
         glosa: data.glosa || "",
         total: data.total || "",
@@ -141,11 +152,14 @@ const RetryTransaction = () => {
       });
       // Limpiar sessionStorage después de leer
       sessionStorage.removeItem('paymentData');
+      console.log("🗑️ Removed 'paymentData' from sessionStorage");
     }else{
-      setPaymentData({
-        ...paymentData,
+      hasReadData.current = true;
+      console.log("❌ No data found in sessionStorage 'paymentData'");
+      setPaymentData(prev => ({
+        ...prev,
         hasData: false
-      });
+      }));
     }
   }, []);
 

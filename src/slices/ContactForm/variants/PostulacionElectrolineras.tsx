@@ -386,7 +386,9 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      
+      if (!values?.email?.trim()) {
+        return;
+      }
       await Promise.all([
         dispatch(
           setCustomer({

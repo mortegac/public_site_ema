@@ -1,5 +1,6 @@
 import { type ClientSchema, a } from "@aws-amplify/backend";
 
+
 /**
  * estandares de creacion de entidades,
  * las entidades/modelos estaran en ingles singular
@@ -8,15 +9,15 @@ import { type ClientSchema, a } from "@aws-amplify/backend";
  *  * la id de referencia sera el mismo de que la id de la entidad padre
  *
  */
-
 export const MainSchema = a
- .schema({
+  .schema({
     User: a
       .model({
         userId: a.id().required(),
         name: a.string().required(),
         validated: a.boolean().default(false),
         roleId: a.id(),
+        order: a.integer().default(0),
         Role: a.belongsTo("Role", "roleId"),
         TimeSlots: a.hasMany("UserTimeSlot", "userId"),
         SupportTickets: a.hasMany("SupportTicket", "employeeId"),
@@ -135,6 +136,9 @@ export const MainSchema = a
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
+      // Explicitly define the timestamp fields you want to index
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
       state: a.enum([
         "available", // disponible
         "reserved", // reservada lo libera webpayStatus si falla 15m
@@ -155,6 +159,7 @@ export const MainSchema = a
       .identifier(["calendarId"])
       .secondaryIndexes(index => [
         index('state').sortKeys(['startDate']).queryField("CalendarVisitsByState"),
+        index("state").sortKeys(['updatedAt']).queryField("CalendarVisitsByStateAndUpdatedAt"),
       ]),
 
     Customer: a.model({
@@ -175,6 +180,8 @@ export const MainSchema = a
       ShoppingCarts: a.hasMany("ShoppingCart", "customerId"),
       SupportTickets: a.hasMany("SupportTicket", "solicitantId"),
       TicketComments: a.hasMany("TicketComment", "solicitantId"),
+      CustomerSessions: a.hasMany("CustomerSession", "customerId"),
+      WebContactForms: a.hasMany("WebContactForm", "customerId"),
     }).identifier(["customerId"]),
 
     ClientForm: a.model({
@@ -193,6 +200,23 @@ export const MainSchema = a
       Estimates: a.hasMany("Estimate", "formId"),
     })
       .identifier(["formId"]),
+
+    WebContactForm: a.model({
+      webContactFormId: a.id().required(),
+      date: a.datetime().required(),
+      type: a.enum(["EMA", "GRETA", "EVE", "OTHER"]),
+      name: a.string(),
+      email: a.string(),
+      phone: a.string(),
+      whatsapp: a.string(),
+      message: a.string(),
+      subject: a.string(),
+      category: a.string(),
+      companyName: a.string(),
+      cantidadVehiculos: a.integer(),
+      customerId: a.id(),
+      Customer: a.belongsTo("Customer", "customerId"),
+    }).identifier(["webContactFormId"]),
 
 
     Estimate: a.model({
@@ -232,6 +256,7 @@ export const MainSchema = a
       electricRoomFloorNumber: a.string(),
 
       //cost start from here
+      installationCost: a.integer(), //costo de instalacion
       chargerCost: a.integer(), //costo cargadors
       otherInstallationCosts: a.integer(), // otros costos de instalacion
       materialsCost: a.integer(), //costo de materiales
@@ -343,11 +368,40 @@ export const MainSchema = a
       brand: a.string(),
       potence: a.float(),
       type: a.string(),
+      isListed: a.boolean(),
+      isActive: a.boolean(),
+      stock: a.integer(),
+      supplierId: a.id(),
+      Supplier: a.belongsTo("SupplierProduct", "supplierId"),
       Prices: a.hasMany("Price", "productId"),
       Recipes: a.hasMany("InstallationProductRel", "productId"),
       EstimateDetails: a.hasMany("EstimateDetail", "productId"),
+      ShoppingCartDetails: a.hasMany("ShoppingCartDetail", "productId"),
     })
-      .identifier(["productId"]),
+      .identifier(["productId"])
+      .secondaryIndexes(index => [
+        index('type').queryField("ProductsByType"),
+      ]),
+
+    SupplierProduct: a.model({
+      supplierId: a.id().required(),
+      rut: a.string(),
+      companyName: a.string(),
+      address: a.string(),
+      comuna: a.string(),
+      legalRepresentative: a.string(),
+      contactName: a.string(),
+      contactPhone: a.string(),
+      contactEmail: a.string(),
+      supportContact: a.string(),
+      supportPhone: a.string(),
+      supportEmail: a.string(),
+      supportAddress: a.string(),
+      supportComuna: a.string(),
+      businessHours: a.string(),
+      Products: a.hasMany("Product", "supplierId"),
+    })
+      .identifier(["supplierId"]),
 
     Price: a.model({
       priceId: a.id().required(),
@@ -355,6 +409,7 @@ export const MainSchema = a
       startDate: a.datetime(),
       endDate: a.datetime(),
       status: a.enum(["active", "deleted", "archived"]),
+      isPubliclyListed: a.boolean(),
       productId: a.id(),
       Product: a.belongsTo("Product", "productId"),
       installationInputId: a.id(),
@@ -371,6 +426,7 @@ export const MainSchema = a
       shoppingCartId: a.id().required(),
       total: a.integer(), //precio
       vat: a.integer(), //iva
+      typeOfCart: a.enum(["product", "service", "input", "visit", "virtualVisit"]),
       paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]), //metodo de pago
       status: a.enum(["pending", "completed", "cancelled", "timed_out"]), //status
 
@@ -395,9 +451,11 @@ export const MainSchema = a
       shoppingCartDetailId: a.id().required(),
       glosa: a.string(),
       price: a.integer(),
-      typeOfItem: a.enum(["product", "service", "input"]),
+      typeOfItem: a.enum(["product", "service", "input", "visit", "virtualVisit"]),
       shoppingCartId: a.id(),
       ShoppingCart: a.belongsTo("ShoppingCart", "shoppingCartId"),
+      productId: a.id(),
+      Product: a.belongsTo("Product", "productId"),
       priceId: a.id(),
       Price: a.belongsTo("Price", "priceId"),
       estimateDetailId: a.id(),
@@ -448,10 +506,44 @@ export const MainSchema = a
         shoppingCartId: a.id(),
         ShoppingCart: a.belongsTo("ShoppingCart", "shoppingCartId"),
       })
-      .secondaryIndexes((index) => [index("token")])
+      .secondaryIndexes((index) => [
+        index("token"),
+        index("status").sortKeys(["date"])],
+      )
       .identifier(["paymentTransactionId"]),
 
+    CustomerSession: a.model({
+      sessionId: a.id().required(),
+      startTime: a.datetime().required(),
+      endTime: a.datetime(),
+      duration: a.integer(),
+
+      // Technical data
+      ipAddress: a.string(),
+      userAgent: a.string(),
+      deviceType: a.enum(["desktop", "mobile", "tablet"]),
+      browser: a.string(),
+      operatingSystem: a.string(),
+      screenResolution: a.string(),
+
+      CustomerInteractions: a.hasMany("SessionInteraction", "sessionId"),
+      customerId: a.id(),
+      Customer: a.belongsTo("Customer", "customerId"),
+    })
+      .identifier(["sessionId"]),
+
+    SessionInteraction: a.model({
+      interactionId: a.id().required(),
+      type: a.string(), //click, scroll, etc submit
+      name: a.string(), //press button, click, etc submit x
+      date: a.datetime().required(), //date of the interaction
+      data: a.string(), //json
+
+      sessionId: a.id().required(),
+      CustomerSession: a.belongsTo("CustomerSession", "sessionId"),
+    }).identifier(["interactionId"])
   })
+
   .authorization((allow) => [
     allow.publicApiKey(),
     allow.authenticated(),

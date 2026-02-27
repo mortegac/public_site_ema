@@ -69,16 +69,14 @@ const customerSlice = createSlice({
       })
       .addCase(setCustomer.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(">>> action.payload >>", action.payload)
-        // state.customer = {...action.payload};
-        console.log(">>> state.customer >>", action.payload)
+        if (action.payload) {
+          state.customer = { ...state.customer, ...action.payload };
+        }
       })
       .addCase(setCustomer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar el customer';
-        const data:any = action?.payload
-        state.customer={ ...data || emptyCustomer }
-        // state.customer={...emptyCustomer}
+        // Do not overwrite state.customer so we keep the last attempted payload (and addresses)
       })
       
     // getCustomer
@@ -88,14 +86,18 @@ const customerSlice = createSlice({
       })
       .addCase(getCustomer.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(">>> action.payload >>", action.payload)
         state.existCustomer = Boolean(action.payload?.customerId && action.payload.customerId.trim() !== '');
-        console.log(">>> state.customer >>", action.payload)
+        if (action.payload?.customerId) {
+          state.customer.customerId = action.payload.customerId;
+        } else {
+          state.customer.customerId = '';
+        }
       })
       .addCase(getCustomer.rejected, (state, action) => {
         state.loading = false;
+        state.existCustomer = false;
         state.error = action.error.message || 'Error al actualizar el customer';
-        state.customer={...emptyCustomer}
+        state.customer.customerId = '';
       });
   },
 });

@@ -14,7 +14,6 @@ export const getAmplifyConfig = () => {
     } else {
       outputs = require('../../amplify_outputs_dev.json');
     }
-    console.log("OUTPUTS ", outputs)
     return outputs;
   } catch (error) {
     console.error('Error loading Amplify configuration:', error);

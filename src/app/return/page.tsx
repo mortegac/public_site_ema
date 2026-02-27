@@ -10,6 +10,9 @@ import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
 import { Box, Grid, Typography, Button, Paper } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
+// import { selectCustomer } from "@/store/Customer/slice";
+// import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
+import { resetCart } from "@/store/ShoppingCart/slice";
 import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentTransaction/slice";
 import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
 import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
@@ -352,9 +355,8 @@ const ReturnPage = () => {
     useEffect(() => {
         if (!isFirstRender.current) return;
         isFirstRender.current = false;
-        
+        dispatch(resetCart());
         handleValidation();
-        
  }, [handleValidation]); 
  
  
@@ -388,37 +390,30 @@ const ReturnPage = () => {
     // Nuevo useEffect para manejar el timeout de 30 segundos y redirección sin parámetros
     useEffect(() => {
         
-        // console.log("----paymentTransaction?.shoppingCartId---", paymentTransaction?.shoppingCartId)
+        // Solo ejecutar si statusRedirect está definido
+        if (!resTransaction?.statusRedirect) {
+            return;
+        }
         
-        const timeoutId = resTransaction?.shoppingCartId && setTimeout(() => {
+        const timeoutId = setTimeout(() => {
             // Preparar los datos para enviar
             
             const paymentData = {                    
-                glosa: resTransaction?.glosa,
-                
-                total: resTransaction?.total,
+                glosa: resTransaction?.glosa || "",
+                total: resTransaction?.total || "",
                 shoppingCartId: resTransaction?.shoppingCartId || null,
                 // Agregar estos si son necesarios para recibo-pago
-                order: resTransaction?.order,
-                card: resTransaction?.card,
-                typePay: resTransaction?.typePay,
-                email: resTransaction?.to_email,
+                order: resTransaction?.order || "",
+                card: resTransaction?.card || "",
+                typePay: resTransaction?.typePay || "",
+                email: resTransaction?.to_email || "",
             };
-            // const paymentData = {                    
-            //     glosa: paymentTransaction?.glosa,
-                
-            //     total: paymentTransaction?.amount,
-            //     shoppingCartId: paymentTransaction?.shoppingCartId || null,
-            //     // Agregar estos si son necesarios para recibo-pago
-            //     order: resTransaction?.order,
-            //     card: resTransaction?.card,
-            //     typePay: resTransaction?.typePay,
-            //     email: paymentTransaction?.usersPaymentTransactionsId,
-            // };
             
             console.log("---paymentData---", paymentData)
             // Guardar en sessionStorage
-            sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+            const paymentDataString = JSON.stringify(paymentData);
+            console.log("📦 Saving to sessionStorage 'paymentData':", paymentDataString);
+            sessionStorage.setItem('paymentData', paymentDataString);
             
             // Redirigir según el estado
             if (resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
@@ -434,8 +429,7 @@ const ReturnPage = () => {
         }, 3000);
 
         return () => clearTimeout(timeoutId);
-    // }, [paymentTransaction, router]);
-    }, [resTransaction?.statusRedirect, resTransaction?.glosa, resTransaction?.total, resTransaction?.order, resTransaction?.to_email, resTransaction?.card, resTransaction?.typePay, paymentTransaction?.shoppingCartId, router]);
+    }, [resTransaction?.statusRedirect, resTransaction?.glosa, resTransaction?.total, resTransaction?.order, resTransaction?.to_email, resTransaction?.card, resTransaction?.typePay, resTransaction?.shoppingCartId, router]);
     
     // funel de ventas 
     // y atrae y finalziaa nuevos clientes 

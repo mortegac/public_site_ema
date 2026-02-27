@@ -136,6 +136,9 @@ export const FormStep01 = (props:any) => {
       // },
       onSubmit: (values) => {
         // trackEvent('ingreso_datos_cliente', 'COTIZADOR_EMA', 'envio formulario cliente simulador');
+        if (!values?.email?.trim()) {
+          return;
+        }
         const addressFromStore = customer?.address ?? values?.address ?? "";
         Promise.all([
           dispatch(

@@ -34,8 +34,8 @@ export const Step05: FC<any> = () => {
     }
   }, []); // Solo se ejecuta al montar el componente
 
-  const handleRemoveItem = (productId: string) => {
-    dispatch(removeProductToCart({shoppingCartDetailId : productId}));
+  const handleRemoveItem = (shoppingCartDetailId: string) => {
+    dispatch(removeProductToCart({ shoppingCartDetailId }));
     dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
   };
 
@@ -45,19 +45,16 @@ export const Step05: FC<any> = () => {
   };
 
   // Calcular valores desde los productos del carrito persistido
+  // product.amount = precio con IVA (gross), product.netAmount = neto, product.vatValue = IVA
   const products = shoppingCart?.products || [];
-  const subtotal = products.reduce((sum, product) => 
+  const subtotalGross = products.reduce((sum, product) =>
     sum + (product.amount * product.quantity), 0);
-  // const totalVat = products.reduce((sum, product) => 
-  //   sum + (product.vatValue * product.quantity), 0);
-  const shipping = 0; // Valor fijo según la imagen, ajustar según tu lógica
-  const totalNeto = subtotal + shipping;
-  
-  
-  // 2. Calculamos el 19%
-  const totalVat = subtotal * IVA;  
-  const totalAPagar = totalNeto * (1 + IVA / 100);
-  // const totalAPagar = 0
+  const totalNeto = Math.round(products.reduce((sum, product) =>
+    sum + ((product.netAmount ?? product.amount / (1 + IVA)) * product.quantity), 0));
+  const totalVat = Math.round(products.reduce((sum, product) =>
+    sum + ((product.vatValue ?? product.amount - product.amount / (1 + IVA)) * product.quantity), 0));
+  const shipping = 0;
+  const totalAPagar = subtotalGross + shipping;
   
   const itemCount = products.reduce((sum, product) => sum + product.quantity, 0);
 
@@ -236,7 +233,7 @@ export const Step05: FC<any> = () => {
                         </Typography> */}
                         <Link
                           component="button"
-                          onClick={() => handleRemoveItem(product.productId)}
+                          onClick={() => handleRemoveItem(product.shoppingCartDetailId ?? product.productId)}
                           sx={{
                             fontSize: "14px",
                             color: "#4A90E2",
@@ -322,7 +319,7 @@ export const Step05: FC<any> = () => {
                     Neto ({itemCount} {itemCount === 1 ? 'producto' : 'productos'})
                   </Typography>
                   <Typography variant="body2" sx={{ color: "#333333" }}>
-                    {formatCurrency(subtotal)}
+                    {formatCurrency(totalNeto)}
                   </Typography>
                 </Box>
                 <Box

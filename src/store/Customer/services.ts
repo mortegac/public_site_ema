@@ -44,114 +44,67 @@ export const getCustomerService = async (input: customerInput): Promise<any> => 
 };
 
 export const createCustomer = async (input: customerInput): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const {  
-            customerId,
-            name,
-            // comune,
-            typeOfResidence,
-            referenceAddress,
-            
-            address,
-            phone, 
-            // email,
-            // city,
-            // state,
-            // zipCode,
-            // lat,
-            // long,
-            // zoomLevel,
-        } = input;
-        
-        console.log("--createCustomer--", input)
-    
-        const formData:any = {
-          customerId: customerId || crypto.randomUUID(),
-          // customerId: customerId || existingCustomer?.customerId || crypto.randomUUID(),
-          name: name || '-',
-          typeOfResidence: typeOfResidence || '-',
-          referenceAddress: referenceAddress || '-',
-          address: address || '-',
-          phone: phone || '-',
-          city: input.city || '-',
-          state: input.state || '-',
-          zipCode: input.zipCode || '-',
-          lat: input.lat || '-',
-          long: input.long || '-',
-          zoomLevel: input.zoomLevel || "15",
-      };
-      
-        // Primero verificamos si existe el customer
-        // let existingCustomer: any = null;
-        if (customerId) {
-        
-            // const { data: existingCustomers } = await client.models.Customer.list({ 
-            //     filter: { customerId: { eq: customerId } } 
-            // });
-            
-            if (Boolean(input.existCustomer)) {
-              console.log("input.existCustomer = ", input.existCustomer);
-                
-                const { data, errors } = await client.models.Customer.update(formData);
-                if (errors) {
-                  console.log("--updateCustomer--errors", errors)
-                  reject({
-                    errorMessage: errors.map(e => e.message).join(', ')
-                  });
-                  return;
-                }
-                console.log("--updateCustomer--resolve", data)
-                resolve(data);
-                return;  
-            }else{
-              console.log("--formData", formData)
-              const { data, errors } = await client.models.Customer.create(formData);
-              console.log("--createCustomer--data", data)
-              
-              if (errors) {
-                console.log("--createCustomer--errors", errors)
-                reject({
-                  errorMessage: errors.map(e => e.message).join(', ')
-                });
-                return;
-              }
-              console.log("--createCustomer--resolve", data)
-              resolve(data);
-            }
-                
-        // console.log("--existingCustomer--", existingCustomer)
-            // if (existingCustomer) {
-            //     console.log("--createCustomer--exists", existingCustomer);
-                
-            //     const { data, errors } = await client.models.Customer.update(formData);
-            //     if (errors) {
-            //       console.log("--updateCustomer--errors", errors)
-            //       reject({
-            //         errorMessage: errors.map(e => e.message).join(', ')
-            //       });
-            //       return;
-            //     }
-            //     console.log("--updateCustomer--resolve", data)
-            //     resolve(data);
-            //     return;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {
+        customerId,
+        name,
+        typeOfResidence,
+        referenceAddress,
+        address,
+        phone,
+      } = input;
 
-            // }
-        }
-
-        
-    
-    
-        
-          
-      } catch (err) {
-        console.log("--createCustomer--err", err)
-        reject({
-          errorMessage: JSON.stringify(err),
-        });
+      if (!customerId || String(customerId).trim() === '') {
+        reject({ errorMessage: 'Email is required' });
+        return;
       }
-    });
-  };
+
+      console.log("--createCustomer--", input);
+
+      const formData: any = {
+        customerId: customerId.trim(),
+        name: name || '-',
+        typeOfResidence: typeOfResidence || '-',
+        referenceAddress: referenceAddress || '-',
+        address: address || '-',
+        phone: phone || '-',
+        city: input.city || '-',
+        state: input.state || '-',
+        zipCode: input.zipCode || '-',
+        lat: input.lat || '-',
+        long: input.long || '-',
+        zoomLevel: input.zoomLevel || "15",
+      };
+
+      const { data: createData, errors: createErrors } = await client.models.Customer.create(formData);
+
+      if (!createErrors || createErrors.length === 0) {
+        console.log("--createCustomer--resolve", createData);
+        resolve(createData);
+        return;
+      }
+
+      console.log("--createCustomer--errors (retrying with update)", createErrors);
+      const { data: updateData, errors: updateErrors } = await client.models.Customer.update(formData);
+
+      if (updateErrors && updateErrors.length > 0) {
+        console.log("--updateCustomer--errors", updateErrors);
+        reject({
+          errorMessage: updateErrors.map(e => e.message).join(', '),
+        });
+        return;
+      }
+      console.log("--updateCustomer--resolve", updateData);
+      resolve(updateData);
+    } catch (err) {
+      console.log("--createCustomer--err", err);
+      reject({
+        errorMessage: JSON.stringify(err),
+      });
+    }
+  });
+};
 
   
   

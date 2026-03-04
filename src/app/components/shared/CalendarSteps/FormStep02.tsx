@@ -23,8 +23,8 @@ export default function FormStep02() {
   const dispatch = useAppDispatch();
   
   const { customer } = useAppSelector(selectCustomer);
-  const { calendarVisits } = useAppSelector(selectCalendarVisits);
-  const { shoppingCart } = useAppSelector(selectShoppingCart);
+  const { calendarVisits, cartId } = useAppSelector(selectCalendarVisits);
+  const { shoppingCart, loading: cartLoading } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
   
   const PRODUCT_NAME = "Visita Técnica "
@@ -50,15 +50,17 @@ export default function FormStep02() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!calendarVisits?.calendarId) return;
-      
-      await dispatch(getShoppingCart({
-        shoppingCartId: calendarVisits?.calendarId,
-      }));
+      if (!cartId) return;
+
+      await dispatch(
+        getShoppingCart({
+          shoppingCartId: cartId,
+        })
+      );
     };
-    
+
     fetchData();
-  }, [calendarVisits?.calendarId, dispatch]);
+  }, [cartId, dispatch]);
 
   
   return (
@@ -148,9 +150,15 @@ export default function FormStep02() {
                 {/* <br /> */}
                 {/* {PRODUCT_TIME} */}
               </Typography>
-              <Typography variant="body1" fontWeight="bold">
-                {formatCurrency(Number(shoppingCart?.total || 0))}
-              </Typography>
+              {cartLoading || (cartId && shoppingCart?.shoppingCartId !== cartId) ? (
+                <Box sx={{ display: "flex", alignItems: "center", minWidth: "80px", justifyContent: "flex-end" }}>
+                  <LoadingIcon icon="puff" color="#E81A68" style={{ width: "24px", height: "24px" }} />
+                </Box>
+              ) : (
+                <Typography variant="body1" fontWeight="bold">
+                  {formatCurrency(Number(shoppingCart?.total || 0))}
+                </Typography>
+              )}
             </Box>
           </Box>
 
@@ -167,9 +175,15 @@ export default function FormStep02() {
               <Typography variant="h6" fontWeight="bold">
                 Total a pagar:
               </Typography>
-              <Typography variant="h6" fontWeight="bold" color="primary">
-              {formatCurrency(Number(shoppingCart?.total || 0))}
-              </Typography>
+              {cartLoading || (cartId && shoppingCart?.shoppingCartId !== cartId) ? (
+                <Box sx={{ display: "flex", alignItems: "center", minWidth: "80px", justifyContent: "flex-end" }}>
+                  <LoadingIcon icon="puff" color="#E81A68" style={{ width: "24px", height: "24px" }} />
+                </Box>
+              ) : (
+                <Typography variant="h6" fontWeight="bold" color="primary">
+                  {formatCurrency(Number(shoppingCart?.total || 0))}
+                </Typography>
+              )}
             </Box>
 
             <Box sx={{ 

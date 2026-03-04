@@ -1,7 +1,7 @@
 "use client";
 
 // components/OrderConfirmation.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/es"; // Importa el idioma español
 import timezone from "dayjs/plugin/timezone";
@@ -77,6 +77,7 @@ export default function FormResumeVirtual() {
     phone:"", 
     hasData:false,
   });
+  const hasReadData = useRef(false);
     
   const theme = useTheme(); // Acceder al tema para los colores
   const { trackEvent } = useAnalytics();
@@ -132,25 +133,27 @@ export default function FormResumeVirtual() {
   // }, [calendarVisits?.calendarId]);
 
   useEffect(() => {
-    // Recuperar datos de sessionStorage si existen
+    // React Strict Mode ejecuta los efectos dos veces. Usamos una bandera para
+    // evitar leer y limpiar sessionStorage más de una vez.
+    if (hasReadData.current) return;
+
     const storedData = sessionStorage.getItem('paymentData');
     if (storedData) {
+      hasReadData.current = true;
       const data = JSON.parse(storedData);
-      setPaymentData({
+      setPaymentData((prev) => ({
+        ...prev,
         email: data.email || "",
         date: data.date || "",
         hour: data.hour || "",
         address: data.address || "",
         phone: data.phone || "",
         hasData: true,
-      });
-      // Limpiar sessionStorage después de leer
+      }));
       sessionStorage.removeItem('paymentData');
-    }else{
-      setPaymentData({
-        ...paymentData,
-        hasData: false
-      });
+    } else {
+      hasReadData.current = true;
+      setPaymentData((prev) => ({ ...prev, hasData: false }));
     }
   }, []);
   

@@ -169,58 +169,47 @@ export const FormStep01 = (props:any) => {
         ]);
       
       } else if (submitButton === 'scheduleNotPay') {
-        // alert("scheduleNotPay")
-        console.log("---calendarVisits---", calendarVisits)
-        
-        trackEvent('agendar_visita_virtual', 'AGENDA_EMA', 'envio formulario visita fisica');
-    
-        const timeoutId = selectedCalendar?.calendarId && setTimeout(() => {
-          const paymentData = {
-              email: values?.email,
-              date: dayjs(selectedCalendar?.startDate).format("D [de] MMMM"),
-              hour: toChileTime({ date: selectedCalendar?.startDate }),
-              address: `${values?.address || ''}, ${customer?.city || ''}`.trim() || "",
-              phone: values?.phone,
-          };
-          
-          console.log("---calendarVisit---", calendarVisit)
-          console.log("---customer---", customer)
-          
-          console.log("---paymentData---", paymentData)
-          // Guardar en sessionStorage
-          sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-          
-          // Redirigir según el estado
-          router.push('/agenda/recibo-virtual');
-          
-        }, 3000);
-      
-        Promise.all([
-          await dispatch(setLoading()),
-          await dispatch(
+        if (!selectedCalendar?.calendarId || !selectedCalendar?.startDate) return;
+
+        trackEvent(
+          "agendar_visita_virtual",
+          "AGENDA_EMA",
+          "envio formulario visita fisica"
+        );
+
+        // Despachar las acciones antes de programar el redireccionamiento
+        await Promise.all([
+          dispatch(setLoading()),
+          dispatch(
             setCustomer({
               ...customer,
               customerId: values?.email,
             })
           ),
           values?.email &&
-          selectedCalendar?.calendarId &&
-          await dispatch(setCalendarNotPay({
-              customerId: values?.email,
-              calendarId: selectedCalendar?.calendarId,
-          })),
-          clearTimeout(timeoutId)
-          // dispatch(setStep(3)), // Ir al paso de visita virtual
-          // Redirect a la página de conversion
-          
-          
+            selectedCalendar?.calendarId &&
+            dispatch(
+              setCalendarNotPay({
+                customerId: values?.email,
+                calendarId: selectedCalendar?.calendarId,
+              })
+            ),
         ]);
-        console.log("---calendarVisit---", calendarVisit)
-        
-      
-      
-       
-        
+
+        // Mantener el timeout de 3 segundos sin cancelarlo para que escriba en sessionStorage
+        setTimeout(() => {
+          const paymentData = {
+            email: values?.email,
+            date: dayjs(selectedCalendar.startDate).format("D [de] MMMM"),
+            hour: toChileTime({ date: selectedCalendar.startDate }),
+            address:
+              `${values?.address || ""}, ${customer?.city || ""}`.trim() || "",
+            phone: values?.phone,
+          };
+
+          sessionStorage.setItem("paymentData", JSON.stringify(paymentData));
+          router.push("/agenda/recibo-virtual");
+        }, 3000);
       }
       
       // setLoadingPage(false)

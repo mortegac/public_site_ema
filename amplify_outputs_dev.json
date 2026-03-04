@@ -6363,6 +6363,25 @@
               "attributes": []
             }
           }
+        },
+        "VisitsSummaryCronReturnType": {
+          "name": "VisitsSummaryCronReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "totalVisits": {
+              "name": "totalVisits",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
         }
       },
       "mutations": {
@@ -6683,6 +6702,34 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true
+            }
+          }
+        },
+        "visitsSummaryCron": {
+          "name": "visitsSummaryCron",
+          "isArray": false,
+          "type": {
+            "nonModel": "VisitsSummaryCronReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false
+            },
+            "email": {
+              "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
             }
           }
         }

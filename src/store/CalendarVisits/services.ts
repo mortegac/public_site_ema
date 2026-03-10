@@ -220,7 +220,8 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
           $duration: Int!
           $address: String!
           $lat: Float
-          $long: Float
+          $long: Float,
+          $isRemote: Boolean!
         ) {
           MakeReservationAndCart(
             customerId: $customerId
@@ -230,6 +231,7 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
             address: $address
             lat: $lat
             long: $long
+            isRemote: $isRemote
           ) {
             message
             cartId
@@ -244,6 +246,7 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
         address: objFilter.address!,
         lat: objFilter.lat,
         long: objFilter.long,
+        isRemote: objFilter.isRemote || false,
       }
     }) as GraphQLResult<MakeReservationResponse>;
     

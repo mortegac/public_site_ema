@@ -699,12 +699,12 @@ export const FormStep01 = (props:any) => {
             color:"#E81A68",
             border: "1px solid #E81A68",
             width: { xs: '100%', md: 'auto' },
+            display: 'none',
           }}
           disabled={status === "loading"}
           onClick={() => {
             // No back button on first step
           }}
-          sx={{ display: 'none' }}
         >
           Volver
         </Button>

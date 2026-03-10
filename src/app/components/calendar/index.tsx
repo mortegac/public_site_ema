@@ -176,6 +176,7 @@ export default function BookingCalendar() {
             address: customer.address,
             lat: customer.lat ? parseFloat(customer.lat) : undefined,
             long: customer.long ? parseFloat(customer.long) : undefined,
+            isRemote: false,
           }))
         ]);
         

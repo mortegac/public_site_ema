@@ -10,6 +10,7 @@ export type calendarVisitInput = {
     address?: string,
     lat?: number,
     long?: number,
+    isRemote?: boolean,
 };  
 
 export type CalendarVisit = {

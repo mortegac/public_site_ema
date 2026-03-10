@@ -1719,6 +1719,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "isFixed": {
+              "name": "isFixed",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -1739,6 +1746,13 @@
               "type": {
                 "enum": "CalendarVisitState"
               },
+              "isRequired": false,
+              "attributes": []
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
               "isRequired": false,
               "attributes": []
             },
@@ -6203,6 +6217,8 @@
             "reserved",
             "payed",
             "payedAndAgended",
+            "initiated",
+            "completed",
             "error",
             "occupied",
             "stale",
@@ -6313,6 +6329,8 @@
             "reserved",
             "payed",
             "payedAndAgended",
+            "initiated",
+            "completed",
             "error",
             "occupied",
             "stale",
@@ -6933,6 +6951,32 @@
             }
           }
         },
+        "FixedTimeReservationReturnType": {
+          "name": "FixedTimeReservationReturnType",
+          "fields": {
+            "ok": {
+              "name": "ok",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": true,
+              "attributes": []
+            },
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "GenerateInstallationDaysReturnType": {
           "name": "GenerateInstallationDaysReturnType",
           "fields": {
@@ -6969,6 +7013,25 @@
             }
           }
         },
+        "SendVisitsSummaryScheduledReturnType": {
+          "name": "SendVisitsSummaryScheduledReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "totalVisits": {
+              "name": "totalVisits",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "FetchCalendarForDateReturnType": {
           "name": "FetchCalendarForDateReturnType",
           "fields": {
@@ -6988,6 +7051,18 @@
               "isRequired": false,
               "attributes": [],
               "isArrayNullable": true
+            }
+          }
+        },
+        "VisitActionReturnType": {
+          "name": "VisitActionReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         }
@@ -7081,6 +7156,12 @@
               "name": "address",
               "isArray": false,
               "type": "String",
+              "isRequired": true
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
               "isRequired": true
             },
             "lat": {
@@ -7305,6 +7386,64 @@
             }
           }
         },
+        "FixedTimeReservation": {
+          "name": "FixedTimeReservation",
+          "isArray": false,
+          "type": {
+            "nonModel": "FixedTimeReservationReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            },
+            "endTime": {
+              "name": "endTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
+            }
+          }
+        },
         "generateInstallationDays": {
           "name": "generateInstallationDays",
           "isArray": false,
@@ -7365,6 +7504,34 @@
             }
           }
         },
+        "sendVisitsSummaryScheduled": {
+          "name": "sendVisitsSummaryScheduled",
+          "isArray": false,
+          "type": {
+            "nonModel": "SendVisitsSummaryScheduledReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "email": {
+              "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "start": {
+              "name": "start",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "end": {
+              "name": "end",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
         "FetchCalendarForDate": {
           "name": "FetchCalendarForDate",
           "isArray": false,
@@ -7396,6 +7563,28 @@
               "isArray": false,
               "type": "Float",
               "isRequired": false
+            }
+          }
+        },
+        "VisitAction": {
+          "name": "VisitAction",
+          "isArray": false,
+          "type": {
+            "nonModel": "VisitActionReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "token": {
+              "name": "token",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "action": {
+              "name": "action",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
             }
           }
         }

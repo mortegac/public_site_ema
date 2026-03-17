@@ -1,6 +1,5 @@
 import { type ClientSchema, a } from "@aws-amplify/backend";
 
-
 /**
  * estandares de creacion de entidades,
  * las entidades/modelos estaran en ingles singular
@@ -135,6 +134,7 @@ export const MainSchema = a
       usedTime: a.integer(),
       maxTime: a.integer(),
       availableTime: a.integer(),
+      isFinalized: a.boolean().default(false),
       userId: a.id(),
       startLocationLatitude: a.string(),
       startLocationLongitude: a.string(),
@@ -166,8 +166,11 @@ export const MainSchema = a
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
+      travelTime: a.integer().default(0),
       routeOrder: a.integer(),
       routeDirections: a.string(),
+      isFixed: a.boolean().default(false),
+      isFinalized: a.boolean().default(false),
       // Explicitly define the timestamp fields you want to index
       createdAt: a.datetime(),
       updatedAt: a.datetime(),
@@ -176,12 +179,15 @@ export const MainSchema = a
         "reserved", // reservada lo libera webpayStatus si falla 15m
         "payed", // pagada  
         "payedAndAgended", // pagada y se genero en google calendar
+        "initiated", // tecnico inicio la visita
+        "completed", // visita finalizada
         "error", // fallo
         "occupied", // no disponible
         "stale", // paso la fecha  
         "timedOut", //expiro
         "waiting", //la transaccion inicio pero no ha terminado; espera a q la transaccion termine asi no es limpiada automaticamente 15m
       ]),
+      isRemote: a.boolean().default(false),
       installationDayId: a.id(),
       InstallationDay: a.belongsTo("InstallationDay", "installationDayId"),
       customerId: a.id(),

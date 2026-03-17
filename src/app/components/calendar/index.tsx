@@ -1,7 +1,7 @@
 "use client";
 
 // components/BookingCalendar.tsx
-import React, { useState, useEffect, useId, useMemo } from 'react';
+import React, { useState, useEffect, useId, useMemo, useRef } from 'react';
 import { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // Importa el idioma español
@@ -123,19 +123,43 @@ export default function BookingCalendar() {
     loadPrices();
   }, []);
 
-  // Fetch installation days when customer address is available
+  // Track cached date range in ref to avoid useEffect dependency array changing size
+  const cachedRangeRef = useRef<{ min: string; max: string } | null>(null);
+  useEffect(() => {
+    if (Array.isArray(installationDays) && installationDays.length > 0) {
+      const cachedDates = installationDays
+        .map((d: InstallationDay) => d?.date && dayjs.utc(d.date).format('YYYY-MM-DD'))
+        .filter(Boolean) as string[];
+      if (cachedDates.length > 0) {
+        const sorted = [...cachedDates].sort();
+        cachedRangeRef.current = { min: sorted[0], max: sorted[sorted.length - 1] };
+      } else {
+        cachedRangeRef.current = null;
+      }
+    } else {
+      cachedRangeRef.current = null;
+    }
+  }, [installationDays]);
+
+  // Fetch installation days when customer address is available (returns ~30 days in one go)
+  // Skip fetch when selected week is within cached data; refetch when we run out of local data
   useEffect(() => {
     const fetchData = async () => {
       if (!customer?.address) {
-        // If no address, go back to form step
         dispatch(setStep(0));
         return;
       }
 
-      const dateStr = selectedDate.format('YYYY-MM-DD');
+      const weekStart = selectedDate.format('YYYY-MM-DD');
+      const weekEnd = selectedDate.add(4, 'day').format('YYYY-MM-DD');
+
+      const cached = cachedRangeRef.current;
+      if (cached && weekStart >= cached.min && weekEnd <= cached.max) {
+        return;
+      }
 
       await dispatch(getInstallationDays({
-        date: dateStr,
+        date: weekStart,
         address: customer.address,
         lat: customer.lat ? parseFloat(customer.lat) : undefined,
         long: customer.long ? parseFloat(customer.long) : undefined,
@@ -144,7 +168,7 @@ export default function BookingCalendar() {
     };
 
     fetchData();
-  }, [customer?.address, customer?.lat, customer?.long, selectedDate, isRemote, dispatch]);
+  }, [customer?.address, customer?.lat, customer?.long, isRemote, selectedDate, dispatch]);
 
   // Update week days and available days mapping
   useEffect(() => {

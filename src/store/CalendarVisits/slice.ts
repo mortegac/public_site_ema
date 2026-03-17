@@ -235,6 +235,10 @@ const calendarVisitsSlice = createSlice({
       setStep: (state, action: PayloadAction<{}>) => {
         const objAction: any = action.payload;
         state.currentStep = objAction;
+        // Reset loading when navigating back to step 0 so FormStep01 doesn't show stale loader
+        if (objAction === 0) {
+          state.status = "idle";
+        }
       },
       increment: (state) => {
         state.status = "loading";
@@ -362,8 +366,25 @@ const calendarVisitsSlice = createSlice({
       })
       .addCase(getInstallationDays.fulfilled, (state, action) => {
         state.statusCalendar = "idle";
-        state.installationDays = action.payload?.installationDays || [];
-        state.calendarVisitGroups = action.payload?.calendarVisitGroups || [];
+        const incoming = action.payload?.installationDays || [];
+        const incomingGroups = action.payload?.calendarVisitGroups || [];
+        // Merge by date so going back doesn't require refetch
+        const byDate = new Map<string, InstallationDay>();
+        (state.installationDays || []).forEach((d) => {
+          if (d?.date) byDate.set(dayjs.utc(d.date).format("YYYY-MM-DD"), d);
+        });
+        incoming.forEach((d: InstallationDay) => {
+          if (d?.date) byDate.set(dayjs.utc(d.date).format("YYYY-MM-DD"), d);
+        });
+        state.installationDays = Array.from(byDate.values());
+        const groupsByDate = new Map<string, CalendarVisitGroupReturnType>();
+        (state.calendarVisitGroups || []).forEach((g) => {
+          if (g?.date) groupsByDate.set(dayjs.utc(g.date).format("YYYY-MM-DD"), g);
+        });
+        incomingGroups.forEach((g: CalendarVisitGroupReturnType) => {
+          if (g?.date) groupsByDate.set(dayjs.utc(g.date).format("YYYY-MM-DD"), g);
+        });
+        state.calendarVisitGroups = Array.from(groupsByDate.values());
       })
       .addCase(getInstallationDays.rejected, (state, action) => {
         state.statusCalendar = "failed";

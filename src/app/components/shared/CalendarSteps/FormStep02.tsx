@@ -23,11 +23,12 @@ export default function FormStep02() {
   const dispatch = useAppDispatch();
   
   const { customer } = useAppSelector(selectCustomer);
-  const { selectedInstallationDayId, calendarVisits } = useAppSelector(selectCalendarVisits);
+  const { cartId: sliceCartId, selectedInstallationDayId, calendarVisits } = useAppSelector(selectCalendarVisits);
   const { shoppingCart, loading: cartLoading } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
 
-  const cartId = selectedInstallationDayId || (calendarVisits as any)?.installationDayId || calendarVisits?.calendarId;
+  // Prefer cartId from slice (UUID from makeReservation) over installationDayId
+  const cartId = sliceCartId || selectedInstallationDayId || (calendarVisits as any)?.installationDayId || calendarVisits?.calendarId;
   
   const PRODUCT_NAME = "Visita Técnica "
   // const PRODUCT_TIME = "09:00 Hrs"
@@ -61,7 +62,7 @@ export default function FormStep02() {
     };
 
     fetchData();
-  }, [selectedInstallationDayId, calendarVisits, dispatch]);
+  }, [cartId, dispatch]);
 
   
   return (

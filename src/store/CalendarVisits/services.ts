@@ -302,19 +302,21 @@ interface FetchCalendarForDateGraphQLResponse {
 
 export const fetchInstallationDays = async (params: {
   date?: string; // ISO date string (YYYY-MM-DD), optional
-  address: string; // Required
+  address?: string; // Optional (required for on-site; omitted for remote)
   lat?: number; // Optional
   long?: number; // Optional
+  remote?: boolean; // Optional (remote availability)
 }) => {
   try {
     const response = await client.graphql<FetchCalendarForDateGraphQLResponse>({
       query: `
-        mutation FetchCalendarForDate($date: AWSDate, $address: String!, $lat: Float, $long: Float) {
+        mutation FetchCalendarForDate($date: AWSDate, $address: String, $lat: Float, $long: Float, $remote: Boolean) {
           FetchCalendarForDate(
             date: $date
             address: $address
             lat: $lat
             long: $long
+            remote: $remote
           ) {
             message
             installationDays {
@@ -330,6 +332,14 @@ export const fetchInstallationDays = async (params: {
               endLocationLatitude
               endLocationLongitude
             }
+            calendarVisitGroups {
+              date
+              calendarVisits {
+                startDate
+                endDate
+                timeZone
+              }
+            }
           }
         }
       `,
@@ -338,6 +348,7 @@ export const fetchInstallationDays = async (params: {
         address: params.address,
         lat: params.lat,
         long: params.long,
+        remote: params.remote,
       }
     }) as GraphQLResult<FetchCalendarForDateGraphQLResponse>;
     

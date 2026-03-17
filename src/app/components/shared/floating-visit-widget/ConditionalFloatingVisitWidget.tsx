@@ -15,15 +15,17 @@ const ConditionalFloatingVisitWidget = () => {
     const wasClosed = sessionStorage.getItem(STORAGE_KEY) === 'true';
     
     // No mostrar el widget si:
-    // 1. Está en /agenda o /cotizador
+    // 1. Está en /agenda, /agenda/recibo-pago, /cotizador
     // 2. Fue cerrado previamente en esta sesión
     if (
-      pathname === '/agenda' || 
-      pathname === '/cotizador' ||  
-      pathname === '/cargadores-vehiculos-electricos-sin-instalacion' || 
-      pathname === '/cargadores-en-edificios' || 
-      pathname === '/postulacion-cargadores-edificios' || 
-      wasClosed) {
+      pathname === '/agenda' ||
+      pathname === '/agenda/recibo-pago' ||
+      pathname === '/cotizador' ||
+      pathname === '/cargadores-vehiculos-electricos-sin-instalacion' ||
+      pathname === '/cargadores-en-edificios' ||
+      pathname === '/postulacion-cargadores-edificios' ||
+      wasClosed
+    ) {
       setShouldShow(false);
     } else {
       setShouldShow(true);

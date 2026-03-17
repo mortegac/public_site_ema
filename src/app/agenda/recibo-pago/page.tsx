@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import { useAnalytics } from '@/hooks/useAnalytics';
-
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 
 import {SvgSuccess} from "./SvgSuccess";
 import { formatCurrency } from "@/utils/currency";
@@ -93,6 +93,8 @@ const Invoice = () => {
   
 
   return (
+    <>
+      <HpHeaderNew />
     <Box
       sx={{
         backgroundColor: '#f8fafc',
@@ -466,6 +468,7 @@ const Invoice = () => {
         
       </Container>
     </Box>
+    </>
   );
 };
 

@@ -41,7 +41,7 @@ import AddressInput from '@/app/components/AddressInput2';
 // import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCustomer, setCustomer, getCustomer, setCustomerData } from "@/store/Customer/slice";
-import { selectCalendarVisits, setStep, setCalendarVisits, setCalendarNotPay, setLoading } from "@/store/CalendarVisits/slice";
+import { selectCalendarVisits, setStep, setIsRemote } from "@/store/CalendarVisits/slice";
 
 
 import 'react-phone-number-input/style.css'
@@ -146,33 +146,24 @@ export const FormStep01 = (props:any) => {
       if (submitButton === 'schedule') {
         // alert("schedule")
         trackEvent('ingreso_datos_cliente', 'AGENDA_EMA', 'envio formulario visita virtual');
-        
-        
-         Promise.all([
-          await dispatch(setLoading()),
-          await dispatch(
+
+        await Promise.all([
+          dispatch(
             setCustomer({
               ...customer,
               customerId: values?.email,
               existCustomer: Boolean(existCustomer)
             })
           ),
-          
-          dispatch(setStep(1)), // Ir al calendario
+          dispatch(setIsRemote(false)),
         ]);
-      
+        dispatch(setStep(1)); // Ir al calendario
+
       } else if (submitButton === 'scheduleNotPay') {
-        if (!selectedCalendar?.calendarId || !selectedCalendar?.startDate) return;
+        // Remote (virtual) visit - same paid flow
+        trackEvent('agendar_visita_remota', 'AGENDA_EMA', 'envio formulario visita remota');
 
-        trackEvent(
-          "agendar_visita_virtual",
-          "AGENDA_EMA",
-          "envio formulario visita fisica"
-        );
-
-        // Despachar las acciones antes de programar el redireccionamiento
         await Promise.all([
-          dispatch(setLoading()),
           dispatch(
             setCustomer({
               ...customer,
@@ -180,27 +171,10 @@ export const FormStep01 = (props:any) => {
               existCustomer: Boolean(existCustomer),
             })
           ),
-          selectedCalendar?.calendarId &&
-          await dispatch(setCalendarNotPay({
-              customerId: values.email,
-              calendarId: selectedCalendar?.calendarId,
-          })),
+          dispatch(setIsRemote(true)),
         ]);
 
-        // Mantener el timeout de 3 segundos sin cancelarlo para que escriba en sessionStorage
-        setTimeout(() => {
-          const paymentData = {
-            email: values?.email,
-            date: dayjs(selectedCalendar.startDate).format("D [de] MMMM"),
-            hour: toChileTime({ date: selectedCalendar.startDate }),
-            address:
-              `${values?.address || ""}, ${customer?.city || ""}`.trim() || "",
-            phone: values?.phone,
-          };
-
-          sessionStorage.setItem("paymentData", JSON.stringify(paymentData));
-          router.push("/agenda/recibo-virtual");
-        }, 3000);
+        dispatch(setStep(1)); // Ir al calendario
       }
       
       // setLoadingPage(false)
@@ -625,7 +599,7 @@ export const FormStep01 = (props:any) => {
                               }}
                               disabled={status === "loading"}
                             >
-                            Continuar con  visita virtual sin costo
+                            Continuar con visita remota
                           </Button>
                          </Box>
                          

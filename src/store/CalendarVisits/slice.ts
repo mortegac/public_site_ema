@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { emptyCalendarVisit, calendarVisitInput, CalendarVisit, InstallationDay } from './type';
+import { emptyCalendarVisit, calendarVisitInput, CalendarVisit, InstallationDay, CalendarVisitGroupReturnType } from './type';
 import { RootState } from "../store";
 import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastScheduleOneInstaller,makeReservation, makeReservationNotPaid, fetchInstallationDays } from './services';
 import { getShoppingCart } from '../ShoppingCart/slice';
@@ -21,7 +21,9 @@ interface CalendarVisitsSliceState {
   cartId: string;
   installersData: {[key: string]: string};
   installationDays: InstallationDay[];
+  calendarVisitGroups: CalendarVisitGroupReturnType[];
   selectedInstallationDayId: string;
+  isRemote: boolean;
 }
 
 const initialState: CalendarVisitsSliceState = {
@@ -38,7 +40,9 @@ const initialState: CalendarVisitsSliceState = {
   cartId: "",
   installersData: {},
   installationDays: [],
+  calendarVisitGroups: [],
   selectedInstallationDayId: "",
+  isRemote: false,
 };
 
 export const getCalendarVisits = createAsyncThunk(
@@ -137,9 +141,10 @@ export const getInstallationDays = createAsyncThunk(
   "CalendarVisits/getInstallationDays",
   async (params: {
     date?: string;
-    address: string;
+    address?: string;
     lat?: number;
     long?: number;
+    remote?: boolean;
   }) => {
     try {
       const response = await fetchInstallationDays(params);
@@ -261,6 +266,9 @@ const calendarVisitsSlice = createSlice({
       setSelectedInstallationDayId: (state, action: PayloadAction<string>) => {
         state.selectedInstallationDayId = action.payload;
       },
+      setIsRemote: (state, action: PayloadAction<boolean>) => {
+        state.isRemote = action.payload;
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -299,12 +307,14 @@ const calendarVisitsSlice = createSlice({
       
       
       
-    // setCalendarVisits
+    // setCalendarVisits (MakeReservationAndCart - disables slot/day buttons while running)
       .addCase(setCalendarVisits.pending, (state) => {
+        state.status = "loading";
         state.loading = true;
         state.error = null;
       })
       .addCase(setCalendarVisits.fulfilled, (state, action) => {
+        state.status = "idle";
         state.loading = false;
         // console.log(">>> setCalendarVisits >> action.payload >>", action.payload.data)
         state.calendarVisits = action?.payload
@@ -315,6 +325,7 @@ const calendarVisitsSlice = createSlice({
         
       })
       .addCase(setCalendarVisits.rejected, (state, action) => {
+        state.status = "idle";
         state.loading = false;
         state.error = action.error.message || 'Error al actualizar la distancia';
       })
@@ -352,11 +363,13 @@ const calendarVisitsSlice = createSlice({
       .addCase(getInstallationDays.fulfilled, (state, action) => {
         state.statusCalendar = "idle";
         state.installationDays = action.payload?.installationDays || [];
+        state.calendarVisitGroups = action.payload?.calendarVisitGroups || [];
       })
       .addCase(getInstallationDays.rejected, (state, action) => {
         state.statusCalendar = "failed";
         state.error = action.error.message || 'Error al obtener días de instalación';
         state.installationDays = [];
+        state.calendarVisitGroups = [];
       });
   },
 });
@@ -371,7 +384,8 @@ export const {
     setDataForm,
     cleanData,
     setLoading,
-    setSelectedInstallationDayId
+    setSelectedInstallationDayId,
+    setIsRemote
   } = calendarVisitsSlice.actions;
   
 export const selectCalendarVisits = (state: RootState) => state.calendarVisits;

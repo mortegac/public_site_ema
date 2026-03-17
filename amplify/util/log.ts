@@ -65,7 +65,6 @@ class Logger {
 export const logger = Logger.getInstance();
 let logLevel;
 try {
-    console.log(process);
     logLevel = parseInt(process?.env?.LOG_LEVEL || "3");
 } catch (error) {
     logLevel = "3";

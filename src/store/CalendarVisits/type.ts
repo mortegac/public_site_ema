@@ -61,7 +61,19 @@ export interface InstallationDay {
   routeLegs?: string;
 }
 
+export interface CalendarVisitReturnType {
+  startDate?: string;
+  endDate?: string;
+  timeZone?: string;
+}
+
+export interface CalendarVisitGroupReturnType {
+  date?: string;
+  calendarVisits?: CalendarVisitReturnType[] | null;
+}
+
 export interface FetchCalendarForDateResponse {
   message: string;
   installationDays: InstallationDay[];
+  calendarVisitGroups?: CalendarVisitGroupReturnType[];
 }

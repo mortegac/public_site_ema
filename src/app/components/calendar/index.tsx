@@ -18,7 +18,7 @@ type props = {
     format?: string;
 };
 
-import { Box, Grid, Typography, Button, Paper, IconButton } from '@mui/material';
+import { Box, Grid, Typography, Button, Paper, IconButton, CircularProgress } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -57,6 +57,7 @@ dayjs.updateLocale('es', {
 });
 
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
+import { fetchNumericParameter } from '@/utils/queries/Parameter/fetchNumericParameter';
 
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
@@ -78,17 +79,49 @@ export default function BookingCalendar() {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
   const [availableDays, setAvailableDays] = useState<{ [key: string]: InstallationDay }>({});
+  const [clickedSlotKey, setClickedSlotKey] = useState<string | null>(null);
+  const [remotePrice, setRemotePrice] = useState<number | null>(null);
+  const [onsitePrice, setOnsitePrice] = useState<number | null>(null);
 
   const UUID = useId();
   const { 
     installationDays,
+    calendarVisitGroups,
     statusCalendar,
+    status,
+    isRemote,
   } = useAppSelector(selectCalendarVisits);
   
   const { customer } = useAppSelector(selectCustomer);
   
   const dispatch = useAppDispatch();
   const { trackEvent } = useAnalytics();
+
+  const formatCLP = (amount: number | null) => {
+    if (amount == null || Number.isNaN(amount)) return '';
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  // Fetch visit prices (remote and on-site) from ParameterEnc
+  useEffect(() => {
+    const loadPrices = async () => {
+      try {
+        const [remote, onsite] = await Promise.all([
+          fetchNumericParameter({ parameterEncId: 'REMOTE_VISIT_COST', default: '10000' }),
+          fetchNumericParameter({ parameterEncId: 'VISIT_COST', default: '10000' }),
+        ]);
+        setRemotePrice(remote);
+        setOnsitePrice(onsite);
+      } catch (e) {
+        console.error('Error fetching visit prices', e);
+      }
+    };
+    loadPrices();
+  }, []);
 
   // Fetch installation days when customer address is available
   useEffect(() => {
@@ -100,17 +133,18 @@ export default function BookingCalendar() {
       }
 
       const dateStr = selectedDate.format('YYYY-MM-DD');
-      
+
       await dispatch(getInstallationDays({
         date: dateStr,
         address: customer.address,
         lat: customer.lat ? parseFloat(customer.lat) : undefined,
         long: customer.long ? parseFloat(customer.long) : undefined,
+        remote: isRemote,
       }));
     };
-    
+
     fetchData();
-  }, [customer?.address, customer?.lat, customer?.long, selectedDate, dispatch]);
+  }, [customer?.address, customer?.lat, customer?.long, selectedDate, isRemote, dispatch]);
 
   // Update week days and available days mapping
   useEffect(() => {
@@ -127,7 +161,8 @@ export default function BookingCalendar() {
     if (Array.isArray(installationDays)) {
       installationDays.forEach((day: InstallationDay) => {
         if (day.date) {
-          const dayDate = dayjs(day.date).format('YYYY-MM-DD');
+          // Normalize to UTC date key to avoid timezone shifting (e.g. 00:00Z -> previous day in -03:00)
+          const dayDate = dayjs.utc(day.date).format('YYYY-MM-DD');
           newAvailableDays[dayDate] = day;
         }
       });
@@ -137,6 +172,7 @@ export default function BookingCalendar() {
   }, [selectedDate, installationDays]);
 
   const handleDateChange = (date: Dayjs | null) => {
+    if (statusCalendar === "loading") return;
     if (date) {
       trackEvent('seleccion_fecha', 'AGENDA_EMA', date.format('YYYY-MM-DD'));
       const newDate = date.tz('America/Santiago').locale('es').startOf('week');
@@ -145,15 +181,19 @@ export default function BookingCalendar() {
   };
 
   const handleDayClick = async (date: Dayjs, installationDay: InstallationDay | undefined) => {
+    if (status === "loading") return;
+
     const dateStr = date.format('YYYY-MM-DD');
+    setClickedSlotKey(`day-${dateStr}`);
     trackEvent('seleccion_dia', 'AGENDA_EMA', dateStr);
-    
+
     if (!customer?.address) {
+      setClickedSlotKey(null);
       alert('Por favor, complete su dirección antes de continuar.');
       dispatch(setStep(0)); // Go back to form
       return;
     }
-    
+
     if (installationDay && installationDay.availableTime > 0) {
       // Calculate startTime: selected day at 09:00 AM Chile time, converted to ISO datetime
       const startTime = date.tz('America/Santiago').hour(9).minute(0).second(0).millisecond(0).utc().toISOString();
@@ -183,22 +223,91 @@ export default function BookingCalendar() {
         // Navigate to payment step after reservation is created successfully
         dispatch(setStep(2));
       } catch (error) {
+        setClickedSlotKey(null);
         console.error('Error creating reservation:', error);
         alert('Hubo un error al crear la reserva. Por favor, intente nuevamente.');
       }
     } else {
+      setClickedSlotKey(null);
       trackEvent('dia_no_disponible', 'AGENDA_EMA', dateStr);
       alert(`El día ${date.format('D [de] MMMM')} no está disponible.`);
     }
   };
 
+  const getSlotsForDate = (dateStr: string) => {
+    const group = (calendarVisitGroups || []).find((g: any) => {
+      if (!g?.date) return false;
+      // `group.date` commonly comes as midnight UTC; use UTC day key to avoid off-by-one-day in Chile TZ.
+      return dayjs.utc(g.date).format('YYYY-MM-DD') === dateStr;
+    });
+    return (group?.calendarVisits || []) as Array<{ startDate?: string; endDate?: string; timeZone?: string }>;
+  };
+
+  const handleRemoteSlotClick = async (date: Dayjs, slot: { startDate?: string; endDate?: string }) => {
+    if (status === "loading") return;
+
+    const dateStr = date.format('YYYY-MM-DD');
+    const slotKey = `slot-${dateStr}-${slot?.startDate || ""}`;
+    setClickedSlotKey(slotKey);
+    trackEvent('seleccion_slot_remoto', 'AGENDA_EMA', `${dateStr}_${slot?.startDate || ''}`);
+
+    const installationDay = (installationDays || []).find((d: any) => {
+      if (!d?.date) return false;
+      return dayjs.utc(d.date).format('YYYY-MM-DD') === dateStr;
+    });
+
+    if (!installationDay?.installationDayId) {
+      setClickedSlotKey(null);
+      alert('No se encontró un día de instalación válido para este horario. Intente nuevamente.');
+      return;
+    }
+
+    const startTime = slot?.startDate;
+    const duration = slot?.startDate && slot?.endDate
+      ? Math.max(1, dayjs(slot.endDate).diff(dayjs(slot.startDate), 'minute'))
+      : 30;
+
+    if (!startTime) {
+      setClickedSlotKey(null);
+      alert('Horario inválido. Intente nuevamente.');
+      return;
+    }
+
+    try {
+      await Promise.all([
+        dispatch(setSelectedInstallationDayId(installationDay.installationDayId)),
+        dispatch(setDataForm({
+          key: "installationDayId",
+          value: installationDay.installationDayId
+        })),
+        dispatch(setCalendarVisits({
+          customerId: customer.customerId || '',
+          installationDayId: installationDay.installationDayId,
+          startTime: startTime,
+          duration: duration,
+          address: customer.address,
+          lat: customer.lat ? parseFloat(customer.lat) : undefined,
+          long: customer.long ? parseFloat(customer.long) : undefined,
+          isRemote: true,
+        }))
+      ]);
+      dispatch(setStep(2));
+    } catch (error) {
+      setClickedSlotKey(null);
+      console.error('Error creating remote reservation:', error);
+      alert('Hubo un error al crear la reserva. Por favor, intente nuevamente.');
+    }
+  };
+
   
-    // Funciones para cambiar de mes
+    // Funciones para cambiar de semana
   const handlePrevMonth = () => {
+      if (statusCalendar === "loading") return;
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'previous_month');
       setSelectedDate(prev => prev.subtract(1, 'week'));
     };
     const handleNextMonth = () => {
+      if (statusCalendar === "loading") return;
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'next_month');
       setSelectedDate(prev => prev.add(1, 'week'));
     };
@@ -240,13 +349,33 @@ export default function BookingCalendar() {
       <Box sx={{ display: 'flex', gap: 4, height: { xs: 'auto', md: '500px' }, flexDirection: { xs: 'column', md: 'row' } }}>
         {/* Calendario mensual */}
         <Box sx={{ width: { xs: '100%', md: '30%' }, height: { xs: 'auto', md: 'auto' }, display: { xs: 'none', md: 'block' } }}>
-          <Paper elevation={3} sx={{ p: 2, pb:10,  height: { xs: 'auto', md: 'auto' } }}>
+          <Paper elevation={3} sx={{ p: 2, pb:10, position: 'relative', height: { xs: 'auto', md: 'auto' } }}>
+            {statusCalendar === "loading" && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 3,
+                  background: 'rgba(255,255,255,0.85)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 1,
+                }}
+              >
+                <CircularProgress size={32} sx={{ color: 'primary.main' }} />
+              </Box>
+            )}
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DateCalendar
                 value={selectedDate}
                 onChange={handleDateChange}
                 views={['month', 'day']}
                 disablePast={true}
+                disabled={statusCalendar === "loading"}
                 shouldDisableDate={(date) => {
                   return date.isSame(dayjs(), 'day');
                 }}
@@ -301,7 +430,12 @@ export default function BookingCalendar() {
             <Box sx={{ position: 'relative', top: 0, left: 0, zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', background: '#f5f5f5', paddingY:1, marginBottom: 1 }}>
              
              <Box sx={{ justifyContent: 'space-between' }}>
-               <IconButton onClick={handlePrevMonth} size="small">
+               <IconButton
+                 onClick={handlePrevMonth}
+                 size="small"
+                 disabled={statusCalendar === "loading"}
+                 aria-label="Semana anterior"
+               >
                  <ArrowBackIcon />
                </IconButton>
              </Box>
@@ -317,7 +451,12 @@ export default function BookingCalendar() {
                {weekLabel}
              </Typography>
              <Box sx={{  }}>
-               <IconButton onClick={handleNextMonth} size="small">
+               <IconButton
+                 onClick={handleNextMonth}
+                 size="small"
+                 disabled={statusCalendar === "loading"}
+                 aria-label="Semana siguiente"
+               >
                  <ArrowForwardIcon />
                </IconButton>
              </Box>
@@ -350,7 +489,9 @@ export default function BookingCalendar() {
                   const formattedDay = day.format('YYYY-MM-DD');
                   const installationDay = availableDays[formattedDay];
                   const isToday = day.isSame(dayjs(), 'day');
-                  const isAvailable = installationDay && installationDay.availableTime > 0;
+                  const slots = isRemote ? getSlotsForDate(formattedDay) : [];
+                  const hasRemoteSlots = isRemote && Array.isArray(slots) && slots.length > 0;
+                  const isAvailable = !isRemote && installationDay && installationDay.availableTime > 0;
                   const isPast = day.isBefore(dayjs(), 'day');
 
                   return (
@@ -389,19 +530,93 @@ export default function BookingCalendar() {
                         flex: 1,
                         minHeight: '100px',
                       }}>
-                        {isAvailable && !isPast ? (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleDayClick(day, installationDay)}
-                            sx={{
-                              minWidth: 'auto',
-                              width: '100%',
-                              paddingY: 2,
-                            }}
-                          >
-                            Disponible
-                          </Button>
+                        {isRemote && !isPast ? (
+                          hasRemoteSlots ? (
+                            <Box
+                              sx={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                maxHeight: { xs: 180, md: 220 },
+                                overflowY: 'auto',
+                                pr: 0.5,
+                                WebkitOverflowScrolling: 'touch',
+                              }}
+                            >
+                              {slots.map((slot, idx) => {
+                                const label = slot?.startDate ? toChileTime({ date: slot.startDate, format: 'HH:mm' }) : `Slot ${idx + 1}`;
+                                const slotKey = `slot-${formattedDay}-${slot?.startDate || ""}`;
+                                const isThisClicked = status === "loading" && clickedSlotKey === slotKey;
+                                return (
+                                  <Button
+                                    key={`${formattedDay}-slot-${idx}`}
+                                    variant="outlined"
+                                    onClick={() => handleRemoteSlotClick(day, slot)}
+                                    disabled={status === "loading"}
+                                    sx={{
+                                      width: '100%',
+                                      minWidth: 'auto',
+                                      py: 0.75,
+                                      lineHeight: 1.1,
+                                      ...(isThisClicked && {
+                                        backgroundColor: 'action.selected',
+                                        borderColor: 'primary.main',
+                                      }),
+                                    }}
+                                  >
+                                    {isThisClicked ? (
+                                      <>
+                                        <CircularProgress size={16} sx={{ mr: 1 }} color="inherit" />
+                                        Reservando...
+                                      </>
+                                    ) : (
+                                      label
+                                    )}
+                                  </Button>
+                                );
+                              })}
+                            </Box>
+                          ) : (
+                            <Typography 
+                              variant="body2" 
+                              color="text.secondary" 
+                              align="center"
+                              sx={{ padding: 2 }}
+                            >
+                              No disponible
+                            </Typography>
+                          )
+                        ) : isAvailable && !isPast ? (
+                          (() => {
+                            const dayKey = `day-${formattedDay}`;
+                            const isThisClicked = status === "loading" && clickedSlotKey === dayKey;
+                            return (
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleDayClick(day, installationDay)}
+                                disabled={status === "loading"}
+                                sx={{
+                                  minWidth: 'auto',
+                                  width: '100%',
+                                  paddingY: 2,
+                                  ...(isThisClicked && {
+                                    opacity: 0.9,
+                                  }),
+                                }}
+                              >
+                                {isThisClicked ? (
+                                  <>
+                                    <CircularProgress size={20} sx={{ mr: 1 }} color="inherit" />
+                                    Reservando...
+                                  </>
+                                ) : (
+                                  'Disponible'
+                                )}
+                              </Button>
+                            );
+                          })()
                         ) : (
                           <Typography 
                             variant="body2" 
@@ -442,8 +657,12 @@ export default function BookingCalendar() {
                     }}
                     component="span"
         >
-          VALOR VISITA TÉCNICA: $10.000
-          </Typography>
+          {(() => {
+            const effectivePrice = isRemote ? remotePrice : onsitePrice;
+            const labelPrice = effectivePrice != null ? formatCLP(effectivePrice) : '$10.000';
+            return `VALOR VISITA TÉCNICA: ${labelPrice}`;
+          })()}
+      </Typography>
       <Typography
         align="left"
                     sx={{

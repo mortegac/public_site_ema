@@ -479,7 +479,7 @@ export const Step02 = (props:any) => {
                       <CustomTextField
                         fullWidth
                         id="AddressReference"
-                        AddressReference="AddressReference"
+                        name="AddressReference"
                         value={formik.values.AddressReference}
                         onChange={formik.handleChange}
                         onBlur={(e: React.FocusEvent<HTMLInputElement>) => {

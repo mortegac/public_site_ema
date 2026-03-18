@@ -1,7 +1,7 @@
 "use client";
 
 // components/BookingCalendar.tsx
-import React, { useState, useEffect, useId, useMemo } from 'react';
+import React, { useState, useEffect, useId, useMemo, useRef } from 'react';
 import { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // Importa el idioma español
@@ -18,7 +18,7 @@ type props = {
     format?: string;
 };
 
-import { Box, Grid, Typography, Button, Paper, IconButton } from '@mui/material';
+import { Box, Grid, Typography, Button, Paper, IconButton, CircularProgress } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -57,46 +57,14 @@ dayjs.updateLocale('es', {
 });
 
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
+import { fetchNumericParameter } from '@/utils/queries/Parameter/fetchNumericParameter';
 
-// Define un tipo para tus horas disponibles
-interface TimeSlot {
-  time: string;
-  available: boolean;
-  calendarId: string;
-}
-
-interface CalendarVisit {
-  calendarId: string;
-  summary: string;
-  location: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  timeZone: string;
-  duration: number;
-  state: string;
-  customerId: string | null;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface CalendarVisitsResponse {
-  data: CalendarVisit[];
-  nextToken?: string;
-}
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setStep, setInstaller, setDataForm, getCalendarVisits, getLastScheduleInstallers, selectCalendarVisits, setLoadingCalendar } from "@/store/CalendarVisits/slice";
+import { setStep, setDataForm, getInstallationDays, selectCalendarVisits, setSelectedInstallationDayId, setCalendarVisits } from "@/store/CalendarVisits/slice";
+import { selectCustomer } from "@/store/Customer/slice";
 import { useAnalytics } from '@/hooks/useAnalytics';
-
-interface InstallerWithCalendar {
-  userId: string;
-  name: string;
-  startDate: string;
-  calendarId: string;
-  getLastScheduleInstallers: string;
-}
+import { InstallationDay } from '@/store/CalendarVisits/type';
 
 
 
@@ -107,86 +75,103 @@ export const toChileTime = (props: props) => {
 };
 
 
-const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || 'DEV';
-    
-      
 export default function BookingCalendar() {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
   const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
-  const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
-  const [initialLoad, setInitialLoad] = useState(true);
-  const [selectedInstaller, setSelectedInstaller] = useState<string>("");
+  const [availableDays, setAvailableDays] = useState<{ [key: string]: InstallationDay }>({});
+  const [clickedSlotKey, setClickedSlotKey] = useState<string | null>(null);
+  const [remotePrice, setRemotePrice] = useState<number | null>(null);
+  const [onsitePrice, setOnsitePrice] = useState<number | null>(null);
 
   const UUID = useId();
   const { 
-    calendarVisits, 
-    lastScheduleInstallers,
-    status,
+    installationDays,
+    calendarVisitGroups,
     statusCalendar,
-    installerId,    
+    status,
+    isRemote,
   } = useAppSelector(selectCalendarVisits);
+  
+  const { customer } = useAppSelector(selectCustomer);
   
   const dispatch = useAppDispatch();
   const { trackEvent } = useAnalytics();
 
-  // Memoizamos las fechas de inicio y fin de semana
-  const weekDates = useMemo(() => {
-    const startOfWeek = selectedDate.startOf('week');
-    const endOfWeek = selectedDate.endOf('week');
-    return {
-      startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-      endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]')
-    };
-  }, [selectedDate]);
+  const formatCLP = (amount: number | null) => {
+    if (amount == null || Number.isNaN(amount)) return '';
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
-  // Efecto para cargar las visitas iniciales y cuando cambia el instalador
+  // Fetch visit prices (remote and on-site) from ParameterEnc
+  useEffect(() => {
+    const loadPrices = async () => {
+      try {
+        const [remote, onsite] = await Promise.all([
+          fetchNumericParameter({ parameterEncId: 'REMOTE_VISIT_COST', default: '10000' }),
+          fetchNumericParameter({ parameterEncId: 'VISIT_COST', default: '10000' }),
+        ]);
+        setRemotePrice(remote);
+        setOnsitePrice(onsite);
+      } catch (e) {
+        console.error('Error fetching visit prices', e);
+      }
+    };
+    loadPrices();
+  }, []);
+
+  // Track cached date range in ref to avoid useEffect dependency array changing size
+  const cachedRangeRef = useRef<{ min: string; max: string } | null>(null);
+  useEffect(() => {
+    if (Array.isArray(installationDays) && installationDays.length > 0) {
+      const cachedDates = installationDays
+        .map((d: InstallationDay) => d?.date && dayjs.utc(d.date).format('YYYY-MM-DD'))
+        .filter(Boolean) as string[];
+      if (cachedDates.length > 0) {
+        const sorted = [...cachedDates].sort();
+        cachedRangeRef.current = { min: sorted[0], max: sorted[sorted.length - 1] };
+      } else {
+        cachedRangeRef.current = null;
+      }
+    } else {
+      cachedRangeRef.current = null;
+    }
+  }, [installationDays]);
+
+  // Fetch installation days when customer address is available (returns ~30 days in one go)
+  // Skip fetch when selected week is within cached data; refetch when we run out of local data
   useEffect(() => {
     const fetchData = async () => {
-      if (!installerId) return;
-      
-      await dispatch(getCalendarVisits({
-        startDate: weekDates.startDate,
-        endDate: weekDates.endDate,
-        userId: installerId
+      if (!customer?.address) {
+        dispatch(setStep(0));
+        return;
+      }
+
+      const weekStart = selectedDate.format('YYYY-MM-DD');
+      const weekEnd = selectedDate.add(4, 'day').format('YYYY-MM-DD');
+
+      const cached = cachedRangeRef.current;
+      if (cached && weekStart >= cached.min && weekEnd <= cached.max) {
+        return;
+      }
+
+      await dispatch(getInstallationDays({
+        date: weekStart,
+        address: customer.address,
+        lat: customer.lat ? parseFloat(customer.lat) : undefined,
+        long: customer.long ? parseFloat(customer.long) : undefined,
+        remote: isRemote,
       }));
     };
-    
+
     fetchData();
-  }, [installerId, weekDates.startDate, weekDates.endDate, dispatch]);
+  }, [customer?.address, customer?.lat, customer?.long, isRemote, selectedDate, dispatch]);
 
-  // Efecto para la carga inicial
+  // Update week days and available days mapping
   useEffect(() => {
-    if (initialLoad) {
-      // handleInstaller("ariel.rivera@energica.city");
-      dispatch(getLastScheduleInstallers())
-      setInitialLoad(false);
-      trackEvent('carga_agenda', 'AGENDA_EMA');
-    }
-  }, [initialLoad]);
-
-  // Nuevo efecto para manejar la selección automática de fecha
-  useEffect(() => {
-    if (Array.isArray(lastScheduleInstallers) && lastScheduleInstallers.length > 0) {
-      const firstInstaller = lastScheduleInstallers[0];
-      if (firstInstaller?.startDate && firstInstaller?.userId) {
-        // Primero setear el instalador
-        handleInstaller(firstInstaller.userId);
-        trackEvent('seleccion_instalador', 'firstInstaller.userId', firstInstaller.userId);
-        // Luego cambiar la fecha
-        const installerDate = dayjs(firstInstaller.startDate);
-        const weekStart = installerDate.startOf('week');
-        
-        // Solo cambiar la fecha si es diferente a la actual
-        if (!selectedDate.isSame(weekStart, 'week')) {
-          handleDateChange(installerDate);
-        }
-      }
-    }
-  }, [lastScheduleInstallers]);
-
-  // Efecto para actualizar la vista semanal
-  useEffect(() => {
-    // Calcular los 7 días de la semana a partir de selectedDate
     const startOfWeek = selectedDate.startOf('week');
     const daysInWeek: Dayjs[] = [];
     for (let i = 0; i < 5; i++) {
@@ -194,35 +179,24 @@ export default function BookingCalendar() {
     }
     setWeekDays(daysInWeek);
 
-    // Obtener las horas disponibles para cada día de la semana
-    const newWeekAvailableTimes: { [key: string]: TimeSlot[] } = {};
+    // Map installation days by date
+    const newAvailableDays: { [key: string]: InstallationDay } = {};
     
-    daysInWeek.forEach(day => {
-      const formattedDate = day.format('YYYY-MM-DD');
-      const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
-        const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
-        return visitDate === formattedDate;
-      }) || [];
+    if (Array.isArray(installationDays)) {
+      installationDays.forEach((day: InstallationDay) => {
+        if (day.date) {
+          // Normalize to UTC date key to avoid timezone shifting (e.g. 00:00Z -> previous day in -03:00)
+          const dayDate = dayjs.utc(day.date).format('YYYY-MM-DD');
+          newAvailableDays[dayDate] = day;
+        }
+      });
+    }
 
-      newWeekAvailableTimes[formattedDate] = visitsForDay.map((visit: CalendarVisit) => ({
-        // time: dayjs(visit.startDate).format('HH:mm'),
-        time: toChileTime({date:visit?.startDate}),
-        available: visit.state === 'available' && !visit.customerId,
-        calendarId: visit.calendarId
-      }));
-    });
-
-    setWeekAvailableTimes(newWeekAvailableTimes);
-  }, [selectedDate, calendarVisits]);
-
-  const handleInstaller = async (installerId: string) => {
-    // trackEvent('seleccion_instalador', 'AGENDA_EMA', `installer_${installerId}`);
-    trackEvent('seleccion_instalador', 'AGENDA_EMA', installerId);
-    setSelectedInstaller(installerId);
-    await dispatch(setInstaller(installerId));
-  };
+    setAvailableDays(newAvailableDays);
+  }, [selectedDate, installationDays]);
 
   const handleDateChange = (date: Dayjs | null) => {
+    if (statusCalendar === "loading") return;
     if (date) {
       trackEvent('seleccion_fecha', 'AGENDA_EMA', date.format('YYYY-MM-DD'));
       const newDate = date.tz('America/Santiago').locale('es').startOf('week');
@@ -230,29 +204,134 @@ export default function BookingCalendar() {
     }
   };
 
-  const handleTimeSlotClick = async (date: Dayjs, timeSlot: TimeSlot) => {
-    trackEvent('seleccion_fecha_hora', 'AGENDA_EMA', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
-    
-    if (timeSlot.available) {
-      Promise.all([
-        await dispatch(setDataForm({
-          key:"calendarId", value:timeSlot?.calendarId
-        })),
-        dispatch(setStep(1))
-      ])
+  const handleDayClick = async (date: Dayjs, installationDay: InstallationDay | undefined) => {
+    if (status === "loading") return;
+
+    const dateStr = date.format('YYYY-MM-DD');
+    setClickedSlotKey(`day-${dateStr}`);
+    trackEvent('seleccion_dia', 'AGENDA_EMA', dateStr);
+
+    if (!customer?.address) {
+      setClickedSlotKey(null);
+      alert('Por favor, complete su dirección antes de continuar.');
+      dispatch(setStep(0)); // Go back to form
+      return;
+    }
+
+    if (installationDay && installationDay.availableTime > 0) {
+      // Calculate startTime: selected day at 09:00 AM Chile time, converted to ISO datetime
+      const startTime = date.tz('America/Santiago').hour(9).minute(0).second(0).millisecond(0).utc().toISOString();
+      
+      // Default duration: 30 minutes for technical visit
+      const duration = 30;
+      
+      try {
+        await Promise.all([
+          dispatch(setSelectedInstallationDayId(installationDay.installationDayId)),
+          dispatch(setDataForm({
+            key: "installationDayId",
+            value: installationDay.installationDayId
+          })),
+          dispatch(setCalendarVisits({
+            customerId: customer.customerId || '',
+            installationDayId: installationDay.installationDayId,
+            startTime: startTime,
+            duration: duration,
+            address: customer.address,
+            lat: customer.lat ? parseFloat(customer.lat) : undefined,
+            long: customer.long ? parseFloat(customer.long) : undefined,
+            isRemote: false,
+          }))
+        ]);
+        
+        // Navigate to payment step after reservation is created successfully
+        dispatch(setStep(2));
+      } catch (error) {
+        setClickedSlotKey(null);
+        console.error('Error creating reservation:', error);
+        alert('Hubo un error al crear la reserva. Por favor, intente nuevamente.');
+      }
     } else {
-      trackEvent('no_disponible_fecha_hora_seleccionada', 'AGENDA_EMA', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
-      alert(`La hora ${timeSlot.time} no está disponible.`);
+      setClickedSlotKey(null);
+      trackEvent('dia_no_disponible', 'AGENDA_EMA', dateStr);
+      alert(`El día ${date.format('D [de] MMMM')} no está disponible.`);
+    }
+  };
+
+  const getSlotsForDate = (dateStr: string) => {
+    const group = (calendarVisitGroups || []).find((g: any) => {
+      if (!g?.date) return false;
+      // `group.date` commonly comes as midnight UTC; use UTC day key to avoid off-by-one-day in Chile TZ.
+      return dayjs.utc(g.date).format('YYYY-MM-DD') === dateStr;
+    });
+    return (group?.calendarVisits || []) as Array<{ startDate?: string; endDate?: string; timeZone?: string }>;
+  };
+
+  const handleRemoteSlotClick = async (date: Dayjs, slot: { startDate?: string; endDate?: string }) => {
+    if (status === "loading") return;
+
+    const dateStr = date.format('YYYY-MM-DD');
+    const slotKey = `slot-${dateStr}-${slot?.startDate || ""}`;
+    setClickedSlotKey(slotKey);
+    trackEvent('seleccion_slot_remoto', 'AGENDA_EMA', `${dateStr}_${slot?.startDate || ''}`);
+
+    const installationDay = (installationDays || []).find((d: any) => {
+      if (!d?.date) return false;
+      return dayjs.utc(d.date).format('YYYY-MM-DD') === dateStr;
+    });
+
+    if (!installationDay?.installationDayId) {
+      setClickedSlotKey(null);
+      alert('No se encontró un día de instalación válido para este horario. Intente nuevamente.');
+      return;
+    }
+
+    const startTime = slot?.startDate;
+    const duration = slot?.startDate && slot?.endDate
+      ? Math.max(1, dayjs(slot.endDate).diff(dayjs(slot.startDate), 'minute'))
+      : 30;
+
+    if (!startTime) {
+      setClickedSlotKey(null);
+      alert('Horario inválido. Intente nuevamente.');
+      return;
+    }
+
+    try {
+      await Promise.all([
+        dispatch(setSelectedInstallationDayId(installationDay.installationDayId)),
+        dispatch(setDataForm({
+          key: "installationDayId",
+          value: installationDay.installationDayId
+        })),
+        dispatch(setCalendarVisits({
+          customerId: customer.customerId || '',
+          installationDayId: installationDay.installationDayId,
+          startTime: startTime,
+          duration: duration,
+          address: customer.address,
+          lat: customer.lat ? parseFloat(customer.lat) : undefined,
+          long: customer.long ? parseFloat(customer.long) : undefined,
+          isRemote: true,
+        }))
+      ]);
+      dispatch(setStep(2));
+    } catch (error) {
+      setClickedSlotKey(null);
+      console.error('Error creating remote reservation:', error);
+      alert('Hubo un error al crear la reserva. Por favor, intente nuevamente.');
     }
   };
 
   
-    // Funciones para cambiar de mes
+    // Funciones para cambiar de semana
   const handlePrevMonth = () => {
+      if (statusCalendar === "loading") return;
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'previous_month');
       setSelectedDate(prev => prev.subtract(1, 'week'));
     };
     const handleNextMonth = () => {
+      if (statusCalendar === "loading") return;
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'next_month');
       setSelectedDate(prev => prev.add(1, 'week'));
     };
@@ -270,20 +349,6 @@ export default function BookingCalendar() {
     weekLabel = `${startOfWeek.format('MMMM YYYY')} - ${endOfWeek.format('MMMM YYYY')}`;
   }
 
-  const handleInstallerDateClick = (installer: InstallerWithCalendar) => {
-    if (!installer?.startDate) return;
-    
-    trackEvent('seleccion_proxima_fecha_instalador', 'AGENDA_EMA', `${installer.userId}_${installer.startDate}`);
-    
-    const day = dayjs(installer.startDate);
-    const slot: TimeSlot = {
-      time: toChileTime({ date: installer.startDate }),
-      available: true,
-      calendarId: installer.calendarId
-    };
-    
-    handleTimeSlotClick(day, slot);
-  };
 
   return (
     <Box sx={{ p: 0 }} key={`${UUID}-CALENDAR`}>
@@ -301,20 +366,40 @@ export default function BookingCalendar() {
         }}
         component="span"
         >
-          Seleccione una hora para continuar con el proceso de reserva de su visita técnica
+          Seleccione un día disponible para continuar con el proceso de reserva de su visita técnica
       </Typography>
   
 
       <Box sx={{ display: 'flex', gap: 4, height: { xs: 'auto', md: '500px' }, flexDirection: { xs: 'column', md: 'row' } }}>
         {/* Calendario mensual */}
         <Box sx={{ width: { xs: '100%', md: '30%' }, height: { xs: 'auto', md: 'auto' }, display: { xs: 'none', md: 'block' } }}>
-          <Paper elevation={3} sx={{ p: 2, pb:10,  height: { xs: 'auto', md: 'auto' } }}>
+          <Paper elevation={3} sx={{ p: 2, pb:10, position: 'relative', height: { xs: 'auto', md: 'auto' } }}>
+            {statusCalendar === "loading" && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 3,
+                  background: 'rgba(255,255,255,0.85)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 1,
+                }}
+              >
+                <CircularProgress size={32} sx={{ color: 'primary.main' }} />
+              </Box>
+            )}
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DateCalendar
                 value={selectedDate}
                 onChange={handleDateChange}
                 views={['month', 'day']}
                 disablePast={true}
+                disabled={statusCalendar === "loading"}
                 shouldDisableDate={(date) => {
                   return date.isSame(dayjs(), 'day');
                 }}
@@ -363,100 +448,18 @@ export default function BookingCalendar() {
           </Paper>
         </Box>
 
-        {/* Semana con horas disponibles */}
+        {/* Semana con días disponibles */}
           <Box sx={{ width: { xs: '100%', md: '70%' }, height: { xs: 'auto', md: '100%' } }}>
-            <Box sx={{ 
-              marginBottom: 4,
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              gap: 2,
-              flexWrap: 'wrap',
-              height: '120px', overflowX: 'auto'
-            }}>
-              
-              {
-              status === "loading" &&  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90px' }}>
-                <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
-              </Box>
-              }
-              
-              
-              { Array.isArray(lastScheduleInstallers) && 
-                [...lastScheduleInstallers]
-                  .sort((a: any, b: any) => {
-                    const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
-                    const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
-                    return orderA - orderB;
-                  })
-                  .map((installer: InstallerWithCalendar, index:number) => (
-                <Box
-                key={installer?.userId}
-                sx={{
-                      minWidth: 160, 
-                      mr: 2, 
-                      flexShrink: 0,
-                      display: 'flex',
-                      flexDirection: { xs: 'row', md: 'column' },
-                      alignItems: { xs: 'center', md: 'center' },
-                      justifyContent: { xs: 'flex-start', md: 'center' },
-                      gap: { xs: 2, md: 0.5 }
-                    }}
-                >
-                 {/* <pre>{JSON.stringify(installer, null, 2)}</pre> */}
-                 {/* <pre>{JSON.stringify(lastScheduleInstallers.length, null, 2)}</pre> */}
-                  <Button 
-                    key={installer.userId}
-                    id={installer.userId}
-                    sx={{ 
-                      backgroundColor: selectedInstaller === installer.userId ? 'black' : '#f5f5f5',
-                      color: selectedInstaller === installer.userId ? 'white' : 'inherit',
-                      border: '1px solid',
-                      borderColor: selectedInstaller === installer.userId ? 'black' : '#e8e4e4',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      width: { xs: '120px', md: '160px' },
-                      '&:hover': {
-                        backgroundColor: selectedInstaller === installer.userId ? 'black' : '#e0e0e0',
-                        borderColor: selectedInstaller === installer.userId ? 'black' : '#e8e4e4',
-                      }
-                    }}
-                    onClick={() => handleInstaller(installer.userId)}
-                  >
-                    {/* {`Instalador ${++index}`}   {installer?.userId ? installer.userId.split('.')[0][0].toUpperCase() : ''} */}
-                    {/* {`Instalador ${++index}`} */}
-                    
-                    {environment === 'PROD' && `Instalador ${lastScheduleInstallers.length > 1 ? ++index : ""}` }
-                    
-                    {/* <p>{installer?.userId.split('@')[0].toUpperCase()}</p> */}
-                    
-                 
-                  </Button>
-                  <Typography 
-                    variant="caption" 
-                    sx={{ 
-                      display: 'block', 
-                      mt: { xs: 0, md: 0.5 }, 
-                      textAlign: { xs: 'left', md: 'center' },
-                      fontSize: { xs: '0.7rem', md: 'inherit' },
-                      cursor: 'pointer',
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      }
-                    }}
-                    onClick={() => handleInstallerDateClick(installer)}
-                  >
-                    Reserve aquí <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
             
             <Box sx={{ position: 'relative', top: 0, left: 0, zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', background: '#f5f5f5', paddingY:1, marginBottom: 1 }}>
              
              <Box sx={{ justifyContent: 'space-between' }}>
-               <IconButton onClick={handlePrevMonth} size="small">
+               <IconButton
+                 onClick={handlePrevMonth}
+                 size="small"
+                 disabled={statusCalendar === "loading"}
+                 aria-label="Semana anterior"
+               >
                  <ArrowBackIcon />
                </IconButton>
              </Box>
@@ -472,7 +475,12 @@ export default function BookingCalendar() {
                {weekLabel}
              </Typography>
              <Box sx={{  }}>
-               <IconButton onClick={handleNextMonth} size="small">
+               <IconButton
+                 onClick={handleNextMonth}
+                 size="small"
+                 disabled={statusCalendar === "loading"}
+                 aria-label="Semana siguiente"
+               >
                  <ArrowForwardIcon />
                </IconButton>
              </Box>
@@ -503,22 +511,25 @@ export default function BookingCalendar() {
               
                 {weekDays.map((day, i) => {
                   const formattedDay = day.format('YYYY-MM-DD');
-                  const timesForDay = weekAvailableTimes[formattedDay] || [];
+                  const installationDay = availableDays[formattedDay];
                   const isToday = day.isSame(dayjs(), 'day');
+                  const slots = isRemote ? getSlotsForDate(formattedDay) : [];
+                  const hasRemoteSlots = isRemote && Array.isArray(slots) && slots.length > 0;
+                  const isAvailable = !isRemote && installationDay && installationDay.availableTime > 0;
+                  const isPast = day.isBefore(dayjs(), 'day');
 
                   return (
                     <Box 
                       key={`${formattedDay}-${i}`} 
                       sx={{
-                        minWidth: { xs: 40, md: 100 }, 
+                        minWidth: { xs: 100, md: 150 }, 
                         mr: 2, 
                         flexShrink: 0,
                         display: 'flex',
                         flexDirection: 'column',
                         height: '100%'
                       }}
-                    >        
-                    {/* <pre>{JSON.stringify(weekAvailableTimes, null, 2)}</pre> */}
+                    >
                       <Typography
                         variant="subtitle1"
                         align="center"
@@ -538,56 +549,108 @@ export default function BookingCalendar() {
                       <Box sx={{ 
                         display: 'flex', 
                         flexDirection: 'column', 
-                        gap: 1,
-                        overflowY: 'auto',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         flex: 1,
-                        '&::-webkit-scrollbar': {
-                          width: '8px',
-                        },
-                        '&::-webkit-scrollbar-track': {
-                          background: '#f1f1f1',
-                          borderRadius: '4px',
-                        },
-                        '&::-webkit-scrollbar-thumb': {
-                          background: '#888',
-                          borderRadius: '4px',
-                          '&:hover': {
-                            background: '#555',
-                          },
-                        },
+                        minHeight: '100px',
                       }}>
-                        {timesForDay.length > 0 ? (
-                          timesForDay.map((slot, index) => (
-                            <Button
-                              key={`${formattedDay}-${slot.time}-${index}`}
-                              variant={slot.available ? 'outlined' : 'text'}
-                              disabled={!slot.available || day.isBefore(dayjs(), 'day')}
-                              onClick={() => handleTimeSlotClick(day, slot)}
+                        {isRemote && !isPast ? (
+                          hasRemoteSlots ? (
+                            <Box
                               sx={{
-                                minWidth: 'auto',
                                 width: '100%',
-                                border: slot.available ? '1px solid' : 'none',
-                                borderColor: (theme) => theme.palette.primary.main,
-                                color: slot.available ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.disabled,
-                                '&.Mui-disabled': {
-                                  borderColor: (theme) => theme.palette.action.disabledBackground,
-                                  color: (theme) => theme.palette.text.disabled,
-                                },
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                maxHeight: { xs: 180, md: 220 },
+                                overflowY: 'auto',
+                                pr: 0.5,
+                                WebkitOverflowScrolling: 'touch',
                               }}
                             >
-                              {slot.time}
-                            </Button>
-                          ))
+                              {slots.map((slot, idx) => {
+                                const label = slot?.startDate ? toChileTime({ date: slot.startDate, format: 'HH:mm' }) : `Slot ${idx + 1}`;
+                                const slotKey = `slot-${formattedDay}-${slot?.startDate || ""}`;
+                                const isThisClicked = status === "loading" && clickedSlotKey === slotKey;
+                                return (
+                                  <Button
+                                    key={`${formattedDay}-slot-${idx}`}
+                                    variant="outlined"
+                                    onClick={() => handleRemoteSlotClick(day, slot)}
+                                    disabled={status === "loading"}
+                                    sx={{
+                                      width: '100%',
+                                      minWidth: 'auto',
+                                      py: 0.75,
+                                      lineHeight: 1.1,
+                                      ...(isThisClicked && {
+                                        backgroundColor: 'action.selected',
+                                        borderColor: 'primary.main',
+                                      }),
+                                    }}
+                                  >
+                                    {isThisClicked ? (
+                                      <>
+                                        <CircularProgress size={16} sx={{ mr: 1 }} color="inherit" />
+                                        Reservando...
+                                      </>
+                                    ) : (
+                                      label
+                                    )}
+                                  </Button>
+                                );
+                              })}
+                            </Box>
+                          ) : (
+                            <Typography 
+                              variant="body2" 
+                              color="text.secondary" 
+                              align="center"
+                              sx={{ padding: 2 }}
+                            >
+                              No disponible
+                            </Typography>
+                          )
+                        ) : isAvailable && !isPast ? (
+                          (() => {
+                            const dayKey = `day-${formattedDay}`;
+                            const isThisClicked = status === "loading" && clickedSlotKey === dayKey;
+                            return (
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleDayClick(day, installationDay)}
+                                disabled={status === "loading"}
+                                sx={{
+                                  minWidth: 'auto',
+                                  width: '100%',
+                                  paddingY: 2,
+                                  ...(isThisClicked && {
+                                    opacity: 0.9,
+                                  }),
+                                }}
+                              >
+                                {isThisClicked ? (
+                                  <>
+                                    <CircularProgress size={20} sx={{ mr: 1 }} color="inherit" />
+                                    Reservando...
+                                  </>
+                                ) : (
+                                  'Disponible'
+                                )}
+                              </Button>
+                            );
+                          })()
                         ) : (
                           <Typography 
                             variant="body2" 
                             color="text.secondary" 
                             align="center"
                             sx={{
-                              display: { xs: 'none', md: 'block' } // Visible en móviles, oculto en desktop
+                              padding: 2,
                             }}
                           >
-                            Agenda <br/> completa
+                            {isPast ? 'Fecha pasada' : 'No disponible'}
                           </Typography>
                         )}
                       </Box>
@@ -618,8 +681,12 @@ export default function BookingCalendar() {
                     }}
                     component="span"
         >
-          VALOR VISITA TÉCNICA: $10.000
-          </Typography>
+          {(() => {
+            const effectivePrice = isRemote ? remotePrice : onsitePrice;
+            const labelPrice = effectivePrice != null ? formatCLP(effectivePrice) : '$10.000';
+            return `VALOR VISITA TÉCNICA: ${labelPrice}`;
+          })()}
+      </Typography>
       <Typography
         align="left"
                     sx={{
@@ -666,6 +733,45 @@ export default function BookingCalendar() {
                         Conozca aquí nuestros términos y condiciones
                       </Typography>
                     </Link>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
+        <Button
+          variant="outlined"
+          size="large"
+          startIcon={
+            <Box
+              component="span"
+              sx={{
+                mr: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(232, 26, 104, 0.1)',
+                color: '#E81A68',
+                '&::after': {
+                  content: '"\\276E"',
+                  fontSize: '16px',
+                  lineHeight: 1,
+                },
+              }}
+            />
+          }
+          sx={{
+            paddingX: 4,
+            paddingY: 1.5,
+            borderRadius: '24px',
+            background: `${statusCalendar === "loading" ? "#bfbfbf" : "#FFFFFF"}`,
+            color: "#E81A68",
+            border: "1px solid #E81A68",
+          }}
+          disabled={statusCalendar === "loading"}
+          onClick={() => dispatch(setStep(0))}
+        >
+          Volver
+        </Button>
+      </Box>
     </Box>
   );
 }

@@ -76,54 +76,30 @@ export default function FormResumeVirtual() {
   const dispatch = useAppDispatch();
 
   const { customer } = useAppSelector(selectCustomer);
-  const { calendarVisits } = useAppSelector(selectCalendarVisits);
+  const { selectedInstallationDayId, installationDays } = useAppSelector(selectCalendarVisits);
   const { shoppingCart } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
 
-  const [calendarData, setCalendarData] = useState<any | null>(null);
+  const [installationDayData, setInstallationDayData] = useState<any | null>(null);
 
   const PRODUCT_NAME = "Visita Técnica ";
 
-  const toChileTime = (dateSchedule: any) => {
-    const { date, format = "HH:mm" } = dateSchedule;
-    const dateUTC = new Date(date);
-    return dayjs(dateUTC)
-      .tz("America/Santiago")
-      .format(format);
-  };
-
   useEffect(() => {
-    const dataCalendar: any = calendarVisits;
-
     const fetchData = async () => {
-      if (!dataCalendar?.calendarId || !dataCalendar?.data) return;
+      if (!selectedInstallationDayId || !Array.isArray(installationDays)) return;
 
-      // Filtrar el array dataCalendar.data para obtener el item que coincida con calendarId
-      const filteredItem = dataCalendar.data.filter(
-        (item: any) => item.calendarId === dataCalendar.calendarId
+      // Find the installation day that matches the selected ID
+      const selectedDay = installationDays.find(
+        (day: any) => day.installationDayId === selectedInstallationDayId
       );
 
-      console.log("--filteredItem--", filteredItem);
-      // const formattedDay = calendarData?.startDate.format('YYYY-MM-DD');
-      // const timesForDay = weekAvailableTimes[formattedDay] || [];
-
-      if (filteredItem.length > 0) {
-        // Almacenar el item filtrado en setCalendarData
-        setCalendarData({
-          ...filteredItem[0],
-          // date: formattedDay,
-          // date2: toChileTime(calendarData?.startDate),
-        });
-      } else {
-        // Si no se encuentra, usar solo el calendarId
-        setCalendarData({
-          calendarId: dataCalendar.calendarId,
-        });
+      if (selectedDay) {
+        setInstallationDayData(selectedDay);
       }
     };
 
     fetchData();
-  }, [calendarVisits?.calendarId]);
+  }, [selectedInstallationDayId, installationDays]);
 
   return (
     <>
@@ -253,10 +229,10 @@ export default function FormResumeVirtual() {
                               fontWeight: "bold",
                             }}
                           >
-                            {/* {calendarData?.startDate} */}
-                            {dayjs(calendarData?.startDate).format(
-                              "D [de] MMMM"
-                            )}
+                            {installationDayData?.date 
+                              ? dayjs(installationDayData.date).format("D [de] MMMM")
+                              : "Fecha no disponible"
+                            }
                           </Typography>
                         </Box>
                       </Box>
@@ -311,7 +287,7 @@ export default function FormResumeVirtual() {
                               fontWeight: "bold",
                             }}
                           >
-                            {toChileTime({ date: calendarData?.startDate })} hrs
+                            Día completo
                           </Typography>
                         </Box>
                       </Box>
@@ -580,8 +556,8 @@ export default function FormResumeVirtual() {
                             style={{ marginRight: "10px" }}
                           >
                             <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
                               d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z"
                               fill="#21D57B"
                             />
@@ -636,8 +612,8 @@ export default function FormResumeVirtual() {
                             style={{ marginRight: "10px" }}
                           >
                             <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
                               d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z"
                               fill="#21D57B"
                             />
@@ -693,8 +669,8 @@ export default function FormResumeVirtual() {
                             style={{ marginRight: "10px" }}
                           >
                             <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
                               d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z"
                               fill="#21D57B"
                             />
@@ -750,8 +726,8 @@ export default function FormResumeVirtual() {
                             style={{ marginRight: "10px" }}
                           >
                             <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
                               d="M20.2721 1.33161C20.8497 1.90918 20.8497 2.8456 20.2721 3.42317L8.44054 15.2548C7.86297 15.8323 6.92655 15.8323 6.34898 15.2548L0.433175 9.33897C-0.144392 8.76141 -0.144392 7.82499 0.433175 7.24742C1.01074 6.66985 1.94716 6.66985 2.52473 7.24742L7.39476 12.1174L18.1806 1.33161C18.7582 0.754046 19.6946 0.754046 20.2721 1.33161Z"
                               fill="#21D57B"
                             />

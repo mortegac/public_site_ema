@@ -41,7 +41,7 @@ import AddressInput from '@/app/components/AddressInput2';
 // import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCustomer, setCustomer, getCustomer, setCustomerData } from "@/store/Customer/slice";
-import { selectCalendarVisits, setStep, setCalendarVisits, setCalendarNotPay, setLoading } from "@/store/CalendarVisits/slice";
+import { selectCalendarVisits, setStep, setIsRemote } from "@/store/CalendarVisits/slice";
 
 
 import 'react-phone-number-input/style.css'
@@ -130,86 +130,52 @@ export const FormStep01 = (props:any) => {
   
   const formik = useFormik({
     initialValues: {
-      name: '',
-      email: '',
-      address: '',
-      phone: '+569',
-      residenceType: '',
+      name: customer?.name || '',
+      email: customer?.customerId || '',
+      address: customer?.address || '',
+      phone: customer?.phone || '+569',
+      residenceType: customer?.typeOfResidence || '',
+      AddressReference: customer?.referenceAddress || '',
     },
     validationSchema: validationSchema,
-    enableReinitialize: false, 
+    enableReinitialize: true, 
 
-    onSubmit: async (values:any) => {
-
-
-      
-      
-      // setLoadingPage(true)
+    onSubmit: async (values: any) => {
+      if (!values?.email?.trim()) {
+        return;
+      }
       if (submitButton === 'schedule') {
         // alert("schedule")
         trackEvent('ingreso_datos_cliente', 'AGENDA_EMA', 'envio formulario visita virtual');
-        
-        
-         Promise.all([
-          await dispatch(setLoading()),
-          await dispatch(
+
+        await Promise.all([
+          dispatch(
             setCustomer({
               ...customer,
               customerId: values?.email,
               existCustomer: Boolean(existCustomer)
             })
           ),
-          values?.email &&
-          selectedCalendar?.calendarId &&
-            await dispatch(setCalendarVisits({
-              customerId: values?.email,
-              calendarId: selectedCalendar?.calendarId,
-            })),
-          dispatch(setStep(2)),
+          dispatch(setIsRemote(false)),
         ]);
-      
+        dispatch(setStep(1)); // Ir al calendario
+
       } else if (submitButton === 'scheduleNotPay') {
-        if (!selectedCalendar?.calendarId || !selectedCalendar?.startDate) return;
+        // Remote (virtual) visit - same paid flow
+        trackEvent('agendar_visita_remota', 'AGENDA_EMA', 'envio formulario visita remota');
 
-        trackEvent(
-          "agendar_visita_virtual",
-          "AGENDA_EMA",
-          "envio formulario visita fisica"
-        );
-
-        // Despachar las acciones antes de programar el redireccionamiento
         await Promise.all([
-          dispatch(setLoading()),
           dispatch(
             setCustomer({
               ...customer,
               customerId: values?.email,
+              existCustomer: Boolean(existCustomer),
             })
           ),
-          values?.email &&
-            selectedCalendar?.calendarId &&
-            dispatch(
-              setCalendarNotPay({
-                customerId: values?.email,
-                calendarId: selectedCalendar?.calendarId,
-              })
-            ),
+          dispatch(setIsRemote(true)),
         ]);
 
-        // Mantener el timeout de 3 segundos sin cancelarlo para que escriba en sessionStorage
-        setTimeout(() => {
-          const paymentData = {
-            email: values?.email,
-            date: dayjs(selectedCalendar.startDate).format("D [de] MMMM"),
-            hour: toChileTime({ date: selectedCalendar.startDate }),
-            address:
-              `${values?.address || ""}, ${customer?.city || ""}`.trim() || "",
-            phone: values?.phone,
-          };
-
-          sessionStorage.setItem("paymentData", JSON.stringify(paymentData));
-          router.push("/agenda/recibo-virtual");
-        }, 3000);
+        dispatch(setStep(1)); // Ir al calendario
       }
       
       // setLoadingPage(false)
@@ -401,9 +367,14 @@ export const FormStep01 = (props:any) => {
                      <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
                       <AddressInput 
+                        value={formik.values.address ?? ''}
+                        onAddressChange={(value) => {
+                          formik.setFieldValue('address', value);
+                          formik.setFieldTouched('address', true);
+                        }}
                         onSelectAddress={(addressDetails) => {
                           if (addressDetails) {
-                            formik.setFieldValue('address', addressDetails.StreetAddress);
+                            formik.setFieldValue('address', addressDetails.StreetAddress ?? '');
                             formik.setFieldTouched('address', true);
                             dispatch(setCustomerData({              
                                 address: addressDetails?.StreetAddress || "",
@@ -434,7 +405,7 @@ export const FormStep01 = (props:any) => {
                       <CustomTextField
                         fullWidth
                         id="AddressReference"
-                        AddressReference="AddressReference"
+                        name="AddressReference"
                         value={formik.values.AddressReference}
                         onChange={formik.handleChange}
                         onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
@@ -507,15 +478,15 @@ export const FormStep01 = (props:any) => {
                       <Box id="box-tittle" sx={{ width: "100%", bgcolor:"#ECF2FF", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", paddingX:"14px" }}>
                          <Box sx={{ width: { xs: "0%", md: "20%" }, display: { xs: "none", md: "flex" }, justifyContent: "center", alignItems: "center" }}>
                            <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
-                             <path d="M2.68126 4.18359C1.20654 4.18359 0 5.39025 0 6.86497V37.7001L31.8407 40.3814L30.5 4.18359H2.68126Z" fill="#461E7D" fill-opacity="0.06"/>
+                             <path d="M2.68126 4.18359C1.20654 4.18359 0 5.39025 0 6.86497V37.7001L31.8407 40.3814L30.5 4.18359H2.68126Z" fill="#461E7D" fillOpacity="0.06"/>
                              <path d="M61 5.86485C61 4.39013 59.7935 3.18359 58.3187 3.18359H30.5V38.0407L61 36.7V5.86485Z" fill="#F2D2DE"/>
                              <path d="M37.2035 56.8089V43.4023H23.7969V56.8089" fill="#461E7D"/>
                              <path d="M45.7503 26.4648C41.5781 26.4648 38.0085 29.0358 36.5332 32.679H54.9672C53.492 29.0359 49.9225 26.4648 45.7503 26.4648Z" fill="#E4769A"/>
                              <path d="M45.7497 22.4408C49.0816 22.4408 51.7826 19.7398 51.7826 16.4079C51.7826 13.076 49.0816 10.375 45.7497 10.375C42.4178 10.375 39.7168 13.076 39.7168 16.4079C39.7168 19.7398 42.4178 22.4408 45.7497 22.4408Z" fill="#E4769A"/>
                              <path d="M15.2503 26.4648C11.0781 26.4648 7.50852 29.0358 6.0332 32.679H24.4672C22.992 29.0359 19.4225 26.4648 15.2503 26.4648Z" fill="#461E7D"/>
                              <path d="M15.2497 22.4408C18.5816 22.4408 21.2826 19.7398 21.2826 16.4079C21.2826 13.076 18.5816 10.375 15.2497 10.375C11.9178 10.375 9.2168 13.076 9.2168 16.4079C9.2168 19.7398 11.9178 22.4408 15.2497 22.4408Z" fill="#461E7D"/>
-                             <path d="M0 36.6992V42.0619C0 43.5366 1.20654 44.7431 2.68126 44.7431H58.3186C59.7933 44.7431 60.9999 43.5366 60.9999 42.0619V36.6992H0Z" fill="#461E7D" fill-opacity="0.33"/>
-                             <path d="M49.6041 57.8158H11.3952C10.8398 57.8158 10.3896 57.3657 10.3896 56.8102C10.3896 56.2548 10.8398 55.8047 11.3952 55.8047H49.604C50.1594 55.8047 50.6095 56.2548 50.6095 56.8102C50.6095 57.3657 50.1595 57.8158 49.6041 57.8158Z" fill="#461E7D" fill-opacity="0.33"/>
+                             <path d="M0 36.6992V42.0619C0 43.5366 1.20654 44.7431 2.68126 44.7431H58.3186C59.7933 44.7431 60.9999 43.5366 60.9999 42.0619V36.6992H0Z" fill="#461E7D" fillOpacity="0.33"/>
+                             <path d="M49.6041 57.8158H11.3952C10.8398 57.8158 10.3896 57.3657 10.3896 56.8102C10.3896 56.2548 10.8398 55.8047 11.3952 55.8047H49.604C50.1594 55.8047 50.6095 56.2548 50.6095 56.8102C50.6095 57.3657 50.1595 57.8158 49.6041 57.8158Z" fill="#461E7D" fillOpacity="0.33"/>
                              <path d="M30.4997 41.7298C31.055 41.7298 31.5052 41.2796 31.5052 40.7243C31.5052 40.1689 31.055 39.7188 30.4997 39.7188C29.9443 39.7188 29.4941 40.1689 29.4941 40.7243C29.4941 41.2796 29.9443 41.7298 30.4997 41.7298Z" fill="#086063"/>
                            </svg>
                          </Box>
@@ -634,7 +605,7 @@ export const FormStep01 = (props:any) => {
                               }}
                               disabled={status === "loading"}
                             >
-                            Continuar con  visita virtual sin costo
+                            Continuar con visita remota
                           </Button>
                          </Box>
                          
@@ -708,9 +679,12 @@ export const FormStep01 = (props:any) => {
             color:"#E81A68",
             border: "1px solid #E81A68",
             width: { xs: '100%', md: 'auto' },
+            display: 'none',
           }}
           disabled={status === "loading"}
-          onClick={() => dispatch(setStep(0))}
+          onClick={() => {
+            // No back button on first step
+          }}
         >
           Volver
         </Button>

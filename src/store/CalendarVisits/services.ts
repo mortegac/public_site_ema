@@ -1,6 +1,6 @@
 import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
-import { calendarVisitInput } from './type';
+import { calendarVisitInput, FetchCalendarForDateResponse } from './type';
 import { GraphQLResult } from '@aws-amplify/api';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -213,10 +213,25 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
   try {
     const response = await client.graphql<MakeReservationResponse>({
       query: `
-        mutation MakeReservationAndCart($customerId: String!, $calendarId: String!) {
+        mutation MakeReservationAndCart(
+          $customerId: String!
+          $installationDayId: String!
+          $startTime: AWSDateTime!
+          $duration: Int!
+          $address: String!
+          $lat: Float
+          $long: Float,
+          $isRemote: Boolean!
+        ) {
           MakeReservationAndCart(
-            customerId: $customerId,
-            calendarId: $calendarId
+            customerId: $customerId
+            installationDayId: $installationDayId
+            startTime: $startTime
+            duration: $duration
+            address: $address
+            lat: $lat
+            long: $long
+            isRemote: $isRemote
           ) {
             message
             cartId
@@ -224,8 +239,14 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
         }
       `,
       variables: {
-        customerId: objFilter.customerId,
-        calendarId: objFilter.calendarId,
+        customerId: objFilter.customerId!,
+        installationDayId: objFilter.installationDayId!,
+        startTime: objFilter.startTime!,
+        duration: objFilter.duration!,
+        address: objFilter.address!,
+        lat: objFilter.lat,
+        long: objFilter.long,
+        isRemote: objFilter.isRemote || false,
       }
     }) as GraphQLResult<MakeReservationResponse>;
     
@@ -271,6 +292,69 @@ export const makeReservationNotPaid = async (objFilter: calendarVisitInput) => {
     
   } catch (error) {
     console.log("Error fetching calendar visits:", error);
+    throw error;
+  }
+};
+
+interface FetchCalendarForDateGraphQLResponse {
+  FetchCalendarForDate: FetchCalendarForDateResponse;
+}
+
+export const fetchInstallationDays = async (params: {
+  date?: string; // ISO date string (YYYY-MM-DD), optional
+  address?: string; // Optional (required for on-site; omitted for remote)
+  lat?: number; // Optional
+  long?: number; // Optional
+  remote?: boolean; // Optional (remote availability)
+}) => {
+  try {
+    const response = await client.graphql<FetchCalendarForDateGraphQLResponse>({
+      query: `
+        mutation FetchCalendarForDate($date: AWSDate, $address: String, $lat: Float, $long: Float, $remote: Boolean) {
+          FetchCalendarForDate(
+            date: $date
+            address: $address
+            lat: $lat
+            long: $long
+            remote: $remote
+          ) {
+            message
+            installationDays {
+              installationDayId
+              day
+              date
+              usedTime
+              maxTime
+              availableTime
+              userId
+              startLocationLatitude
+              startLocationLongitude
+              endLocationLatitude
+              endLocationLongitude
+            }
+            calendarVisitGroups {
+              date
+              calendarVisits {
+                startDate
+                endDate
+                timeZone
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        date: params.date,
+        address: params.address,
+        lat: params.lat,
+        long: params.long,
+        remote: params.remote,
+      }
+    }) as GraphQLResult<FetchCalendarForDateGraphQLResponse>;
+    
+    return response.data?.FetchCalendarForDate || { message: "", installationDays: [] };
+  } catch (error) {
+    console.log("Error fetching installation days:", error);
     throw error;
   }
 };

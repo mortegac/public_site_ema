@@ -46,8 +46,9 @@ const client = generateClient<MAIN.MainTypes>();
       card_number: string;
       payment_type_code: string;
       paymentTransactionId: string;
+      shoppingCartId: string;
       glosa: string;
-      
+      typeOfCart: "product" | "service" | "input" | "visit" | "virtualVisit" | null;
     };
   }
 

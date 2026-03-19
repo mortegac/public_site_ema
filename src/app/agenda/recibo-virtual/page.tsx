@@ -13,6 +13,7 @@ dayjs.extend(timezone);
 dayjs.locale("es"); // Configurar el idioma español
 
 import PageContainer from "@/app/components/container/PageContainer";
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 
 
 import {
@@ -163,12 +164,13 @@ export default function FormResumeVirtual() {
         title="Retorno de Pago"
         description="Procesando el retorno de pago"
       >
-        {/* <HpHeader /> */}
+        <HpHeaderNew />
         {/* <pre>calendarData = {JSON.stringify(calendarData, null, 2)}</pre> */}
         {/* <pre>customer = {JSON.stringify(customer, null, 2 )}</pre> */}
         {/* <pre>calendarVisits = {JSON.stringify(calendarVisits, null, 2)}</pre> */}
 
         <Box
+          id="VISITA-VIRTUAL-PAGADO"
           sx={{
             // minHeight: '80vh',
             display: "flex",
@@ -962,8 +964,6 @@ export default function FormResumeVirtual() {
             </Box>
           </Box>
         </Box>
-        {/* <Footer /> */}
-        {/* <ScrollToTop /> */}
       </PageContainer>
     </>
   );

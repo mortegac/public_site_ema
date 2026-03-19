@@ -36,8 +36,12 @@ interface Props {
 
 const KEY = "AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ";
 
+let googleMapsScriptPromise: Promise<void> | null = null;
+
 const loadGoogleMapsScript = (): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  if (googleMapsScriptPromise) return googleMapsScriptPromise;
+
+  googleMapsScriptPromise = new Promise((resolve, reject) => {
     if (window.google?.maps?.places) {
       resolve();
       return;
@@ -46,31 +50,30 @@ const loadGoogleMapsScript = (): Promise<void> => {
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${KEY}&libraries=places`;
     script.async = true;
-    
+
     script.onload = () => {
-      // Esperamos a que el objeto google.maps.places esté disponible
       const checkPlaces = setInterval(() => {
         if (window.google?.maps?.places) {
           clearInterval(checkPlaces);
-          console.log('Google Maps Places API loaded successfully');
           resolve();
         }
       }, 100);
 
-      // Timeout después de 5 segundos
       setTimeout(() => {
         clearInterval(checkPlaces);
         reject(new Error('Timeout waiting for Google Maps Places API'));
       }, 5000);
     };
-    
+
     script.onerror = () => {
-      console.error('Error loading Google Maps script');
+      googleMapsScriptPromise = null;
       reject(new Error('Error loading Google Maps script'));
     };
 
     document.head.appendChild(script);
   });
+
+  return googleMapsScriptPromise;
 };
 
 const AddressInput: React.FC<Props> = ({ onSelectAddress, value: controlledValue, onAddressChange, error, helperText }) => {

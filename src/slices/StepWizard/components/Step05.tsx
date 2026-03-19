@@ -26,13 +26,29 @@ export const Step05: FC<any> = () => {
   const dispatch = useAppDispatch();
   const { shoppingCart, loading } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
+
+  const handlePagar = () => {
+    if (!webpay?.url || !webpay?.token) return;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = webpay.url;
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'token_ws';
+    input.value = webpay.token;
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+  };
   
-  // Obtener el carrito desde la API cuando el componente se monte
+  // Obtener el carrito desde la API cuando el shoppingCartId esté disponible.
+  // La dependencia en shoppingCartId resuelve el caso donde redux-persist aún
+  // no ha rehidratado el estado al momento del primer montaje.
   useEffect(() => {
     if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== '') {
       dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
     }
-  }, []); // Solo se ejecuta al montar el componente
+  }, [shoppingCart?.shoppingCartId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRemoveItem = (shoppingCartDetailId: string) => {
     dispatch(removeProductToCart({ shoppingCartDetailId }));
@@ -273,11 +289,6 @@ export const Step05: FC<any> = () => {
 
           {/* Columna Derecha - Resumen de Compra */}
           <Box sx={{ width: '100%', maxWidth: '100%' }}>
-          <form className="form flex flex-wrap w-full"
-            action={webpay?.url || ""}
-            method="POST"
-        >
-          <input id="token_ws" type="hidden" name="token_ws" value={webpay?.token || ""} />
         
         
         
@@ -423,10 +434,11 @@ export const Step05: FC<any> = () => {
 
                 <Button
                 variant="contained"
-                type='submit'
+                type='button'
                 color="primary"
                 size="large"
-                disabled={webpay?.token ? false : true}
+                onClick={handlePagar}
+                disabled={!webpay?.token}
                 endIcon={
                   <Box
                     component="span"
@@ -487,8 +499,6 @@ export const Step05: FC<any> = () => {
                 )}
               </CardContent>
             </Card>
-          
-            </form>
           </Box>
         </Box>
         )}

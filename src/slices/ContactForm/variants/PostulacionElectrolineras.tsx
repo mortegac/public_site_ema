@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Text } from "@/app/components/shared/text";
 import {ContactFormTemplate, HTML} from "@/app/components/shared/emailsTemplate/ContactForm";
@@ -64,8 +65,11 @@ const validationSchema = yup.object({
     .required("Campo obligatorio"),
   phone: yup
     .string()
-    .min(5, "El teléfono debe tener al menos 9 digitos")
-    .required("Campo obligatorio"),
+    .required("Campo obligatorio")
+    .test('is-valid-phone', 'El teléfono debe tener el formato +56 9XX XXX XXX', (value) => {
+      if (!value) return false;
+      try { return isValidPhoneNumber(value); } catch { return false; }
+    }),
   typeofresidence: yup
     .string()
     .required("Campo obligatorio"),
@@ -349,6 +353,9 @@ const ButtonContainer = styled(Button)(({ theme }) => ({
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCustomer, setCustomer, setCustomerData, getCustomer } from "@/store/Customer/slice";
 import { setWebContactForm } from "@/store/WebContactForm/slice";
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import AddressInput from '@/app/components/AddressInput2';
 
 
 export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
@@ -362,6 +369,7 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
   const visitorparkingstatus = primaryDefault?.visitorparkingstatus;
   const evusercount = primaryDefault?.evusercount;
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const {  customer, existCustomer } = useAppSelector(selectCustomer); 
   
   const [isSentEmail, setIsSentEmail] = useState<EmailState>({
@@ -389,6 +397,14 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
       if (!values?.email?.trim()) {
         return;
       }
+      const typeOfResidenceMap: Record<string, "house" | "appartment" | "other"> = {
+        "Edificio residencial (departamentos)": "appartment",
+        "Condominio residencial (casas)": "house",
+        "Edificio de oficinas": "other",
+        "Otro": "other",
+      };
+      const mappedTypeOfResidence = typeOfResidenceMap[values?.typeofresidence] ?? "other";
+
       await Promise.all([
         dispatch(
           setCustomer({
@@ -397,8 +413,15 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             name: values?.firstname,
             email: values?.email,
             phone: values?.phone,
-            typeOfResidence: values?.typeofresidence || "other",
-            address: values?.address,
+            typeOfResidence: mappedTypeOfResidence,
+            address: values?.address || customer?.address || "-",
+            city: customer?.city || "-",
+            state: customer?.state || "-",
+            zipCode: customer?.zipCode || "-",
+            lat: customer?.lat || "-",
+            long: customer?.long || "-",
+            zoomLevel: customer?.zoomLevel || "15",
+            referenceAddress: customer?.referenceAddress || "-",
           })
         ),
         dispatch(
@@ -410,9 +433,10 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             email: values?.email,
             phone: values?.phone,
             whatsapp: values?.phone,
-            message: values?.message,
-            subject: `Formulario de Postulación Electrolineras`,
-            category: "ELECTROLINERAS",
+            message: `Cargo: ${values?.position} | Dirección: ${values?.address} | Estacionamientos de visita: ${values?.visitorparkingstatus} | Usuarios EV: ${values?.evusercount} | Mensaje: ${values?.message}`,
+            subject: "Postulación Cargadores Edificios",
+            category: values?.typeofresidence || "",
+            companyName: values?.nameofresidence || "",
             cantidadVehiculos: 0,
             customerId: values?.email,
           })
@@ -554,20 +578,13 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
           contentHTML: CONTENT_HTML,
         };
         
-        const response = await emailjs.send(
+        await emailjs.send(
           // SERVICE,  // 1. Service ID
           // TEMPLATE, // 2. Template ID
           "service_dbrrm6b",
           "template_ey97i29",
           templateParams);
-        setIsSentEmail({
-          sentEmail: true,
-          isFailure: false,
-          title: "¡Gracias por dar el primer paso hacia la electromovilidad! 🎉",
-          // text: "Hemos recibido tu consulta y pronto un miembro de nuestro equipo de expertos en electromovilidad se pondrá en contacto contigo. Nos especializamos en proyectos de transporte sostenible para personas y empresas, y estamos listos para ayudarte a concretar el tuyo de manera eficiente y rentable.",
-          text: "Hemos recibido tu consulta y pronto un miembro de nuestro equipo de expertos evaluará la factibilidad técnica y la coordinación con la administración o entidad responsable.💡 Este programa está orientado a comunidades, establecimientos y espacios de alto tránsito que busquen fomentar la movilidad eléctrica y compartir el beneficio entre sus residentes, huéspedes, clientes o colaboradores. Recibirás una respuesta de nuestros consultores lo antes posible.",
-          response: JSON.stringify(response),
-        });
+        router.push('/postulacion-cargadores-edificios/gracias');
       } catch (error) {
         console.log("FAILED...", error);
         setIsSentEmail({
@@ -800,17 +817,64 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   ? phone
                   : "Teléfono"}
               </Typography>
-              <TextField
-                fullWidth
-                id="phone"
-                name="phone"
-                type="phone"
-                value={formik.values.phone}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.phone && Boolean(formik.errors.phone)}
-                helperText={formik.touched.phone && formik.errors.phone}
-              />
+              <Box sx={{
+                '& .PhoneInput': {
+                  height: '48px',
+                  border: formik.touched.phone && Boolean(formik.errors.phone)
+                    ? '1px solid #ff3355'
+                    : '1px solid rgba(0, 17, 51, 0.15)',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0 13px',
+                  backgroundColor: 'white',
+                  cursor: 'text',
+                  transition: 'all 0.4s ease',
+                  '&:focus-within': {
+                    boxShadow: '0 0 0 2px rgba(126, 73, 150, 0.4)',
+                  },
+                },
+                '& .PhoneInputInput': {
+                  border: 'none !important',
+                  borderRadius: '0 !important',
+                  height: 'auto !important',
+                  padding: '0 !important',
+                  background: 'none',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  color: 'rgba(0, 17, 51, 0.8)',
+                  outline: 'none !important',
+                  boxShadow: 'none !important',
+                  width: '100%',
+                },
+                '& .PhoneInputCountry': {
+                  marginRight: '10px',
+                },
+              }}>
+                <PhoneInput
+                  international
+                  defaultCountry="CL"
+                  id="phone"
+                  name="phone"
+                  value={formik.values.phone}
+                  onChange={(value) => {
+                    const formatted = value || '+569';
+                    formik.setFieldValue('phone', formatted);
+                    formik.setFieldTouched('phone', true);
+                  }}
+                  onBlur={() => formik.setFieldTouched('phone', true)}
+                  placeholder="Ingrese número de teléfono"
+                />
+              </Box>
+              {formik.touched.phone && formik.errors.phone && (
+                <Typography
+                  variant="caption"
+                  color="error"
+                  sx={{ display: 'block', mt: '4px', ml: '14px', fontSize: '0.75rem' }}
+                >
+                  {String(formik.errors.phone)}
+                </Typography>
+              )}
             </Box>
             
             <Box>
@@ -905,16 +969,50 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   ? address
                   : "Dirección"}
               </Typography>
-              <TextField
-                fullWidth
-                id="address"
-                name="address"
-                value={formik.values.address}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.address && Boolean(formik.errors.address)}
-                helperText={formik.touched.address && formik.errors.address}
-              />
+              <Box sx={{
+                mt: '5px',
+                '& > div': {
+                  borderColor: `${
+                    formik.touched.address && Boolean(formik.errors.address)
+                      ? '#ff3355'
+                      : 'rgba(0, 17, 51, 0.15)'
+                  } !important`,
+                  borderRadius: '6px !important',
+                },
+                '& input': {
+                  height: 'auto !important',
+                  border: '0 !important',
+                  borderRadius: '0 !important',
+                  padding: '13px !important',
+                  fontSize: '14px',
+                  color: 'rgba(0, 17, 51, 0.8)',
+                  boxShadow: 'none !important',
+                },
+              }}>
+                <AddressInput
+                  onSelectAddress={(addressDetails) => {
+                    if (addressDetails) {
+                      formik.setFieldValue('address', addressDetails.StreetAddress || '');
+                      formik.setFieldTouched('address', true);
+                      dispatch(setCustomerData({
+                        address: addressDetails?.StreetAddress || "",
+                        city: addressDetails?.City || "",
+                        state: addressDetails?.State || "",
+                        zipCode: addressDetails?.ZipCode || "",
+                        lat: String(addressDetails?.Latitude || ""),
+                        long: String(addressDetails?.Longitude || ""),
+                        zoomLevel: "15",
+                      }));
+                    }
+                  }}
+                  error={formik.touched.address && Boolean(formik.errors.address)}
+                  helperText={
+                    formik.touched.address && formik.errors.address
+                      ? String(formik.errors.address)
+                      : undefined
+                  }
+                />
+              </Box>
             </Box>
             
             <Box>

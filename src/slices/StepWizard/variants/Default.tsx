@@ -1,5 +1,6 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useSearchParams } from 'next/navigation';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -37,7 +38,7 @@ const typeOfForm: any = {
   ["0"]: Step01,
   ["1"]: Step01,
   ["2"]: Step02,
-  ["3"]: Step03, 
+  ["3"]: Step05,
   ["4"]: Step04,
   ["5"]: Step05,
 };
@@ -77,15 +78,26 @@ const StepIconNumber: FC<StepIconNumberProps> = ({ icon, isActiveStep }) => {
 export const Default: FC<StepWizardProps> = ({ slice }) => {
   const {primary} = slice;
   const primaryDefault = primary as any;
-  
+
   const dispatch = useAppDispatch();
-  const handleStepClick = (stepIndex: number, stepName: string) => {
-    
-    dispatch(setStep(stepIndex));
-  };
-  
+  const searchParams = useSearchParams();
+
   const { currentStep, } = useAppSelector(selectWizard);
   const { shoppingCart, } = useAppSelector(selectShoppingCart);
+
+  useEffect(() => {
+    const stepParam = searchParams.get('step');
+    if (stepParam !== null) {
+      const step = Number(stepParam);
+      if (!isNaN(step)) {
+        dispatch(setStep(step));
+      }
+    }
+  }, [searchParams]);
+
+  const handleStepClick = (stepIndex: number, stepName: string) => {
+    dispatch(setStep(stepIndex));
+  };
   
   const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
   

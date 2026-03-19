@@ -1,4 +1,4 @@
-export type WebContactFormType = "OTHER" | "SUPPORT" | "QUOTE" | "GENERAL";
+export type WebContactFormType = "EMA" | "GRETA" | "EVE" | "OTHER";
 
 export type webContactForm = {
   __typename?: "WebContactForm";

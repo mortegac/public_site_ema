@@ -12,57 +12,65 @@ configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
 
+const CREATE_WEB_CONTACT_FORM = /* GraphQL */ `
+  mutation CreateWebContactForm($input: CreateWebContactFormInput!) {
+    createWebContactForm(input: $input) {
+      webContactFormId
+      date
+      type
+      name
+      email
+      phone
+      whatsapp
+      message
+      subject
+      category
+      companyName
+      cantidadVehiculos
+      customerId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const createWebContactForm = async (input: webContactFormInput): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const {
-        webContactFormId,
-        date,
-        type,
-        name,
-        email,
-        phone,
-        whatsapp,
-        message,
-        subject,
-        category,
-        companyName,
-        cantidadVehiculos,
-        customerId,
-      } = input;
-
-      console.log("--createWebContactForm--", input);
-
       const formData: any = {
-        webContactFormId: webContactFormId || crypto.randomUUID(),
-        date: date || new Date().toISOString(),
-        type: type || "OTHER",
-        name: name || null,
-        email: email || null,
-        phone: phone || null,
-        whatsapp: whatsapp || null,
-        message: message || null,
-        subject: subject || null,
-        category: category || null,
-        companyName: companyName || null,
-        cantidadVehiculos: cantidadVehiculos || null,
-        customerId: customerId || null,
+        webContactFormId: input.webContactFormId || crypto.randomUUID(),
+        date: input.date || new Date().toISOString(),
+        type: input.type || "OTHER",
+        name: input.name || "",
+        email: input.email || "",
+        phone: input.phone || "",
+        whatsapp: input.whatsapp || "",
+        message: input.message || "",
+        subject: input.subject || "",
+        category: input.category || "",
+        companyName: input.companyName || "",
+        cantidadVehiculos: input.cantidadVehiculos ?? 0,
+        customerId: input.customerId || "",
       };
 
-      console.log("--formData", formData);
-      
-      // @ts-ignore - WebContactForm model will be available once schema is updated
-      const { data, errors } = await client.models.WebContactForm.create(formData);
-      console.log("--createWebContactForm--data", data);
+      console.log("--createWebContactForm--formData", formData);
 
-      if (errors) {
-        console.log("--createWebContactForm--errors", errors);
+      const response: any = await client.graphql({
+        query: CREATE_WEB_CONTACT_FORM,
+        variables: { input: formData },
+      });
+
+      console.log("--createWebContactForm--response", response);
+
+      if (response.errors?.length) {
+        console.log("--createWebContactForm--errors", response.errors);
         reject({
-          errorMessage: errors.map((e: { message: string }) => e.message).join(', ')
+          errorMessage: response.errors.map((e: { message: string }) => e.message).join(', ')
         });
         return;
       }
 
+      const data = response.data?.createWebContactForm;
       console.log("--createWebContactForm--resolve", data);
       resolve(data);
     } catch (err) {

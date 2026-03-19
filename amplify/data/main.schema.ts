@@ -502,13 +502,15 @@ export const MainSchema = a
         response_code: a.string().default(""),
         vci: a.string().default(""),
         glosa: a.string().default(""),
+        createdAt: a.datetime(),
+        updatedAt: a.datetime(),
         usersPaymentTransactionsId: a.id(),
         shoppingCartId: a.id(),
         ShoppingCart: a.belongsTo("ShoppingCart", "shoppingCartId"),
       })
       .secondaryIndexes((index) => [
         index("token"),
-        index("status").sortKeys(["date"])],
+        index("status").sortKeys(["createdAt"]).queryField("listPaymentTransactionByStatusAndDate")],
       )
       .identifier(["paymentTransactionId"]),
 

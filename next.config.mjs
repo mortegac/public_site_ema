@@ -24,8 +24,8 @@ const nextConfig = {
         exclude: ['error', 'warn'],
       } : false,
     },
-    // Configuración SWC para eliminar legacy JavaScript
-    swcMinify: true,
+    // Fijar el workspace root para evitar advertencia de múltiples lockfiles
+    outputFileTracingRoot: '/Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema',
     // Headers de seguridad y performance
     async headers() {
       return [

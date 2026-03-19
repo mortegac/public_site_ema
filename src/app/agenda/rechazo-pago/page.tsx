@@ -18,6 +18,7 @@ dayjs.extend(timezone);
 dayjs.locale("es"); // Configurar el idioma español
 
 import PageContainer from "@/app/components/container/PageContainer";
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 
 
 import {
@@ -166,9 +167,11 @@ const RetryTransaction = () => {
   
   
   return (
-    <>
+    <PageContainer title="Pago rechazado" description="Hubo un problema con tu pago">
+      <HpHeaderNew />
       {/* <pre>paymentData = {JSON.stringify(paymentData, null, 2 )}</pre> */}
       <Box
+        id="VISITA-PRESENCIAL-RECHAZO"
         sx={{
           backgroundColor: '#f8fafc',
           color: '#74787e',
@@ -418,7 +421,7 @@ const RetryTransaction = () => {
         
         </Container>
       </Box>
-    </>
+    </PageContainer>
   );
 }
 export default RetryTransaction;

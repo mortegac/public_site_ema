@@ -232,7 +232,7 @@ export const Step03: FC<any> = () => {
                     },
                   }}
                 >
-                  Continuar y pagar la visita física
+                  Pagar compra
                 </Button>
               </Box>
             )}

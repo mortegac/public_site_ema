@@ -238,16 +238,24 @@ const shoppingCartSlice = createSlice({
       })
       .addCase(getShoppingCart.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(">>> action.payload >>", action.payload)
-        state.shoppingCart = {...action.payload};
+        console.log(">>> action.payload >>", action.payload);
+        // Preserve imageUrl from localStorage — DB has no imageUrl (images come from Prismic CMS)
+        const existingProducts: CartProduct[] = state.shoppingCart.products || [];
+        const incomingProducts: CartProduct[] = action.payload?.products || [];
+        const mergedProducts = incomingProducts.map((incoming: CartProduct) => {
+          const existing = existingProducts.find(
+            (p) => p.productId === incoming.productId || p.description === incoming.description
+          );
+          return { ...incoming, imageUrl: incoming.imageUrl || existing?.imageUrl || '' };
+        });
+        state.shoppingCart = { ...action.payload, products: mergedProducts };
         // Normalize total/vat from products when present so they never drift
-        const products = state.shoppingCart.products ?? [];
-        if (products.length > 0) {
-          const { total, vat } = computeTotalsFromProducts(products);
+        if (mergedProducts.length > 0) {
+          const { total, vat } = computeTotalsFromProducts(mergedProducts);
           state.shoppingCart.total = String(total);
           state.shoppingCart.vat = String(vat);
         }
-        console.log(">>> state.shoppingCart >>", state.shoppingCart)
+        console.log(">>> state.shoppingCart >>", state.shoppingCart);
       })
       .addCase(getShoppingCart.rejected, (state, action) => {
         state.loading = false;

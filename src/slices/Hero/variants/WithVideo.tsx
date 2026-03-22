@@ -64,9 +64,7 @@ export const WithVideo: FC<HeroProps> = ({ slice }) => {
           zIndex: 0,
         }}
       >
-        <source src={primary?.videourl || undefined} type="video/webm" />
         <source src={primary?.videourl || undefined} type="video/mp4" />
-        <source src={primary?.videourl || undefined} type="video/ogg" />
       </Box>
       <Container
         sx={{

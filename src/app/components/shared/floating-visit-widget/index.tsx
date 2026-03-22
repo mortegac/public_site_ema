@@ -166,7 +166,7 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
             >
               <Box
                 component="img"
-                src="https://43818972.hs-sites.com/hs-fs/hubfs/T%C3%A9cnico-instalador-1.png?width=600&height=600&name=T%C3%A9cnico-instalador-1.png"
+                src="https://images.prismic.io/energica-public-site/acAHZpGXnQHGY1Nc_tecnico-instalador-1.png?auto=format,compress"
                 alt="Técnico instalador"
                 sx={{
                   width: '100%',

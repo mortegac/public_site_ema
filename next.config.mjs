@@ -11,6 +11,11 @@ const nextConfig = {
           hostname: 'images.prismic.io',
           pathname: '/**',
         },
+        {
+          protocol: 'https',
+          hostname: 'energica-public-site.cdn.prismic.io',
+          pathname: '/**',
+        },
       ],
       formats: ['image/avif', 'image/webp'],
       minimumCacheTTL: 2592000,
@@ -57,7 +62,7 @@ const nextConfig = {
             },
             {
               key: 'Content-Security-Policy',
-              value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.prismic.io https://www.google-analytics.com; media-src 'self' https://*.prismic.io https://energica-public-site.cdn.prismic.io; connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://analytics.google.com; frame-src https://www.googletagmanager.com;"
+              value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com; media-src 'self' https://*.prismic.io https://energica-public-site.cdn.prismic.io; connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://analytics.google.com https://cognito-identity.us-east-2.amazonaws.com https://*.amazonaws.com https://*.appsync-api.us-east-2.amazonaws.com; frame-src https://www.googletagmanager.com;"
             },
           ],
         },

@@ -103,7 +103,7 @@ export const Default: FC<OptionsContentProps> = ({ slice }) => {
                         borderRadius: '8px',
                         marginBottom: '22px',
                       }}
-                      unoptimized
+                      sizes="100px"
                     />
                   )}
                    <Box

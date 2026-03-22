@@ -154,7 +154,7 @@ export const BlogHero: FC<HeroProps> = ({ slice }) => {
               alt={imageAlt || "Cargador eléctrico"}
               fill
               priority
-              unoptimized
+              sizes="(max-width: 600px) 100vw, 50vw"
               style={{
                 objectFit: 'cover',
               }}

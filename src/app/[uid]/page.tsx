@@ -11,8 +11,7 @@ import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import PageContainer from '@/app/components/container/PageContainer';
-
-const DOMAIN:string="https://energica.city";
+import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 
 type Params = { uid: string };
 
@@ -24,10 +23,8 @@ export async function generateMetadata({
   const { uid } = await params;
   const client = createClient();
   const page = await client.getByUID("page", uid).catch(() => notFound());
-  // console.log("--page--", page)
-  
-  
-  const DOMAIN_PAGE:string=`${DOMAIN}${page.url}`;
+
+  const DOMAIN_PAGE:string=`${CANONICAL_DOMAIN}${page.url}`;
 
   return {
     title: page.data.meta_title,
@@ -46,7 +43,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "website",
-      url: `${DOMAIN_PAGE}`,
+      url: DOMAIN_PAGE,
       title: page.data.meta_title ?? undefined,
       description: page.data.meta_description ?? "",
       images: [
@@ -84,27 +81,29 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const client = createClient();
   const page = await client.getByUID("page", uid).catch(() => notFound());
 
-    
-  const DOMAIN_PAGE:string=`${DOMAIN}${page.url}`;
+  const DOMAIN_PAGE:string=`${CANONICAL_DOMAIN}${page.url}`;
 
-
-  console.log("--page--", page)
-  
-  const organizationSchema = {
+  const breadcrumbSchema = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Energica City",
-    "url": `${DOMAIN_PAGE}`,
-    "logo": `${DOMAIN_PAGE}`,
-    "description": page?.data.meta_description ?? "",
-    "sameAs": [
-      "https://www.instagram.com/energicacity/",
-      "https://www.linkedin.com/company/energicacity"
-    ]
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": CANONICAL_DOMAIN,
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": page.data.meta_title ?? uid,
+        "item": DOMAIN_PAGE,
+      },
+    ],
   };
-  
+
   return <>
-    <SchemaMarkup type="Organization" data={organizationSchema} />
+    <SchemaMarkup type="BreadcrumbList" data={breadcrumbSchema} />
     {/* <PageContainer title="" description=""> */}
       {/* <HpHeader />  */}
       <HpHeaderNew /> 

@@ -133,7 +133,7 @@ export const SinTextoResponsive: FC<HeroProps> = ({ slice }) => {
                 width={500}
                 height={300}
                 priority
-                unoptimized
+                sizes="(max-width: 600px) 100vw, 50vw"
                 style={{
                   maxWidth: '100%',
                   height: 'auto',

@@ -142,7 +142,7 @@ export const BlogHero: FC<IdeasProps> = ({ slice }) => {
               alt={(primary as any)?.image?.alt || "Cargador eléctrico"}
               fill
               priority
-              unoptimized
+              sizes="(max-width: 600px) 100vw, 50vw"
               style={{
                 objectFit: 'cover',
               }}

@@ -121,7 +121,7 @@ export const TwoColumns: FC<OptionsContentProps> = ({ slice }) => {
                      height: 'auto',
                      display: 'block'
                    }}
-                   unoptimized
+                   sizes="(max-width: 600px) 100vw, 50vw"
                  />
                )}
                

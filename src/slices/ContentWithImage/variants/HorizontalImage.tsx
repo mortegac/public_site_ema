@@ -268,7 +268,7 @@ export const HorizontalImage: FC<ContentWithImageProps> = ({ slice }) => {
                     width={1200}
                     height={406}
                     priority
-                    unoptimized
+                    sizes="(max-width: 600px) 100vw, 50vw"
                     style={{
                       maxWidth: '100%',
                       height: 'auto',

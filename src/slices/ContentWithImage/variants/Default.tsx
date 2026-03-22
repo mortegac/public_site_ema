@@ -108,7 +108,7 @@ export const Default: FC<ContentWithImageProps> = ({ slice }) => {
                           alt={item.ico.alt || ""}
                           width={26}
                           height={26}
-                          unoptimized
+                          sizes="100px"
                         />
                       </Box>
                     )}
@@ -172,7 +172,7 @@ export const Default: FC<ContentWithImageProps> = ({ slice }) => {
                     width={500}
                     height={380}
                     priority
-                    unoptimized
+                    sizes="(max-width: 600px) 100vw, 50vw"
                     style={{
                       maxWidth: '100%',
                       height: 'auto',

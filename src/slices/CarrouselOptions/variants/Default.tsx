@@ -359,7 +359,7 @@ export const Default: FC<CarrouselOptionsProps> = ({ slice }) => {
                               objectFit: 'contain',
                               borderRadius: '8px'
                             }}
-                            unoptimized
+                            sizes="(max-width: 600px) 50vw, 300px"
                           />
                         )}
                       </CardMedia>

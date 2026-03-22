@@ -180,7 +180,7 @@ export const Step05: FC<any> = () => {
                             style={{
                               objectFit: "contain",
                             }}
-                            unoptimized
+                            sizes="(max-width: 600px) 100vw, 50vw"
                           />
                         </Box>
                       ) : (

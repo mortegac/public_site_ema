@@ -296,7 +296,7 @@ export const ExtendedOptions: FC<CarrouselOptionsProps> = ({ slice }) => {
                                     style={{
                                       objectFit: 'contain',
                                     }}
-                                    unoptimized
+                                    sizes="(max-width: 600px) 50vw, 300px"
                                   />
                                 </Box>
                               )}

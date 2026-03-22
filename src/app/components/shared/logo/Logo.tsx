@@ -49,7 +49,7 @@ const Logo = () => {
       {customizer.activeMode === "dark" ? (
         <Image
           src="/images/logos/dark-rtl-logo.svg"
-          alt="logo"
+          alt="Energica City"
           height={customizer.TopbarHeight}
           width={174}
           priority
@@ -57,7 +57,7 @@ const Logo = () => {
       ) : (
         <Image
           src="/images/logos/light-logo-rtl.svg"
-          alt="logo"
+          alt="Energica City"
           height={customizer.TopbarHeight}
           width={174}
           priority

@@ -1,4 +1,3 @@
-"use client";
 import { FC } from "react";
 import { Content } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
@@ -16,7 +15,6 @@ import {
   Grid,
   Button,
 } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import { HeroProps } from "../types"
 
@@ -127,7 +125,7 @@ export const Default: FC<HeroProps> = ({ slice }) => {
                 width={500}
                 height={300}
                 priority
-                unoptimized
+                sizes="(max-width: 600px) 100vw, 50vw"
                 style={{
                   maxWidth: '100%',
                   height: 'auto',

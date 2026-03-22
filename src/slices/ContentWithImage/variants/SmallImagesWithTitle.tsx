@@ -155,7 +155,7 @@ export const SmallImagesWithTitle: FC<ContentWithImageProps> = ({ slice }) => {
                           width={525}
                           height={500}
                           priority
-                          unoptimized
+                          sizes="(max-width: 600px) 100vw, 50vw"
                           style={{
                             maxWidth: '100%',
                             height: 'auto',

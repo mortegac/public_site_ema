@@ -2,6 +2,7 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+    poweredByHeader: false,
     // output: 'export', // Comentar o remover esta línea
     images: {
       remotePatterns: [
@@ -12,11 +13,11 @@ const nextConfig = {
         },
       ],
       formats: ['image/avif', 'image/webp'],
-      minimumCacheTTL: 60,
+      minimumCacheTTL: 2592000,
     },
     // Configuración para analytics
     experimental: {
-      optimizePackageImports: ['@mui/material', '@mui/icons-material', '@mui/x-date-pickers'],
+      optimizePackageImports: ['@mui/material', '@mui/icons-material', '@mui/x-date-pickers', '@tabler/icons-react'],
     },
     // Optimización de compilación moderna
     compiler: {
@@ -24,8 +25,6 @@ const nextConfig = {
         exclude: ['error', 'warn'],
       } : false,
     },
-    // Fijar el workspace root para evitar advertencia de múltiples lockfiles
-    outputFileTracingRoot: '/Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema',
     // Headers de seguridad y performance
     async headers() {
       return [
@@ -35,6 +34,30 @@ const nextConfig = {
             {
               key: 'X-DNS-Prefetch-Control',
               value: 'on'
+            },
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=63072000; includeSubDomains; preload'
+            },
+            {
+              key: 'X-Frame-Options',
+              value: 'SAMEORIGIN'
+            },
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff'
+            },
+            {
+              key: 'Referrer-Policy',
+              value: 'strict-origin-when-cross-origin'
+            },
+            {
+              key: 'Permissions-Policy',
+              value: 'camera=(), microphone=(), geolocation=(self)'
+            },
+            {
+              key: 'Content-Security-Policy',
+              value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.prismic.io https://www.google-analytics.com; connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://analytics.google.com; frame-src https://www.googletagmanager.com;"
             },
           ],
         },

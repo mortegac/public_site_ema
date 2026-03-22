@@ -100,7 +100,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                       objectFit: 'contain',
                       borderRadius: '8px'
                     }}
-                    unoptimized
+                    sizes="(max-width: 600px) 50vw, 300px"
                   />
                 )}
               </div>

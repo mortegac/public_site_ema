@@ -109,7 +109,7 @@ export const FoundingTeam: FC<OptionsContentProps> = ({ slice }) => {
                         objectFit: 'contain',
                         borderRadius: '8px'
                       }}
-                      unoptimized
+                      sizes="(max-width: 600px) 100vw, 200px"
                     />
                   )}
                 </CardMedia>
@@ -136,7 +136,7 @@ export const FoundingTeam: FC<OptionsContentProps> = ({ slice }) => {
                         borderRadius: '8px',
                         marginTop: '20px',
                       }}
-                      unoptimized
+                      sizes="100px"
                     />
                   )}
                 </Stack>

@@ -1,7 +1,7 @@
 import { Organization, WithContext } from "schema-dts";
 
 interface SchemaMarkupProps {
-  type: "Organization" | "WebSite" | "WebPage";
+  type: "Organization" | "WebSite" | "WebPage" | "LocalBusiness" | "BlogPosting" | "FAQPage" | "Service" | "BreadcrumbList";
   data: any;
 }
 

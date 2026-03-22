@@ -12,8 +12,7 @@ import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import PageContainer from '@/app/components/container/PageContainer';
-
-const DOMAIN:string="https://ema.energica.city/blog";
+import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 
 type Params = { uid: string };
 
@@ -25,11 +24,9 @@ export async function generateMetadata({
   const { uid } = await params;
   const client = createClient();
   const page = await client.getByUID("blog", uid).catch(() => notFound());
-  console.log("--page--", page)
-  
-  
-  const DOMAIN_PAGE:string=`${DOMAIN}/blog${page?.uid}`;
-console.log("--page--", page)
+
+  const DOMAIN_PAGE:string=`${CANONICAL_DOMAIN}/blog/${page.uid}`;
+
   return {
     title: page.data.meta_title,
     description: page.data.meta_description,
@@ -47,7 +44,7 @@ console.log("--page--", page)
     },
     openGraph: {
       type: "website",
-      url: `${DOMAIN_PAGE}`,
+      url: DOMAIN_PAGE,
       title: page.data.meta_title ?? undefined,
       description: page.data.meta_description ?? "",
       images: [
@@ -142,30 +139,66 @@ console.log("--page--", page)
 
 export default async function Page({ params }: { params: Promise<Params> }) {
   const { uid } = await params;
-    const client = createClient();
-    const page = await client.getByUID("blog", uid).catch(() => notFound());
-  
-      
-    const DOMAIN_PAGE:string=`${DOMAIN}/blog${page.url}`;
-  
-  
-    // console.log("--page--", page)
-    
-    const organizationSchema = {
-      "@context": "https://schema.org",
+  const client = createClient();
+  const page = await client.getByUID("blog", uid).catch(() => notFound());
+
+  const DOMAIN_PAGE:string=`${CANONICAL_DOMAIN}/blog/${page.uid}`;
+
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": page.data.meta_title ?? "",
+    "description": page.data.meta_description ?? "",
+    "image": page?.data?.image?.url ?? "",
+    "url": DOMAIN_PAGE,
+    "datePublished": page.first_publication_date ?? "",
+    "dateModified": page.last_publication_date ?? "",
+    "author": {
       "@type": "Organization",
       "name": "Energica City",
-      "url": `${DOMAIN_PAGE}`,
-      "logo": `${DOMAIN_PAGE}`,
-      "description": page?.data.meta_description ?? "",
-      "sameAs": [
-        "https://www.instagram.com/energicacity/",
-        "https://www.linkedin.com/company/energicacity"
-      ]
-    };
-  
+      "url": CANONICAL_DOMAIN,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Energica City",
+      "url": CANONICAL_DOMAIN,
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://energica.city/logo.png",
+        "width": 200,
+        "height": 60
+      },
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": CANONICAL_DOMAIN,
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": `${CANONICAL_DOMAIN}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": page.data.meta_title ?? uid,
+        "item": DOMAIN_PAGE,
+      },
+    ],
+  };
+
   return <>
-    <SchemaMarkup type="Organization" data={organizationSchema} />
+    <SchemaMarkup type="BlogPosting" data={blogPostingSchema} />
+    <SchemaMarkup type="BreadcrumbList" data={breadcrumbSchema} />
     {/* <PageContainer title="" description=""> */}
       {/* <HpHeader />  */}
       <HpHeaderNew /> 
@@ -216,7 +249,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
           width={1200}
           height={300}
           priority
-          unoptimized
+          sizes="(max-width: 600px) 100vw, 50vw"
           style={{
             maxWidth: '100%',
             height: 'auto',
@@ -245,8 +278,8 @@ export async function generateStaticParams() {
     // console.log("=== DIAGNÓSTICO DE PRISMIC ===");
     // console.log("Repository name:", process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || "energica-public-site");
     
-    // Obtener todos los documentos de tipo "page"
-    const pages = await client.getAllByType("page");
+    // Obtener todos los documentos de tipo "blog"
+    const pages = await client.getAllByType("blog");
     
     // console.log("=== TODOS LOS DOCUMENTOS DE PRISMIC ===");
     // console.log("Total de páginas encontradas:", pages.length);

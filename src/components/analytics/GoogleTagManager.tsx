@@ -6,7 +6,7 @@ import { GTM_ID } from '@/utils/analytics';
  * 
  * Estrategia de carga optimizada:
  * 1. Inicializa dataLayer antes de cargar GTM
- * 2. Carga GTM con strategy="beforeInteractive" para máxima prioridad
+ * 2. Carga GTM con strategy="afterInteractive" para máxima prioridad
  * 3. Asegura que GTM se cargue antes de que la página sea interactiva
  * 
  * IMPORTANTE: beforeInteractive solo funciona en Server Components
@@ -22,7 +22,7 @@ const GoogleTagManager = () => {
       {/* Inicializar dataLayer ANTES de cargar GTM */}
       <Script
         id="gtm-dataLayer-init"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -32,7 +32,7 @@ const GoogleTagManager = () => {
       {/* Script principal de GTM - carga antes de la interacción */}
       <Script
         id="gtm-script"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

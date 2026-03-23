@@ -31,7 +31,6 @@ export async function generateMetadata({
     description: page.data.meta_description,
     alternates: {
       canonical: `${DOMAIN_PAGE}`,
-      languages: { [`${page.lang ?? "es"}`]: `${DOMAIN_PAGE}`},
     },
     robots: {
       index: true,

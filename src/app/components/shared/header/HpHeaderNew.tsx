@@ -16,26 +16,24 @@ import MobileSidebar from "./MobileSidebar";
 import { IconMenu2, IconShoppingCart } from "@tabler/icons-react";
 import Link from "next/link";
 
+const AppBarStyled = styled(AppBar)(({ theme }) => ({
+  justifyContent: "center",
+  [theme.breakpoints.up("lg")]: {
+    minHeight: "81px",
+    background: "#4dbfd9",
+  },
+  backgroundColor: "#fcfcfc",
+}));
+
+const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
+  width: "100%",
+  paddingLeft: "0 !important",
+  paddingRight: "0 !important",
+  color: theme.palette.text.secondary,
+  justifyContent: "space-between",
+}));
+
 const HpHeaderNew = (props: any) => {
-  const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    justifyContent: "center",
-    [theme.breakpoints.up("lg")]: {
-      minHeight: "81px",
-      background: "#4dbfd9",
-    },
-    backgroundColor: "#fcfcfc",
-    // backgroundColor: theme.palette.primary.light,
-  }));
-  
-  const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    width: "100%",
-    paddingLeft: "0 !important",
-    paddingRight: "0 !important",
-    color: theme.palette.text.secondary,
-    justifyContent: "space-between",
-    shadow: 1,
-    // background: "#4dbfd9",
-  }));
 
   //   sidebar
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));

@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import Image from "next/image";
 import { PrismicRichText } from "@prismicio/react";
 import { defaultComponents } from "@/app/components/PrismicRichText";
@@ -19,16 +19,7 @@ import { ContentWithImageProps } from "../types"
 export const WithIcons: FC<ContentWithImageProps> = ({ slice }) => {
   const { primary } = slice;
   const imageIsRight = (primary as any)?.imageisright;
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-  
   return(
     <>
       <Box bgcolor="#ffffff" pt={7} pb={7}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   Box,
   Card,
@@ -164,16 +165,13 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
                 textDecoration: 'none',
               }}
             >
-              <Box
-                component="img"
-                src="https://images.prismic.io/energica-public-site/acAHZpGXnQHGY1Nc_tecnico-instalador-1.png?auto=format,compress"
+              <Image
+                src="https://images.prismic.io/energica-public-site/acAHZpGXnQHGY1Nc_tecnico-instalador-1.png"
                 alt="Técnico instalador"
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                }}
+                width={304}
+                height={295}
+                loading="lazy"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </Box>
           </Box>

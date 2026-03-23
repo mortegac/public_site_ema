@@ -11,7 +11,6 @@ import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-vis
 
 
 import { configureAmplify } from "@/utils/amplify-config";
-import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import GoogleTagManagerNoScript from "@/components/analytics/GoogleTagManagerNoScript";
 
@@ -105,11 +104,8 @@ export default function RootLayout({
             })
           }}
         />
-        {/* GTM con strategy="beforeInteractive" se carga antes de la interacción */}
         <GoogleTagManager />
-        {/* Noscript fallback para GTM - debe estar inmediatamente después de <body> */}
         <GoogleTagManagerNoScript />
-        <GoogleAnalytics />
           <Providers>
             
             <MyApp>

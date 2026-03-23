@@ -9,7 +9,7 @@
 //   }
 
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import Image from "next/image";
 import { PrismicRichText } from "@prismicio/react";
 import { defaultComponents } from "@/app/components/PrismicRichText";
@@ -29,16 +29,7 @@ import { Text } from "@/app/components/shared/text";
 
 export const SmallImagesWithTitle: FC<ContentWithImageProps> = ({ slice }) => {
   const { primary } = slice;
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-  
   return(
     <>
       <Box bgcolor="#ffffff" pt={0} pb={7}

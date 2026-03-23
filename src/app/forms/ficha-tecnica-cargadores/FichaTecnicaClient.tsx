@@ -26,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import HpHeaderNew from "@/app/components/shared/header/HpHeaderNew";
+import AddressInput from "@/app/components/AddressInput2";
 
 // ─── EmailJS config ──────────────────────────────────────────────────────────
 const SERVICE = "service_dbrrm6b";
@@ -356,15 +357,20 @@ export default function FichaTecnicaClient() {
                 />
                 <ErrorText>{touched.rut && errors.rut}</ErrorText>
 
-                <FieldLabel htmlFor="direccionEmpresa">Dirección *</FieldLabel>
-                <StyledInput
-                  id="direccionEmpresa"
-                  name="direccionEmpresa"
+                <FieldLabel>Dirección *</FieldLabel>
+                <AddressInput
                   value={values.direccionEmpresa}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={touched.direccionEmpresa && errors.direccionEmpresa ? "error" : ""}
-                  placeholder="Av. Providencia 1234, Santiago"
+                  onAddressChange={(v) => setFieldValue("direccionEmpresa", v)}
+                  onSelectAddress={(place) => {
+                    if (place) {
+                      const parts = [place.StreetAddress, place.City, place.State].filter(Boolean);
+                      setFieldValue("direccionEmpresa", parts.join(", "));
+                    } else {
+                      setFieldValue("direccionEmpresa", "");
+                    }
+                  }}
+                  error={!!(touched.direccionEmpresa && errors.direccionEmpresa)}
+                  helperText={touched.direccionEmpresa && errors.direccionEmpresa ? errors.direccionEmpresa : ""}
                 />
                 <ErrorText>{touched.direccionEmpresa && errors.direccionEmpresa}</ErrorText>
 
@@ -720,15 +726,20 @@ export default function FichaTecnicaClient() {
                 />
                 <ErrorText>{touched.emailSoporte && errors.emailSoporte}</ErrorText>
 
-                <FieldLabel htmlFor="direccionSoporte">Dirección *</FieldLabel>
-                <StyledInput
-                  id="direccionSoporte"
-                  name="direccionSoporte"
+                <FieldLabel>Dirección *</FieldLabel>
+                <AddressInput
                   value={values.direccionSoporte}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={touched.direccionSoporte && errors.direccionSoporte ? "error" : ""}
-                  placeholder="Av. Providencia 1650 Of. 406, Santiago"
+                  onAddressChange={(v) => setFieldValue("direccionSoporte", v)}
+                  onSelectAddress={(place) => {
+                    if (place) {
+                      const parts = [place.StreetAddress, place.City, place.State].filter(Boolean);
+                      setFieldValue("direccionSoporte", parts.join(", "));
+                    } else {
+                      setFieldValue("direccionSoporte", "");
+                    }
+                  }}
+                  error={!!(touched.direccionSoporte && errors.direccionSoporte)}
+                  helperText={touched.direccionSoporte && errors.direccionSoporte ? errors.direccionSoporte : ""}
                 />
                 <ErrorText>{touched.direccionSoporte && errors.direccionSoporte}</ErrorText>
 

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import merge from 'lodash/merge';
 import { createTheme } from '@mui/material/styles';
 import { useAppSelector } from '@/store/hooks';
 import { useEffect } from 'react';
@@ -29,7 +29,7 @@ export const BuildTheme = (config: any = {}) => {
     typography: typography,
   };
   const theme = createTheme(
-    _.merge({}, baseMode, defaultTheme, locales, themeSelect, {
+    merge({}, baseMode, defaultTheme, locales, themeSelect, {
       direction: config.direction,
     }),
   );

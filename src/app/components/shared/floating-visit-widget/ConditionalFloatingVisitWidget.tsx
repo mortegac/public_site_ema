@@ -18,11 +18,13 @@ const ConditionalFloatingVisitWidget = () => {
     // 1. Está en /agenda o /cotizador
     // 2. Fue cerrado previamente en esta sesión
     if (
-      pathname === '/agenda' || 
-      pathname === '/cotizador' ||  
-      pathname === '/cargadores-vehiculos-electricos-sin-instalacion' || 
-      pathname === '/cargadores-en-edificios' || 
-      pathname === '/postulacion-cargadores-edificios' || 
+      pathname === '/agenda' ||
+      pathname === '/cotizador' ||
+      pathname === '/cargadores-vehiculos-electricos-sin-instalacion' ||
+      pathname === '/cargadores-en-edificios' ||
+      pathname === '/postulacion-cargadores-edificios' ||
+      pathname.startsWith('/forms') ||
+      pathname.startsWith('/return') ||
       wasClosed) {
       setShouldShow(false);
     } else {

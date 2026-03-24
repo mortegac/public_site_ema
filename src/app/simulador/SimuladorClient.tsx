@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   IconButton,
   Slider,
   Typography,
@@ -14,6 +15,12 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { styled, useTheme } from "@mui/material/styles";
 import HpHeaderNew from "@/app/components/shared/header/HpHeaderNew";
+import { generateClient } from "aws-amplify/api";
+import { GraphQLResult } from "@aws-amplify/api";
+import { configureAmplify } from "@/utils/amplify-config";
+
+configureAmplify();
+const client = generateClient();
 
 // ─── Data constants ───────────────────────────────────────────────────────────
 const STEPS = [
@@ -321,7 +328,87 @@ export default function SimuladorClient() {
   const [availablePowerKW, setAvailablePowerKW] = useState(100);
   const [areaM2, setAreaM2] = useState(200);
 
+  const [saving, setSaving] = useState(false);
+
   const totalVehicles = Object.values(fleet).reduce((s, v) => s + (v || 0), 0);
+
+  async function saveToAPI() {
+    try {
+      const fleetItems = Object.entries(fleet)
+        .filter(([, qty]) => qty > 0)
+        .map(([vehicleId, qty]) => {
+          const vt = VEHICLE_TYPES.find(v => v.id === vehicleId)!;
+          return {
+            vehicleType: vehicleId,
+            quantity: qty,
+            avgDailyKm,
+            consumptionKWhPer100km: vt.avgConsumption * 100,
+          };
+        });
+
+      const response = await client.graphql<{
+        SaveSimulatorResult: { simulatorLeadId: string; simulatorResultId: string; message: string };
+      }>({
+        query: `
+          mutation SaveSimulatorResult(
+            $companyName: String
+            $companySize: String
+            $industry: String
+            $region: String
+            $operationProfile: String
+            $operatingHours: Int
+            $daysPerWeek: Int
+            $avgDailyKm: Int
+            $connectionType: String
+            $hasTransformer: Boolean
+            $availablePowerKW: Int
+            $areaM2: Int
+            $fleetItemsJson: String!
+          ) {
+            SaveSimulatorResult(
+              companyName: $companyName
+              companySize: $companySize
+              industry: $industry
+              region: $region
+              operationProfile: $operationProfile
+              operatingHours: $operatingHours
+              daysPerWeek: $daysPerWeek
+              avgDailyKm: $avgDailyKm
+              connectionType: $connectionType
+              hasTransformer: $hasTransformer
+              availablePowerKW: $availablePowerKW
+              areaM2: $areaM2
+              fleetItemsJson: $fleetItemsJson
+            ) {
+              simulatorLeadId
+              simulatorResultId
+              message
+            }
+          }
+        `,
+        variables: {
+          companyName: companyName || null,
+          companySize: companySize || null,
+          industry: industry || null,
+          region: region || null,
+          operationProfile: operationProfile || null,
+          operatingHours,
+          daysPerWeek,
+          avgDailyKm,
+          connectionType: connectionType || null,
+          hasTransformer: hasTransformer ?? null,
+          availablePowerKW,
+          areaM2,
+          fleetItemsJson: JSON.stringify(fleetItems),
+        },
+      }) as GraphQLResult<{ SaveSimulatorResult: { simulatorLeadId: string; simulatorResultId: string; message: string } }>;
+
+      console.log("Simulator saved:", response.data?.SaveSimulatorResult);
+    } catch (err) {
+      // Non-blocking: log but don't prevent results from showing
+      console.warn("Simulator save error:", err);
+    }
+  }
 
   const canProceed = [
     !!(companySize && industry && region),
@@ -336,8 +423,14 @@ export default function SimuladorClient() {
       ? calcResults(fleet, avgDailyKm, operationProfile, daysPerWeek, availablePowerKW, hasTransformer, areaM2)
       : null;
 
-  function navigate(dir: 1 | -1) {
-    if (animating) return;
+  async function navigate(dir: 1 | -1) {
+    if (animating || saving) return;
+    // Save to API when moving from step 3 (infrastructure) → step 4 (results)
+    if (dir === 1 && step === 3) {
+      setSaving(true);
+      await saveToAPI();
+      setSaving(false);
+    }
     setAnimating(true);
     setTimeout(() => {
       setStep(s => Math.max(0, Math.min(STEPS.length - 1, s + dir)));
@@ -862,10 +955,11 @@ export default function SimuladorClient() {
                 variant="contained"
                 color="primary"
                 onClick={() => navigate(1)}
-                disabled={!canProceed}
+                disabled={!canProceed || saving}
+                startIcon={saving ? <CircularProgress size={16} color="inherit" /> : undefined}
                 sx={{ borderRadius: "7px", px: 4, py: 1.25, fontSize: "0.875rem", fontWeight: 600 }}
               >
-                {step === 3 ? "Calcular →" : "Siguiente →"}
+                {saving ? "Calculando..." : step === 3 ? "Calcular →" : "Siguiente →"}
               </Button>
             </Box>
           )}

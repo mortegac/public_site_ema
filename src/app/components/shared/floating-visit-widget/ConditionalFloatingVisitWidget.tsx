@@ -22,6 +22,7 @@ const ConditionalFloatingVisitWidget = () => {
       pathname === '/cotizador' ||
       pathname === '/cargadores-vehiculos-electricos-sin-instalacion' ||
       pathname === '/cargadores-en-edificios' ||
+      pathname === '/simulador' ||
       pathname === '/postulacion-cargadores-edificios' ||
       pathname.startsWith('/forms') ||
       pathname.startsWith('/return') ||

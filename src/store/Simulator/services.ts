@@ -22,6 +22,7 @@ const SAVE_SIMULATOR_MUTATION = /* GraphQL */ `
     $availablePowerKW: Int
     $areaM2: Int
     $fleetItemsJson: String!
+    $customerId: String
   ) {
     SaveSimulatorResult(
       companyName: $companyName
@@ -37,6 +38,7 @@ const SAVE_SIMULATOR_MUTATION = /* GraphQL */ `
       availablePowerKW: $availablePowerKW
       areaM2: $areaM2
       fleetItemsJson: $fleetItemsJson
+      customerId: $customerId
     ) {
       simulatorLeadId
       simulatorResultId
@@ -62,6 +64,7 @@ export async function saveSimulatorResult(input: SaveSimulatorInput): Promise<Sa
       availablePowerKW: input.availablePowerKW,
       areaM2: input.areaM2,
       fleetItemsJson: JSON.stringify(input.fleetItems),
+      customerId: input.customerId ?? null,
     },
   }) as GraphQLResult<{ SaveSimulatorResult: SaveSimulatorResponse }>;
 

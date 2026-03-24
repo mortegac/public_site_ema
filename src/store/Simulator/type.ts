@@ -26,6 +26,9 @@ export interface SaveSimulatorInput {
   hasTransformer?: boolean | null;
   availablePowerKW: number;
   areaM2: number;
+
+  // Optional customer link
+  customerId?: string | null;
 }
 
 export interface SaveSimulatorResponse {

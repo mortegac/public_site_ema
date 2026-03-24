@@ -792,9 +792,15 @@ export default function SimuladorClient() {
             Nuestros expertos evaluarán tu caso con GRETA, nuestra herramienta de análisis de electromovilidad, para entregarte un proyecto detallado y certificado SEC.
           </Typography>
           <Box sx={{ display: "flex", gap: 1.5, justifyContent: "center", flexWrap: "wrap" }}>
-            <Button component={Link} href="/agenda" variant="contained" color="primary"
+            <Button
+              component="a"
+              href="https://api.whatsapp.com/send/?phone=56967666652&text=Hablar+experto+desde+simulador+electroterminal+energica.city&type=phone_number&app_absent=0"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="contained"
+              color="primary"
               sx={{ borderRadius: "7px", px: 3.5, py: 1.25, fontSize: "0.875rem" }}>
-              Agendar Reunión
+              Hablar por WhatsApp
             </Button>
             <Button component={Link} href="/contactanos" variant="outlined" color="primary"
               sx={{ borderRadius: "7px", px: 3.5, py: 1.25, fontSize: "0.875rem" }}>

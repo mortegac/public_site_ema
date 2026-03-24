@@ -590,7 +590,7 @@ export const MainSchema = a
     SimulatorFleetItem: a.model({
       fleetItemId: a.id().required(),
 
-      vehicleType: a.enum(["bus", "truck", "van", "car", "other"]),
+      vehicleType: a.enum(["bus", "truck", "pickup", "van", "car", "light_truck", "other"]),
       quantity: a.integer(),
       avgDailyKm: a.integer(),
       consumptionKWhPer100km: a.float(),

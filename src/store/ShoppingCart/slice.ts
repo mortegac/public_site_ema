@@ -29,31 +29,22 @@ export const getShoppingCart = createAsyncThunk(
           const { total: computedTotal, vat: computedVat } = computeTotalsFromProducts(products);
           const currentTotal = Number(response.total) || 0;
           const currentVat = Number(response.vat) || 0;
-          if (Math.round(computedTotal) !== Math.round(currentTotal) || Math.round(computedVat) !== Math.round(currentVat)) {
-            try {
-              await updateShoppingCart({
-                shoppingCartId: response.shoppingCartId,
-                total: computedTotal,
-                vat: computedVat,
-              });
-            } catch (updateErr) {
-              console.log(">>>>WARN: could not sync cart totals before Webpay", updateErr);
-            }
-          }
-          // Ensure cart type is "product" before WebPay when cart has product items (product purchase flow).
-          // Do not override visit/virtualVisit carts (agenda flow).
           const typeOfCart = response.typeOfCart ?? null;
           const hasProductItems = products.length > 0;
           const isVisitCart = typeOfCart === "visit" || typeOfCart === "virtualVisit";
-          if (hasProductItems && typeOfCart !== "product" && !isVisitCart) {
+          const needsTotalSync = Math.round(computedTotal) !== Math.round(currentTotal) || Math.round(computedVat) !== Math.round(currentVat);
+          const needsTypeSync = hasProductItems && typeOfCart !== "product" && !isVisitCart;
+          // Combine both updates into a single call when both are needed
+          if (needsTotalSync || needsTypeSync) {
             try {
               await updateShoppingCart({
                 shoppingCartId: response.shoppingCartId,
-                typeOfCart: "product",
+                ...(needsTotalSync ? { total: computedTotal, vat: computedVat } : {}),
+                ...(needsTypeSync ? { typeOfCart: "product" } : {}),
               });
-              response.typeOfCart = "product";
-            } catch (typeErr) {
-              console.log(">>>>WARN: could not set cart type to product before Webpay", typeErr);
+              if (needsTypeSync) response.typeOfCart = "product";
+            } catch (updateErr) {
+              console.log(">>>>WARN: could not sync cart before Webpay", updateErr);
             }
           }
           await dispatch(getWebpayStart({

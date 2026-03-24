@@ -17,7 +17,7 @@ import webContactFormReducer from './WebContactForm/slice';
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ['customizer', 'wizard', 'clientForms', 'shoppingCart'],
+  whitelist: ['customizer', 'clientForms', 'shoppingCart'],
 };
 
 const rootReducer = combineReducers({

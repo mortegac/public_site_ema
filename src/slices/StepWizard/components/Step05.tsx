@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef } from "react";
 import Image from "next/image";
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
 
@@ -26,6 +26,7 @@ export const Step05: FC<any> = () => {
   const dispatch = useAppDispatch();
   const { shoppingCart, loading } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
+  const fetchedForCartId = useRef<string | null>(null);
 
   const handlePagar = () => {
     if (!webpay?.url || !webpay?.token) return;
@@ -41,18 +42,22 @@ export const Step05: FC<any> = () => {
     form.submit();
   };
   
-  // Obtener el carrito desde la API cuando el shoppingCartId esté disponible.
-  // La dependencia en shoppingCartId resuelve el caso donde redux-persist aún
-  // no ha rehidratado el estado al momento del primer montaje.
+  // Solo llama a getShoppingCart/webpayStart una vez por shoppingCartId,
+  // evitando doble invocación por React StrictMode o re-renders.
   useEffect(() => {
-    if (shoppingCart?.shoppingCartId && shoppingCart.shoppingCartId.trim() !== '') {
-      dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
+    const cartId = shoppingCart?.shoppingCartId;
+    if (cartId && cartId.trim() !== '' && fetchedForCartId.current !== cartId) {
+      fetchedForCartId.current = cartId;
+      dispatch(getShoppingCart({ shoppingCartId: cartId }));
     }
   }, [shoppingCart?.shoppingCartId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleRemoveItem = (shoppingCartDetailId: string) => {
-    dispatch(removeProductToCart({ shoppingCartDetailId }));
-    dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
+  const handleRemoveItem = async (shoppingCartDetailId: string) => {
+    fetchedForCartId.current = null; // permite re-fetch con token webpay actualizado
+    await dispatch(removeProductToCart({ shoppingCartDetailId }));
+    if (shoppingCart?.shoppingCartId) {
+      dispatch(getShoppingCart({ shoppingCartId: shoppingCart.shoppingCartId }));
+    }
   };
 
   const handleContinuePurchase = () => {

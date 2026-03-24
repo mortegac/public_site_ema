@@ -75,6 +75,7 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                         price
                         glosa
                         priceId
+                        productId
                       }
                     }
                     Customer {
@@ -109,51 +110,22 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
 
             if (getShoppingCart) {
                 // Transformar ShoppingCartDetails a products
-                const productsPromises = (dataShoppingCartDetails?.data || []).map(async (detail: any) => {
-                  // price está en pesos (misma unidad que total)
+                const products = (dataShoppingCartDetails?.data || []).map((detail: any) => {
                   const amount = detail.price ?? 0;
-                  // Calcular netAmount y vatValue (asumiendo 19% IVA)
                   const netAmount = amount / 1.19;
                   const vatValue = amount - netAmount;
-                  
-                  // Intentar obtener información del Price si está disponible
-                  let productId = detail.shoppingCartDetailId || '';
-                  let imageUrl = '';
-                  
-                  if (detail.priceId) {
-                    try {
-                      const priceData = await client.models.Price.get({ priceId: detail.priceId });
-                      if (priceData?.data?.productId) {
-                        productId = priceData.data.productId;
-                        
-                        // Intentar obtener información del Product
-                        try {
-                          const productData = await client.models.Product.get({ productId: priceData.data.productId });
-                          // Aquí podrías obtener más información del producto si está disponible
-                          // Por ahora solo usamos el productId
-                        } catch (productError) {
-                          console.log("--Error obteniendo Product--", productError);
-                        }
-                      }
-                    } catch (priceError) {
-                      console.log("--Error obteniendo Price--", priceError);
-                    }
-                  }
-                  
                   return {
-                    productId: productId,
+                    productId: detail.productId || detail.shoppingCartDetailId || '',
                     description: detail.glosa || '',
-                    netAmount: Math.round(netAmount * 100) / 100, // Redondear a 2 decimales
+                    netAmount: Math.round(netAmount * 100) / 100,
                     amount: amount,
-                    vatValue: Math.round(vatValue * 100) / 100, // Redondear a 2 decimales
-                    quantity: 1, // Por defecto 1, ajustar según tu lógica
-                    imageUrl: imageUrl, // Se puede obtener del Product si está disponible
-                    shoppingCartDetailId: detail.shoppingCartDetailId, // Incluir el ID del detalle
+                    vatValue: Math.round(vatValue * 100) / 100,
+                    quantity: 1,
+                    imageUrl: '',
+                    shoppingCartDetailId: detail.shoppingCartDetailId,
                     priceId: detail.priceId ?? undefined,
                   };
                 });
-                
-                const products = await Promise.all(productsPromises);
 
                 // Transformar Customer a CartCustomer
                 let customer: CartCustomer | undefined = undefined;

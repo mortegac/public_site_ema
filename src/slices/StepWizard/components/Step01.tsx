@@ -30,24 +30,7 @@ import type { ProductWithPriceAndStock } from "@/utils/queries/Product/fetchProd
 
 
 const createPrismicClient = () => {
-  return prismic.createClient("energica-public-site", {
-    // Usar un parámetro válido para evitar caché
-    fetch: (url, options) => {
-      const timestamp = Date.now();
-      const separator = url.includes('?') ? '&' : '?';
-      return fetch(`${url}${separator}t=${timestamp}`, options);
-    }
-  })
-  
-  
-  // prismic.createClient("https://miniswimmerchile.cdn.prismic.io/api/v2", {
-  //   // Usar un parámetro válido para evitar caché
-  //   fetch: (url, options) => {
-  //     const timestamp = Date.now();
-  //     const separator = url.includes('?') ? '&' : '?';
-  //     return fetch(`${url}${separator}t=${timestamp}`, options);
-  //   }
-  // });
+  return prismic.createClient("energica-public-site");
 };
 
 

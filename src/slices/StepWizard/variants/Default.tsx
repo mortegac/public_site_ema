@@ -92,14 +92,17 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
       if (!isNaN(step)) {
         dispatch(setStep(step));
       }
+    } else {
+      dispatch(setStep(1));
     }
   }, [searchParams]);
 
   const handleStepClick = (stepIndex: number, stepName: string) => {
     dispatch(setStep(stepIndex));
   };
-  
-  const FormStep = typeOfForm[String(currentStep)] || typeOfForm[0];
+
+  const effectiveStep = currentStep === 0 ? 1 : currentStep;
+  const FormStep = typeOfForm[String(effectiveStep)] || typeOfForm[1];
   
   
     return (
@@ -111,9 +114,11 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
             paddingBottom:'56px',
           }}
         >
+          
+          
           {/* <span>currentStep={currentStep}</span> */}
-        <Stepper 
-          activeStep={currentStep - 1}
+        <Stepper
+          activeStep={effectiveStep - 1}
           sx={{
             '& .MuiStepLabel-root': {
               display: 'flex',
@@ -142,7 +147,7 @@ export const Default: FC<StepWizardProps> = ({ slice }) => {
           {primary?.steps?.map((label: any, index: number) => {
             const stepNumber = index + 1;
             const stepProps: { completed?: boolean; icon?: number } = { icon: stepNumber };
-            const isActiveStep = Number(currentStep) === Number(label?.stepcomponent);
+            const isActiveStep = Number(effectiveStep) === Number(label?.stepcomponent);
             const labelProps: {
               optional?: React.ReactNode;
               onClick?: () => void;

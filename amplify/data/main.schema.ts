@@ -182,6 +182,7 @@ export const MainSchema = a
       TicketComments: a.hasMany("TicketComment", "solicitantId"),
       CustomerSessions: a.hasMany("CustomerSession", "customerId"),
       WebContactForms: a.hasMany("WebContactForm", "customerId"),
+      SimulatorLeads: a.hasMany("SimulatorLead", "customerId"),
     }).identifier(["customerId"]),
 
     ClientForm: a.model({
@@ -543,7 +544,121 @@ export const MainSchema = a
 
       sessionId: a.id().required(),
       CustomerSession: a.belongsTo("CustomerSession", "sessionId"),
-    }).identifier(["interactionId"])
+    }).identifier(["interactionId"]),
+
+    // ─── Simulator B2B ───────────────────────────────────────────────────────
+
+    SimulatorLead: a.model({
+      simulatorLeadId: a.id().required(),
+
+      // Company info
+      companyName: a.string(),
+      companySize: a.enum(["small", "medium", "large"]),
+      industry: a.string(),
+      region: a.string(),
+
+      // Operation profile
+      avgDailyKm: a.integer(),
+      operationProfile: a.enum(["depot_night", "depot_day", "opportunity", "mixed"]),
+      operatingHours: a.integer(),
+      daysPerWeek: a.integer(),
+
+      // Infrastructure constraints
+      connectionType: a.enum(["mono", "tri_bt", "tri_mt"]),
+      hasTransformer: a.boolean(),
+      availablePowerKW: a.integer(),
+      areaM2: a.integer(),
+
+      createdAt: a.datetime(),
+
+      // CRM status
+      status: a.enum(["in_progress", "completed", "contacted", "converted"]),
+
+      // Relations
+      FleetItems: a.hasMany("SimulatorFleetItem", "simulatorLeadId"),
+      Result: a.hasOne("SimulatorResult", "simulatorLeadId"),
+
+      customerId: a.id(),
+      Customer: a.belongsTo("Customer", "customerId"),
+    })
+      .identifier(["simulatorLeadId"])
+      .secondaryIndexes((index) => [
+        index("status").sortKeys(["createdAt"]).queryField("SimulatorLeadsByStatus"),
+        index("companySize").sortKeys(["createdAt"]).queryField("SimulatorLeadsByCompanySize"),
+      ]),
+
+    SimulatorFleetItem: a.model({
+      fleetItemId: a.id().required(),
+
+      vehicleType: a.enum(["bus", "truck", "van", "car", "other"]),
+      quantity: a.integer(),
+      avgDailyKm: a.integer(),
+      consumptionKWhPer100km: a.float(),
+      dailyEnergyKWh: a.float(),
+
+      simulatorLeadId: a.id().required(),
+      SimulatorLead: a.belongsTo("SimulatorLead", "simulatorLeadId"),
+    })
+      .identifier(["fleetItemId"])
+      .secondaryIndexes((index) => [
+        index("simulatorLeadId").queryField("SimulatorFleetItemsByLead"),
+      ]),
+
+    SimulatorResult: a.model({
+      simulatorResultId: a.id().required(),
+
+      // Fleet totals
+      totalVehicles: a.integer(),
+      totalDailyEnergyKWh: a.float(),
+
+      // Charger recommendation
+      recommendedACChargers: a.integer(),
+      recommendedDCChargers: a.integer(),
+      recommendedPowerKW: a.float(),
+      requiresTransformerUpgrade: a.boolean(),
+
+      // Cost breakdown (CLP)
+      costEquipos: a.integer(),
+      costTransformador: a.integer(),
+      costObrasCiviles: a.integer(),
+      costObrasElectricas: a.integer(),
+      costIngenieria: a.integer(),
+      costPermisosSEC: a.integer(),
+      totalCostCLP: a.integer(),
+      totalCostUSD: a.integer(),
+
+      // Savings & ROI
+      dieselAnnualCostCLP: a.integer(),
+      electricAnnualCostCLP: a.integer(),
+      annualSavingsCLP: a.integer(),
+      co2SavedTonnesPerYear: a.float(),
+      paybackYears: a.float(),
+
+      simulatorLeadId: a.id().required(),
+      SimulatorLead: a.belongsTo("SimulatorLead", "simulatorLeadId"),
+
+      ChargerRecommendations: a.hasMany("SimulatorChargerRec", "simulatorResultId"),
+    })
+      .identifier(["simulatorResultId"])
+      .secondaryIndexes((index) => [
+        index("simulatorLeadId").queryField("SimulatorResultByLead"),
+      ]),
+
+    SimulatorChargerRec: a.model({
+      chargerRecId: a.id().required(),
+
+      chargerType: a.enum(["AC_7kW", "AC_11kW", "AC_22kW", "DC_50kW", "DC_150kW", "DC_350kW"]),
+      quantity: a.integer(),
+      unitCostCLP: a.integer(),
+      totalCostCLP: a.integer(),
+
+      simulatorResultId: a.id().required(),
+      SimulatorResult: a.belongsTo("SimulatorResult", "simulatorResultId"),
+    })
+      .identifier(["chargerRecId"])
+      .secondaryIndexes((index) => [
+        index("simulatorResultId").queryField("SimulatorChargerRecsByResult"),
+      ]),
   })
 
   .authorization((allow) => [

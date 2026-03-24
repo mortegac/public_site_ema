@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
   IconButton,
   Slider,
   Typography,
@@ -15,12 +14,9 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { styled, useTheme } from "@mui/material/styles";
 import HpHeaderNew from "@/app/components/shared/header/HpHeaderNew";
-import { generateClient } from "aws-amplify/api";
-import { GraphQLResult } from "@aws-amplify/api";
-import { configureAmplify } from "@/utils/amplify-config";
-
-configureAmplify();
-const client = generateClient();
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { saveSimulatorResultThunk } from "@/store/Simulator/slice";
 
 // ─── Data constants ───────────────────────────────────────────────────────────
 const STEPS = [
@@ -303,6 +299,7 @@ function calcResults(
 export default function SimuladorClient() {
   const theme = useTheme();
   const PRIMARY = theme.palette.primary.main; // #E81A68
+  const dispatch = useDispatch<AppDispatch>();
 
   const [step, setStep] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -328,86 +325,37 @@ export default function SimuladorClient() {
   const [availablePowerKW, setAvailablePowerKW] = useState(100);
   const [areaM2, setAreaM2] = useState(200);
 
-  const [saving, setSaving] = useState(false);
-
   const totalVehicles = Object.values(fleet).reduce((s, v) => s + (v || 0), 0);
 
   async function saveToAPI() {
-    try {
-      const fleetItems = Object.entries(fleet)
-        .filter(([, qty]) => qty > 0)
-        .map(([vehicleId, qty]) => {
-          const vt = VEHICLE_TYPES.find(v => v.id === vehicleId)!;
-          return {
-            vehicleType: vehicleId,
-            quantity: qty,
-            avgDailyKm,
-            consumptionKWhPer100km: vt.avgConsumption * 100,
-          };
-        });
-
-      const response = await client.graphql<{
-        SaveSimulatorResult: { simulatorLeadId: string; simulatorResultId: string; message: string };
-      }>({
-        query: `
-          mutation SaveSimulatorResult(
-            $companyName: String
-            $companySize: String
-            $industry: String
-            $region: String
-            $operationProfile: String
-            $operatingHours: Int
-            $daysPerWeek: Int
-            $avgDailyKm: Int
-            $connectionType: String
-            $hasTransformer: Boolean
-            $availablePowerKW: Int
-            $areaM2: Int
-            $fleetItemsJson: String!
-          ) {
-            SaveSimulatorResult(
-              companyName: $companyName
-              companySize: $companySize
-              industry: $industry
-              region: $region
-              operationProfile: $operationProfile
-              operatingHours: $operatingHours
-              daysPerWeek: $daysPerWeek
-              avgDailyKm: $avgDailyKm
-              connectionType: $connectionType
-              hasTransformer: $hasTransformer
-              availablePowerKW: $availablePowerKW
-              areaM2: $areaM2
-              fleetItemsJson: $fleetItemsJson
-            ) {
-              simulatorLeadId
-              simulatorResultId
-              message
-            }
-          }
-        `,
-        variables: {
-          companyName: companyName || null,
-          companySize: companySize || null,
-          industry: industry || null,
-          region: region || null,
-          operationProfile: operationProfile || null,
-          operatingHours,
-          daysPerWeek,
+    const fleetItems = Object.entries(fleet)
+      .filter(([, qty]) => qty > 0)
+      .map(([vehicleId, qty]) => {
+        const vt = VEHICLE_TYPES.find(v => v.id === vehicleId)!;
+        return {
+          vehicleType: vehicleId,
+          quantity: qty,
           avgDailyKm,
-          connectionType: connectionType || null,
-          hasTransformer: hasTransformer ?? null,
-          availablePowerKW,
-          areaM2,
-          fleetItemsJson: JSON.stringify(fleetItems),
-        },
-      }) as GraphQLResult<{ SaveSimulatorResult: { simulatorLeadId: string; simulatorResultId: string; message: string } }>;
+          consumptionKWhPer100km: vt.avgConsumption * 100,
+        };
+      });
 
-      console.log("Simulator saved:", response.data?.SaveSimulatorResult);
-    } catch (err) {
-      // Non-blocking: log but don't prevent results from showing
-      console.warn("Simulator save error:", err);
-    }
+    // Non-blocking: dispatch thunk, don't await result — results still render
+    dispatch(saveSimulatorResultThunk({
+      companyName: companyName || null,
+      companySize: companySize || null,
+      industry: industry || null,
+      region: region || null,
+      fleetItems,
+      avgDailyKm,
+      operationProfile: operationProfile || null,
+      operatingHours,
+      daysPerWeek,
+      connectionType: connectionType || null,
+      hasTransformer: hasTransformer ?? null,
+      availablePowerKW,
+      areaM2,
+    }));
   }
 
   const canProceed = [
@@ -423,14 +371,10 @@ export default function SimuladorClient() {
       ? calcResults(fleet, avgDailyKm, operationProfile, daysPerWeek, availablePowerKW, hasTransformer, areaM2)
       : null;
 
-  async function navigate(dir: 1 | -1) {
-    if (animating || saving) return;
-    // Save to API when moving from step 3 (infrastructure) → step 4 (results)
-    if (dir === 1 && step === 3) {
-      setSaving(true);
-      await saveToAPI();
-      setSaving(false);
-    }
+  function navigate(dir: 1 | -1) {
+    if (animating) return;
+    // Fire-and-forget save when moving step 3 → 4
+    if (dir === 1 && step === 3) saveToAPI();
     setAnimating(true);
     setTimeout(() => {
       setStep(s => Math.max(0, Math.min(STEPS.length - 1, s + dir)));
@@ -955,11 +899,10 @@ export default function SimuladorClient() {
                 variant="contained"
                 color="primary"
                 onClick={() => navigate(1)}
-                disabled={!canProceed || saving}
-                startIcon={saving ? <CircularProgress size={16} color="inherit" /> : undefined}
+                disabled={!canProceed}
                 sx={{ borderRadius: "7px", px: 4, py: 1.25, fontSize: "0.875rem", fontWeight: 600 }}
               >
-                {saving ? "Calculando..." : step === 3 ? "Calcular →" : "Siguiente →"}
+                {step === 3 ? "Calcular →" : "Siguiente →"}
               </Button>
             </Box>
           )}

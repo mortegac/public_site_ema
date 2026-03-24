@@ -13,6 +13,7 @@ import webpayReducer from './Webpay/slice';
 import paymentTransactionReducer from './PaymentTransaction/slice';
 import supportTicketReducer from './SupportTicket/slice';
 import webContactFormReducer from './WebContactForm/slice';
+import simulatorReducer from './Simulator/slice';
 
 const persistConfig = {
   key: "root",
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   paymentTransaction: paymentTransactionReducer,
   supportTicket: supportTicketReducer,
   webContactForm: webContactFormReducer,
+  simulator: simulatorReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

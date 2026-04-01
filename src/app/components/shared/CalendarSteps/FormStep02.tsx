@@ -23,12 +23,16 @@ export default function FormStep02() {
   const dispatch = useAppDispatch();
   
   const { customer } = useAppSelector(selectCustomer);
-  const { cartId: sliceCartId, selectedInstallationDayId, calendarVisits } = useAppSelector(selectCalendarVisits);
+  const { cartId: sliceCartId, calendarVisits, loading: calendarLoading } = useAppSelector(selectCalendarVisits);
   const { shoppingCart, loading: cartLoading } = useAppSelector(selectShoppingCart);
   const { webpay, status } = useAppSelector(selectWebpay);
 
-  // Prefer cartId from slice (UUID from makeReservation) over installationDayId
-  const cartId = sliceCartId || selectedInstallationDayId || (calendarVisits as any)?.installationDayId || calendarVisits?.calendarId;
+  // Only the shopping cart UUID from MakeReservationAndCart — never installationDayId / calendarId
+  // (those are different entities and produce empty getShoppingCart results).
+  const reservationCartId =
+    (sliceCartId && sliceCartId.trim() !== "")
+      ? sliceCartId
+      : (calendarVisits as { cartId?: string })?.cartId ?? "";
   
   const PRODUCT_NAME = "Visita Técnica "
   // const PRODUCT_TIME = "09:00 Hrs"
@@ -53,16 +57,17 @@ export default function FormStep02() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Use installationDayId if available, otherwise fall back to calendarId for backward compatibility
-      if (!cartId) return;
-      
-      await dispatch(getShoppingCart({
-        shoppingCartId: cartId,
-      }));
+      if (!reservationCartId || calendarLoading) return;
+
+      await dispatch(
+        getShoppingCart({
+          shoppingCartId: reservationCartId,
+        })
+      );
     };
 
     fetchData();
-  }, [cartId, dispatch]);
+  }, [reservationCartId, calendarLoading, dispatch]);
 
   
   return (
@@ -152,7 +157,9 @@ export default function FormStep02() {
                 {/* <br /> */}
                 {/* {PRODUCT_TIME} */}
               </Typography>
-              {cartLoading || (cartId && shoppingCart?.shoppingCartId !== cartId) ? (
+              {calendarLoading ||
+              cartLoading ||
+              (reservationCartId && shoppingCart?.shoppingCartId !== reservationCartId) ? (
                 <Box sx={{ display: "flex", alignItems: "center", minWidth: "80px", justifyContent: "flex-end" }}>
                   <LoadingIcon icon="puff" color="#E81A68" style={{ width: "24px", height: "24px" }} />
                 </Box>
@@ -177,7 +184,9 @@ export default function FormStep02() {
               <Typography variant="h6" fontWeight="bold">
                 Total a pagar:
               </Typography>
-              {cartLoading || (cartId && shoppingCart?.shoppingCartId !== cartId) ? (
+              {calendarLoading ||
+              cartLoading ||
+              (reservationCartId && shoppingCart?.shoppingCartId !== reservationCartId) ? (
                 <Box sx={{ display: "flex", alignItems: "center", minWidth: "80px", justifyContent: "flex-end" }}>
                   <LoadingIcon icon="puff" color="#E81A68" style={{ width: "24px", height: "24px" }} />
                 </Box>

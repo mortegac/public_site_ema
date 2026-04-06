@@ -142,7 +142,9 @@ export default function Step4CTAs() {
         </Button>
         <Button
           onClick={() => dispatch(resetComparador())}
-          sx={{ background: PR, color: '#fff', fontWeight: 700, px: 3, py: 1.5, borderRadius: '10px', textTransform: 'none', fontSize: 15, '&:hover': { background: '#1a3a5c', transform: 'translateY(-1px)' } }}
+          variant="contained"
+          color="primary"
+          sx={{ fontWeight: 700, px: 3, py: 1.5, borderRadius: '10px', textTransform: 'none', fontSize: 15, '&:hover': { transform: 'translateY(-1px)' } }}
         >
           Nuevo análisis ↺
         </Button>

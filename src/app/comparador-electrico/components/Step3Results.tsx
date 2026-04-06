@@ -2,12 +2,13 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Box, Typography, Button, Collapse } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setSelectedEV, prevStep, nextStep, selectComparador } from '@/store/Comparador/slice';
 import { calcTCO, formatCLP } from '../utils/tco';
 import { EVehicle } from '../data/vehicles';
 
-const PR = '#0B1F3A';
+const PR = '#2A3547'; // text dark
 const AC = '#00C47C';
 const ACL = '#EAFAF4';
 const ACD = '#009E63';
@@ -68,6 +69,8 @@ interface EVCardProps {
 }
 
 function EVCard({ ev, isSelected, isRecommended, index, onSelect }: EVCardProps) {
+  const { palette } = useTheme();
+  const primary = palette.primary.main;
   return (
     <Box
       onClick={() => onSelect(ev.id)}
@@ -89,7 +92,7 @@ function EVCard({ ev, isSelected, isRecommended, index, onSelect }: EVCardProps)
     >
       <Box sx={{ display: 'flex', gap: '5px', flexWrap: 'wrap', mb: 1 }}>
         {isRecommended && index === 0 && (
-          <Box sx={{ fontSize: 10, fontWeight: 700, px: '8px', py: '2px', borderRadius: '20px', background: PR, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+          <Box sx={{ fontSize: 10, fontWeight: 700, px: '8px', py: '2px', borderRadius: '20px', background: primary, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
             ⭐ Recomendado
           </Box>
         )}
@@ -141,6 +144,8 @@ export default function Step3Results() {
   const { currentVehicle, usageProfile, selectedEVId, evRecommendations } = useAppSelector(selectComparador);
   const [showDetails, setShowDetails] = React.useState(false);
   const costSectionRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
+  const primary = theme.palette.primary.main;
 
   const selectedEV = evRecommendations.find(ev => ev.id === selectedEVId) ?? evRecommendations[0];
 
@@ -228,7 +233,7 @@ export default function Step3Results() {
         </Typography>
 
         {/* Net investment banner */}
-        <Box sx={{ background: PR, borderRadius: '12px', p: '18px 22px', mb: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ background: primary, borderRadius: '12px', p: '18px 22px', mb: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>
             <Typography fontSize={13} color="rgba(255,255,255,.65)">
               {tco.inversionNeta >= 0 ? 'Deberías pagar de diferencia' : 'Tendrías un excedente de'}
@@ -329,7 +334,7 @@ export default function Step3Results() {
         <Box mt={2}>
           <Button
             onClick={() => setShowDetails(v => !v)}
-            sx={{ color: MU, fontSize: 13, textTransform: 'none', p: 0, fontWeight: 600, '&:hover': { background: 'none', color: PR } }}
+            sx={{ color: MU, fontSize: 13, textTransform: 'none', p: 0, fontWeight: 600, '&:hover': { background: 'none', color: primary } }}
           >
             {showDetails ? '▲' : '▼'} ¿Qué incluye este cálculo?
           </Button>
@@ -362,14 +367,15 @@ export default function Step3Results() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
         <Button
           onClick={() => dispatch(prevStep())}
-          sx={{ color: MU, border: `1.5px solid ${BD}`, fontWeight: 700, px: 3, py: 1.5, borderRadius: '10px', textTransform: 'none', fontSize: 15, '&:hover': { borderColor: PR, color: PR } }}
+          sx={{ color: MU, border: `1.5px solid ${BD}`, fontWeight: 700, px: 3, py: 1.5, borderRadius: '10px', textTransform: 'none', fontSize: 15, '&:hover': { borderColor: primary, color: primary } }}
         >
           ← Atrás
         </Button>
         <Button
           onClick={() => dispatch(nextStep())}
           variant="contained"
-          sx={{ background: AC, color: '#fff', fontWeight: 700, px: 4, py: 1.5, borderRadius: '10px', textTransform: 'none', fontSize: 15, '&:hover': { background: '#009E63', transform: 'translateY(-1px)', boxShadow: '0 4px 16px rgba(0,196,124,.3)' } }}
+          color="primary"
+          sx={{ fontWeight: 700, px: 4, py: 1.5, borderRadius: '10px', textTransform: 'none', fontSize: 15, '&:hover': { transform: 'translateY(-1px)' } }}
         >
           Ver próximos pasos →
         </Button>

@@ -179,16 +179,15 @@ export default function Step2Profile() {
         <Button
           onClick={handleContinue}
           variant="contained"
+          color="primary"
           sx={{
-            background: AC,
-            color: '#fff',
             fontWeight: 700,
             px: 4,
             py: 1.5,
             borderRadius: '10px',
             textTransform: 'none',
             fontSize: 15,
-            '&:hover': { background: '#009E63', transform: 'translateY(-1px)', boxShadow: '0 4px 16px rgba(0,196,124,.3)' },
+            '&:hover': { transform: 'translateY(-1px)' },
           }}
         >
           Ver mi análisis ✦

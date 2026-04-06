@@ -1,0 +1,20 @@
+# Reglas de Optimización para Next.js + Prismic (PageSpeed Insights)
+
+Cuando escribas, refactorices o revises código, debes aplicar estrictamente las siguientes reglas de rendimiento:
+
+## 1. Largest Contentful Paint (LCP) e Imágenes (Prismic)
+- NUNCA uses la etiqueta `<img>` estándar. Usa SIEMPRE `<PrismicNextImage>` de `@prismicio/next`.
+- Para la imagen principal (Hero) de la página, debes añadir SIEMPRE las propiedades: `priority={true}` y `fetchPriority="high"`.
+- Define explícitamente `width` y `height` o usa `fill={true}` con `sizes` correctos para evitar el Cumulative Layout Shift (CLS).
+- Para imágenes fuera del viewport inicial (below the fold), asegúrate de que tengan `loading="lazy"` (que es el comportamiento por defecto de Next.js, no lo sobrescribas con priority).
+
+## 2. Interaction to Next Paint (INP) y JavaScript
+- Todo componente de cliente (`"use client"`) que no sea crítico para el renderizado inicial debe ser importado dinámicamente usando `next/dynamic`.
+- Retrasa la carga de scripts de terceros (GTM, analíticas, widgets) usando `<Script>` de `next/script` con la estrategia `strategy="lazyOnload"` o `strategy="afterInteractive"`.
+
+## 3. Caché y Datos (Prismic Fetching)
+- Asegúrate de que las llamadas al cliente de Prismic (`client.getByUID`, etc.) estén utilizando el sistema de caché de Next.js (por ejemplo, con `revalidate` tags o ISR).
+- Solo pide a Prismic los campos (`graphQuery` o `fetch`) que se van a renderizar para evitar inflar el payload de JSON que bloquea el hilo principal.
+
+## 4. Fuentes
+- Usa SIEMPRE `next/font/google` o `next/font/local`. No uses `@import` en CSS globales para cargar fuentes externas.

@@ -18,6 +18,7 @@ import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setCurrentVehicle, nextStep, selectComparador } from '@/store/Comparador/slice';
 import { lookupGasVehicle } from '../data/vehicles';
+import CurrencyTextField from './CurrencyTextField';
 
 const PR = '#0B1F3A';
 const AC = '#00C47C';
@@ -175,13 +176,14 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
 
       {/* Market value */}
       <Box mb={2}>
-        <TextField
+        <CurrencyTextField
           fullWidth
-          label="Valor de mercado actual (CLP)"
-          type="number"
-          placeholder="ej. 12000000"
-          inputProps={{ step: 100000, min: 500000 }}
-          {...formik.getFieldProps('valorMercadoCLP')}
+          label="Valor de mercado actual"
+          placeholder="ej. 12.000.000"
+          value={formik.values.valorMercadoCLP}
+          onValueChange={(num) => formik.setFieldValue('valorMercadoCLP', num)}
+          onBlur={formik.handleBlur}
+          name="valorMercadoCLP"
           error={formik.touched.valorMercadoCLP && Boolean(formik.errors.valorMercadoCLP)}
           sx={{
             ...inputSx,
@@ -250,12 +252,14 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
           helperText={(formik.touched.consumoL100km && formik.errors.consumoL100km) || 'Típico: 9–12 L/100km'}
           sx={inputSx}
         />
-        <TextField
+        <CurrencyTextField
           fullWidth
           label="Precio combustible ($/L)"
-          type="number"
-          inputProps={{ step: 10, min: 600, max: 2000 }}
-          {...formik.getFieldProps('precioCombustibleCLP')}
+          placeholder="ej. 1.100"
+          value={formik.values.precioCombustibleCLP}
+          onValueChange={(num) => formik.setFieldValue('precioCombustibleCLP', num)}
+          onBlur={formik.handleBlur}
+          name="precioCombustibleCLP"
           helperText="Referencia Chile 2025"
           sx={inputSx}
         />

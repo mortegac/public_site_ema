@@ -3,10 +3,16 @@ import { GraphQLResult } from "@aws-amplify/api";
 import { MainTypes } from "../../../amplify/data/main.schema";
 import { shoppingCartInput, createShoppingCartInput, createShoppingCartDetailInput, updateShoppingCartInput, CartProduct, CartCustomer } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
+import { normalizeCustomerEmail, normalizeCustomerIdKey } from "@/store/Customer/services";
 
 configureAmplify();
 
 const client = generateClient<MainTypes>();
+
+const withNormalizedShoppingCartCustomerId = <T extends { customerId?: string | null }>(cart: T): T =>
+  typeof cart.customerId === 'string'
+    ? { ...cart, customerId: normalizeCustomerIdKey(cart.customerId) }
+    : cart;
 
 /** Respuesta de la query getShoppingCart con detalles y customer anidados */
 interface GetShoppingCartGraphQLResponse {
@@ -130,10 +136,11 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                 // Transformar Customer a CartCustomer
                 let customer: CartCustomer | undefined = undefined;
                 if (dataCustomer?.data) {
+                  const rawCustomerId = dataCustomer.data.customerId || '';
                   customer = {
-                    customerId: dataCustomer.data.customerId || '',
+                    customerId: normalizeCustomerIdKey(rawCustomerId),
                     Name: dataCustomer.data.name || '',
-                    Email: dataCustomer.data.customerId || '',
+                    Email: normalizeCustomerEmail(rawCustomerId),
                     Phone: dataCustomer.data.phone || '',
                     Address: dataCustomer.data.address || '',
                     City: dataCustomer.data.city || '',
@@ -155,7 +162,7 @@ export const fecthShoppingCart = async (input: shoppingCartInput): Promise<any> 
                   total: getShoppingCart.total || 0,
                   vat: getShoppingCart.vat || 0,
                   status: getShoppingCart.status || 'pending',
-                  customerId: getShoppingCart.customerId || '',
+                  customerId: normalizeCustomerIdKey(getShoppingCart.customerId || ''),
                   typeOfCart: getShoppingCart.typeOfCart || null,
                   addressCustomer: addressCustomer,
                   glosa: dataShoppingCartDetails?.data?.[0]?.glosa || '',
@@ -265,6 +272,10 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
         
         console.log("--createShoppingCart--", input)
     
+        const normalizedCustomerId = customerId != null && String(customerId).trim() !== ''
+          ? normalizeCustomerIdKey(customerId)
+          : '';
+
         const formData:any = {
           shoppingCartId: shoppingCartId || crypto.randomUUID(),
           total: total || 0,
@@ -272,7 +283,7 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
           typeOfCart: typeOfCart || "product",
           paymentMethod: paymentMethod || null,
           status: status || "pending",
-          customerId: customerId || null,
+          customerId: normalizedCustomerId || null,
         };
         
         console.log("--formData ShoppingCart--", formData)
@@ -316,7 +327,7 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
         
         // Devolver el shopping cart con los detalles creados
         const response = {
-          ...shoppingCartData,
+          ...withNormalizedShoppingCartCustomerId(shoppingCartData as { customerId?: string | null }),
           ShoppingCartDetails: createdDetails,
         };
         
@@ -384,7 +395,11 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
           typeOfCart: typeOfCart !== undefined ? typeOfCart : undefined,
           paymentMethod: paymentMethod !== undefined ? paymentMethod : undefined,
           status: status !== undefined ? status : undefined,
-          customerId: customerId !== undefined ? customerId : undefined,
+          customerId: customerId !== undefined
+            ? (typeof customerId === 'string'
+              ? normalizeCustomerIdKey(customerId)
+              : customerId)
+            : undefined,
         };
         
         // Eliminar campos undefined
@@ -414,7 +429,7 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
         // When products is not provided, only update the cart header (total/vat) and return
         if (products === undefined) {
           console.log("--updateShoppingCart--resolve (header only)")
-          resolve(shoppingCartData);
+          resolve(withNormalizedShoppingCartCustomerId(shoppingCartData as { customerId?: string | null }));
           return;
         }
 
@@ -463,7 +478,7 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
         
         // Devolver el shopping cart actualizado con los detalles creados
         const response = {
-          ...shoppingCartData,
+          ...withNormalizedShoppingCartCustomerId(shoppingCartData as { customerId?: string | null }),
           ShoppingCartDetails: createdDetails,
         };
         

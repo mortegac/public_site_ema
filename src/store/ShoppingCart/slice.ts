@@ -4,6 +4,7 @@ import { emptyShoppingCart, shoppingCartInput, createShoppingCartInput, updateSh
 import { RootState } from "../store";
 import { fecthShoppingCart, createShoppingCart, deleteShoppingCartDetail, updateShoppingCart } from './services';
 import { getWebpayStart } from '../Webpay/slice';
+import { normalizeCustomerEmail, normalizeCustomerIdKey } from '@/store/Customer/services';
 
 interface ShoppingCartState {
   status: "idle" | "loading" | "failed";
@@ -111,8 +112,12 @@ export const setCustomerToCart = createAsyncThunk(
     "SHOPPINGCART/setCustomerToCart",
     async (customer: CartCustomer) => {
       try {
-        // Retornamos el customer para almacenarlo en el estado
-        return customer;
+        const customerId = normalizeCustomerIdKey(customer.customerId);
+        let Email = normalizeCustomerEmail(customer.Email);
+        if (!Email) {
+          Email = customerId;
+        }
+        return { ...customer, customerId, Email };
       } catch (error) {
         console.log(">>>>ERROR SET CUSTOMER TO CART", error)
         return Promise.reject(error);

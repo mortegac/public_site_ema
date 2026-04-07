@@ -8,6 +8,7 @@ import utc from 'dayjs/plugin/utc';
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
 import { configureAmplify } from "@/utils/amplify-config";
+import { normalizeCustomerIdKey } from "@/store/Customer/services";
 
 import { client } from "../../app/init";
 // Configurar Amplify con la configuración del entorno correspondiente
@@ -224,7 +225,7 @@ export const makeReservation = async (objFilter: calendarVisitInput) => {
         }
       `,
       variables: {
-        customerId: objFilter.customerId,
+        customerId: normalizeCustomerIdKey(objFilter.customerId),
         calendarId: objFilter.calendarId,
       }
     }) as GraphQLResult<MakeReservationResponse>;
@@ -260,7 +261,7 @@ export const makeReservationNotPaid = async (objFilter: calendarVisitInput) => {
       `,
       variables: {
         calendarId: objFilter.calendarId,
-        customerId: objFilter.customerId,
+        customerId: normalizeCustomerIdKey(objFilter.customerId),
         isRemote: true
       }
     }) as GraphQLResult<MakeReservationResponse>;

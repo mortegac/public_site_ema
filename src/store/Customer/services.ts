@@ -1,4 +1,4 @@
-import { generateClient, SelectionSet } from "aws-amplify/api";
+import { generateClient } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { customerInput } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
@@ -8,14 +8,37 @@ configureAmplify();
 
 const client = generateClient<MAIN.MainTypes>();
 
-/** Normalize email: lowercase and trim. Used as customerId. */
-export const normalizeCustomerEmail = (email: string | null | undefined): string =>
-  (email ?? '').trim().toLowerCase();
+const ZERO_WIDTH_RE = /[\u200B-\u200D\uFEFF\u2060]/g;
+
+/** Full normalization for email-shaped strings: ZW strip, NBSP→space, trim, NFC, lowercase. */
+export const normalizeCustomerEmail = (value: string | null | undefined): string => {
+  let s = String(value ?? '');
+  s = s.replace(ZERO_WIDTH_RE, '');
+  s = s.replace(/\u00A0/g, ' ');
+  s = s.trim();
+  s = s.normalize('NFC');
+  return s.toLowerCase();
+};
+
+/**
+ * PK/FK key for Customer (schema: customerId is the email). Uses the same canonical cleaning as
+ * {@link normalizeCustomerEmail} so stored ids stay aligned with sanitized email fields.
+ */
+export const normalizeCustomerIdKey = (value: string | null | undefined): string =>
+  normalizeCustomerEmail(value);
+
+/** Shallow copy; only normalizes `email` when it is present. Does not touch customerId or other fields. */
+export const normalizeCustomerInput = (input: customerInput): customerInput => {
+  if (input.email == null) {
+    return { ...input };
+  }
+  return { ...input, email: normalizeCustomerEmail(input.email) };
+};
 
 export const getCustomerService = async (input: customerInput): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const customerId = normalizeCustomerEmail(input.customerId);
+      const customerId = normalizeCustomerIdKey(input.customerId);
 
       if (!customerId) {
         resolve(null);
@@ -40,7 +63,10 @@ export const getCustomerService = async (input: customerInput): Promise<any> => 
         return;
       }
       console.log("--getCustomer--resolve", customer)
-      resolve({ customerId: customer?.customerId ?? null });
+      const returnedId = customer?.customerId;
+      resolve({
+        customerId: returnedId != null ? normalizeCustomerIdKey(returnedId) : null,
+      });
         
     } catch (err) {
       console.log("--getCustomer--err", err)
@@ -54,7 +80,8 @@ export const getCustomerService = async (input: customerInput): Promise<any> => 
 export const createCustomer = async (input: customerInput): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const customerId = normalizeCustomerEmail(input.customerId);
+      const normalizedInput = normalizeCustomerInput(input);
+      const customerId = normalizeCustomerIdKey(normalizedInput.customerId);
 
       if (!customerId) {
         reject({ errorMessage: 'Email is required' });
@@ -67,7 +94,7 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         referenceAddress,
         address,
         phone,
-      } = input;
+      } = normalizedInput;
 
       console.log("--createCustomer--", input);
 
@@ -78,19 +105,23 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         referenceAddress: referenceAddress || '-',
         address: address || '-',
         phone: phone || '-',
-        city: input.city || '-',
-        state: input.state || '-',
-        zipCode: input.zipCode || '-',
-        lat: input.lat || '-',
-        long: input.long || '-',
-        zoomLevel: input.zoomLevel || "15",
+        city: normalizedInput.city ?? '',
+        state: normalizedInput.state ?? '',
+        zipCode: normalizedInput.zipCode ?? '',
+        lat: normalizedInput.lat ?? '',
+        long: normalizedInput.long ?? '',
+        zoomLevel: normalizedInput.zoomLevel ?? '15',
       };
 
       const { data: createData, errors: createErrors } = await client.models.Customer.create(formData);
 
       if (!createErrors || createErrors.length === 0) {
         console.log("--createCustomer--resolve", createData);
-        resolve(createData);
+        resolve(
+          createData?.customerId != null
+            ? { ...createData, customerId: normalizeCustomerIdKey(createData.customerId) }
+            : createData
+        );
         return;
       }
 
@@ -105,7 +136,11 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         return;
       }
       console.log("--updateCustomer--resolve", updateData);
-      resolve(updateData);
+      resolve(
+        updateData?.customerId != null
+          ? { ...updateData, customerId: normalizeCustomerIdKey(updateData.customerId) }
+          : updateData
+      );
     } catch (err) {
       console.log("--createCustomer--err", err);
       reject({
@@ -114,7 +149,3 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
     }
   });
 };
-
-  
-  
-  

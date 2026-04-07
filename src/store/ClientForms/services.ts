@@ -2,6 +2,7 @@ import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { clientFormInput } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
+import { normalizeCustomerIdKey } from "@/store/Customer/services";
 
 
 
@@ -29,7 +30,7 @@ export const createClientForm = async (input: clientFormInput): Promise<any> => 
         console.log("--createClientForm--", input)
         const formData = {
             formId: crypto.randomUUID(), // Genera un ID único
-            customerId: customerId,
+            customerId: customerId != null ? normalizeCustomerIdKey(customerId) : customerId,
             isWallbox: isWallbox || false,
             isPortable: isPortable || false,
             isHouse: isHouse || false,

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { ClientForm } from '../../utils/imports/graphql/API';
 import { emptyCustomer, customerInput, Customer } from './type';
 import { RootState } from "../store";
-import { createCustomer, getCustomerService } from './services';
+import { createCustomer, getCustomerService, normalizeCustomerIdKey } from './services';
 interface CustomerState {
   status: "idle" | "loading" | "failed";
   customer: Customer;
@@ -56,7 +56,11 @@ const customerSlice = createSlice({
     //   state.error = action.payload;
     // },
     setCustomerData: (state, action: PayloadAction<Customer>) => {
-      state.customer = {...state.customer, ...action.payload};
+      const payload = { ...action.payload };
+      if (payload.customerId != null) {
+        payload.customerId = normalizeCustomerIdKey(payload.customerId);
+      }
+      state.customer = { ...state.customer, ...payload };
     },
   },
   extraReducers: (builder) => {
@@ -70,7 +74,11 @@ const customerSlice = createSlice({
       .addCase(setCustomer.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          state.customer = { ...state.customer, ...action.payload };
+          const merged = { ...state.customer, ...action.payload };
+          if (merged.customerId != null) {
+            merged.customerId = normalizeCustomerIdKey(merged.customerId);
+          }
+          state.customer = merged;
         }
       })
       .addCase(setCustomer.rejected, (state, action) => {
@@ -88,7 +96,7 @@ const customerSlice = createSlice({
         state.loading = false;
         state.existCustomer = Boolean(action.payload?.customerId && action.payload.customerId.trim() !== '');
         if (action.payload?.customerId) {
-          state.customer.customerId = action.payload.customerId;
+          state.customer.customerId = normalizeCustomerIdKey(action.payload.customerId);
         } else {
           state.customer.customerId = '';
         }

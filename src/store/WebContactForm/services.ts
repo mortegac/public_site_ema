@@ -2,7 +2,7 @@ import { generateClient } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { webContactFormInput } from './type';
 import { configureAmplify } from "@/utils/amplify-config";
-import { getCustomerService, createCustomer } from '../Customer/services';
+import { getCustomerService, createCustomer, normalizeCustomerEmail, normalizeCustomerIdKey } from '../Customer/services';
 
 // Re-export for consumers that import from WebContactForm
 export { getCustomerService, createCustomer };
@@ -42,7 +42,7 @@ export const createWebContactForm = async (input: webContactFormInput): Promise<
         date: input.date || new Date().toISOString(),
         type: input.type || "OTHER",
         name: input.name || "",
-        email: input.email || "",
+        email: normalizeCustomerEmail(input.email || ""),
         phone: input.phone || "",
         whatsapp: input.whatsapp || "",
         message: input.message || "",
@@ -50,7 +50,7 @@ export const createWebContactForm = async (input: webContactFormInput): Promise<
         category: input.category || "",
         companyName: input.companyName || "",
         cantidadVehiculos: input.cantidadVehiculos ?? 0,
-        customerId: input.customerId || "",
+        customerId: normalizeCustomerIdKey(input.customerId || ""),
       };
 
       console.log("--createWebContactForm--formData", formData);

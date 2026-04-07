@@ -2,6 +2,7 @@ import { generateClient } from "aws-amplify/api";
 import { GraphQLResult } from "@aws-amplify/api";
 import { configureAmplify } from "@/utils/amplify-config";
 import { SaveSimulatorInput, SaveSimulatorResponse } from "./type";
+import { normalizeCustomerIdKey } from "@/store/Customer/services";
 
 configureAmplify();
 
@@ -64,7 +65,7 @@ export async function saveSimulatorResult(input: SaveSimulatorInput): Promise<Sa
       availablePowerKW: input.availablePowerKW,
       areaM2: input.areaM2,
       fleetItemsJson: JSON.stringify(input.fleetItems),
-      customerId: input.customerId ?? null,
+      customerId: input.customerId != null ? normalizeCustomerIdKey(input.customerId) : null,
     },
   }) as GraphQLResult<{ SaveSimulatorResult: SaveSimulatorResponse }>;
 

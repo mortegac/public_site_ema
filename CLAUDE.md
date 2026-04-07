@@ -23,6 +23,51 @@ npm run sl
 
 No test commands are configured. Environment is controlled via `NEXT_PUBLIC_ENVIRONMENT` (DEV | PROD) — set this in `.env.local` to switch Amplify backends.
 
+## Cloud Infrastructure
+
+### AWS (via Amplify Gen 2)
+
+**AWS Profile (local)**: `amplify-admin-ema`
+**AWS Account**: `750104932774`
+**Region**: `us-east-2` (Ohio)
+**Amplify App ID**: `d2k7ge85k75jcb`
+
+| Service | DEV | PROD |
+|---------|-----|------|
+| **AppSync GraphQL** | `sdit4qsgvnbqhanpgarq2zxqqq.appsync-api.us-east-2.amazonaws.com/graphql` | `hxncxtno75ac7cetsri66gdlri.appsync-api.us-east-2.amazonaws.com/graphql` |
+| **Cognito User Pool** | `us-east-2_YNPJLwx1p` | `us-east-2_bqbta3Q0z` |
+| **DynamoDB** | Managed via AppSync/Amplify | Same |
+
+AppSync authorization: API_KEY (default, 30-day expiry), AMAZON_COGNITO_USER_POOLS, AWS_IAM.
+
+### Vercel (Frontend Hosting)
+
+- **Project**: `public_site_ema`
+- **Project ID**: `prj_k2B03wNv0JsZBDXGQbkHO7fWsxfd`
+- **Org ID**: `team_Wed2Y6MdwJGMzjmBdiyxX4bV`
+- Deploys automatically on git push to `main`
+- Image CDN and Edge Network provided by Vercel
+
+### External Services
+
+| Service | Purpose | Config |
+|---------|---------|--------|
+| **Prismic CMS** | Content management (pages, blog, slices) | Repo: `energica-public-site` |
+| **Google Analytics** | Traffic analytics | `G-M0V5GMK6FL` |
+| **Google Tag Manager** | Tag management | `GTM-5C8WKS5R` |
+| **Google Maps Places API** | Address autocomplete in forms | Key in `AddressInput2.tsx` |
+| **EmailJS** | Contact form & payment emails | Service ID: `lUerPXXiKXnrvLlVw` |
+| **Transbank Webpay** | Chilean payment gateway (via AppSync) | Credentials stored in backend secrets |
+
+### Environment Variables
+
+```bash
+# .env.local
+NEXT_PUBLIC_ENVIRONMENT=PROD       # DEV | PROD — switches Amplify outputs file
+NEXT_PUBLIC_GA_ID=G-M0V5GMK6FL
+NEXT_PUBLIC_GTM_ID=GTM-5C8WKS5R
+```
+
 ## Architecture
 
 This is the **public-facing website** for ENERGICA, a Chilean solar energy company. Built with Next.js 15 App Router + TypeScript.

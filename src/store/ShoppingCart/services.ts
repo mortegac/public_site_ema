@@ -14,6 +14,17 @@ const withNormalizedShoppingCartCustomerId = <T extends { customerId?: string | 
     ? { ...cart, customerId: normalizeCustomerIdKey(cart.customerId) }
     : cart;
 
+/** Normalize cart FK; empty after cleaning → null for Amplify. */
+function customerIdForShoppingCartWrite(
+  customerId: string | null | undefined,
+): string | null {
+  if (customerId == null || customerId === '') {
+    return null;
+  }
+  const n = normalizeCustomerIdKey(String(customerId));
+  return n || null;
+}
+
 /** Respuesta de la query getShoppingCart con detalles y customer anidados */
 interface GetShoppingCartGraphQLResponse {
   getShoppingCart: {
@@ -272,10 +283,6 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
         
         console.log("--createShoppingCart--", input)
     
-        const normalizedCustomerId = customerId != null && String(customerId).trim() !== ''
-          ? normalizeCustomerIdKey(customerId)
-          : '';
-
         const formData:any = {
           shoppingCartId: shoppingCartId || crypto.randomUUID(),
           total: total || 0,
@@ -283,7 +290,7 @@ export const createShoppingCart = async (input: createShoppingCartInput): Promis
           typeOfCart: typeOfCart || "product",
           paymentMethod: paymentMethod || null,
           status: status || "pending",
-          customerId: normalizedCustomerId || null,
+          customerId: customerIdForShoppingCartWrite(customerId ?? undefined),
         };
         
         console.log("--formData ShoppingCart--", formData)
@@ -396,9 +403,9 @@ export const updateShoppingCart = async (input: updateShoppingCartInput): Promis
           paymentMethod: paymentMethod !== undefined ? paymentMethod : undefined,
           status: status !== undefined ? status : undefined,
           customerId: customerId !== undefined
-            ? (typeof customerId === 'string'
-              ? normalizeCustomerIdKey(customerId)
-              : customerId)
+            ? customerId === null
+              ? null
+              : customerIdForShoppingCartWrite(customerId)
             : undefined,
         };
         

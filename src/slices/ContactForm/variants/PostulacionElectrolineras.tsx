@@ -613,7 +613,9 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
            
           {/* {isSentEmail.isFailure && ( */}
           { isSentEmail.sentEmail ? (
-            <Box sx={{ 
+            <Box 
+            id="FORMULARIO-ELECTROLINERA"
+            sx={{ 
               minWidth:'668px',
               minHeigh:'360px',
               marginTop: '22px',

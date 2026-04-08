@@ -599,25 +599,27 @@ export const Default: FC<ContactFormProps> = ({ slice }) => {
            
           {/* {isSentEmail.isFailure && ( */}
           { isSentEmail.sentEmail ? (
-            <Box sx={{ 
-              minWidth:'668px',
-              minHeigh:'360px',
-              marginTop: '22px',
-              border: "1px solid rgba(0, 17, 51, 0.15)",
-              borderRadius: "24px",
-              padding: "48px",
-              fontSize: '24px',
-              lineHeight: '2rem',
-              "@media (max-width: 960px)": {
-                minWidth: "auto",
-                width: "100%",
-                padding: "32px",
-              },
-              "@media (max-width: 600px)": {
-                padding: "24px",
-                fontSize: '20px',
-              },
-            }}>
+            <Box 
+              id="FORMULARIO-CONTACTO"
+              sx={{ 
+                minWidth:'668px',
+                minHeigh:'360px',
+                marginTop: '22px',
+                border: "1px solid rgba(0, 17, 51, 0.15)",
+                borderRadius: "24px",
+                padding: "48px",
+                fontSize: '24px',
+                lineHeight: '2rem',
+                "@media (max-width: 960px)": {
+                  minWidth: "auto",
+                  width: "100%",
+                  padding: "32px",
+                },
+                "@media (max-width: 600px)": {
+                  padding: "24px",
+                  fontSize: '20px',
+                },
+              }}>
               {/* <p style={{ fontSize: '32px', textAlign:'center' }}>😱</p> */}
               <p style={{ fontSize: '32px', textAlign:'center' }}>{isSentEmail.title}</p>
               <p style={{ fontSize: '18px', textAlign:'center' }}>{isSentEmail.text}</p>

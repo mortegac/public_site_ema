@@ -46,8 +46,8 @@ export async function generateMetadata({
       title: page.data.meta_title ?? undefined,
       description: page.data.meta_description ?? "",
       images: [
-        { 
-          url: page.data.meta_image.url ?? "",
+        {
+          url: (page.data.meta_image.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg"),
           width: 1200,
           height: 630,
           alt: page.data.meta_image.alt ?? "",

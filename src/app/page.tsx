@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: page.data.meta_title ?? undefined,
-      images: [{ url: page.data.meta_image.url ?? "" }],
+      images: [{ url: (page.data.meta_image.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg") }],
     },
   };
 }

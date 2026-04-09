@@ -1,0 +1,74 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"og_url": {
+				"__TYPE__": "FieldContent",
+				"value": "upward",
+				"type": "Text"
+			},
+			"og_type": {
+				"__TYPE__": "FieldContent",
+				"value": "people",
+				"type": "Text"
+			},
+			"og_title": {
+				"__TYPE__": "FieldContent",
+				"value": "cold",
+				"type": "Text"
+			},
+			"og_description": {
+				"__TYPE__": "FieldContent",
+				"value": "stepped",
+				"type": "Text"
+			},
+			"og_image": {
+				"__TYPE__": "FieldContent",
+				"value": "darkness",
+				"type": "Text"
+			},
+			"og_temporal_twitter_card": {
+				"__TYPE__": "FieldContent",
+				"value": "purpose",
+				"type": "Text"
+			},
+			"og_temporal_twitter_title": {
+				"__TYPE__": "FieldContent",
+				"value": "audience",
+				"type": "Text"
+			},
+			"og_temporal_twitter_description": {
+				"__TYPE__": "FieldContent",
+				"value": "went",
+				"type": "Text"
+			},
+			"og_temporal_twitter_image": {
+				"__TYPE__": "FieldContent",
+				"value": "explore",
+				"type": "Text"
+			},
+			"og_temporal_twitter_image_width": {
+				"__TYPE__": "FieldContent",
+				"value": "missing",
+				"type": "Text"
+			},
+			"og_temporal_twitter_image_height": {
+				"__TYPE__": "FieldContent",
+				"value": "but",
+				"type": "Text"
+			},
+			"og_image_alt": {
+				"__TYPE__": "FieldContent",
+				"value": "hung",
+				"type": "Text"
+			},
+			"fb_app_id": {
+				"__TYPE__": "FieldContent",
+				"value": "parallel",
+				"type": "Text"
+			}
+		},
+		"items": []
+	}
+]

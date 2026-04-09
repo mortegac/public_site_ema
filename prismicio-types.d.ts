@@ -316,6 +316,138 @@ interface PageDocumentData {
    * - **Documentation**: https://prismic.io/docs/fields/image
    */
   meta_image: prismic.ImageField<never>;
+
+  /**
+   * og:url field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_url
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_url: prismic.KeyTextField;
+
+  /**
+   * og:type field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_type
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_type: prismic.KeyTextField;
+
+  /**
+   * og:title field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_title: prismic.KeyTextField;
+
+  /**
+   * og:description field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_description: prismic.KeyTextField;
+
+  /**
+   * og:image field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_image: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:card field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_temporal_twitter_card
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_card: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:title field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_temporal_twitter_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_title: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:description field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_temporal_twitter_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_description: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:image field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_temporal_twitter_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_image: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:image:width field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_temporal_twitter_image_width
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_image_width: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:image:height field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_temporal_twitter_image_height
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_image_height: prismic.KeyTextField;
+
+  /**
+   * og:image:alt field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.og_image_alt
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_image_alt: prismic.KeyTextField;
 }
 
 /**
@@ -3251,6 +3383,168 @@ export type ResumeBlogSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *Seo → Default → Primary*
+ */
+export interface SeoSliceDefaultPrimary {
+  /**
+   * fb:app_id field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.fb_app_id
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  fb_app_id: prismic.KeyTextField;
+
+  /**
+   * og:url field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_url
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_url: prismic.KeyTextField;
+
+  /**
+   * og:type field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_type
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_type: prismic.KeyTextField;
+
+  /**
+   * og:title field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_title: prismic.KeyTextField;
+
+  /**
+   * og:description field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_description
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_description: prismic.KeyTextField;
+
+  /**
+   * og:image field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_image
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_image: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:card field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_temporal_twitter_card
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_card: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:title field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_temporal_twitter_title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_title: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:description field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_temporal_twitter_description
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_description: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:image field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_temporal_twitter_image
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_image: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:image:width field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_temporal_twitter_image_width
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_image_width: prismic.KeyTextField;
+
+  /**
+   * og:temporal:twitter:image:height field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_temporal_twitter_image_height
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_temporal_twitter_image_height: prismic.KeyTextField;
+
+  /**
+   * og:image:alt field in *Seo → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: seo.default.primary.og_image_alt
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  og_image_alt: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for Seo Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type SeoSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<SeoSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Seo*
+ */
+type SeoSliceVariation = SeoSliceDefault;
+
+/**
+ * Seo Shared Slice
+ *
+ * - **API ID**: `seo`
+ * - **Description**: Seo
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type SeoSlice = prismic.SharedSlice<"seo", SeoSliceVariation>;
+
+/**
  * Item in *StepWizard → Default → Primary → steps*
  */
 export interface StepWizardSliceDefaultPrimaryStepsItem {
@@ -3469,6 +3763,10 @@ declare module "@prismicio/client" {
       ResumeBlogSliceDefaultPrimary,
       ResumeBlogSliceVariation,
       ResumeBlogSliceDefault,
+      SeoSlice,
+      SeoSliceDefaultPrimary,
+      SeoSliceVariation,
+      SeoSliceDefault,
       StepWizardSlice,
       StepWizardSliceDefaultPrimaryStepsItem,
       StepWizardSliceDefaultPrimary,

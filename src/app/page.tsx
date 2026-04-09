@@ -15,6 +15,16 @@ import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient();
   const page = await client.getByUID("page", "home").catch(() => notFound());
+  const ogImageFromPrismic = page.data.og_image ?? page.data.meta_image.url ?? "";
+  const ogImageAltFromPrismic = page.data.og_image_alt ?? page.data.meta_image.alt ?? "";
+  const ogData = {
+    "og:temporal:twitter:card": page.data.og_temporal_twitter_card ?? "",
+    "og:temporal:twitter:title": page.data.og_temporal_twitter_title ?? "",
+    "og:temporal:twitter:description": page.data.og_temporal_twitter_description ?? "",
+    "og:temporal:twitter:image": page.data.og_temporal_twitter_image ?? "",
+    "og:temporal:twitter:image_width": page.data.og_temporal_twitter_image_width ?? "",
+    "og:temporal:twitter:image_height": page.data.og_temporal_twitter_image_height ?? "",
+  };
 
   return {
     title: page.data.meta_title,
@@ -23,9 +33,13 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: CANONICAL_DOMAIN,
     },
     openGraph: {
-      title: page.data.meta_title ?? undefined,
-      images: [{ url: (page.data.meta_image.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg") }],
+      url: page.data.og_url ?? CANONICAL_DOMAIN,
+      type: page.data.og_type ?? "website",
+      title: page.data.og_title ?? page.data.meta_title ?? undefined,
+      description: page.data.og_description ?? page.data.meta_description ?? "",
+      images: [{ url: ogImageFromPrismic, alt: ogImageAltFromPrismic }],
     },
+    other: ogData,
   };
 }
 

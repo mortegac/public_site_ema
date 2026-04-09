@@ -25,6 +25,16 @@ export async function generateMetadata({
   const page = await client.getByUID("page", uid).catch(() => notFound());
 
   const DOMAIN_PAGE:string=`${CANONICAL_DOMAIN}${page.url}`;
+  const ogImageFromPrismic = page.data.og_image ?? page.data.meta_image.url ?? "";
+  const ogImageAltFromPrismic = page.data.og_image_alt ?? page.data.meta_image.alt ?? "";
+  const ogData = {
+    "og:temporal:twitter:card": page.data.og_temporal_twitter_card ?? "",
+    "og:temporal:twitter:title": page.data.og_temporal_twitter_title ?? "",
+    "og:temporal:twitter:description": page.data.og_temporal_twitter_description ?? "",
+    "og:temporal:twitter:image": page.data.og_temporal_twitter_image ?? "",
+    "og:temporal:twitter:image_width": page.data.og_temporal_twitter_image_width ?? "",
+    "og:temporal:twitter:image_height": page.data.og_temporal_twitter_image_height ?? "",
+  };
 
   return {
     title: page.data.meta_title,
@@ -41,20 +51,21 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      type: "website",
-      url: DOMAIN_PAGE,
-      title: page.data.meta_title ?? undefined,
-      description: page.data.meta_description ?? "",
+      type: page.data.og_type ?? "website",
+      url: page.data.og_url ?? DOMAIN_PAGE,
+      title: page.data.og_title ?? page.data.meta_title ?? undefined,
+      description: page.data.og_description ?? page.data.meta_description ?? "",
       images: [
         {
-          url: (page.data.meta_image.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg"),
+          url: ogImageFromPrismic,
           width: 1200,
           height: 630,
-          alt: page.data.meta_image.alt ?? "",
+          alt: ogImageAltFromPrismic,
         }
         
       ],
     },
+    other: ogData,
     // twitter: {
     //   card: "summary_large_image",
     //   site: "@miniswimmer_edu",

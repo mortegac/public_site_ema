@@ -73,6 +73,90 @@
           "thumbnails": []
         },
         "type": "Image"
+      },
+      "og_url": {
+        "type": "Text",
+        "config": {
+          "label": "og:url",
+          "placeholder": ""
+        }
+      },
+      "og_type": {
+        "type": "Text",
+        "config": {
+          "label": "og:type",
+          "placeholder": ""
+        }
+      },
+      "og_title": {
+        "type": "Text",
+        "config": {
+          "label": "og:title",
+          "placeholder": ""
+        }
+      },
+      "og_description": {
+        "type": "Text",
+        "config": {
+          "label": "og:description",
+          "placeholder": ""
+        }
+      },
+      "og_image": {
+        "type": "Text",
+        "config": {
+          "label": "og:image",
+          "placeholder": ""
+        }
+      },
+      "og_temporal_twitter_card": {
+        "type": "Text",
+        "config": {
+          "label": "og:temporal:twitter:card",
+          "placeholder": ""
+        }
+      },
+      "og_temporal_twitter_title": {
+        "type": "Text",
+        "config": {
+          "label": "og:temporal:twitter:title",
+          "placeholder": ""
+        }
+      },
+      "og_temporal_twitter_description": {
+        "type": "Text",
+        "config": {
+          "label": "og:temporal:twitter:description",
+          "placeholder": ""
+        }
+      },
+      "og_temporal_twitter_image": {
+        "type": "Text",
+        "config": {
+          "label": "og:temporal:twitter:image",
+          "placeholder": ""
+        }
+      },
+      "og_temporal_twitter_image_width": {
+        "type": "Text",
+        "config": {
+          "label": "og:temporal:twitter:image:width",
+          "placeholder": ""
+        }
+      },
+      "og_temporal_twitter_image_height": {
+        "type": "Text",
+        "config": {
+          "label": "og:temporal:twitter:image:height",
+          "placeholder": ""
+        }
+      },
+      "og_image_alt": {
+        "type": "Text",
+        "config": {
+          "label": "og:image:alt",
+          "placeholder": ""
+        }
       }
     }
   }

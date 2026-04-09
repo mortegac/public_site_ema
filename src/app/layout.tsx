@@ -58,6 +58,7 @@ export default function RootLayout({
   return (
     <html lang="es-CL" suppressHydrationWarning className={inter.variable}>
       <head>
+        <meta name="facebook-domain-verification" content="op025mmhdhmr82aut2bbskxt84jcqf" />
         <link rel="preconnect" href="https://images.prismic.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.prismic.io" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />

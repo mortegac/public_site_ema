@@ -37,7 +37,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://energica.city'),
+  metadataBase: new URL('https://www.energica.city'),
   title: {
     template: '%s | Energica City',
     default: 'Energica City — Cargadores EV para Empresas',
@@ -72,10 +72,10 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "Energica City",
-              "url": "https://energica.city",
+              "url": "https://www.energica.city",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://energica.city/logo.png",
+                "url": "https://www.energica.city/logo.png",
                 "width": 200,
                 "height": 60
               },
@@ -101,7 +101,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "Energica City",
-              "url": "https://energica.city"
+              "url": "https://www.energica.city"
             })
           }}
         />

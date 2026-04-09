@@ -9,7 +9,7 @@ import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
 
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
-import { CANONICAL_DOMAIN } from "@/utils/seo-config";
+import { CANONICAL_DOMAIN, normalizeEnergicaSiteUrl } from "@/utils/seo-config";
 
 const VALID_OPEN_GRAPH_TYPES = [
   "article",
@@ -54,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: CANONICAL_DOMAIN,
     },
     openGraph: {
-      url: page.data.og_url ?? CANONICAL_DOMAIN,
+      url: normalizeEnergicaSiteUrl(page.data.og_url, CANONICAL_DOMAIN),
       type: getOpenGraphType(page.data.og_type),
       title: page.data.og_title ?? page.data.meta_title ?? undefined,
       description: page.data.og_description ?? page.data.meta_description ?? "",

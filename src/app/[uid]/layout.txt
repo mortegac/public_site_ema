@@ -34,7 +34,7 @@ const inter = Inter({
 //   openGraph: {
 //     images: [
 //       {
-//         url: 'https://energica.city/hubfs/T%C3%A9cnico-instalador-1.png',
+//         url: 'https://www.energica.city/hubfs/T%C3%A9cnico-instalador-1.png',
 //         width: 1200,
 //         height: 630,
 //         alt: 'Técnico instalador Energica',

@@ -649,7 +649,7 @@ export default function BookingCalendar() {
         >
           Servicio disponible sólo en RM y provincias específicas de V y VI Región.
       </Typography>
-                <Link href={`https://energica.city/t-y-c-cotizador`}>
+                <Link href={`https://www.energica.city/t-y-c-cotizador`}>
                       <Typography
                         sx={{
                           display: "block",

@@ -37,6 +37,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: BLOCKED_PATHS,
       },
     ],
-    sitemap: 'https://energica.city/sitemap.xml',
+    sitemap: 'https://www.energica.city/sitemap.xml',
   }
 }

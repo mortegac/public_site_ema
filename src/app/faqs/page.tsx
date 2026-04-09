@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Preguntas Frecuentes sobre Cargadores EV",
   description: "Resuelve tus dudas sobre instalación de cargadores eléctricos para empresas y edificios en Chile.",
   alternates: {
-    canonical: "https://energica.city/faqs",
+    canonical: "https://www.energica.city/faqs",
   },
 };
 

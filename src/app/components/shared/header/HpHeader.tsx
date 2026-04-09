@@ -83,7 +83,7 @@ const HpHeader = (props: any) => {
               <Button
                 color="primary"
                 variant="contained"
-                href="https://energica.city/contacto"
+                href="https://www.energica.city/contacto"
               >
                 Contacto
               </Button>

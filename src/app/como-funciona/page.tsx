@@ -5,7 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 export const metadata: Metadata = {
   title: 'Cómo Funciona la Instalación de Cargadores EV',
   description: 'Conoce el proceso paso a paso para instalar cargadores eléctricos en tu empresa o edificio en Chile: cotización, visita técnica, instalación y certificación TE6.',
-  alternates: { canonical: 'https://energica.city/como-funciona' },
+  alternates: { canonical: 'https://www.energica.city/como-funciona' },
 }
 
 // Steps data
@@ -26,7 +26,7 @@ export default function ComoFuncionaPage() {
     "provider": {
       "@type": "Organization",
       "name": "Energica City",
-      "url": "https://energica.city"
+      "url": "https://www.energica.city"
     },
     "areaServed": { "@type": "Country", "name": "Chile" },
     "description": "Servicio completo de instalación de cargadores eléctricos para empresas y edificios en Chile, incluyendo visita técnica, instalación certificada y trámites TE6.",
@@ -37,8 +37,8 @@ export default function ComoFuncionaPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://energica.city" },
-      { "@type": "ListItem", "position": 2, "name": "Cómo Funciona", "item": "https://energica.city/como-funciona" }
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
+      { "@type": "ListItem", "position": 2, "name": "Cómo Funciona", "item": "https://www.energica.city/como-funciona" }
     ]
   }
 

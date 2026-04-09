@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Cargadores EV en ${cityData.name} | Energica City`,
     description: `Instalación de cargadores eléctricos para empresas y edificios en ${cityData.name}. Técnicos certificados SEC. Cotiza gratis.`,
-    alternates: { canonical: `https://energica.city/servicios/${city}` },
+    alternates: { canonical: `https://www.energica.city/servicios/${city}` },
   }
 }
 
@@ -38,7 +38,7 @@ export default async function CityPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ElectricalContractor"],
     "name": "Energica City",
-    "url": "https://energica.city",
+    "url": "https://www.energica.city",
     "description": `Instalación de cargadores eléctricos certificados SEC en ${cityData.name}, Chile.`,
     "areaServed": { "@type": "City", "name": cityData.name },
     "geo": { "@type": "GeoCoordinates", "latitude": cityData.lat, "longitude": cityData.lon },
@@ -56,8 +56,8 @@ export default async function CityPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://energica.city" },
-      { "@type": "ListItem", "position": 2, "name": cityData.name, "item": `https://energica.city/servicios/${city}` }
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
+      { "@type": "ListItem", "position": 2, "name": cityData.name, "item": `https://www.energica.city/servicios/${city}` }
     ]
   }
 

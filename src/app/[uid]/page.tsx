@@ -11,7 +11,7 @@ import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import PageContainer from '@/app/components/container/PageContainer';
-import { CANONICAL_DOMAIN } from "@/utils/seo-config";
+import { CANONICAL_DOMAIN, normalizeEnergicaSiteUrl } from "@/utils/seo-config";
 
 type Params = { uid: string };
 const VALID_OPEN_GRAPH_TYPES = [
@@ -72,7 +72,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: getOpenGraphType(page.data.og_type),
-      url: page.data.og_url ?? DOMAIN_PAGE,
+      url: normalizeEnergicaSiteUrl(page.data.og_url, DOMAIN_PAGE),
       title: page.data.og_title ?? page.data.meta_title ?? undefined,
       description: page.data.og_description ?? page.data.meta_description ?? "",
       images: [

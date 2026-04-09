@@ -5,7 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 export const metadata: Metadata = {
   title: 'Credenciales SEC y Certificaciones',
   description: 'Instaladores certificados SEC (TE1/TE6) para cargadores EV en Chile. Conoce nuestras credenciales y estándares de seguridad.',
-  alternates: { canonical: 'https://energica.city/credenciales' },
+  alternates: { canonical: 'https://www.energica.city/credenciales' },
 }
 
 const certifications = [
@@ -20,7 +20,7 @@ export default function CredencialesPage() {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ElectricalContractor"],
     "name": "Energica City",
-    "url": "https://energica.city",
+    "url": "https://www.energica.city",
     "description": "Instalación certificada SEC de cargadores eléctricos para empresas y edificios en Chile.",
     "address": {
       "@type": "PostalAddress",
@@ -41,8 +41,8 @@ export default function CredencialesPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://energica.city" },
-      { "@type": "ListItem", "position": 2, "name": "Credenciales", "item": "https://energica.city/credenciales" }
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
+      { "@type": "ListItem", "position": 2, "name": "Credenciales", "item": "https://www.energica.city/credenciales" }
     ]
   }
 

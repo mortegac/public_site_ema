@@ -5,7 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 export const metadata: Metadata = {
   title: 'Casos de Éxito en Cargadores EV para Empresas',
   description: 'Conoce cómo Chilexpress, CMP y CMPC confiaron en Energica City para instalar cargadores eléctricos para sus flotas en Chile.',
-  alternates: { canonical: 'https://energica.city/casos-de-exito' },
+  alternates: { canonical: 'https://www.energica.city/casos-de-exito' },
 }
 
 const cases = [
@@ -43,21 +43,21 @@ export default function CasosDeExitoPage() {
         "position": 1,
         "name": "Chilexpress — 100 furgones eléctricos",
         "description": "Chilexpress electrificó su flota con 100 furgones y 120 cargadores AC de 7.4 kW. Reducción del 65% en costos operacionales.",
-        "url": "https://energica.city/casos-de-exito"
+        "url": "https://www.energica.city/casos-de-exito"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "CMP — 45 buses eléctricos",
         "description": "CMP modernizó su transporte de personal con 45 buses eléctricos y cargadores DC de 150 kW.",
-        "url": "https://energica.city/casos-de-exito"
+        "url": "https://www.energica.city/casos-de-exito"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": "CMPC — 130 vehículos eléctricos",
         "description": "CMPC desplegó la mayor flota corporativa eléctrica de Chile con 200 puntos de carga.",
-        "url": "https://energica.city/casos-de-exito"
+        "url": "https://www.energica.city/casos-de-exito"
       }
     ]
   }
@@ -66,8 +66,8 @@ export default function CasosDeExitoPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://energica.city" },
-      { "@type": "ListItem", "position": 2, "name": "Casos de Éxito", "item": "https://energica.city/casos-de-exito" }
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
+      { "@type": "ListItem", "position": 2, "name": "Casos de Éxito", "item": "https://www.energica.city/casos-de-exito" }
     ]
   }
 

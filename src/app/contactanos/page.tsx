@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Contáctanos",
   description: "Contáctanos para saber más sobre instalación de cargadores eléctricos en Chile. Escríbenos un mensaje y te responderemos lo antes posible.",
   alternates: {
-    canonical: "https://energica.city/contactanos",
+    canonical: "https://www.energica.city/contactanos",
   },
 };
 
@@ -25,13 +25,13 @@ const contactSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
   "name": "Contáctanos — Energica City",
-  "url": "https://energica.city/contactanos",
+  "url": "https://www.energica.city/contactanos",
   "description": "Contacta a Energica City para instalación de cargadores eléctricos en Chile.",
   "mainEntity": {
     "@type": "Organization",
     "name": "Energica City",
     "telephone": "+56967666652",
-    "url": "https://energica.city"
+    "url": "https://www.energica.city"
   }
 }
 

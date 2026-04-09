@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Soporte | Energica City",
   description: "Contáctate con nuestro equipo de soporte para resolver tus dudas o problemas con la instalación de cargadores eléctricos.",
   alternates: {
-    canonical: "https://energica.city/soporte",
+    canonical: "https://www.energica.city/soporte",
   },
 };
 

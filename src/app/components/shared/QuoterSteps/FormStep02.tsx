@@ -554,7 +554,7 @@ useEffect(() => {
                         fontSize:"15px",
                       }}>
                Revise nuestros términos y condiciones{" "}
-               <a href="https://energica.city/t-y-c-cotizador" target="_blank" rel="noopener noreferrer" style={{ color: '#2A3547', textDecoration: 'none', fontWeight: 'bold' }}>
+               <a href="https://www.energica.city/t-y-c-cotizador" target="_blank" rel="noopener noreferrer" style={{ color: '#2A3547', textDecoration: 'none', fontWeight: 'bold' }}>
                  aquí
                </a>
              </Typography>

@@ -163,7 +163,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
       "url": CANONICAL_DOMAIN,
       "logo": {
         "@type": "ImageObject",
-        "url": "https://energica.city/logo.png",
+        "url": "https://www.energica.city/logo.png",
         "width": 200,
         "height": 60
       },

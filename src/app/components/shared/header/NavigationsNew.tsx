@@ -32,7 +32,7 @@ export const NavLinks = [
   },
   // {
   //   title: "¿Dudas?",
-  //   href: "https://energica.city/faq-y-tc",
+  //   href: "https://www.energica.city/faq-y-tc",
   // },
   // {
   //   title: "Agenda",

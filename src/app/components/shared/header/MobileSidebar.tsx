@@ -49,7 +49,7 @@ const MobileSidebar = () => {
           >
             Support
           </Button> */}
-          <Button color="primary" variant="contained" href="https://energica.city/contacto">
+          <Button color="primary" variant="contained" href="https://www.energica.city/contacto">
             Contacto
           </Button>
         </Stack>

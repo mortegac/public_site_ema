@@ -32,27 +32,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const prismicEntries = pages
     .filter((page) => !PRISMIC_EXCLUDED_UIDS.has(page.uid))
     .map((page) => ({
-      url: `https://energica.city/${page.uid}`,
+      url: `https://www.energica.city/${page.uid}`,
       lastModified: new Date(page.last_publication_date),
     }))
 
   const blogEntries = blogPosts.map((post) => ({
-    url: `https://energica.city/blog/${post.uid}`,
+    url: `https://www.energica.city/blog/${post.uid}`,
     lastModified: new Date(post.last_publication_date),
   }))
 
   const staticEntries = STATIC_ROUTES.map((route) => ({
-    url: `https://energica.city${route}`,
+    url: `https://www.energica.city${route}`,
     lastModified: STATIC_LAST_MODIFIED,
   }))
 
   const cityEntries = CITY_ROUTES.map((city) => ({
-    url: `https://energica.city/servicios/${city}`,
+    url: `https://www.energica.city/servicios/${city}`,
     lastModified: STATIC_LAST_MODIFIED,
   }))
 
   return [
-    { url: 'https://energica.city', lastModified: STATIC_LAST_MODIFIED },
+    { url: 'https://www.energica.city', lastModified: STATIC_LAST_MODIFIED },
     ...prismicEntries,
     ...blogEntries,
     ...staticEntries,

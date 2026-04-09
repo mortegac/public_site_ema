@@ -14,6 +14,26 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 
 type Params = { uid: string };
+const VALID_OPEN_GRAPH_TYPES = [
+  "article",
+  "website",
+  "book",
+  "profile",
+  "music.song",
+  "music.album",
+  "music.playlist",
+  "music.radio_station",
+  "video.movie",
+  "video.episode",
+  "video.tv_show",
+  "video.other",
+] as const;
+type OpenGraphType = (typeof VALID_OPEN_GRAPH_TYPES)[number];
+
+const getOpenGraphType = (value?: string | null): OpenGraphType =>
+  VALID_OPEN_GRAPH_TYPES.includes(value as OpenGraphType)
+    ? (value as OpenGraphType)
+    : "website";
 
 export async function generateMetadata({
   params,
@@ -51,7 +71,7 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      type: page.data.og_type ?? "website",
+      type: getOpenGraphType(page.data.og_type),
       url: page.data.og_url ?? DOMAIN_PAGE,
       title: page.data.og_title ?? page.data.meta_title ?? undefined,
       description: page.data.og_description ?? page.data.meta_description ?? "",

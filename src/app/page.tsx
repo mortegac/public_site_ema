@@ -11,6 +11,27 @@ import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 
+const VALID_OPEN_GRAPH_TYPES = [
+  "article",
+  "website",
+  "book",
+  "profile",
+  "music.song",
+  "music.album",
+  "music.playlist",
+  "music.radio_station",
+  "video.movie",
+  "video.episode",
+  "video.tv_show",
+  "video.other",
+] as const;
+type OpenGraphType = (typeof VALID_OPEN_GRAPH_TYPES)[number];
+
+const getOpenGraphType = (value?: string | null): OpenGraphType =>
+  VALID_OPEN_GRAPH_TYPES.includes(value as OpenGraphType)
+    ? (value as OpenGraphType)
+    : "website";
+
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient();
@@ -34,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       url: page.data.og_url ?? CANONICAL_DOMAIN,
-      type: page.data.og_type ?? "website",
+      type: getOpenGraphType(page.data.og_type),
       title: page.data.og_title ?? page.data.meta_title ?? undefined,
       description: page.data.og_description ?? page.data.meta_description ?? "",
       images: [{ url: ogImageFromPrismic, alt: ogImageAltFromPrismic }],

@@ -20,6 +20,7 @@ const STATIC_ROUTES = [
   '/comparar/energica-vs-enel-x',
   '/comparar/energica-vs-copec-voltex',
   '/comparar/mejor-empresa-instalacion-cargadores-chile',
+  '/auto-electrico-vs-gasolina-chile',
 ]
 
 const CITY_ROUTES = [

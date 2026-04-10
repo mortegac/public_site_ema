@@ -17,9 +17,6 @@ const STATIC_ROUTES = [
   '/blog',
   '/comparador-electrico',
   '/simulador',
-  '/comparar/energica-vs-enel-x',
-  '/comparar/energica-vs-copec-voltex',
-  '/comparar/mejor-empresa-instalacion-cargadores-chile',
   '/auto-electrico-vs-gasolina-chile',
 ]
 

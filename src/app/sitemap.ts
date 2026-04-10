@@ -19,7 +19,12 @@ const STATIC_ROUTES = [
   '/simulador',
 ]
 
-const CITY_ROUTES = ['santiago', 'las-condes', 'providencia', 'vitacura', 'nunoa', 'la-florida']
+const CITY_ROUTES = [
+  'santiago', 'las-condes', 'providencia', 'vitacura', 'nunoa', 'la-florida',
+  'lo-barnechea', 'san-miguel', 'villa-alemana', 'estacion-central', 'huechuraba',
+  'colina', 'lampa', 'chicureo', 'maipu', 'algarrobo', 'la-cisterna',
+  'penalolen', 'con-con', 'maitencillo',
+]
 
 const PRISMIC_EXCLUDED_UIDS = new Set(['home', 'privacidad'])
 

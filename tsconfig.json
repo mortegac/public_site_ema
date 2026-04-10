@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -21,14 +25,35 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@types": ["amplify/data/resource"],
-      "@queries": ["src/utils/queries/index.ts"],
-      "@client": ["src/app/init.ts"],
-      "@log": ["src/utils/log.ts"],
-      "@error": ["src/utils/error.ts"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@types": [
+        "amplify/data/resource"
+      ],
+      "@queries": [
+        "src/utils/queries/index.ts"
+      ],
+      "@client": [
+        "src/app/init.ts"
+      ],
+      "@log": [
+        "src/utils/log.ts"
+      ],
+      "@error": [
+        "src/utils/error.ts"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/slices/ContactForm/indextxt2"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/slices/ContactForm/indextxt2",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

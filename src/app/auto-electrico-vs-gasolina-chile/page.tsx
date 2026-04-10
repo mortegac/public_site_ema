@@ -132,23 +132,24 @@ export default async function AutoElectricoVsGasolinaChilePage() {
         {/* Section 1 — Hero */}
         <Box
           sx={{
-            background: `linear-gradient(135deg, ${DARK} 0%, ${BLUE_DARK} 100%)`,
+            background: 'linear-gradient(358deg, #0898b9 0%, #4dbfd9 100%)',
             color: '#fff',
             py: { xs: 8, md: 12 },
             textAlign: 'center',
+            borderRadius: 0,
           }}
         >
           <Container maxWidth="md">
             <Typography
               variant="h1"
               component="h1"
-              sx={{ fontSize: { xs: '1.875rem', md: '2.75rem' }, fontWeight: 800, mb: 3, lineHeight: 1.2 }}
+              sx={{ fontSize: { xs: '1.875rem', md: '2.75rem' }, fontWeight: 800, mb: 3, lineHeight: 1.2, color: '#000000' }}
             >
               Auto Eléctrico vs Gasolina en Chile: ¿Cuál conviene en 2025?
             </Typography>
             <Typography
               variant="body1"
-              sx={{ fontSize: { xs: '1rem', md: '1.15rem' }, color: 'rgba(255,255,255,0.85)', mb: 5, maxWidth: 520, mx: 'auto' }}
+              sx={{ fontSize: { xs: '1rem', md: '1.15rem' }, color: '#000000', mb: 5, maxWidth: 520, mx: 'auto' }}
             >
               La respuesta depende de TU situación. Nuestro comparador analiza tus kilómetros reales, tu consumo
               actual y los modelos disponibles en Chile para darte un resultado personalizado.

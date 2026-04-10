@@ -216,6 +216,21 @@ export default async function CityPage({ params }: Props) {
             </Box>
           </Box>
 
+          {/* Banner — Cargadores sin instalación */}
+          <Box component="a" href="/cargadores-vehiculos-electricos-sin-instalacion" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2, p: { xs: 3, md: 4 }, mb: 6, bgcolor: 'grey.900', borderRadius: 2, textDecoration: 'none', '&:hover': { bgcolor: 'grey.800' } }}>
+            <Box>
+              <Typography variant="h3" sx={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', mb: 0.5 }}>
+                ¿Solo necesitas el cargador, sin instalación?
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'grey.400' }}>
+                Compra tu cargador eléctrico directamente — entrega a domicilio en {cityData.name}.
+              </Typography>
+            </Box>
+            <Box sx={{ px: 3, py: 1.5, bgcolor: 'primary.main', borderRadius: 1, color: 'white', fontWeight: 600, fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
+              Ver cargadores →
+            </Box>
+          </Box>
+
           {/* Section B — Zonas que atendemos */}
           <Box sx={{ mb: 6 }}>
             <Typography variant="h2" sx={{ fontSize: '1.5rem', fontWeight: 700, mb: 2 }}>

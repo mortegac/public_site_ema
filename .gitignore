@@ -37,3 +37,7 @@ src/app/components/shared/CalendarSteps/index.tsx
 
 
  .vscode/
+
+# Claude Code local settings (machine-specific paths)
+.claude/settings.local.json
+.claude/worktrees/

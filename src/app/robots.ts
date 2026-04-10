@@ -4,6 +4,7 @@ import type { MetadataRoute } from 'next'
 const BLOCKED_PATHS = [
   '/return',
   '/return/',
+  '/return/invoice',
   '/agenda/recibo-pago',
   '/agenda/rechazo-pago',
   '/agenda/recibo-virtual',

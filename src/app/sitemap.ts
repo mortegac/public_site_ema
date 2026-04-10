@@ -2,7 +2,7 @@
 import type { MetadataRoute } from 'next'
 import { createClient } from '@/prismicio'
 
-const STATIC_LAST_MODIFIED = new Date('2026-01-01')
+const STATIC_LAST_MODIFIED = new Date('2026-04-10')
 
 const STATIC_ROUTES = [
   '/cotizador',
@@ -15,6 +15,8 @@ const STATIC_ROUTES = [
   '/casos-de-exito',
   '/credenciales',
   '/blog',
+  '/comparador-electrico',
+  '/simulador',
 ]
 
 const CITY_ROUTES = ['santiago', 'las-condes', 'providencia', 'vitacura', 'nunoa', 'la-florida']

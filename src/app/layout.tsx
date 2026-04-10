@@ -48,6 +48,9 @@ export const metadata: Metadata = {
     locale: 'es_CL',
     type: 'website',
   },
+  other: {
+    'fb:app_id': '841526374876111',
+  },
 };
 
 export default function RootLayout({

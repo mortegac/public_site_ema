@@ -31,8 +31,8 @@ export const metadata: Metadata = {
 }
 
 const DARK = '#0F172A'
-const BLUE = '#1E40AF'
-const BLUE_DARK = '#1E3A8A'
+const BLUE = '#e81a68'
+const BLUE_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
 

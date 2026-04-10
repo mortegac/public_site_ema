@@ -3,13 +3,13 @@ import { Container, Box, Typography } from '@mui/material'
 import { notFound } from 'next/navigation'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 
-const cities: Record<string, { name: string; demonym: string; description: string; address: string; lat: number; lon: number }> = {
-  santiago: { name: 'Santiago', demonym: 'santiaguino', description: 'la capital de Chile', address: 'Santiago, Región Metropolitana, Chile', lat: -33.4489, lon: -70.6693 },
-  'las-condes': { name: 'Las Condes', demonym: 'de Las Condes', description: 'la comuna financiera y empresarial de Santiago', address: 'Las Condes, Región Metropolitana, Chile', lat: -33.4113, lon: -70.5664 },
-  providencia: { name: 'Providencia', demonym: 'providenciano', description: 'una de las comunas más activas de Santiago', address: 'Providencia, Región Metropolitana, Chile', lat: -33.4323, lon: -70.6100 },
-  vitacura: { name: 'Vitacura', demonym: 'vitacurino', description: 'una de las comunas premium de Santiago', address: 'Vitacura, Región Metropolitana, Chile', lat: -33.3866, lon: -70.5790 },
-  nunoa: { name: 'Ñuñoa', demonym: 'ñuñoíno', description: 'una comuna residencial y comercial de Santiago', address: 'Ñuñoa, Región Metropolitana, Chile', lat: -33.4568, lon: -70.5985 },
-  'la-florida': { name: 'La Florida', demonym: 'floridano', description: 'la comuna más poblada de Santiago', address: 'La Florida, Región Metropolitana, Chile', lat: -33.5167, lon: -70.5948 },
+const cities: Record<string, { name: string; demonym: string; description: string; address: string; lat: number; lon: number; zones: string[] }> = {
+  santiago: { name: 'Santiago', demonym: 'santiaguino', description: 'la capital de Chile', address: 'Santiago, Región Metropolitana, Chile', lat: -33.4489, lon: -70.6693, zones: ['Barrio Italia', 'Yungay', 'Estación Central', 'San Miguel', 'La Cisterna', 'El Bosque'] },
+  'las-condes': { name: 'Las Condes', demonym: 'de Las Condes', description: 'la comuna financiera y empresarial de Santiago', address: 'Las Condes, Región Metropolitana, Chile', lat: -33.4113, lon: -70.5664, zones: ['Apoquindo', 'El Golf', 'Nueva Las Condes', 'La Dehesa', 'Lo Barnechea', 'Escandinavia'] },
+  providencia: { name: 'Providencia', demonym: 'providenciano', description: 'una de las comunas más activas de Santiago', address: 'Providencia, Región Metropolitana, Chile', lat: -33.4323, lon: -70.6100, zones: ['Manuel Montt', 'Los Leones', 'Pedro de Valdivia', 'Tobalaba', 'Baquedano', 'Salvador'] },
+  vitacura: { name: 'Vitacura', demonym: 'vitacurino', description: 'una de las comunas premium de Santiago', address: 'Vitacura, Región Metropolitana, Chile', lat: -33.3866, lon: -70.5790, zones: ['Bicentenario', 'Lo Curro', 'Miraflores', 'El Arrabal', 'Las Condes Norte', 'Chicureo'] },
+  nunoa: { name: 'Ñuñoa', demonym: 'ñuñoíno', description: 'una comuna residencial y comercial de Santiago', address: 'Ñuñoa, Región Metropolitana, Chile', lat: -33.4568, lon: -70.5985, zones: ['Irarrázaval', 'Plaza Ñuñoa', 'Suecia', 'Echeñique', 'Villa Frei', 'Macul'] },
+  'la-florida': { name: 'La Florida', demonym: 'floridano', description: 'la comuna más poblada de Santiago', address: 'La Florida, Región Metropolitana, Chile', lat: -33.5167, lon: -70.5948, zones: ['Vicuña Mackenna', 'Los Quillayes', 'Roble Alto', 'La Florida Centro', 'Santa Amalia', 'El Castillo'] },
 }
 
 type Props = { params: Promise<{ city: string }> }
@@ -83,6 +83,48 @@ export default async function CityPage({ params }: Props) {
     ]
   }
 
+  const installationSteps = [
+    {
+      number: 1,
+      title: 'Cotización en línea',
+      body: 'Ingresa los datos de tu proyecto en nuestro cotizador y recibe una estimación de costos en minutos.',
+    },
+    {
+      number: 2,
+      title: 'Visita técnica',
+      body: `Un técnico certificado SEC visita tu propiedad en ${cityData.name} para evaluar la instalación y preparar el proyecto definitivo.`,
+    },
+    {
+      number: 3,
+      title: 'Instalación certificada',
+      body: 'Ejecutamos la instalación según normativa SEC, incluyendo cargadores AC/DC, sistema de monitoreo y cableado.',
+    },
+    {
+      number: 4,
+      title: 'Certificación TE6',
+      body: 'Gestionamos el trámite TE6 ante la SEC en un máximo de 5 días hábiles tras finalizar las obras.',
+    },
+  ]
+
+  const faqs = [
+    {
+      question: '¿Cuánto demora la instalación de un cargador eléctrico?',
+      answer: `El tiempo de instalación varía según el proyecto. Una instalación estándar toma entre 4 y 8 horas. Proyectos para edificios o flotas en ${cityData.name} pueden tardar varios días según el alcance.`,
+    },
+    {
+      question: '¿Necesito permisos especiales para instalar en mi edificio?',
+      answer: 'Sí. En edificios debes contar con autorización de la administración del condominio. Toda instalación debe cumplir la normativa SEC y contar con el certificado TE6. Energica City gestiona este trámite por ti.',
+    },
+    {
+      question: '¿Qué garantía tienen las instalaciones?',
+      answer: 'Nuestras instalaciones cuentan con garantía de 6 meses en mano de obra. Los materiales y equipos tienen la garantía de sus respectivos fabricantes.',
+    },
+    {
+      question: `¿Pueden instalar en departamentos de edificios en ${cityData.name}?`,
+      answer: 'Sí, instalamos en edificios de departamentos siempre que exista autorización de la administración e infraestructura eléctrica adecuada. Nuestros técnicos evalúan la factibilidad durante la visita técnica.',
+    },
+  ]
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
@@ -148,6 +190,64 @@ export default async function CityPage({ params }: Props) {
                 </Box>
               ))}
             </Box>
+          </Box>
+
+          {/* Section A — Proceso de instalación */}
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h2" sx={{ fontSize: '1.5rem', fontWeight: 700, mb: 3 }}>
+              Proceso de instalación
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+              {installationSteps.map((step) => (
+                <Box key={step.number} sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                  <Box sx={{ bgcolor: 'primary.main', color: 'white', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontWeight: 700, fontSize: '0.95rem' }}>
+                    {step.number}
+                  </Box>
+                  <Box>
+                    <Typography variant="h3" sx={{ fontSize: '1rem', fontWeight: 600, mb: 0.5 }}>
+                      {step.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {step.body}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Section B — Zonas que atendemos */}
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h2" sx={{ fontSize: '1.5rem', fontWeight: 700, mb: 2 }}>
+              Zonas que atendemos
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              Atendemos instalaciones de cargadores eléctricos en toda la comuna de {cityData.name} y sectores aledaños:
+            </Typography>
+            <Box>
+              {cityData.zones.map((zone) => (
+                <Box key={zone} component="span" sx={{ display: 'inline-block', px: 2, py: 0.5, bgcolor: 'grey.100', borderRadius: 2, mr: 1, mb: 1, fontSize: '0.875rem' }}>
+                  {zone}
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Section C — Preguntas frecuentes */}
+          <Box sx={{ mb: 8 }}>
+            <Typography variant="h2" sx={{ fontSize: '1.5rem', fontWeight: 700, mb: 3 }}>
+              Preguntas frecuentes sobre instalación de cargadores en {cityData.name}
+            </Typography>
+            {faqs.map((faq) => (
+              <Box key={faq.question} sx={{ p: 3, border: '1px solid', borderColor: 'divider', borderRadius: 2, mb: 2 }}>
+                <Typography variant="h3" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+                  {faq.question}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  {faq.answer}
+                </Typography>
+              </Box>
+            ))}
           </Box>
 
           <Box sx={{ p: 4, bgcolor: 'primary.main', borderRadius: 2, textAlign: 'center', color: 'white' }}>

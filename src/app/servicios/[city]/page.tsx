@@ -53,7 +53,10 @@ export default async function CityPage({ params }: Props) {
     "@type": ["LocalBusiness", "ElectricalContractor"],
     "name": "Energica City",
     "url": "https://www.energica.city",
+    "image": "https://www.energica.city/images/og/servicios-cargadores-ev.jpg",
     "description": `Instalación de cargadores eléctricos certificados SEC en ${cityData.name}, Chile.`,
+    "priceRange": "$$",
+    "hasMap": `https://www.google.com/maps/search/Energica+City+${encodeURIComponent(cityData.name)}`,
     "areaServed": { "@type": "City", "name": cityData.name },
     "geo": { "@type": "GeoCoordinates", "latitude": cityData.lat, "longitude": cityData.lon },
     "address": {
@@ -63,7 +66,11 @@ export default async function CityPage({ params }: Props) {
       "addressCountry": "CL"
     },
     "telephone": "+56967666652",
-    "openingHours": "Mo-Fr 09:00-18:00"
+    "openingHours": "Mo-Fr 09:00-18:00",
+    "sameAs": [
+      "https://www.linkedin.com/company/energica-city",
+      "https://www.instagram.com/energicacity/"
+    ]
   }
 
   const breadcrumbSchema = {
@@ -71,7 +78,8 @@ export default async function CityPage({ params }: Props) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
-      { "@type": "ListItem", "position": 2, "name": cityData.name, "item": `https://www.energica.city/servicios/${city}` }
+      { "@type": "ListItem", "position": 2, "name": "Servicios", "item": "https://www.energica.city/servicios" },
+      { "@type": "ListItem", "position": 3, "name": cityData.name, "item": `https://www.energica.city/servicios/${city}` }
     ]
   }
 

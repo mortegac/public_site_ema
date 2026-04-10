@@ -92,7 +92,7 @@ export default function RootLayout({
               },
               "sameAs": [
                 "https://www.linkedin.com/company/energica-city",
-                "https://www.instagram.com/energica.city"
+                "https://www.instagram.com/energicacity/"
               ]
             })
           }}

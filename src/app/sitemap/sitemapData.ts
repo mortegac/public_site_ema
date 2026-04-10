@@ -1,0 +1,41 @@
+export const STATIC_ROUTES: Array<{ path: string; label: string }> = [
+  { path: '/', label: 'Inicio' },
+  { path: '/cotizador', label: 'Cotizador de Instalación' },
+  { path: '/agenda', label: 'Agendar Visita Técnica' },
+  { path: '/comparador-electrico', label: 'Comparador Eléctrico' },
+  { path: '/simulador', label: 'Simulador de Ahorro' },
+  { path: '/auto-electrico-vs-gasolina-chile', label: 'Auto Eléctrico vs Gasolina en Chile' },
+  { path: '/como-funciona', label: 'Cómo Funciona' },
+  { path: '/casos-de-exito', label: 'Casos de Éxito' },
+  { path: '/credenciales', label: 'Credenciales' },
+  { path: '/faqs', label: 'Preguntas Frecuentes' },
+  { path: '/soporte', label: 'Soporte' },
+  { path: '/contactanos', label: 'Contáctanos' },
+  { path: '/blog', label: 'Blog' },
+  { path: '/terminos-condiciones', label: 'Términos y Condiciones' },
+]
+
+export const CITY_ROUTES: Array<{ slug: string; label: string }> = [
+  { slug: 'santiago', label: 'Santiago' },
+  { slug: 'las-condes', label: 'Las Condes' },
+  { slug: 'providencia', label: 'Providencia' },
+  { slug: 'vitacura', label: 'Vitacura' },
+  { slug: 'nunoa', label: 'Ñuñoa' },
+  { slug: 'la-florida', label: 'La Florida' },
+  { slug: 'lo-barnechea', label: 'Lo Barnechea' },
+  { slug: 'san-miguel', label: 'San Miguel' },
+  { slug: 'villa-alemana', label: 'Villa Alemana' },
+  { slug: 'estacion-central', label: 'Estación Central' },
+  { slug: 'huechuraba', label: 'Huechuraba' },
+  { slug: 'colina', label: 'Colina' },
+  { slug: 'lampa', label: 'Lampa' },
+  { slug: 'chicureo', label: 'Chicureo' },
+  { slug: 'maipu', label: 'Maipú' },
+  { slug: 'algarrobo', label: 'Algarrobo' },
+  { slug: 'la-cisterna', label: 'La Cisterna' },
+  { slug: 'penalolen', label: 'Peñalolén' },
+  { slug: 'con-con', label: 'Concón' },
+  { slug: 'maitencillo', label: 'Maitencillo' },
+]
+
+export const PRISMIC_EXCLUDED_UIDS = new Set(['home', 'privacidad'])

@@ -22,10 +22,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city } = await params
   const cityData = cities[city]
   if (!cityData) return {}
+  const url = `https://www.energica.city/servicios/${city}`
+  const description = `Instalación de cargadores eléctricos para empresas, edificios y condominios en ${cityData.name}. Técnicos certificados SEC, gestión TE6 incluida. Cotiza gratis.`
   return {
-    title: `Cargadores EV en ${cityData.name} | Energica City`,
-    description: `Instalación de cargadores eléctricos para empresas y edificios en ${cityData.name}. Técnicos certificados SEC. Cotiza gratis.`,
-    alternates: { canonical: `https://www.energica.city/servicios/${city}` },
+    title: `Cargadores EV en ${cityData.name}`,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      url,
+      title: `Cargadores EV en ${cityData.name}`,
+      description,
+      images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: `Instalación de cargadores EV en ${cityData.name}` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Cargadores EV en ${cityData.name}`,
+      description,
+      images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+    },
   }
 }
 

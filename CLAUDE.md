@@ -140,6 +140,38 @@ Persisted slices (localStorage): `customizer`, `wizard`, `clientForms`, `shoppin
 ### Analytics
 Google Analytics + Google Tag Manager integration in `src/components/analytics/`. Event tracking documented in `EVENTOS-GTAG.md`.
 
+## Design System — DESIGN.md
+
+**MANDATORY: Read `DESIGN.md` before creating or modifying any UI component, page, or section.**
+
+`DESIGN.md` is the single source of truth for the visual identity of this project. It defines — in machine-readable YAML tokens and human-readable prose — all colors, typography, spacing, border-radius, shadows, and component patterns for Enérgica City.
+
+### When to use DESIGN.md
+
+- Creating a new page or route
+- Adding a new section to an existing page
+- Building a component (card, hero, CTA band, table, FAQ)
+- Modifying layout, spacing, or colors on any interface
+- Reviewing a UI for consistency
+
+### Key rules (summary — full details in DESIGN.md)
+
+| Rule | Value |
+|------|-------|
+| CTA buttons | `bgcolor: '#e81a68'` (magenta), hover `'#c01556'` |
+| Hero gradient | `linear-gradient(358deg, #0898b9 0%, #4dbfd9 100%)` |
+| Hero text color | `#000000` (black, NOT white) |
+| Stats numbers | `color: '#0898b9'`, `fontWeight: 800` |
+| Dark sections | `bgcolor: '#0F172A'`, text `#fff` |
+| Surface alternation | sections alternate `#ffffff` / `#F8FAFC` |
+| MUI Grid (v7) | `size={{ xs: N, sm: N }}` — NEVER `item xs={N}` |
+| Font | Plus Jakarta Sans (primary), Inter (fallback) |
+| Section padding | `py: { xs: 7, md: 10 }` |
+
+### Skill
+
+The `/design-system` skill (`.claude/skills/design-system.md`) provides a validation checklist and component code snippets. It is automatically triggered when building or modifying UI.
+
 <!-- code-review-graph MCP tools -->
 ## MCP Tools: code-review-graph
 

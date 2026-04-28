@@ -224,7 +224,7 @@ export default function ArticlePage() {
                 { value: '4 comunas', label: 'Valparaíso, Viña, Concón, Quilpué' },
                 { value: 'IP65', label: 'Protección mínima zona costera' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

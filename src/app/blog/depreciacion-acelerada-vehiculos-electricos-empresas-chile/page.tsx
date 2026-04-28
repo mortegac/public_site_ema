@@ -230,7 +230,7 @@ export default function ArticlePage() {
                 { value: '$68,9M', label: 'Ahorro tributario caso real: 10 BYD Atto 3 + infraestructura' },
                 { value: '$36M', label: 'Ahorro en combustible al año (10 vehículos, 2.500 km/mes c/u)' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

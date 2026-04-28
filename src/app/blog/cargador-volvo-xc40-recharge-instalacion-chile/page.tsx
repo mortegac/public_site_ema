@@ -232,7 +232,7 @@ export default function ArticlePage() {
                 { value: '11 kW', label: 'Carga AC máxima' },
                 { value: '~8 h', label: 'Carga completa con Wallbox 11 kW' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

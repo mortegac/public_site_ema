@@ -227,7 +227,7 @@ export default function ArticlePage() {
                 { value: '300 km', label: 'Autonomía WLTP' },
                 { value: '~4 h', label: 'Carga completa con Wallbox 7,4 kW' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

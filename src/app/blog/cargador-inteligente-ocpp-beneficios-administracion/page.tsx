@@ -199,7 +199,7 @@ export default function ArticlePage() {
                 { value: '~35%', label: 'Ahorro carga nocturna (tarifa valle)' },
                 { value: '~$47/kWh', label: 'Tarifa off-peak estimada en contratos optimizados' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center', color: '#fff' }}>
                     <Typography
                       sx={{ fontSize: { xs: '1.6rem', md: '2.2rem' }, fontWeight: 800 }}

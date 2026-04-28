@@ -197,7 +197,7 @@ export default function ArticlePage() {
                 { value: '100%', label: 'Depreciación tributaria año 1' },
                 { value: '20 puertos', label: 'Caso de estudio — Las Condes' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center', color: '#fff' }}>
                     <Typography
                       sx={{ fontSize: { xs: '1.8rem', md: '2.4rem' }, fontWeight: 800 }}

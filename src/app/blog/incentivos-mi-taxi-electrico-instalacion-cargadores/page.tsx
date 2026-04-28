@@ -199,7 +199,7 @@ export default function ArticlePage() {
                 { value: '80%', label: 'Subsidio sobre costo de instalación' },
                 { value: '$500.000', label: 'Ahorro mensual estimado vs. carga pública' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center', color: '#fff' }}>
                     <Typography
                       sx={{ fontSize: { xs: '1.8rem', md: '2.4rem' }, fontWeight: 800 }}

@@ -230,7 +230,7 @@ export default function ArticlePage() {
                 { value: '40%', label: 'Del litio mundial está en el Salar de Atacama' },
                 { value: '50%+', label: 'Electricidad chilena ya proviene de fuentes renovables' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

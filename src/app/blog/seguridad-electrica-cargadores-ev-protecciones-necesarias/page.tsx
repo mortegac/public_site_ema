@@ -261,7 +261,7 @@ export default function ArticlePage() {
                 { value: '32 A', label: 'corriente continua sostenida de un Wallbox 7kW estándar' },
                 { value: '6 mm²', label: 'sección mínima de conductor para circuito de 32 A' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: TEAL }}>{stat.value}</Typography>
                     <Typography sx={{ fontSize: '0.9rem', color: TEXT_MUTED, mt: 0.5 }}>{stat.label}</Typography>

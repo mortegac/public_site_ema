@@ -250,7 +250,7 @@ export default function ArticlePage() {
                 { value: '10 años', label: 'Vida útil de un Wallbox' },
                 { value: 'IEC 61851', label: 'Protocolo que protege tu batería' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

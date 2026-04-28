@@ -239,7 +239,7 @@ export default function ArticlePage() {
                 { value: '$3.500', label: 'Costo de carga en casa por 100 km (tarifa nocturna)' },
                 { value: '$25.000', label: 'Costo de carga en público por 100 km (cargador rápido DC)' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}

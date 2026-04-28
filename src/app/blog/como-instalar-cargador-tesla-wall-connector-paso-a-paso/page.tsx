@@ -198,7 +198,7 @@ export default function ArticlePage() {
                 { value: '~4 h', label: 'Carga completa Model 3 LR' },
                 { value: '$279.000', label: 'Instalación desde (incluye TE6)' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center', color: '#fff' }}>
                     <Typography
                       sx={{ fontSize: { xs: '1.8rem', md: '2.4rem' }, fontWeight: 800 }}

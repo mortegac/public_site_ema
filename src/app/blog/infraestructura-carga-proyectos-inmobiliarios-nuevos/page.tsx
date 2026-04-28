@@ -211,7 +211,7 @@ export default function ArticlePage() {
                 { value: '1%', label: 'del presupuesto eléctrico para pre-instalar el 100% de estacionamientos' },
                 { value: 'Ley 21.505', label: 'obliga infraestructura EV en edificios comerciales nuevos (2022)' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: TEAL }}>{stat.value}</Typography>
                     <Typography sx={{ fontSize: '0.9rem', color: TEXT_MUTED, mt: 0.5 }}>{stat.label}</Typography>
@@ -398,7 +398,7 @@ export default function ArticlePage() {
                     sub: 'Carga nocturna de bajo consumo',
                   },
                 ].map((item) => (
-                  <Grid item xs={6} sm={4} key={item.label}>
+                  <Grid size={{ xs: 6, sm: 4 }} key={item.label}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography sx={{ fontWeight: 800, fontSize: '1.4rem', color: TEAL }}>{item.value}</Typography>
                       <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: DARK, mt: 0.5 }}>{item.label}</Typography>

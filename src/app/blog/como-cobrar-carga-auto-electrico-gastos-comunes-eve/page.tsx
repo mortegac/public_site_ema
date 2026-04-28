@@ -225,7 +225,7 @@ export default function ArticlePage() {
                 { value: '$0', label: 'Costo de infraestructura para el edificio' },
                 { value: 'OCPP', label: 'Protocolo abierto de carga inteligente' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Typography
                     variant="h3"
                     sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, color: TEAL }}
@@ -317,7 +317,7 @@ export default function ArticlePage() {
             </Typography>
             <Grid container spacing={3}>
               {eveSteps.map((step) => (
-                <Grid item xs={12} sm={6} md={4} key={step.numero}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={step.numero}>
                   <Box
                     sx={{
                       p: 3,

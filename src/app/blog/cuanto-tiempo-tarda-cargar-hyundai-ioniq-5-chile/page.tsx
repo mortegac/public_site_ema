@@ -261,7 +261,7 @@ export default function ArticlePage() {
                 { value: '~7 horas', label: 'carga 0–100% con Wallbox 11kW en casa' },
                 { value: '$12.500 CLP', label: 'costo de una carga completa en casa' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: TEAL }}>{stat.value}</Typography>
                     <Typography sx={{ fontSize: '0.9rem', color: TEXT_MUTED, mt: 0.5 }}>{stat.label}</Typography>
@@ -305,7 +305,7 @@ export default function ArticlePage() {
                   connector: 'Tipo 2 (AC) + CCS2 (DC)',
                 },
               ].map((spec) => (
-                <Grid item xs={12} sm={6} key={spec.model}>
+                <Grid size={{ xs: 12, sm: 6 }} key={spec.model}>
                   <Box
                     sx={{
                       p: 3,
@@ -473,7 +473,7 @@ export default function ArticlePage() {
                   color: '#16A34A',
                 },
               ].map((item) => (
-                <Grid item xs={12} sm={4} key={item.title}>
+                <Grid size={{ xs: 12, sm: 4 }} key={item.title}>
                   <Box
                     sx={{
                       p: 3,

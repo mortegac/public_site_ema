@@ -308,7 +308,7 @@ export default function ArticlePage() {
                 { value: '2 años', label: 'garantía de instalación incluida en todos los servicios de Enérgica City' },
                 { value: '1 vez/año', label: 'frecuencia mínima de mantención preventiva recomendada' },
               ].map((stat) => (
-                <Grid item xs={12} sm={4} key={stat.label}>
+                <Grid size={{ xs: 12, sm: 4 }} key={stat.label}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: TEAL }}>{stat.value}</Typography>
                     <Typography sx={{ fontSize: '0.9rem', color: TEXT_MUTED, mt: 0.5 }}>{stat.label}</Typography>
@@ -508,7 +508,7 @@ export default function ArticlePage() {
                   ],
                 },
               ].map((group) => (
-                <Grid item xs={12} sm={6} key={group.category}>
+                <Grid size={{ xs: 12, sm: 6 }} key={group.category}>
                   <Box
                     sx={{
                       p: 3,

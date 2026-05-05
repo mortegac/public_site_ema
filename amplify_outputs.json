@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-2_bqbta3Q0z",
+    "user_pool_id": "us-east-2_YNPJLwx1p",
     "aws_region": "us-east-2",
-    "user_pool_client_id": "1f7nd93mch2c2431eeo8ljsqui",
-    "identity_pool_id": "us-east-2:31de0d76-319d-478d-bf2d-10d4f8466bf6",
+    "user_pool_client_id": "qi2jmlvgk3uafrg4em715qijk",
+    "identity_pool_id": "us-east-2:fb45415d-b245-44fe-95b0-0f8d8de4e846",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email"
@@ -26,9 +26,9 @@
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://hxncxtno75ac7cetsri66gdlri.appsync-api.us-east-2.amazonaws.com/graphql",
+    "url": "https://sdit4qsgvnbqhanpgarq2zxqqq.appsync-api.us-east-2.amazonaws.com/graphql",
     "aws_region": "us-east-2",
-    "api_key": "da2-t6hfz5j2mzb75j2xtz2qudqzni",
+    "api_key": "da2-sy4nbrk3rrd4tm6k5fdzjo2obi",
     "default_authorization_type": "API_KEY",
     "authorization_types": [
       "AMAZON_COGNITO_USER_POOLS",
@@ -51,7 +51,7 @@
               "name": "name",
               "isArray": false,
               "type": "String",
-              "isRequired": true,
+              "isRequired": false,
               "attributes": []
             },
             "validated": {
@@ -154,6 +154,22 @@
                 ]
               }
             },
+            "InstallationDays": {
+              "name": "InstallationDays",
+              "isArray": true,
+              "type": {
+                "model": "InstallationDay"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "userId"
+                ]
+              }
+            },
             "companyId": {
               "name": "companyId",
               "isArray": false,
@@ -233,7 +249,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -270,15 +286,47 @@
               "isRequired": false,
               "attributes": []
             },
-            "timeAvailable": {
-              "name": "timeAvailable",
-              "isArray": true,
-              "type": {
-                "nonModel": "TimeSlot"
-              },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSTime",
               "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true
+              "attributes": []
+            },
+            "endTime": {
+              "name": "endTime",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             },
             "userId": {
               "name": "userId",
@@ -359,7 +407,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -467,7 +515,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -605,7 +653,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -786,7 +834,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -909,7 +957,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -1123,7 +1171,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -1304,7 +1352,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -1319,6 +1367,261 @@
           "primaryKeyInfo": {
             "isCustomPrimaryKey": true,
             "primaryKeyFieldName": "ticketCommentId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "InstallationDay": {
+          "name": "InstallationDay",
+          "fields": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "type": {
+              "name": "type",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "day": {
+              "name": "day",
+              "isArray": false,
+              "type": {
+                "enum": "InstallationDayDay"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "usedTime": {
+              "name": "usedTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "maxTime": {
+              "name": "maxTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "availableTime": {
+              "name": "availableTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "isFinalized": {
+              "name": "isFinalized",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "route": {
+              "name": "route",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeDistance": {
+              "name": "routeDistance",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeDuration": {
+              "name": "routeDuration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeTravelTime": {
+              "name": "routeTravelTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeLegs": {
+              "name": "routeLegs",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "scheduleBlockReason": {
+              "name": "scheduleBlockReason",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "User": {
+              "name": "User",
+              "isArray": false,
+              "type": {
+                "model": "User"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "userId"
+                ]
+              }
+            },
+            "CalendarVisits": {
+              "name": "CalendarVisits",
+              "isArray": true,
+              "type": {
+                "model": "CalendarVisit"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "installationDayId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "InstallationDays",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "installationDayId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "installationDaysByTypeAndDate",
+                "queryField": "InstallationDaysByTypeAndDate",
+                "fields": [
+                  "type",
+                  "date"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "identityPool",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "installationDayId",
             "sortKeyFieldNames": []
           }
         },
@@ -1339,6 +1642,20 @@
               "isRequired": false,
               "attributes": []
             },
+            "googleEventIdUser": {
+              "name": "googleEventIdUser",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "googleEventIdCustomer": {
+              "name": "googleEventIdCustomer",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
             "summary": {
               "name": "summary",
               "isArray": false,
@@ -1350,6 +1667,20 @@
               "name": "location",
               "isArray": false,
               "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "latitude": {
+              "name": "latitude",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "longitude": {
+              "name": "longitude",
+              "isArray": false,
+              "type": "Float",
               "isRequired": false,
               "attributes": []
             },
@@ -1388,6 +1719,41 @@
               "isRequired": false,
               "attributes": []
             },
+            "travelTime": {
+              "name": "travelTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeOrder": {
+              "name": "routeOrder",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "routeDirections": {
+              "name": "routeDirections",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "isFixed": {
+              "name": "isFixed",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "isFinalized": {
+              "name": "isFinalized",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -1410,6 +1776,35 @@
               },
               "isRequired": false,
               "attributes": []
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "InstallationDay": {
+              "name": "InstallationDay",
+              "isArray": false,
+              "type": {
+                "model": "InstallationDay"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "installationDayId"
+                ]
+              }
             },
             "customerId": {
               "name": "customerId",
@@ -1510,6 +1905,17 @@
               }
             },
             {
+              "type": "key",
+              "properties": {
+                "name": "calendarVisitsByInstallationDayIdAndStartDate",
+                "queryField": "CalendarVisitsByInstallationDayId",
+                "fields": [
+                  "installationDayId",
+                  "startDate"
+                ]
+              }
+            },
+            {
               "type": "auth",
               "properties": {
                 "rules": [
@@ -1534,7 +1940,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -1560,6 +1966,13 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "customer_creation_date": {
+              "name": "customer_creation_date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
               "attributes": []
             },
             "name": {
@@ -1689,6 +2102,22 @@
                 ]
               }
             },
+            "PaymentTransactions": {
+              "name": "PaymentTransactions",
+              "isArray": true,
+              "type": {
+                "model": "PaymentTransaction"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
+                ]
+              }
+            },
             "SupportTickets": {
               "name": "SupportTickets",
               "isArray": true,
@@ -1742,6 +2171,22 @@
               "isArray": true,
               "type": {
                 "model": "WebContactForm"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "customerId"
+                ]
+              }
+            },
+            "SimulatorLeads": {
+              "name": "SimulatorLeads",
+              "isArray": true,
+              "type": {
+                "model": "SimulatorLead"
               },
               "isRequired": false,
               "attributes": [],
@@ -1810,7 +2255,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -1836,6 +2281,13 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "period": {
+              "name": "period",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
               "attributes": []
             },
             "isWallbox": {
@@ -1968,7 +2420,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -1994,6 +2446,13 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "period": {
+              "name": "period",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
               "attributes": []
             },
             "date": {
@@ -2154,7 +2613,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -2180,6 +2639,13 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "period": {
+              "name": "period",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
               "attributes": []
             },
             "stateValidation": {
@@ -2611,7 +3077,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -2844,7 +3310,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -3005,7 +3471,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -3157,7 +3623,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -3328,7 +3794,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -3458,7 +3924,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -3704,7 +4170,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -3903,7 +4369,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -4123,7 +4589,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -4149,6 +4615,13 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "period": {
+              "name": "period",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
               "attributes": []
             },
             "total": {
@@ -4348,7 +4821,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -4566,7 +5039,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -4689,7 +5162,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -4813,7 +5286,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -4839,6 +5312,13 @@
               "isArray": false,
               "type": "ID",
               "isRequired": true,
+              "attributes": []
+            },
+            "period": {
+              "name": "period",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
               "attributes": []
             },
             "status": {
@@ -4967,12 +5447,48 @@
               "isRequired": false,
               "attributes": []
             },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
             "usersPaymentTransactionsId": {
               "name": "usersPaymentTransactionsId",
               "isArray": false,
               "type": "ID",
               "isRequired": false,
               "attributes": []
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
             },
             "shoppingCartId": {
               "name": "shoppingCartId",
@@ -4995,22 +5511,6 @@
                   "shoppingCartId"
                 ]
               }
-            },
-            "createdAt": {
-              "name": "createdAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
-            },
-            "updatedAt": {
-              "name": "updatedAt",
-              "isArray": false,
-              "type": "AWSDateTime",
-              "isRequired": false,
-              "attributes": [],
-              "isReadOnly": true
             }
           },
           "syncable": true,
@@ -5031,11 +5531,11 @@
             {
               "type": "key",
               "properties": {
-                "name": "paymentTransactionsByStatusAndDate",
+                "name": "paymentTransactionsByStatusAndCreatedAt",
                 "queryField": "listPaymentTransactionByStatusAndDate",
                 "fields": [
                   "status",
-                  "date"
+                  "createdAt"
                 ]
               }
             },
@@ -5074,7 +5574,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -5262,7 +5762,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -5397,7 +5897,7 @@
                   },
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -5412,6 +5912,832 @@
           "primaryKeyInfo": {
             "isCustomPrimaryKey": true,
             "primaryKeyFieldName": "interactionId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "SimulatorLead": {
+          "name": "SimulatorLead",
+          "fields": {
+            "simulatorLeadId": {
+              "name": "simulatorLeadId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "companyName": {
+              "name": "companyName",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "companySize": {
+              "name": "companySize",
+              "isArray": false,
+              "type": {
+                "enum": "SimulatorLeadCompanySize"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "industry": {
+              "name": "industry",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "region": {
+              "name": "region",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "avgDailyKm": {
+              "name": "avgDailyKm",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "operationProfile": {
+              "name": "operationProfile",
+              "isArray": false,
+              "type": {
+                "enum": "SimulatorLeadOperationProfile"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "operatingHours": {
+              "name": "operatingHours",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "daysPerWeek": {
+              "name": "daysPerWeek",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "connectionType": {
+              "name": "connectionType",
+              "isArray": false,
+              "type": {
+                "enum": "SimulatorLeadConnectionType"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "hasTransformer": {
+              "name": "hasTransformer",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "availablePowerKW": {
+              "name": "availablePowerKW",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "areaM2": {
+              "name": "areaM2",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "status": {
+              "name": "status",
+              "isArray": false,
+              "type": {
+                "enum": "SimulatorLeadStatus"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "FleetItems": {
+              "name": "FleetItems",
+              "isArray": true,
+              "type": {
+                "model": "SimulatorFleetItem"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "simulatorLeadId"
+                ]
+              }
+            },
+            "Result": {
+              "name": "Result",
+              "isArray": false,
+              "type": {
+                "model": "SimulatorResult"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "HAS_ONE",
+                "associatedWith": [
+                  "simulatorLeadId"
+                ],
+                "targetNames": []
+              }
+            },
+            "customerId": {
+              "name": "customerId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "Customer": {
+              "name": "Customer",
+              "isArray": false,
+              "type": {
+                "model": "Customer"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "customerId"
+                ]
+              }
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SimulatorLeads",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "simulatorLeadId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "simulatorLeadsByCompanySizeAndCreatedAt",
+                "queryField": "SimulatorLeadsByCompanySize",
+                "fields": [
+                  "companySize",
+                  "createdAt"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "simulatorLeadsByStatusAndCreatedAt",
+                "queryField": "SimulatorLeadsByStatus",
+                "fields": [
+                  "status",
+                  "createdAt"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "identityPool",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "simulatorLeadId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "SimulatorFleetItem": {
+          "name": "SimulatorFleetItem",
+          "fields": {
+            "fleetItemId": {
+              "name": "fleetItemId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "vehicleType": {
+              "name": "vehicleType",
+              "isArray": false,
+              "type": {
+                "enum": "SimulatorFleetItemVehicleType"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "quantity": {
+              "name": "quantity",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "avgDailyKm": {
+              "name": "avgDailyKm",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "consumptionKWhPer100km": {
+              "name": "consumptionKWhPer100km",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "dailyEnergyKWh": {
+              "name": "dailyEnergyKWh",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "simulatorLeadId": {
+              "name": "simulatorLeadId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "SimulatorLead": {
+              "name": "SimulatorLead",
+              "isArray": false,
+              "type": {
+                "model": "SimulatorLead"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "simulatorLeadId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SimulatorFleetItems",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "fleetItemId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "simulatorFleetItemsBySimulatorLeadId",
+                "queryField": "SimulatorFleetItemsByLead",
+                "fields": [
+                  "simulatorLeadId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "identityPool",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "fleetItemId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "SimulatorResult": {
+          "name": "SimulatorResult",
+          "fields": {
+            "simulatorResultId": {
+              "name": "simulatorResultId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "totalVehicles": {
+              "name": "totalVehicles",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "totalDailyEnergyKWh": {
+              "name": "totalDailyEnergyKWh",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "recommendedACChargers": {
+              "name": "recommendedACChargers",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "recommendedDCChargers": {
+              "name": "recommendedDCChargers",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "recommendedPowerKW": {
+              "name": "recommendedPowerKW",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "requiresTransformerUpgrade": {
+              "name": "requiresTransformerUpgrade",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "costEquipos": {
+              "name": "costEquipos",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "costTransformador": {
+              "name": "costTransformador",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "costObrasCiviles": {
+              "name": "costObrasCiviles",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "costObrasElectricas": {
+              "name": "costObrasElectricas",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "costIngenieria": {
+              "name": "costIngenieria",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "costPermisosSEC": {
+              "name": "costPermisosSEC",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "totalCostCLP": {
+              "name": "totalCostCLP",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "totalCostUSD": {
+              "name": "totalCostUSD",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "dieselAnnualCostCLP": {
+              "name": "dieselAnnualCostCLP",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "electricAnnualCostCLP": {
+              "name": "electricAnnualCostCLP",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "annualSavingsCLP": {
+              "name": "annualSavingsCLP",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "co2SavedTonnesPerYear": {
+              "name": "co2SavedTonnesPerYear",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "paybackYears": {
+              "name": "paybackYears",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "simulatorLeadId": {
+              "name": "simulatorLeadId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "SimulatorLead": {
+              "name": "SimulatorLead",
+              "isArray": false,
+              "type": {
+                "model": "SimulatorLead"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "simulatorLeadId"
+                ]
+              }
+            },
+            "ChargerRecommendations": {
+              "name": "ChargerRecommendations",
+              "isArray": true,
+              "type": {
+                "model": "SimulatorChargerRec"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "simulatorResultId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SimulatorResults",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "simulatorResultId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "simulatorResultsBySimulatorLeadId",
+                "queryField": "SimulatorResultByLead",
+                "fields": [
+                  "simulatorLeadId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "identityPool",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "simulatorResultId",
+            "sortKeyFieldNames": []
+          }
+        },
+        "SimulatorChargerRec": {
+          "name": "SimulatorChargerRec",
+          "fields": {
+            "chargerRecId": {
+              "name": "chargerRecId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "chargerType": {
+              "name": "chargerType",
+              "isArray": false,
+              "type": {
+                "enum": "SimulatorChargerRecChargerType"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "quantity": {
+              "name": "quantity",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "unitCostCLP": {
+              "name": "unitCostCLP",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "totalCostCLP": {
+              "name": "totalCostCLP",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "simulatorResultId": {
+              "name": "simulatorResultId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "SimulatorResult": {
+              "name": "SimulatorResult",
+              "isArray": false,
+              "type": {
+                "model": "SimulatorResult"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "simulatorResultId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "SimulatorChargerRecs",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "chargerRecId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "simulatorChargerRecsBySimulatorResultId",
+                "queryField": "SimulatorChargerRecsByResult",
+                "fields": [
+                  "simulatorResultId"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "identityPool",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": true,
+            "primaryKeyFieldName": "chargerRecId",
             "sortKeyFieldNames": []
           }
         },
@@ -5486,7 +6812,7 @@
                 "rules": [
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -5607,7 +6933,7 @@
                 "rules": [
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -5744,7 +7070,7 @@
                 "rules": [
                   {
                     "allow": "public",
-                    "provider": "iam",
+                    "provider": "identityPool",
                     "operations": [
                       "create",
                       "update",
@@ -5820,6 +7146,18 @@
             "test"
           ]
         },
+        "InstallationDayDay": {
+          "name": "InstallationDayDay",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
+        },
         "CalendarVisitState": {
           "name": "CalendarVisitState",
           "values": [
@@ -5827,11 +7165,15 @@
             "reserved",
             "payed",
             "payedAndAgended",
+            "initiated",
+            "completed",
             "error",
             "occupied",
             "stale",
             "timedOut",
-            "waiting"
+            "backoffice_cancellation",
+            "waiting",
+            "lunch_break"
           ]
         },
         "CustomerTypeOfResidence": {
@@ -5921,6 +7263,63 @@
             "tablet"
           ]
         },
+        "SimulatorLeadCompanySize": {
+          "name": "SimulatorLeadCompanySize",
+          "values": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "SimulatorLeadOperationProfile": {
+          "name": "SimulatorLeadOperationProfile",
+          "values": [
+            "depot_night",
+            "depot_day",
+            "opportunity",
+            "mixed"
+          ]
+        },
+        "SimulatorLeadConnectionType": {
+          "name": "SimulatorLeadConnectionType",
+          "values": [
+            "mono",
+            "tri_bt",
+            "tri_mt"
+          ]
+        },
+        "SimulatorLeadStatus": {
+          "name": "SimulatorLeadStatus",
+          "values": [
+            "in_progress",
+            "completed",
+            "contacted",
+            "converted"
+          ]
+        },
+        "SimulatorFleetItemVehicleType": {
+          "name": "SimulatorFleetItemVehicleType",
+          "values": [
+            "bus",
+            "truck",
+            "pickup",
+            "van",
+            "car",
+            "light_truck",
+            "other"
+          ]
+        },
+        "SimulatorChargerRecChargerType": {
+          "name": "SimulatorChargerRecChargerType",
+          "values": [
+            "AC_7kW",
+            "AC_11kW",
+            "AC_22kW",
+            "DC_50kW",
+            "DC_150kW",
+            "DC_350kW"
+          ]
+        },
         "MakeEstimateIntoCartPaymentMethod": {
           "name": "MakeEstimateIntoCartPaymentMethod",
           "values": [
@@ -5929,28 +7328,21 @@
             "cash",
             "on_site"
           ]
+        },
+        "InstallationDayReturnTypeDay": {
+          "name": "InstallationDayReturnTypeDay",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
         }
       },
       "nonModels": {
-        "TimeSlot": {
-          "name": "TimeSlot",
-          "fields": {
-            "start": {
-              "name": "start",
-              "isArray": false,
-              "type": "AWSTime",
-              "isRequired": false,
-              "attributes": []
-            },
-            "end": {
-              "name": "end",
-              "isArray": false,
-              "type": "AWSTime",
-              "isRequired": false,
-              "attributes": []
-            }
-          }
-        },
         "EstimateResume": {
           "name": "EstimateResume",
           "fields": {
@@ -6019,6 +7411,145 @@
             }
           }
         },
+        "CalendarVisitReturnType": {
+          "name": "CalendarVisitReturnType",
+          "fields": {
+            "startDate": {
+              "name": "startDate",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endDate": {
+              "name": "endDate",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "timeZone": {
+              "name": "timeZone",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "CalendarVisitGroupReturnType": {
+          "name": "CalendarVisitGroupReturnType",
+          "fields": {
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "calendarVisits": {
+              "name": "calendarVisits",
+              "isArray": true,
+              "type": {
+                "nonModel": "CalendarVisitReturnType"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            }
+          }
+        },
+        "InstallationDayReturnType": {
+          "name": "InstallationDayReturnType",
+          "fields": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "day": {
+              "name": "day",
+              "isArray": false,
+              "type": {
+                "enum": "InstallationDayReturnTypeDay"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "usedTime": {
+              "name": "usedTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "maxTime": {
+              "name": "maxTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "availableTime": {
+              "name": "availableTime",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "scheduleBlockReason": {
+              "name": "scheduleBlockReason",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
         "ProcessEstimateReturnType": {
           "name": "ProcessEstimateReturnType",
           "fields": {
@@ -6062,6 +7593,18 @@
         },
         "BlockInstallerScheduleReturnType": {
           "name": "BlockInstallerScheduleReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "UnblockInstallationDayReturnType": {
+          "name": "UnblockInstallationDayReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -6299,6 +7842,20 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "googleEventIdUser": {
+              "name": "googleEventIdUser",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "googleEventIdCustomer": {
+              "name": "googleEventIdCustomer",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         },
@@ -6340,8 +7897,46 @@
             }
           }
         },
-        "GenerateTimeSlotsReturnType": {
-          "name": "GenerateTimeSlotsReturnType",
+        "FixedTimeReservationReturnType": {
+          "name": "FixedTimeReservationReturnType",
+          "fields": {
+            "ok": {
+              "name": "ok",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": true,
+              "attributes": []
+            },
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "GenerateInstallationDaysReturnType": {
+          "name": "GenerateInstallationDaysReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "FinalizeVisitsReturnType": {
+          "name": "FinalizeVisitsReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -6364,8 +7959,8 @@
             }
           }
         },
-        "VisitsSummaryCronReturnType": {
-          "name": "VisitsSummaryCronReturnType",
+        "SendVisitsSummaryScheduledReturnType": {
+          "name": "SendVisitsSummaryScheduledReturnType",
           "fields": {
             "message": {
               "name": "message",
@@ -6378,6 +7973,111 @@
               "name": "totalVisits",
               "isArray": false,
               "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "FetchCalendarForDateReturnType": {
+          "name": "FetchCalendarForDateReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "installationDays": {
+              "name": "installationDays",
+              "isArray": true,
+              "type": {
+                "nonModel": "InstallationDayReturnType"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            },
+            "calendarVisitGroups": {
+              "name": "calendarVisitGroups",
+              "isArray": true,
+              "type": {
+                "nonModel": "CalendarVisitGroupReturnType"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            }
+          }
+        },
+        "VisitActionReturnType": {
+          "name": "VisitActionReturnType",
+          "fields": {
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "actionType": {
+              "name": "actionType",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "customerName": {
+              "name": "customerName",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "actionTime": {
+              "name": "actionTime",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "calendarId": {
+              "name": "calendarId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        },
+        "SaveSimulatorResultReturnType": {
+          "name": "SaveSimulatorResultReturnType",
+          "fields": {
+            "simulatorLeadId": {
+              "name": "simulatorLeadId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "simulatorResultId": {
+              "name": "simulatorResultId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "message": {
+              "name": "message",
+              "isArray": false,
+              "type": "String",
               "isRequired": false,
               "attributes": []
             }
@@ -6445,8 +8145,8 @@
           },
           "isRequired": false,
           "arguments": {
-            "calendarId": {
-              "name": "calendarId",
+            "installationDayId": {
+              "name": "installationDayId",
               "isArray": false,
               "type": "String",
               "isRequired": true
@@ -6456,6 +8156,42 @@
               "isArray": false,
               "type": "String",
               "isRequired": true
+            },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": true
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": true
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
             }
           }
         },
@@ -6484,6 +8220,82 @@
               "isArray": false,
               "type": "AWSDateTime",
               "isRequired": true
+            },
+            "reason": {
+              "name": "reason",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
+        "UnblockInstallationDay": {
+          "name": "UnblockInstallationDay",
+          "isArray": false,
+          "type": {
+            "nonModel": "UnblockInstallationDayReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true
+            },
+            "workStartTime": {
+              "name": "workStartTime",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "workEndTime": {
+              "name": "workEndTime",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "startLocationLatitude": {
+              "name": "startLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "startLocationLongitude": {
+              "name": "startLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "endLocationLatitude": {
+              "name": "endLocationLatitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "endLocationLongitude": {
+              "name": "endLocationLongitude",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "includeLunchBreak": {
+              "name": "includeLunchBreak",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
+            },
+            "lunchStartTime": {
+              "name": "lunchStartTime",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "lunchDurationMinutes": {
+              "name": "lunchDurationMinutes",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
             }
           }
         },
@@ -6602,6 +8414,12 @@
               "isArray": false,
               "type": "Boolean",
               "isRequired": false
+            },
+            "userOnly": {
+              "name": "userOnly",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
             }
           }
         },
@@ -6661,11 +8479,69 @@
             }
           }
         },
-        "generateTimeSlots": {
-          "name": "generateTimeSlots",
+        "FixedTimeReservation": {
+          "name": "FixedTimeReservation",
           "isArray": false,
           "type": {
-            "nonModel": "GenerateTimeSlotsReturnType"
+            "nonModel": "FixedTimeReservationReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "installationDayId": {
+              "name": "installationDayId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "startTime": {
+              "name": "startTime",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": true
+            },
+            "duration": {
+              "name": "duration",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": true
+            },
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "isRemote": {
+              "name": "isRemote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
+            },
+            "title": {
+              "name": "title",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
+        "generateInstallationDays": {
+          "name": "generateInstallationDays",
+          "isArray": false,
+          "type": {
+            "nonModel": "GenerateInstallationDaysReturnType"
           },
           "isRequired": false,
           "arguments": {
@@ -6675,6 +8551,34 @@
               "type": "String",
               "isRequired": false
             },
+            "startDate": {
+              "name": "startDate",
+              "isArray": false,
+              "type": "AWSDate",
+              "isRequired": false
+            },
+            "endDate": {
+              "name": "endDate",
+              "isArray": false,
+              "type": "AWSDate",
+              "isRequired": false
+            },
+            "override": {
+              "name": "override",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
+            }
+          }
+        },
+        "FinalizeVisits": {
+          "name": "FinalizeVisits",
+          "isArray": false,
+          "type": {
+            "nonModel": "FinalizeVisitsReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
             "date": {
               "name": "date",
               "isArray": false,
@@ -6691,42 +8595,230 @@
           },
           "isRequired": false,
           "arguments": {
-            "oldVisitId": {
-              "name": "oldVisitId",
+            "calendarId": {
+              "name": "calendarId",
               "isArray": false,
               "type": "ID",
               "isRequired": true
             },
-            "newVisitId": {
-              "name": "newVisitId",
+            "newInstallationDayId": {
+              "name": "newInstallationDayId",
               "isArray": false,
               "type": "ID",
               "isRequired": true
+            },
+            "newStartTime": {
+              "name": "newStartTime",
+              "isArray": false,
+              "type": "AWSTime",
+              "isRequired": false
             }
           }
         },
-        "visitsSummaryCron": {
-          "name": "visitsSummaryCron",
+        "sendVisitsSummaryScheduled": {
+          "name": "sendVisitsSummaryScheduled",
           "isArray": false,
           "type": {
-            "nonModel": "VisitsSummaryCronReturnType"
+            "nonModel": "SendVisitsSummaryScheduledReturnType"
           },
           "isRequired": false,
           "arguments": {
+            "email": {
+              "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
             "start": {
               "name": "start",
               "isArray": false,
-              "type": "AWSDateTime",
+              "type": "String",
               "isRequired": false
             },
             "end": {
               "name": "end",
               "isArray": false,
-              "type": "AWSDateTime",
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
+        "FetchCalendarForDate": {
+          "name": "FetchCalendarForDate",
+          "isArray": false,
+          "type": {
+            "nonModel": "FetchCalendarForDateReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "date": {
+              "name": "date",
+              "isArray": false,
+              "type": "AWSDate",
               "isRequired": false
             },
-            "email": {
-              "name": "email",
+            "address": {
+              "name": "address",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "lat": {
+              "name": "lat",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "long": {
+              "name": "long",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false
+            },
+            "remote": {
+              "name": "remote",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
+            }
+          }
+        },
+        "VisitAction": {
+          "name": "VisitAction",
+          "isArray": false,
+          "type": {
+            "nonModel": "VisitActionReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "token": {
+              "name": "token",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "action": {
+              "name": "action",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            }
+          }
+        },
+        "AdminCognitoUser": {
+          "name": "AdminCognitoUser",
+          "isArray": false,
+          "type": "String",
+          "isRequired": false,
+          "arguments": {
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "action": {
+              "name": "action",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "password": {
+              "name": "password",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            }
+          }
+        },
+        "SaveSimulatorResult": {
+          "name": "SaveSimulatorResult",
+          "isArray": false,
+          "type": {
+            "nonModel": "SaveSimulatorResultReturnType"
+          },
+          "isRequired": false,
+          "arguments": {
+            "companyName": {
+              "name": "companyName",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "companySize": {
+              "name": "companySize",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "industry": {
+              "name": "industry",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "region": {
+              "name": "region",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "operationProfile": {
+              "name": "operationProfile",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "operatingHours": {
+              "name": "operatingHours",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
+            },
+            "daysPerWeek": {
+              "name": "daysPerWeek",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
+            },
+            "avgDailyKm": {
+              "name": "avgDailyKm",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
+            },
+            "connectionType": {
+              "name": "connectionType",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "hasTransformer": {
+              "name": "hasTransformer",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false
+            },
+            "availablePowerKW": {
+              "name": "availablePowerKW",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
+            },
+            "areaM2": {
+              "name": "areaM2",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false
+            },
+            "fleetItemsJson": {
+              "name": "fleetItemsJson",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "customerId": {
+              "name": "customerId",
               "isArray": false,
               "type": "String",
               "isRequired": false

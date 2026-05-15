@@ -6,7 +6,7 @@ import {
   CurrentVehicleState,
   UsageProfileState,
 } from './type';
-import { EV_DB } from '@/app/comparador-electrico/data/vehicles';
+import { EV_DB, lookupGasVehicle, selectGasCars } from '@/app/comparador-electrico/data/vehicles';
 import { selectBestEVs } from '@/app/comparador-electrico/utils/tco';
 
 const initialState: ComparadorState = {
@@ -14,20 +14,22 @@ const initialState: ComparadorState = {
   currentVehicle: {
     marca: '',
     modelo: '',
-    anio: new Date().getFullYear(),
     combustible: 'bencina',
-    valorMercadoCLP: 0,
+    precioListaCLP: 0,
     kmMensuales: 1000,
     consumoL100km: 10,
-    precioCombustibleCLP: 1100,
+    precioCombustibleCLP: 1545,
   },
   usageProfile: {
     tipoUso: 'mixed',
     lugarCarga: 'home',
     presupuestoCLP: 25000000,
+    years: 4,
   },
   selectedEVId: null,
   evRecommendations: [],
+  gasRecommendations: [],
+  segmento: '',
 };
 
 const comparadorSlice = createSlice({
@@ -64,13 +66,21 @@ const comparadorSlice = createSlice({
 
     computeRecommendations(state) {
       const { tipoUso, presupuestoCLP } = state.usageProfile;
-      const recommendations = selectBestEVs(EV_DB, presupuestoCLP, tipoUso, 4);
-      state.evRecommendations = recommendations;
+      const { marca, modelo, combustible, precioListaCLP } = state.currentVehicle;
 
-      // Auto-select top recommendation if none selected or current selection not in new list
-      const isCurrentInList = recommendations.some(ev => ev.id === state.selectedEVId);
-      if (!isCurrentInList && recommendations.length > 0) {
-        state.selectedEVId = recommendations[0].id;
+      const lookup = lookupGasVehicle(marca, modelo, combustible);
+      const seg = lookup?.seg ?? 'suv';
+      state.segmento = seg;
+
+      const evRecs = selectBestEVs(EV_DB, presupuestoCLP, tipoUso, seg, 2);
+      state.evRecommendations = evRecs;
+
+      const gasRecs = selectGasCars(seg, marca, modelo, combustible, precioListaCLP);
+      state.gasRecommendations = gasRecs;
+
+      const isCurrentInList = evRecs.some(ev => ev.id === state.selectedEVId);
+      if (!isCurrentInList && evRecs.length > 0) {
+        state.selectedEVId = evRecs[0].id;
       }
     },
 

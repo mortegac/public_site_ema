@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Box,
   Container,
@@ -349,31 +349,68 @@ export default function CotizadorWizard() {
   useEffect(() => { setDates(genDates()) }, [])
 
   // ─── Geolocation on mount ─────────────────────────────────────────────────
+  // useRef guard prevents React StrictMode double-invocation bug:
+  // StrictMode fires effects twice (mount→cleanup→mount). With a local `let active`,
+  // the second getCurrentPosition call's callback may use active=false from the
+  // first cleanup if the browser deduplicates the two pending calls.
+  // A ref persists across re-mounts so we only ever start geo detection ONCE.
+  const geoStarted = useRef(false)
+
   useEffect(() => {
+    if (geoStarted.current) {
+      console.log('[geo] 🔁 useEffect re-fired (StrictMode) — already started, skipping')
+      return
+    }
+    geoStarted.current = true
+
+    console.log('[geo] 🟡 Starting geolocation detection...')
+
     if (typeof window === 'undefined' || !navigator.geolocation) {
+      console.log('[geo] ⚠️  navigator.geolocation not available — switching to manual input')
       setGeoStatus('manual')
       return
     }
+
+    // Log permission state for diagnostics
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        console.log(`[geo] 🔑 Browser permission state: "${result.state}"`)
+      }).catch(() => {})
+    }
+
+    console.log('[geo] 🌍 Calling navigator.geolocation.getCurrentPosition (timeout=10s)...')
+
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords
+        console.log(`[geo] ✅ Position received: lat=${lat.toFixed(6)}, lng=${lng.toFixed(6)}, accuracy=±${Math.round(accuracy)}m`)
+
         try {
-          const { latitude: lat, longitude: lng } = pos.coords
-          // Use our server-side API route to avoid Google Maps API key domain restrictions
-          const res = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`)
+          const url = `/api/geocode?lat=${lat}&lng=${lng}`
+          console.log(`[geo] 🔄 Reverse geocoding via ${url}`)
+          const res = await fetch(url)
+          console.log(`[geo] 📡 /api/geocode HTTP ${res.status}`)
           const json = await res.json()
+          console.log('[geo] 📦 Response:', json)
           const addr: string = json.address ?? ''
           if (addr) {
+            console.log('[geo] 📍 Address resolved:', addr)
             update({ address: addr })
             setGeoAddress(addr)
+          } else {
+            console.warn('[geo] ⚠️  No address returned (status:', json.status, ') — showing empty input')
           }
-        } catch {
-          // ignore reverse geocode errors — user can still type manually
+        } catch (fetchErr) {
+          console.error('[geo] ❌ /api/geocode failed:', fetchErr)
         } finally {
+          console.log('[geo] 🟢 setGeoStatus("detected")')
           setGeoStatus('detected')
         }
       },
       (err) => {
-        console.warn('[cotizador2] Geolocation denied or failed:', err.message)
+        const codeMap: Record<number, string> = { 1: 'PERMISSION_DENIED', 2: 'POSITION_UNAVAILABLE', 3: 'TIMEOUT' }
+        console.error(`[geo] ❌ Error: ${codeMap[err.code] ?? 'UNKNOWN'} (code=${err.code}) — "${err.message}"`)
+        console.log('[geo] 🔵 setGeoStatus("manual") — user will type address manually')
         setGeoStatus('manual')
       },
       { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
@@ -555,10 +592,17 @@ export default function CotizadorWizard() {
         {geoStatus === 'detecting' && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, mb: 2 }}>
             <Typography sx={{ fontSize: '1.2rem' }}>📍</Typography>
-            <Box>
+            <Box sx={{ flex: 1 }}>
               <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
               <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Usando la ubicación de tu dispositivo</Typography>
             </Box>
+            <Button
+              size="small"
+              onClick={() => { console.log('[geo] 👤 User skipped geo detection'); setGeoStatus('manual') }}
+              sx={{ fontSize: '0.72rem', color: TEXT_MUTED, minWidth: 'auto', whiteSpace: 'nowrap', textTransform: 'none' }}
+            >
+              Ingresar manual
+            </Button>
           </Box>
         )}
 

@@ -121,14 +121,15 @@ test.describe('/cotizador2 wizard', () => {
   test('step 0: geo-detected address label shown as independent text', async ({ page }) => {
     const MOCK_ADDRESS = 'Av. Providencia 1234, Providencia, Santiago, Chile'
 
-    // Patch window.fetch before React loads so the geo reverse-geocode returns a known address
+    // Patch window.fetch before React loads so /api/geocode returns a known address
+    // (wizard now calls /api/geocode server-side, not maps.googleapis.com directly)
     await page.addInitScript((mockAddr: string) => {
       const orig = window.fetch.bind(window)
       window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
         const url = typeof input === 'string' ? input : input instanceof URL ? input.href : (input as Request).url
-        if (url.includes('maps.googleapis.com') && url.includes('geocode')) {
+        if (url.includes('/api/geocode')) {
           return new Response(
-            JSON.stringify({ results: [{ formatted_address: mockAddr }], status: 'OK' }),
+            JSON.stringify({ address: mockAddr, status: 'OK' }),
             { status: 200, headers: { 'Content-Type': 'application/json' } }
           )
         }

@@ -358,23 +358,25 @@ export default function CotizadorWizard() {
       async (pos) => {
         try {
           const { latitude: lat, longitude: lng } = pos.coords
-          const res = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GMAPS_KEY}&language=es`
-          )
+          // Use our server-side API route to avoid Google Maps API key domain restrictions
+          const res = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`)
           const json = await res.json()
-          const addr = json.results?.[0]?.formatted_address ?? ''
+          const addr: string = json.address ?? ''
           if (addr) {
             update({ address: addr })
-            setGeoAddress(addr)  // store detected address to display as text label
+            setGeoAddress(addr)
           }
         } catch {
-          // ignore reverse geocode errors
+          // ignore reverse geocode errors — user can still type manually
         } finally {
           setGeoStatus('detected')
         }
       },
-      () => setGeoStatus('manual'),
-      { timeout: 8000, maximumAge: 60000 }
+      (err) => {
+        console.warn('[cotizador2] Geolocation denied or failed:', err.message)
+        setGeoStatus('manual')
+      },
+      { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
     )
   }, []) // run once on mount
 
@@ -560,7 +562,7 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* Geo-detected address displayed as a read-only text label */}
+        {/* Geo-detected address — shown as h3 when geolocation succeeds */}
         {geoStatus === 'detected' && geoAddress && (
           <Box
             sx={{
@@ -574,12 +576,24 @@ export default function CotizadorWizard() {
               borderRadius: 1.5,
             }}
           >
-            <Typography sx={{ fontSize: '1rem', mt: 0.1 }}>📍</Typography>
+            <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
             <Box sx={{ flex: 1 }}>
-              <Typography sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, mb: 0.25 }}>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}
+              >
                 Ubicación detectada
               </Typography>
-              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547', lineHeight: 1.4 }}>
+              <Typography
+                component="h3"
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 600,
+                  color: '#2A3547',
+                  lineHeight: 1.4,
+                  m: 0,
+                }}
+              >
                 {geoAddress}
               </Typography>
             </Box>

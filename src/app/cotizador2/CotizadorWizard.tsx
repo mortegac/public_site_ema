@@ -341,50 +341,40 @@ export default function CotizadorWizard() {
     formId: null,
   })
 
-  const [geoStatus, setGeoStatus] = useState<'detecting' | 'detected' | 'manual'>('detecting')
-  const [geoAddress, setGeoAddress] = useState<string>('')  // raw address from geolocation
+  // Start in 'manual' — Chrome requires geolocation to be triggered by a user gesture,
+  // not automatically on mount. Auto-detecting on load causes:
+  //   [Violation] Only request geolocation information in response to a user gesture.
+  // and on macOS may trigger kCLErrorLocationUnknown if Location Services is not enabled.
+  const [geoStatus, setGeoStatus] = useState<'idle' | 'detecting' | 'detected' | 'error'>('idle')
+  const [geoAddress, setGeoAddress] = useState<string>('')
+  const [geoError, setGeoError] = useState<string>('')
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
 
-  // ─── Geolocation on mount ─────────────────────────────────────────────────
-  // useRef guard prevents React StrictMode double-invocation bug:
-  // StrictMode fires effects twice (mount→cleanup→mount). With a local `let active`,
-  // the second getCurrentPosition call's callback may use active=false from the
-  // first cleanup if the browser deduplicates the two pending calls.
-  // A ref persists across re-mounts so we only ever start geo detection ONCE.
-  const geoStarted = useRef(false)
-
-  useEffect(() => {
-    if (geoStarted.current) {
-      console.log('[geo] 🔁 useEffect re-fired (StrictMode) — already started, skipping')
-      return
-    }
-    geoStarted.current = true
-
-    console.log('[geo] 🟡 Starting geolocation detection...')
-
-    if (typeof window === 'undefined' || !navigator.geolocation) {
-      console.log('[geo] ⚠️  navigator.geolocation not available — switching to manual input')
-      setGeoStatus('manual')
+  // ─── Geolocation — triggered by user click (NOT on mount) ─────────────────
+  async function requestGeoLocation() {
+    if (!navigator.geolocation) {
+      console.log('[geo] ⚠️  navigator.geolocation not available')
+      setGeoError('Tu navegador no soporta geolocalización.')
+      setGeoStatus('error')
       return
     }
 
-    // Log permission state for diagnostics
+    setGeoStatus('detecting')
+    setGeoError('')
+    console.log('[geo] 🟡 User triggered geolocation detection...')
+
     if (navigator.permissions) {
-      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-        console.log(`[geo] 🔑 Browser permission state: "${result.state}"`)
-      }).catch(() => {})
+      const perm = await navigator.permissions.query({ name: 'geolocation' }).catch(() => null)
+      console.log(`[geo] 🔑 Browser permission state: "${perm?.state}"`)
     }
-
-    console.log('[geo] 🌍 Calling navigator.geolocation.getCurrentPosition (timeout=10s)...')
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const { latitude: lat, longitude: lng, accuracy } = pos.coords
         console.log(`[geo] ✅ Position received: lat=${lat.toFixed(6)}, lng=${lng.toFixed(6)}, accuracy=±${Math.round(accuracy)}m`)
-
         try {
           const url = `/api/geocode?lat=${lat}&lng=${lng}`
           console.log(`[geo] 🔄 Reverse geocoding via ${url}`)
@@ -397,25 +387,31 @@ export default function CotizadorWizard() {
             console.log('[geo] 📍 Address resolved:', addr)
             update({ address: addr })
             setGeoAddress(addr)
+            setGeoStatus('detected')
           } else {
-            console.warn('[geo] ⚠️  No address returned (status:', json.status, ') — showing empty input')
+            console.warn('[geo] ⚠️  No address in response')
+            setGeoStatus('detected') // still show input, just empty
           }
         } catch (fetchErr) {
           console.error('[geo] ❌ /api/geocode failed:', fetchErr)
-        } finally {
-          console.log('[geo] 🟢 setGeoStatus("detected")')
-          setGeoStatus('detected')
+          setGeoStatus('detected') // fallback to manual
         }
       },
       (err) => {
         const codeMap: Record<number, string> = { 1: 'PERMISSION_DENIED', 2: 'POSITION_UNAVAILABLE', 3: 'TIMEOUT' }
-        console.error(`[geo] ❌ Error: ${codeMap[err.code] ?? 'UNKNOWN'} (code=${err.code}) — "${err.message}"`)
-        console.log('[geo] 🔵 setGeoStatus("manual") — user will type address manually')
-        setGeoStatus('manual')
+        const type = codeMap[err.code] ?? 'UNKNOWN'
+        console.error(`[geo] ❌ ${type} (code=${err.code}) — "${err.message}"`)
+        const messages: Record<string, string> = {
+          PERMISSION_DENIED: 'Permiso denegado. Activa la ubicación en tu navegador.',
+          POSITION_UNAVAILABLE: 'Ubic. no disponible. En macOS: Configuración del sistema › Privacidad › Servicios de ubicación › Chrome ✓',
+          TIMEOUT: 'Tiempo de espera agotado. Intenta de nuevo.',
+        }
+        setGeoError(messages[type] ?? 'No se pudo obtener tu ubicación.')
+        setGeoStatus('error')
       },
       { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
     )
-  }, []) // run once on mount
+  }
 
   const result = calcResult(state)
 
@@ -550,7 +546,9 @@ export default function CotizadorWizard() {
       apiResult: null,
       formId: null,
     })
-    setGeoStatus('manual')
+    setGeoStatus('idle')
+    setGeoAddress('')
+    setGeoError('')
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────
@@ -589,73 +587,83 @@ export default function CotizadorWizard() {
           Dirección de instalación
         </Typography>
 
+        {/* ─── Geo button (idle) ─── */}
+        {geoStatus === 'idle' && (
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={requestGeoLocation}
+            sx={{
+              mb: 1.5,
+              py: 1.25,
+              borderColor: TEAL,
+              color: TEAL,
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              textTransform: 'none',
+              borderRadius: 1.5,
+              '&:hover': { borderColor: '#0777a0', bgcolor: 'rgba(8,152,185,0.05)' },
+            }}
+          >
+            📍 Detectar mi ubicación automáticamente
+          </Button>
+        )}
+
+        {/* ─── Detecting spinner ─── */}
         {geoStatus === 'detecting' && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, mb: 2 }}>
-            <Typography sx={{ fontSize: '1.2rem' }}>📍</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, mb: 1.5 }}>
+            <Typography sx={{ fontSize: '1.1rem' }}>📍</Typography>
             <Box sx={{ flex: 1 }}>
               <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
-              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Usando la ubicación de tu dispositivo</Typography>
+              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED }}>Usando los Servicios de ubicación de tu dispositivo</Typography>
             </Box>
-            <Button
-              size="small"
-              onClick={() => { console.log('[geo] 👤 User skipped geo detection'); setGeoStatus('manual') }}
-              sx={{ fontSize: '0.72rem', color: TEXT_MUTED, minWidth: 'auto', whiteSpace: 'nowrap', textTransform: 'none' }}
-            >
-              Ingresar manual
+          </Box>
+        )}
+
+        {/* ─── Detected address as h3 ─── */}
+        {geoStatus === 'detected' && geoAddress && (
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, mb: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5 }}>
+            <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="caption" sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}>
+                Ubicación detectada
+              </Typography>
+              <Typography component="h3" sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4, m: 0 }}>
+                {geoAddress}
+              </Typography>
+            </Box>
+            <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: TEAL, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap' }}>
+              Actualizar
             </Button>
           </Box>
         )}
 
-        {/* Geo-detected address — shown as h3 when geolocation succeeds */}
-        {geoStatus === 'detected' && geoAddress && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 1,
-              p: 1.5,
-              mb: 1.5,
-              bgcolor: 'rgba(8,152,185,0.06)',
-              border: `1px solid rgba(8,152,185,0.25)`,
-              borderRadius: 1.5,
-            }}
+        {/* ─── Error state ─── */}
+        {geoStatus === 'error' && (
+          <Alert
+            severity="warning"
+            sx={{ mb: 1.5, fontSize: '0.8rem', '& .MuiAlert-message': { lineHeight: 1.5 } }}
+            action={
+              <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: 'inherit', textTransform: 'none' }}>
+                Reintentar
+              </Button>
+            }
           >
-            <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
-            <Box sx={{ flex: 1 }}>
-              <Typography
-                variant="caption"
-                sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}
-              >
-                Ubicación detectada
-              </Typography>
-              <Typography
-                component="h3"
-                sx={{
-                  fontSize: '0.95rem',
-                  fontWeight: 600,
-                  color: '#2A3547',
-                  lineHeight: 1.4,
-                  m: 0,
-                }}
-              >
-                {geoAddress}
-              </Typography>
-            </Box>
-          </Box>
+            {geoError}
+          </Alert>
         )}
 
-        {(geoStatus === 'detected' || geoStatus === 'manual') && (
-          <AddressInput2
-            value={state.address}
-            onAddressChange={(v) => update({ address: v, regionWarn: false })}
-            onSelectAddress={(details) => {
-              if (details) {
-                const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                update({ address: full, regionWarn: false })
-              }
-            }}
-          />
-        )}
+        {/* ─── Address input (always shown) ─── */}
+        <AddressInput2
+          value={state.address}
+          onAddressChange={(v) => update({ address: v, regionWarn: false })}
+          onSelectAddress={(details) => {
+            if (details) {
+              const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+              update({ address: full, regionWarn: false })
+            }
+          }}
+        />
 
         {state.regionWarn && (
           <Alert severity="warning" sx={{ fontSize: '0.8rem', mt: 1 }}>

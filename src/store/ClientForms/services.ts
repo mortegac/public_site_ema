@@ -28,18 +28,16 @@ export const createClientForm = async (input: clientFormInput): Promise<any> => 
         } = input;
         
         console.log("--createClientForm--", input)
+        // Omit customerId when null — DynamoDB GSI gsi-Customer.ClientForms expects String not NULL
+        const normalizedCustomerId = customerId != null ? normalizeCustomerIdKey(customerId) : undefined;
         const formData = {
-            formId: crypto.randomUUID(), // Genera un ID único
-            customerId: customerId != null ? normalizeCustomerIdKey(customerId) : customerId,
+            formId: crypto.randomUUID(),
             isWallbox: isWallbox || false,
             isPortable: isPortable || false,
             isHouse: isHouse || false,
             distance: distance || 0,
             numberOfChargers: numberOfChargers || 1,
-            // name: name || '',
-            // email: email || '',
-            // phone: phone || '',
-            // ...rest
+            ...(normalizedCustomerId !== undefined ? { customerId: normalizedCustomerId } : {}),
         };
     
         const data = await client.models.ClientForm.create(formData);

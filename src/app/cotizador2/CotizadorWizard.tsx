@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import {
   Box,
   Container,
@@ -9,15 +8,14 @@ import {
   Button,
   Grid,
   Slider,
-  Select,
-  MenuItem,
   TextField,
   Divider,
   Chip,
   Alert,
-  FormControl,
-  InputLabel,
 } from '@mui/material'
+import AddressInput2 from '@/app/components/AddressInput2'
+import { createClientForm } from '@/store/ClientForms/services'
+import { createEstimate } from '@/store/Estimate/services'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -29,6 +27,9 @@ const TEXT_MUTED = '#64748B'
 const BORDER = '#E2E8F0'
 const SUCCESS = '#00C47C'
 
+// ─── Constants ───────────────────────────────────────────────────────────────
+const GMAPS_KEY = 'AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ'
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 const CHARGERS = [
   { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 299000, stock: 2 },
@@ -36,6 +37,7 @@ const CHARGERS = [
   { id: 'effitec', name: 'EFFITEC 7 kW', tipo: 'wallbox', kw: '7', desc: 'Cable tipo 2 · Garantía 2 años', precio: 595000, stock: 5 },
   { id: 'kpn-app', name: 'KPN Wallbox KBox App', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · App de usuario', precio: 606900, stock: 5 },
   { id: 'beste-s', name: 'BESTE TS-EVC07 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Cable tipo 2 · Disponibilidad inmediata', precio: 773500, stock: 5 },
+  { id: 'beste-mini', name: 'BESTE Smart Mini 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Diseño compacto · Disponibilidad inmediata', precio: 773500, stock: 5 },
   { id: 'kpn-ocpp', name: 'KPN Wallbox KBox OCPP 1.6', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · Protocolo OCPP 1.6', precio: 779450, stock: 5 },
 ]
 
@@ -106,6 +108,19 @@ interface WizardState {
   paid: boolean
   selectedDate: number | null
   booked: boolean
+  estimateLoading: boolean
+  apiResult: {
+    mat: number
+    inst: number
+    sec: number
+    chargerPrice: number
+    chargerName: string
+    neto: number
+    iva: number
+    total: number
+    isOwn: boolean
+  } | null
+  formId: string | null
 }
 
 interface CalcResult {
@@ -208,6 +223,10 @@ function SelectionCard({ selected, onClick, icon, title, subtitle }: SelectionCa
   return (
     <Box
       onClick={onClick}
+      data-testid={`card-${title.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-')}`}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onClick()}
       sx={{
         border: `2px solid ${selected ? PINK : BORDER}`,
         borderRadius: 2,
@@ -319,9 +338,45 @@ export default function CotizadorWizard() {
     paid: false,
     selectedDate: null,
     booked: false,
+    estimateLoading: false,
+    apiResult: null,
+    formId: null,
   })
 
-  const [dates] = useState(genDates)
+  const [geoStatus, setGeoStatus] = useState<'detecting' | 'detected' | 'manual'>('detecting')
+
+  // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
+  const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
+  useEffect(() => { setDates(genDates()) }, [])
+
+  // ─── Geolocation on mount ─────────────────────────────────────────────────
+  useEffect(() => {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+      setGeoStatus('manual')
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude: lat, longitude: lng } = pos.coords
+          const res = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GMAPS_KEY}&language=es`
+          )
+          const json = await res.json()
+          const addr = json.results?.[0]?.formatted_address ?? ''
+          if (addr) {
+            update({ address: addr })
+          }
+        } catch {
+          // ignore reverse geocode errors
+        } finally {
+          setGeoStatus('detected')
+        }
+      },
+      () => setGeoStatus('manual'),
+      { timeout: 8000, maximumAge: 60000 }
+    )
+  }, []) // run once on mount
 
   const result = calcResult(state)
 
@@ -349,7 +404,60 @@ export default function CotizadorWizard() {
     setState(prev => ({ ...prev, ...partial }))
   }
 
-  function goNext() {
+  async function goNext() {
+    if (state.step === 1) {
+      update({ estimateLoading: true })
+      try {
+        const isWallbox = state.tipoC === 'wallbox'
+        const isPortable = state.tipoC === 'portable'
+        const isHouse = state.tipo === 'casa'
+        const charger = state.chargerId !== 'own' ? CHARGERS.find(c => c.id === state.chargerId) : null
+
+        const formResult = await createClientForm({
+          isHouse,
+          isPortable,
+          isWallbox,
+          numberOfChargers: 1,
+          distance: state.dist,
+          customerId: null,
+        })
+
+        const formId = formResult?.data?.formId ?? formResult?.formId ?? null
+
+        if (formId) {
+          const estimates: any[] = await createEstimate({ formId })
+
+          const targetPotence = isWallbox ? 7 : 2.2
+          const est = estimates.find((e: any) => Number(e.chargerPotence) === targetPotence) ?? estimates[0]
+
+          if (est) {
+            const chargerPrice = charger ? charger.precio : 0
+            const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
+            update({
+              estimateLoading: false,
+              step: 2,
+              formId,
+              apiResult: {
+                mat: Number(est.materialsCost ?? 0),
+                inst: Number(est.installationCost ?? 0),
+                sec: Number(est.SECCost ?? 0),
+                chargerPrice,
+                chargerName,
+                neto: Number(est.netPrice ?? 0),
+                iva: Number(est.VAT ?? 0),
+                total: Number(est.grossPrice ?? 0),
+                isOwn: state.chargerId === 'own',
+              },
+            })
+            return
+          }
+        }
+      } catch (err) {
+        console.error('ProcessEstimate failed, using local calc', err)
+      }
+      update({ estimateLoading: false, step: 2 })
+      return
+    }
     if (state.step < 2) {
       update({ step: state.step + 1 })
     }
@@ -392,13 +500,11 @@ export default function CotizadorWizard() {
       paid: false,
       selectedDate: null,
       booked: false,
+      estimateLoading: false,
+      apiResult: null,
+      formId: null,
     })
-  }
-
-  function handleAddressBlur() {
-    if (state.address.length >= 4) {
-      update({ editingAddr: false, regionWarn: checkRegion(state.address) })
-    }
+    setGeoStatus('manual')
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────
@@ -437,26 +543,27 @@ export default function CotizadorWizard() {
           Dirección de instalación
         </Typography>
 
-        {state.editingAddr ? (
-          <TextField
-            fullWidth
-            size="small"
-            placeholder="Ej: Av. Providencia 1234, Santiago"
-            value={state.address}
-            onChange={e => update({ address: e.target.value, regionWarn: false })}
-            onBlur={handleAddressBlur}
-            onKeyDown={e => { if (e.key === 'Enter') handleAddressBlur() }}
-            sx={{ mb: 1 }}
-          />
-        ) : (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Typography sx={{ fontSize: '0.9rem', color: '#2A3547', flex: 1, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1, px: 1.5, py: 0.75 }}>
-              {state.address}
-            </Typography>
-            <Button size="small" onClick={() => update({ editingAddr: true })} sx={{ color: TEAL, fontSize: '0.75rem', minWidth: 'auto', whiteSpace: 'nowrap' }}>
-              Editar
-            </Button>
+        {geoStatus === 'detecting' && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, mb: 2 }}>
+            <Typography sx={{ fontSize: '1.2rem' }}>📍</Typography>
+            <Box>
+              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Usando la ubicación de tu dispositivo</Typography>
+            </Box>
           </Box>
+        )}
+
+        {(geoStatus === 'detected' || geoStatus === 'manual') && (
+          <AddressInput2
+            value={state.address}
+            onAddressChange={(v) => update({ address: v, regionWarn: false })}
+            onSelectAddress={(details) => {
+              if (details) {
+                const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                update({ address: full, regionWarn: false })
+              }
+            }}
+          />
         )}
 
         {state.regionWarn && (
@@ -543,50 +650,45 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* Wallbox select */}
+        {/* Wallbox card list */}
         {state.tipoC === 'wallbox' && (
           <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1.5, color: '#2A3547' }}>
-              Selecciona tu wallbox
-            </Typography>
-            <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-              <InputLabel>Modelo de wallbox</InputLabel>
-              <Select
-                label="Modelo de wallbox"
-                value={state.chargerId ?? ''}
-                onChange={e => update({ chargerId: e.target.value })}
-              >
-                {wallboxes.map(c => (
-                  <MenuItem key={c.id} value={c.id}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                      <Box>
-                        <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{c.name}</Typography>
-                        <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED }}>{c.desc}</Typography>
-                      </Box>
-                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, ml: 2, flexShrink: 0 }}>{fmt(c.precio)}</Typography>
-                    </Box>
-                  </MenuItem>
-                ))}
-                <MenuItem value="own">
-                  <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>Ya tengo mi cargador</Typography>
-                </MenuItem>
-              </Select>
-            </FormControl>
-
-            {state.chargerId && state.chargerId !== 'own' && (() => {
-              const sel = CHARGERS.find(c => c.id === state.chargerId)
-              return sel ? (
-                <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2, mb: 2 }}>
-                  <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', mb: 0.5 }}>{sel.name}</Typography>
-                  <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mb: 1 }}>{sel.desc}</Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    <Chip label={`${sel.kw} kW`} size="small" sx={{ bgcolor: 'rgba(8,152,185,0.1)', color: TEAL, fontWeight: 600 }} />
-                    <Chip label={`${sel.stock} en stock`} size="small" sx={{ bgcolor: 'rgba(0,196,124,0.1)', color: SUCCESS }} />
-                    <Chip label={fmt(sel.precio)} size="small" sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700 }} />
-                  </Box>
-                </Box>
-              ) : null
-            })()}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>
+                Selecciona tu wallbox
+              </Typography>
+              <Chip
+                label="Catálogo completo"
+                size="small"
+                sx={{ height: 18, fontSize: '0.65rem', bgcolor: 'rgba(8,152,185,0.1)', color: TEAL }}
+              />
+            </Box>
+            {wallboxes.map(c => (
+              <ChargerListItem
+                key={c.id}
+                charger={c}
+                selected={state.chargerId === c.id}
+                onClick={() => update({ chargerId: c.id })}
+              />
+            ))}
+            <Box
+              onClick={() => update({ chargerId: 'own' })}
+              sx={{
+                border: `2px solid ${state.chargerId === 'own' ? PINK : BORDER}`,
+                borderRadius: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: state.chargerId === 'own' ? 'rgba(232,26,104,0.04)' : '#fff',
+                transition: 'all 0.2s',
+                '&:hover': { borderColor: PINK },
+                mb: 1,
+              }}
+            >
+              <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', color: state.chargerId === 'own' ? PINK : '#2A3547' }}>
+                Ya tengo mi cargador
+              </Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Solo necesito la instalación</Typography>
+            </Box>
           </Box>
         )}
 
@@ -621,7 +723,9 @@ export default function CotizadorWizard() {
   }
 
   function renderStep2() {
-    if (!result) return null
+    const localResult = result
+    const displayResult = state.apiResult ?? localResult
+    if (!displayResult) return null
 
     return (
       <Box>
@@ -629,7 +733,7 @@ export default function CotizadorWizard() {
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 0.5 }}>Total estimado (con IVA)</Typography>
           <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
-            {fmt(result.total)}
+            {fmt(displayResult.total)}
           </Typography>
           <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.5 }}>
             Valor referencial · sujeto a visita técnica
@@ -640,24 +744,24 @@ export default function CotizadorWizard() {
         <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
           <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', mb: 2, color: '#2A3547' }}>Desglose</Typography>
 
-          {!result.isOwn && (
+          {!displayResult.isOwn && (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Cargador ({result.chargerName})</Typography>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(result.chargerPrice)}</Typography>
+              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Cargador ({displayResult.chargerName})</Typography>
+              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.chargerPrice)}</Typography>
             </Box>
           )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Materiales eléctricos</Typography>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(result.mat)}</Typography>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.mat)}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Instalación certificada</Typography>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(result.inst)}</Typography>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.inst)}</Typography>
           </Box>
-          {result.sec > 0 && (
+          {displayResult.sec > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
               <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Trámites SEC</Typography>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(result.sec)}</Typography>
+              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.sec)}</Typography>
             </Box>
           )}
 
@@ -665,18 +769,18 @@ export default function CotizadorWizard() {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.75 }}>
             <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>Subtotal neto</Typography>
-            <Typography sx={{ fontSize: '0.85rem' }}>{fmt(result.neto)}</Typography>
+            <Typography sx={{ fontSize: '0.85rem' }}>{fmt(displayResult.neto)}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.75 }}>
             <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>IVA 19%</Typography>
-            <Typography sx={{ fontSize: '0.85rem' }}>{fmt(result.iva)}</Typography>
+            <Typography sx={{ fontSize: '0.85rem' }}>{fmt(displayResult.iva)}</Typography>
           </Box>
 
           <Divider sx={{ my: 1.5 }} />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>Total con IVA</Typography>
-            <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: PINK }}>{fmt(result.total)}</Typography>
+            <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: PINK }}>{fmt(displayResult.total)}</Typography>
           </Box>
         </Box>
 
@@ -764,7 +868,7 @@ export default function CotizadorWizard() {
                 fontSize: '0.95rem',
               }}
             >
-              Pagar {fmt(result.total)} con Webpay →
+              Pagar {fmt(displayResult.total)} con Webpay →
             </Button>
             <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
               Pago seguro · Visa, Mastercard, Redcompra, débito
@@ -822,24 +926,52 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* Trust box */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2 }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '0.82rem', color: '#2A3547', mb: 1.5, display: 'flex', alignItems: 'center', gap: 0.75 }}>
-            🔒 Tu compra protegida
+        {/* Trust box — redesigned */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 3 }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
+            Tu compra protegida
           </Typography>
-          <Grid container spacing={1}>
-            {[
-              { icon: '✅', text: 'Instalación certificada SEC' },
-              { icon: '🔄', text: 'Garantía de satisfacción 30 días' },
-              { icon: '📞', text: 'Soporte post-venta incluido' },
-            ].map(({ icon, text }) => (
-              <Grid size={{ xs: 12 }} key={text}>
-                <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  {icon} {text}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
+
+          {[
+            {
+              icon: (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 7H4C3.45 7 3 7.45 3 8V19C3 19.55 3.45 20 4 20H20C20.55 20 21 19.55 21 19V8C21 7.45 20.55 7 20 7Z" stroke="#0898b9" strokeWidth="1.5" fill="none"/>
+                  <path d="M16 7V5C16 3.9 15.1 3 14 3H10C8.9 3 8 3.9 8 5V7" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M12 12V16M10 14H14" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              ),
+              title: 'Devolución gratis.',
+              desc: 'Tienes 30 días desde que lo recibes.',
+            },
+            {
+              icon: (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L3 5.5V12C3 16.5 7 20.5 12 22C17 20.5 21 16.5 21 12V5.5L12 2Z" stroke="#0898b9" strokeWidth="1.5" fill="none"/>
+                  <path d="M8 12L11 15L16 9" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ),
+              title: 'Compra Protegida.',
+              desc: 'Recibe el producto que esperabas o te devolvemos tu dinero.',
+            },
+            {
+              icon: (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="#0898b9" strokeWidth="1.5" fill="none"/>
+                  <path d="M12 7V12L15 15" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              ),
+              title: '3 meses de garantía.',
+              desc: 'Garantía técnica sobre la instalación completa.',
+            },
+          ].map(({ icon, title, desc }) => (
+            <Box key={title} sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2, '&:last-child': { mb: 0 } }}>
+              <Box sx={{ flexShrink: 0, mt: 0.25 }}>{icon}</Box>
+              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547', lineHeight: 1.5 }}>
+                <strong>{title}</strong> {desc}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Box>
     )
@@ -925,7 +1057,8 @@ export default function CotizadorWizard() {
   }
 
   function renderStep4() {
-    if (!result) return null
+    const displayResult = state.apiResult ?? result
+    if (!displayResult) return null
 
     return (
       <Box>
@@ -945,11 +1078,11 @@ export default function CotizadorWizard() {
           <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>Resumen de tu pedido</Typography>
           {[
             { label: 'Tipo de propiedad', value: state.tipo === 'casa' ? 'Casa' : 'Edificio' },
-            { label: 'Cargador', value: result.chargerName || 'Cargador propio' },
+            { label: 'Cargador', value: displayResult.chargerName || 'Cargador propio' },
             { label: 'Distancia al tablero', value: `${state.dist} m` },
             { label: 'Dirección', value: state.address || '—' },
             ...(state.depto ? [{ label: 'Depto / Ref.', value: state.depto }] : []),
-            { label: 'Total pagado', value: fmt(result.total) },
+            { label: 'Total pagado', value: fmt(displayResult.total) },
           ].map(({ label, value }) => (
             <Box key={label} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, gap: 2 }}>
               <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, flexShrink: 0 }}>{label}</Typography>
@@ -1035,6 +1168,15 @@ export default function CotizadorWizard() {
 
   return (
     <Box>
+      {/* ── Loading overlay ───────────────────────────────────────────────── */}
+      {state.estimateLoading && (
+        <Box sx={{ position: 'fixed', inset: 0, bgcolor: 'rgba(255,255,255,0.85)', zIndex: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+          <Typography sx={{ fontSize: '2rem' }}>⚡</Typography>
+          <Typography sx={{ fontWeight: 700, color: '#2A3547' }}>Calculando tu presupuesto…</Typography>
+          <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>Procesando con datos reales del servidor</Typography>
+        </Box>
+      )}
+
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <Box sx={{ background: `linear-gradient(358deg, ${TEAL} 0%, ${TEAL_LIGHT} 100%)`, py: { xs: 6, md: 8 } }}>
         <Container maxWidth="sm">
@@ -1097,6 +1239,7 @@ export default function CotizadorWizard() {
                   variant="contained"
                   disabled={!canNext}
                   onClick={goNext}
+                  data-testid="btn-next"
                   sx={{
                     flex: 1,
                     bgcolor: PINK,

@@ -6,11 +6,9 @@ import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { prevStep, resetComparador, selectComparador } from '@/store/Comparador/slice';
 import { calcTCO, formatCLP } from '../utils/tco';
-import { EV_DB } from '../data/vehicles';
 
 const PR = '#0B1F3A';
 const AC = '#00C47C';
-const ACL = '#EAFAF4';
 const BD = '#E2E8F0';
 const MU = '#64748B';
 
@@ -57,36 +55,34 @@ function CTACard({ icon, title, description, cta, href, variant = 'default', wid
       }}
     >
       <Typography fontSize={28}>{icon}</Typography>
-      <Typography fontSize={15} fontWeight={700} color={isDark ? '#fff' : PR}>
-        {title}
-      </Typography>
-      <Typography fontSize={13} color={isDark ? 'rgba(255,255,255,.65)' : MU} lineHeight={1.4}>
-        {description}
-      </Typography>
-      <Typography fontSize={14} fontWeight={700} color={isWhatsapp ? '#25D366' : AC} mt="auto">
-        {cta}
-      </Typography>
+      <Typography fontSize={15} fontWeight={700} color={isDark ? '#fff' : PR}>{title}</Typography>
+      <Typography fontSize={13} color={isDark ? 'rgba(255,255,255,.65)' : MU} lineHeight={1.4}>{description}</Typography>
+      <Typography fontSize={14} fontWeight={700} color={isWhatsapp ? '#25D366' : AC} mt="auto">{cta}</Typography>
     </Box>
   );
 }
 
 export default function Step4CTAs() {
   const dispatch = useAppDispatch();
-  const { currentVehicle, selectedEVId, evRecommendations } = useAppSelector(selectComparador);
+  const { currentVehicle, usageProfile, selectedEVId, evRecommendations } = useAppSelector(selectComparador);
 
+  const years = usageProfile.years ?? 4;
+  const yrLabel = years === 1 ? '1 año' : `${years} años`;
   const selectedEV = evRecommendations.find(ev => ev.id === selectedEVId) ?? evRecommendations[0];
 
   let savingsText = 'El equipo de Energica City te acompaña en cada paso de tu transición a la electromovilidad.';
-  if (selectedEV && currentVehicle.valorMercadoCLP > 0) {
+  if (selectedEV && currentVehicle.precioListaCLP > 0) {
     const tco = calcTCO(
       selectedEV,
-      currentVehicle.valorMercadoCLP,
+      currentVehicle.precioListaCLP,
       currentVehicle.kmMensuales,
       currentVehicle.consumoL100km,
       currentVehicle.precioCombustibleCLP,
+      undefined,
+      years,
     );
-    if (tco.ahorro5yr > 0) {
-      savingsText = `El análisis muestra que podrías ahorrar ${formatCLP(tco.ahorro5yr)} en 5 años pasándote al ${selectedEV.marca} ${selectedEV.modelo}. El equipo de Energica City te acompaña en cada paso.`;
+    if (tco.ahorroTotal > 0) {
+      savingsText = `El análisis muestra que podrías ahorrar ${formatCLP(tco.ahorroTotal)} en ${yrLabel} pasándote al ${selectedEV.marca} ${selectedEV.modelo}. El equipo de Energica City te acompaña en cada paso.`;
     }
   }
 

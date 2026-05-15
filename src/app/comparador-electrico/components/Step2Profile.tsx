@@ -1,12 +1,7 @@
 'use client';
 
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Slider,
-} from '@mui/material';
+import { Box, Typography, Button, Slider } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   setUsageProfile,
@@ -44,22 +39,17 @@ function OptionCard({ icon, title, subtitle, selected, onClick }: OptionCardProp
         textAlign: 'center',
         transition: 'all 0.2s',
         userSelect: 'none',
-        '&:hover': {
-          borderColor: AC,
-          background: ACL,
-        },
+        '&:hover': { borderColor: AC, background: ACL },
       }}
     >
       <Typography fontSize={24} mb={0.5}>{icon}</Typography>
-      <Typography fontSize={13} fontWeight={700} color={PR} display="block">
-        {title}
-      </Typography>
-      <Typography fontSize={11} color={MU} display="block" mt={0.25}>
-        {subtitle}
-      </Typography>
+      <Typography fontSize={13} fontWeight={700} color={PR} display="block">{title}</Typography>
+      <Typography fontSize={11} color={MU} display="block" mt={0.25}>{subtitle}</Typography>
     </Box>
   );
 }
+
+const YEARS_OPTIONS = [2, 3, 4, 5, 6] as const;
 
 export default function Step2Profile() {
   const dispatch = useAppDispatch();
@@ -68,13 +58,14 @@ export default function Step2Profile() {
   const [tipoUso, setTipoUso] = React.useState<TipoUso>(usageProfile.tipoUso);
   const [lugarCarga, setLugarCarga] = React.useState<LugarCarga>(usageProfile.lugarCarga);
   const [presupuesto, setPresupuesto] = React.useState(usageProfile.presupuestoCLP);
+  const [years, setYears] = React.useState(usageProfile.years ?? 4);
   const [error, setError] = React.useState('');
 
   const handleContinue = () => {
     if (!tipoUso) { setError('Indica para qué usas tu auto.'); return; }
     if (!lugarCarga) { setError('Indica dónde cargarías el eléctrico.'); return; }
     setError('');
-    dispatch(setUsageProfile({ tipoUso, lugarCarga, presupuestoCLP: presupuesto }));
+    dispatch(setUsageProfile({ tipoUso, lugarCarga, presupuestoCLP: presupuesto, years }));
     dispatch(computeRecommendations());
     dispatch(nextStep());
   };
@@ -96,18 +87,9 @@ export default function Step2Profile() {
           ¿Para qué usas tu auto principalmente?
         </Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', '@media (max-width:420px)': { gridTemplateColumns: '1fr 1fr' } }}>
-          <OptionCard
-            icon="🏙️" title="Ciudad" subtitle="Traslados cortos"
-            selected={tipoUso === 'city'} onClick={() => setTipoUso('city')}
-          />
-          <OptionCard
-            icon="🛣️" title="Mixto" subtitle="Ciudad + autopistas"
-            selected={tipoUso === 'mixed'} onClick={() => setTipoUso('mixed')}
-          />
-          <OptionCard
-            icon="🗺️" title="Carretera" subtitle="Viajes largos"
-            selected={tipoUso === 'highway'} onClick={() => setTipoUso('highway')}
-          />
+          <OptionCard icon="🏙️" title="Ciudad" subtitle="Traslados cortos" selected={tipoUso === 'city'} onClick={() => setTipoUso('city')} />
+          <OptionCard icon="🛣️" title="Mixto" subtitle="Ciudad + autopistas" selected={tipoUso === 'mixed'} onClick={() => setTipoUso('mixed')} />
+          <OptionCard icon="🗺️" title="Carretera" subtitle="Viajes largos" selected={tipoUso === 'highway'} onClick={() => setTipoUso('highway')} />
         </Box>
       </Box>
 
@@ -117,14 +99,8 @@ export default function Step2Profile() {
           ¿Dónde cargarías el eléctrico?
         </Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-          <OptionCard
-            icon="🏠" title="Casa propia" subtitle="Estacionamiento individual"
-            selected={lugarCarga === 'home'} onClick={() => setLugarCarga('home')}
-          />
-          <OptionCard
-            icon="🏢" title="Edificio / Depto" subtitle="Estacionamiento común"
-            selected={lugarCarga === 'building'} onClick={() => setLugarCarga('building')}
-          />
+          <OptionCard icon="🏠" title="Casa propia" subtitle="Estacionamiento individual" selected={lugarCarga === 'home'} onClick={() => setLugarCarga('home')} />
+          <OptionCard icon="🏢" title="Edificio / Depto" subtitle="Estacionamiento común" selected={lugarCarga === 'building'} onClick={() => setLugarCarga('building')} />
         </Box>
       </Box>
 
@@ -150,6 +126,37 @@ export default function Step2Profile() {
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography fontSize={11} color={MU}>$12M</Typography>
           <Typography fontSize={11} color={MU}>$65M</Typography>
+        </Box>
+      </Box>
+
+      {/* Years selector */}
+      <Box mb={2}>
+        <Typography fontSize={12} fontWeight={700} color={PR} textTransform="uppercase" letterSpacing="0.3px" mb={1.5}>
+          ¿A cuántos años quieres evaluar?
+        </Typography>
+        <Box sx={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          {YEARS_OPTIONS.map(y => (
+            <Box
+              key={y}
+              onClick={() => setYears(y)}
+              sx={{
+                px: 2,
+                py: 1,
+                border: `1.5px solid ${years === y ? AC : BD}`,
+                borderRadius: '8px',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: 'pointer',
+                background: years === y ? AC : '#fff',
+                color: years === y ? '#fff' : MU,
+                transition: 'all 0.2s',
+                userSelect: 'none',
+                '&:hover': { borderColor: AC, color: years === y ? '#fff' : AC },
+              }}
+            >
+              {y} años
+            </Box>
+          ))}
         </Box>
       </Box>
 

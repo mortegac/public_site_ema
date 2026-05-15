@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
+  Autocomplete,
   Box,
   Typography,
   TextField,
@@ -17,27 +18,30 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setCurrentVehicle, nextStep, selectComparador } from '@/store/Comparador/slice';
-import { lookupGasVehicle } from '../data/vehicles';
+import { GAS_DB, lookupGasVehicle } from '../data/vehicles';
+import { PRECIO_BENCINA_DEFAULT, PRECIO_DIESEL_DEFAULT } from '../utils/tco';
 import CurrencyTextField from './CurrencyTextField';
 
 const PR = '#0B1F3A';
 const AC = '#00C47C';
 const BD = '#E2E8F0';
 const MU = '#64748B';
-const BG = '#F5F7FA';
+
+function capitalize(s: string): string {
+  return s.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function normalizeStr(s: string): string {
+  return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+}
 
 const validationSchema = Yup.object({
   marca: Yup.string().trim().required('Ingresa la marca de tu auto'),
   modelo: Yup.string().trim().required('Ingresa el modelo de tu auto'),
-  anio: Yup.number()
-    .integer('Debe ser un año válido')
-    .min(2005, 'Año mínimo 2005')
-    .max(new Date().getFullYear() + 1, 'Año inválido')
-    .required('Ingresa el año de fabricación'),
   combustible: Yup.string().oneOf(['bencina', 'diesel']).required(),
-  valorMercadoCLP: Yup.number()
-    .min(500000, 'El valor debe ser mayor a $500.000')
-    .required('Ingresa el valor de mercado de tu auto'),
+  precioListaCLP: Yup.number()
+    .min(5000000, 'El precio debe ser mayor a $5.000.000')
+    .required('Ingresa el precio de lista de tu auto'),
   consumoL100km: Yup.number()
     .min(4, 'Mínimo 4 L/100km')
     .max(25, 'Máximo 25 L/100km')
@@ -48,11 +52,7 @@ const validationSchema = Yup.object({
     .required(),
 });
 
-interface Step1Props {
-  onNext?: () => void;
-}
-
-export default function Step1VehicleForm({ onNext }: Step1Props) {
+export default function Step1VehicleForm() {
   const dispatch = useAppDispatch();
   const { currentVehicle } = useAppSelector(selectComparador);
   const lookupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -64,11 +64,10 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
     initialValues: {
       marca: currentVehicle.marca,
       modelo: currentVehicle.modelo,
-      anio: currentVehicle.anio || new Date().getFullYear() - 3,
       combustible: currentVehicle.combustible,
-      valorMercadoCLP: currentVehicle.valorMercadoCLP || ('' as unknown as number),
+      precioListaCLP: currentVehicle.precioListaCLP || ('' as unknown as number),
       consumoL100km: currentVehicle.consumoL100km || 10,
-      precioCombustibleCLP: currentVehicle.precioCombustibleCLP || 1100,
+      precioCombustibleCLP: currentVehicle.precioCombustibleCLP || PRECIO_BENCINA_DEFAULT,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -76,23 +75,38 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
         ...values,
         marca: values.marca.trim(),
         modelo: values.modelo.trim(),
-        valorMercadoCLP: Number(values.valorMercadoCLP),
+        precioListaCLP: Number(values.precioListaCLP),
         kmMensuales,
       }));
       dispatch(nextStep());
-      onNext?.();
     },
   });
+
+  // All unique brands from the DB, capitalized and sorted
+  const allBrands = useMemo(
+    () => [...new Set(GAS_DB.map(r => capitalize(r.marca)))].sort(),
+    [],
+  );
+
+  // Models for the currently typed/selected brand
+  const brandModels = useMemo(() => {
+    const m = normalizeStr(formik.values.marca);
+    if (!m) return [];
+    const matches = GAS_DB.filter(r => normalizeStr(r.marca) === m);
+    return [...new Set(matches.map(r => capitalize(r.modelo)))].sort();
+  }, [formik.values.marca]);
+
+  const marcaSelected = formik.values.marca.trim().length > 0;
 
   const tryLookup = useCallback(() => {
     if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
     lookupTimerRef.current = setTimeout(() => {
-      const { marca, modelo, anio, combustible } = formik.values;
-      if (!marca.trim() || !modelo.trim() || !anio || String(anio).length < 4) return;
+      const { marca, modelo, combustible } = formik.values;
+      if (!marca.trim() || !modelo.trim()) return;
 
-      const result = lookupGasVehicle(marca.trim(), modelo.trim(), anio, combustible);
+      const result = lookupGasVehicle(marca.trim(), modelo.trim(), combustible);
       if (result) {
-        formik.setFieldValue('valorMercadoCLP', result.precio);
+        formik.setFieldValue('precioListaCLP', result.precio);
         if (result.consumoRef !== null) {
           formik.setFieldValue('consumoL100km', result.consumoRef);
         }
@@ -100,7 +114,7 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
       } else {
         setLookupStatus('notfound');
       }
-    }, 600);
+    }, 400);
   }, [formik]);
 
   useEffect(() => {
@@ -108,7 +122,17 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
     return () => {
       if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
     };
-  }, [formik.values.marca, formik.values.modelo, formik.values.anio, formik.values.combustible]);
+  }, [formik.values.marca, formik.values.modelo, formik.values.combustible]);
+
+  // Auto-update fuel price when combustible changes (only if still at default)
+  useEffect(() => {
+    const defaultPrice = formik.values.combustible === 'diesel' ? PRECIO_DIESEL_DEFAULT : PRECIO_BENCINA_DEFAULT;
+    const currentPrice = formik.values.precioCombustibleCLP;
+    if (currentPrice === PRECIO_BENCINA_DEFAULT || currentPrice === PRECIO_DIESEL_DEFAULT) {
+      formik.setFieldValue('precioCombustibleCLP', defaultPrice);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik.values.combustible]);
 
   const inputSx = {
     '& .MuiOutlinedInput-root': {
@@ -127,64 +151,115 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
         Tu auto actual
       </Typography>
       <Typography fontSize={14} color={MU} mb={2.5} lineHeight={1.5}>
-        Ingresa los datos de tu vehículo para estimar su valor de mercado actual
+        Compararemos un auto nuevo equivalente al tuyo, para una comparación justa entre precios de mercado actuales
       </Typography>
 
+      {/* Marca + Modelo autocomplete */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
-        <TextField
-          fullWidth
-          label="Marca"
-          placeholder="ej. Toyota"
-          {...formik.getFieldProps('marca')}
-          error={formik.touched.marca && Boolean(formik.errors.marca)}
-          helperText={formik.touched.marca && formik.errors.marca}
-          sx={inputSx}
-          autoComplete="off"
+        <Autocomplete
+          freeSolo
+          options={allBrands}
+          value={formik.values.marca}
+          onChange={(_, value) => {
+            formik.setFieldValue('marca', value ?? '');
+            formik.setFieldValue('modelo', '');
+            setLookupStatus('idle');
+          }}
+          onInputChange={(_, value, reason) => {
+            if (reason === 'input') {
+              formik.setFieldValue('marca', value);
+              if (formik.values.modelo) {
+                formik.setFieldValue('modelo', '');
+                setLookupStatus('idle');
+              }
+            }
+          }}
+          onBlur={() => formik.setFieldTouched('marca', true)}
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: '10px',
+                boxShadow: '0 4px 20px rgba(11,31,58,.12)',
+                '& .MuiAutocomplete-option': {
+                  fontSize: 14,
+                  '&[aria-selected="true"]': { background: `${AC}22` },
+                  '&:hover': { background: `${AC}14` },
+                },
+              },
+            },
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Marca"
+              placeholder="ej. Toyota"
+              error={formik.touched.marca && Boolean(formik.errors.marca)}
+              helperText={formik.touched.marca && formik.errors.marca}
+              sx={inputSx}
+            />
+          )}
         />
-        <TextField
-          fullWidth
-          label="Modelo"
-          placeholder="ej. Corolla"
-          {...formik.getFieldProps('modelo')}
-          error={formik.touched.modelo && Boolean(formik.errors.modelo)}
-          helperText={formik.touched.modelo && formik.errors.modelo}
-          sx={inputSx}
-          autoComplete="off"
+
+        <Autocomplete
+          freeSolo
+          disabled={!marcaSelected}
+          options={brandModels}
+          value={formik.values.modelo}
+          onChange={(_, value) => {
+            formik.setFieldValue('modelo', value ?? '');
+          }}
+          onInputChange={(_, value, reason) => {
+            if (reason === 'input') {
+              formik.setFieldValue('modelo', value);
+            }
+          }}
+          onBlur={() => formik.setFieldTouched('modelo', true)}
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: '10px',
+                boxShadow: '0 4px 20px rgba(11,31,58,.12)',
+                '& .MuiAutocomplete-option': {
+                  fontSize: 14,
+                  '&[aria-selected="true"]': { background: `${AC}22` },
+                  '&:hover': { background: `${AC}14` },
+                },
+              },
+            },
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Modelo"
+              placeholder={marcaSelected ? 'ej. Corolla' : 'Primero selecciona la marca'}
+              error={formik.touched.modelo && Boolean(formik.errors.modelo)}
+              helperText={formik.touched.modelo && formik.errors.modelo}
+              sx={inputSx}
+            />
+          )}
         />
-        <TextField
-          fullWidth
-          label="Año"
-          type="number"
-          placeholder="ej. 2020"
-          inputProps={{ min: 2005, max: new Date().getFullYear() + 1 }}
-          {...formik.getFieldProps('anio')}
-          error={formik.touched.anio && Boolean(formik.errors.anio)}
-          helperText={formik.touched.anio && formik.errors.anio}
-          sx={inputSx}
-        />
+      </Box>
+
+      <Box mb={2}>
         <FormControl fullWidth sx={inputSx}>
           <InputLabel>Combustible</InputLabel>
-          <Select
-            label="Combustible"
-            {...formik.getFieldProps('combustible')}
-          >
+          <Select label="Combustible" {...formik.getFieldProps('combustible')}>
             <MenuItem value="bencina">Bencina</MenuItem>
             <MenuItem value="diesel">Diésel</MenuItem>
           </Select>
         </FormControl>
       </Box>
 
-      {/* Market value */}
       <Box mb={2}>
         <CurrencyTextField
           fullWidth
-          label="Valor de mercado actual"
-          placeholder="ej. 12.000.000"
-          value={formik.values.valorMercadoCLP}
-          onValueChange={(num) => formik.setFieldValue('valorMercadoCLP', num)}
+          label="Precio de lista nuevo (CLP)"
+          placeholder="ej. 18.500.000"
+          value={formik.values.precioListaCLP}
+          onValueChange={(num) => formik.setFieldValue('precioListaCLP', num)}
           onBlur={formik.handleBlur}
-          name="valorMercadoCLP"
-          error={formik.touched.valorMercadoCLP && Boolean(formik.errors.valorMercadoCLP)}
+          name="precioListaCLP"
+          error={formik.touched.precioListaCLP && Boolean(formik.errors.precioListaCLP)}
           sx={{
             ...inputSx,
             ...(lookupStatus === 'found' && {
@@ -197,25 +272,24 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
         />
         {lookupStatus === 'found' && (
           <Typography fontSize={12} color={AC} fontWeight={600} mt={0.5}>
-            ✓ Estimado desde base de datos — puedes editar el valor
+            ✓ Precio de lista estimado — puedes editar el valor
           </Typography>
         )}
         {lookupStatus === 'notfound' && (
           <Typography fontSize={12} color="#F59E0B" fontWeight={600} mt={0.5}>
-            Modelo no encontrado — ingresa el valor manualmente
+            Modelo no encontrado — ingresa el precio manualmente
           </Typography>
         )}
         {lookupStatus === 'idle' && (
           <Typography fontSize={12} color={MU} mt={0.5}>
-            Ingresa marca + modelo + año para estimar automáticamente
+            Ingresa marca + modelo para estimar automáticamente
           </Typography>
         )}
-        {formik.touched.valorMercadoCLP && formik.errors.valorMercadoCLP && (
-          <FormHelperText error>{formik.errors.valorMercadoCLP}</FormHelperText>
+        {formik.touched.precioListaCLP && formik.errors.precioListaCLP && (
+          <FormHelperText error>{formik.errors.precioListaCLP}</FormHelperText>
         )}
       </Box>
 
-      {/* KM slider */}
       <Box mb={2.5}>
         <Typography fontSize={12} fontWeight={700} color={PR} textTransform="uppercase" letterSpacing="0.3px" mb={1}>
           Kilómetros al mes
@@ -240,7 +314,6 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
         </Box>
       </Box>
 
-      {/* Consumption + fuel price */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
         <TextField
           fullWidth
@@ -255,12 +328,12 @@ export default function Step1VehicleForm({ onNext }: Step1Props) {
         <CurrencyTextField
           fullWidth
           label="Precio combustible ($/L)"
-          placeholder="ej. 1.100"
+          placeholder="ej. 1.545"
           value={formik.values.precioCombustibleCLP}
           onValueChange={(num) => formik.setFieldValue('precioCombustibleCLP', num)}
           onBlur={formik.handleBlur}
           name="precioCombustibleCLP"
-          helperText="Referencia Chile 2025"
+          helperText={`Bencina $${PRECIO_BENCINA_DEFAULT.toLocaleString('es-CL')}/L · Diésel $${PRECIO_DIESEL_DEFAULT.toLocaleString('es-CL')}/L`}
           sx={inputSx}
         />
       </Box>

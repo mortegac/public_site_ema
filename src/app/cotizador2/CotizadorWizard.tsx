@@ -14,8 +14,6 @@ import {
   Alert,
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
-import { createClientForm } from '@/store/ClientForms/services'
-import { createEstimate } from '@/store/Estimate/services'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -344,6 +342,7 @@ export default function CotizadorWizard() {
   })
 
   const [geoStatus, setGeoStatus] = useState<'detecting' | 'detected' | 'manual'>('detecting')
+  const [geoAddress, setGeoAddress] = useState<string>('')  // raw address from geolocation
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
@@ -366,6 +365,7 @@ export default function CotizadorWizard() {
           const addr = json.results?.[0]?.formatted_address ?? ''
           if (addr) {
             update({ address: addr })
+            setGeoAddress(addr)  // store detected address to display as text label
           }
         } catch {
           // ignore reverse geocode errors
@@ -413,19 +413,22 @@ export default function CotizadorWizard() {
         const isHouse = state.tipo === 'casa'
         const charger = state.chargerId !== 'own' ? CHARGERS.find(c => c.id === state.chargerId) : null
 
-        const formResult = await createClientForm({
-          isHouse,
-          isPortable,
-          isWallbox,
-          numberOfChargers: 1,
-          distance: state.dist,
-          customerId: null,
+        // Call Next.js API route — server-side AppSync call avoids client auth issues
+        const res = await fetch('/api/cotizar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            isHouse,
+            isPortable,
+            isWallbox,
+            distance: state.dist,
+            numberOfChargers: 1,
+          }),
         })
 
-        const formId = formResult?.data?.formId ?? formResult?.formId ?? null
-
-        if (formId) {
-          const estimates: any[] = await createEstimate({ formId })
+        if (res.ok) {
+          const data = await res.json()
+          const { formId, estimates } = data as { formId: string; estimates: any[] }
 
           const targetPotence = isWallbox ? 7 : 2.2
           const est = estimates.find((e: any) => Number(e.chargerPotence) === targetPotence) ?? estimates[0]
@@ -451,10 +454,14 @@ export default function CotizadorWizard() {
             })
             return
           }
+        } else {
+          const err = await res.json().catch(() => ({}))
+          console.error('[cotizador2] /api/cotizar error:', err)
         }
       } catch (err) {
-        console.error('ProcessEstimate failed, using local calc', err)
+        console.error('[cotizador2] fetch /api/cotizar failed, falling back to local calc:', err)
       }
+      // Fallback: show local calculation
       update({ estimateLoading: false, step: 2 })
       return
     }
@@ -549,6 +556,32 @@ export default function CotizadorWizard() {
             <Box>
               <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
               <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Usando la ubicación de tu dispositivo</Typography>
+            </Box>
+          </Box>
+        )}
+
+        {/* Geo-detected address displayed as a read-only text label */}
+        {geoStatus === 'detected' && geoAddress && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 1,
+              p: 1.5,
+              mb: 1.5,
+              bgcolor: 'rgba(8,152,185,0.06)',
+              border: `1px solid rgba(8,152,185,0.25)`,
+              borderRadius: 1.5,
+            }}
+          >
+            <Typography sx={{ fontSize: '1rem', mt: 0.1 }}>📍</Typography>
+            <Box sx={{ flex: 1 }}>
+              <Typography sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, mb: 0.25 }}>
+                Ubicación detectada
+              </Typography>
+              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547', lineHeight: 1.4 }}>
+                {geoAddress}
+              </Typography>
             </Box>
           </Box>
         )}

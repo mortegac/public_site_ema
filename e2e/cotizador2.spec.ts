@@ -34,6 +34,50 @@ async function goToStep1(page: any) {
 const selectChargerByName = (page: any, name: string) =>
   page.getByText(name).first().click()
 
+// ── API endpoint unit test ──────────────────────────────────────────────────
+test.describe('/api/cotizar endpoint', () => {
+
+  test('POST returns formId and estimates from ProcessEstimate', async ({ request }) => {
+    const res = await request.post('/api/cotizar', {
+      data: { isHouse: true, isWallbox: true, isPortable: false, distance: 10, numberOfChargers: 1 },
+    })
+    expect(res.status()).toBe(200)
+    const body = await res.json()
+    expect(body).toHaveProperty('formId')
+    expect(typeof body.formId).toBe('string')
+    expect(Array.isArray(body.estimates)).toBe(true)
+    expect(body.estimates.length).toBeGreaterThan(0)
+    // Each estimate has the expected fields
+    const est = body.estimates[0]
+    expect(est).toHaveProperty('estimateId')
+    expect(est).toHaveProperty('materialsCost')
+    expect(est).toHaveProperty('installationCost')
+    expect(est).toHaveProperty('netPrice')
+    expect(est).toHaveProperty('VAT')
+    expect(est).toHaveProperty('grossPrice')
+    expect(est).toHaveProperty('chargerPotence')
+    expect(Number(est.grossPrice)).toBeGreaterThan(0)
+  })
+
+  test('POST with portable returns estimate with chargerPotence 2.2', async ({ request }) => {
+    const res = await request.post('/api/cotizar', {
+      data: { isHouse: true, isWallbox: false, isPortable: true, distance: 5, numberOfChargers: 1 },
+    })
+    expect(res.status()).toBe(200)
+    const body = await res.json()
+    expect(body.estimates.length).toBeGreaterThan(0)
+  })
+
+  test('POST with missing fields returns 400', async ({ request }) => {
+    const res = await request.post('/api/cotizar', {
+      data: { isHouse: 'not-a-boolean' },
+    })
+    expect(res.status()).toBe(400)
+  })
+
+})
+
+// ── Wizard UI tests ─────────────────────────────────────────────────────────
 test.describe('/cotizador2 wizard', () => {
 
   test('page title and H1', async ({ page }) => {
@@ -72,6 +116,31 @@ test.describe('/cotizador2 wizard', () => {
   test('step 0: address input visible after geo settles', async ({ page }) => {
     await setup(page)
     await expect(page.locator('input[id="address"]').first()).toBeVisible({ timeout: 10000 })
+  })
+
+  test('step 0: geo-detected address label shown as independent text', async ({ page }) => {
+    const MOCK_ADDRESS = 'Av. Providencia 1234, Providencia, Santiago, Chile'
+
+    // Patch window.fetch before React loads so the geo reverse-geocode returns a known address
+    await page.addInitScript((mockAddr: string) => {
+      const orig = window.fetch.bind(window)
+      window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = typeof input === 'string' ? input : input instanceof URL ? input.href : (input as Request).url
+        if (url.includes('maps.googleapis.com') && url.includes('geocode')) {
+          return new Response(
+            JSON.stringify({ results: [{ formatted_address: mockAddr }], status: 'OK' }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } }
+          )
+        }
+        return orig(input, init)
+      }
+    }, MOCK_ADDRESS)
+
+    await setup(page)
+
+    // The "Ubicación detectada" read-only label appears when geo succeeds
+    await expect(page.getByText('Ubicación detectada').first()).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText(MOCK_ADDRESS).first()).toBeVisible()
   })
 
   test('step 1: portátil charger cards appear', async ({ page }) => {

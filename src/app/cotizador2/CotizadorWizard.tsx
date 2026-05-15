@@ -397,13 +397,40 @@ export default function CotizadorWizard() {
           setGeoStatus('detected') // fallback to manual
         }
       },
-      (err) => {
+      async (err) => {
         const codeMap: Record<number, string> = { 1: 'PERMISSION_DENIED', 2: 'POSITION_UNAVAILABLE', 3: 'TIMEOUT' }
         const type = codeMap[err.code] ?? 'UNKNOWN'
         console.error(`[geo] ❌ ${type} (code=${err.code}) — "${err.message}"`)
+
+        // POSITION_UNAVAILABLE: macOS CoreLocation failure (e.g. Location Services
+        // disabled for Chrome). Auto-fallback to IP-based geolocation instead of
+        // showing an error — gives a city-level approximation silently.
+        if (err.code === 2) {
+          console.log('[geo] 🔄 POSITION_UNAVAILABLE — trying IP geolocation fallback via /api/geoip')
+          try {
+            const geoIpRes = await fetch('/api/geoip')
+            const geoIpData = await geoIpRes.json()
+            console.log('[geo] 📦 /api/geoip response:', geoIpData)
+            const { latitude: lat, longitude: lng, city, region, source } = geoIpData
+            console.log(`[geo] 🌐 IP location: ${city}, ${region} (source: ${source})`)
+            // Reverse-geocode the IP coords to get a street-level address
+            const geocodeRes = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`)
+            const geocodeData = await geocodeRes.json()
+            console.log('[geo] 📦 /api/geocode response:', geocodeData)
+            const addr: string = geocodeData.address ?? `${city}, ${region}, Chile`
+            console.log('[geo] 📍 IP-based address:', addr)
+            update({ address: addr })
+            setGeoAddress(addr)
+            setGeoStatus('detected')
+            return
+          } catch (ipErr) {
+            console.error('[geo] ❌ IP geolocation fallback failed:', ipErr)
+          }
+        }
+
         const messages: Record<string, string> = {
           PERMISSION_DENIED: 'Permiso denegado. Activa la ubicación en tu navegador.',
-          POSITION_UNAVAILABLE: 'Ubic. no disponible. En macOS: Configuración del sistema › Privacidad › Servicios de ubicación › Chrome ✓',
+          POSITION_UNAVAILABLE: 'No se pudo detectar la ubicación. Escribe tu dirección manualmente.',
           TIMEOUT: 'Tiempo de espera agotado. Intenta de nuevo.',
         }
         setGeoError(messages[type] ?? 'No se pudo obtener tu ubicación.')

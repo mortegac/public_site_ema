@@ -40,4 +40,4 @@ src/app/components/shared/CalendarSteps/index.tsx
 
 # Claude Code local settings (machine-specific paths)
 .claude/settings.local.json
-.claude/worktrees/
+.claude/worktrees/test-results/

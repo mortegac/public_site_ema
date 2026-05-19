@@ -345,17 +345,45 @@ export default function CotizadorWizard() {
     formId: null,
   })
 
-  // Start in 'manual' — Chrome requires geolocation to be triggered by a user gesture,
-  // not automatically on mount. Auto-detecting on load causes:
-  //   [Violation] Only request geolocation information in response to a user gesture.
-  // and on macOS may trigger kCLErrorLocationUnknown if Location Services is not enabled.
-  const [geoStatus, setGeoStatus] = useState<'idle' | 'detecting' | 'detected' | 'error'>('idle')
+  const [geoStatus, setGeoStatus] = useState<'loading' | 'detected' | 'error'>('loading')
   const [geoAddress, setGeoAddress] = useState<string>('')
   const [geoError, setGeoError] = useState<string>('')
+  // Controls whether the manual address input is visible
+  const [showManualInput, setShowManualInput] = useState<boolean>(false)
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
+
+  // ─── Auto-detect location via IP on mount (no user gesture needed) ────────
+  const autoGeoStarted = useRef(false)
+  useEffect(() => {
+    if (autoGeoStarted.current) return
+    autoGeoStarted.current = true
+    console.log('[geo] 🟡 Auto-detecting location via IP geolocation...')
+    ;(async () => {
+      try {
+        const geoIpRes = await fetch('/api/geoip')
+        const geoIpData = await geoIpRes.json()
+        console.log('[geo] 📦 /api/geoip:', geoIpData)
+        const { latitude: lat, longitude: lng } = geoIpData
+        const geocodeRes = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`)
+        const geocodeData = await geocodeRes.json()
+        const addr: string = geocodeData.address ?? ''
+        if (addr) {
+          console.log('[geo] 📍 Auto-detected address:', addr)
+          update({ address: addr })
+          setGeoAddress(addr)
+          setGeoStatus('detected')
+        } else {
+          setGeoStatus('error')
+        }
+      } catch (err) {
+        console.error('[geo] ❌ Auto IP detection failed:', err)
+        setGeoStatus('error')
+      }
+    })()
+  }, [])
 
   // ─── Geolocation — triggered by user click (NOT on mount) ─────────────────
   async function requestGeoLocation() {
@@ -366,7 +394,7 @@ export default function CotizadorWizard() {
       return
     }
 
-    setGeoStatus('detecting')
+    setGeoStatus('loading')
     setGeoError('')
     console.log('[geo] 🟡 User triggered geolocation detection...')
 
@@ -449,7 +477,8 @@ export default function CotizadorWizard() {
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
     if (state.step === 0) return state.tipo !== null
-    if (state.step === 1) return state.tipoC !== null && state.chargerId !== null
+    // 'own' is pre-selected by default so just need tipoC chosen
+    if (state.step === 1) return state.tipoC !== null
     return true
   })()
 
@@ -581,9 +610,11 @@ export default function CotizadorWizard() {
       apiResult: null,
       formId: null,
     })
-    setGeoStatus('idle')
+    setGeoStatus('loading')
     setGeoAddress('')
     setGeoError('')
+    setShowManualInput(false)
+    autoGeoStarted.current = false  // allow re-detection on next render cycle
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────
@@ -622,58 +653,60 @@ export default function CotizadorWizard() {
           Dirección de instalación
         </Typography>
 
-        {/* ─── Geo button (idle) ─── */}
-        {geoStatus === 'idle' && (
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={requestGeoLocation}
-            sx={{
-              mb: 1.5,
-              py: 1.25,
-              borderColor: TEAL,
-              color: TEAL,
-              fontWeight: 600,
-              fontSize: '0.875rem',
-              textTransform: 'none',
-              borderRadius: 1.5,
-              '&:hover': { borderColor: '#0777a0', bgcolor: 'rgba(8,152,185,0.05)' },
-            }}
-          >
-            📍 Detectar mi ubicación automáticamente
-          </Button>
-        )}
-
-        {/* ─── Detecting spinner ─── */}
-        {geoStatus === 'detecting' && (
+        {/* ─── Loading (auto IP detection on mount) ─── */}
+        {geoStatus === 'loading' && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, mb: 1.5 }}>
             <Typography sx={{ fontSize: '1.1rem' }}>📍</Typography>
             <Box sx={{ flex: 1 }}>
               <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
-              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED }}>Usando los Servicios de ubicación de tu dispositivo</Typography>
+              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED }}>Calculando automáticamente</Typography>
             </Box>
           </Box>
         )}
 
-        {/* ─── Detected address as h3 ─── */}
+        {/* ─── Detected address as h3 (input hidden by default) ─── */}
         {geoStatus === 'detected' && geoAddress && (
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, mb: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5 }}>
-            <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="caption" sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}>
-                Ubicación detectada
-              </Typography>
-              <Typography component="h3" sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4, m: 0 }}>
-                {geoAddress}
-              </Typography>
+          <Box sx={{ mb: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5, mb: 1 }}>
+              <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}>
+                  Ubicación detectada
+                </Typography>
+                <Typography component="h3" sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4, m: 0 }}>
+                  {geoAddress}
+                </Typography>
+              </Box>
+              <Button
+                size="small"
+                onClick={requestGeoLocation}
+                sx={{ fontSize: '0.7rem', color: TEAL, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap' }}
+              >
+                Actualizar
+              </Button>
             </Box>
-            <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: TEAL, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap' }}>
-              Actualizar
-            </Button>
+            {/* Toggle manual input */}
+            {!showManualInput ? (
+              <Button
+                size="small"
+                onClick={() => setShowManualInput(true)}
+                sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textTransform: 'none', p: 0, '&:hover': { color: '#2A3547', bgcolor: 'transparent' } }}
+              >
+                ✏️ Ingresar dirección manualmente
+              </Button>
+            ) : (
+              <Button
+                size="small"
+                onClick={() => setShowManualInput(false)}
+                sx={{ fontSize: '0.78rem', color: TEAL, textTransform: 'none', p: 0, '&:hover': { bgcolor: 'transparent' } }}
+              >
+                ← Usar ubicación detectada
+              </Button>
+            )}
           </Box>
         )}
 
-        {/* ─── Error state ─── */}
+        {/* ─── Error state (show input directly) ─── */}
         {geoStatus === 'error' && (
           <Alert
             severity="warning"
@@ -684,21 +717,23 @@ export default function CotizadorWizard() {
               </Button>
             }
           >
-            {geoError}
+            {geoError || 'No se pudo detectar la ubicación. Ingresa tu dirección manualmente.'}
           </Alert>
         )}
 
-        {/* ─── Address input (always shown) ─── */}
-        <AddressInput2
-          value={state.address}
-          onAddressChange={(v) => update({ address: v, regionWarn: false })}
-          onSelectAddress={(details) => {
-            if (details) {
-              const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-              update({ address: full, regionWarn: false })
-            }
-          }}
-        />
+        {/* ─── Address input: shown when error, manual mode, or user toggled it ─── */}
+        {(geoStatus === 'error' || showManualInput) && (
+          <AddressInput2
+            value={state.address}
+            onAddressChange={(v) => update({ address: v, regionWarn: false })}
+            onSelectAddress={(details) => {
+              if (details) {
+                const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                update({ address: full, regionWarn: false })
+              }
+            }}
+          />
+        )}
 
         {state.regionWarn && (
           <Alert severity="warning" sx={{ fontSize: '0.8rem', mt: 1 }}>
@@ -708,7 +743,7 @@ export default function CotizadorWizard() {
 
         {state.tipo === 'edificio' && (
           <Alert severity="info" sx={{ mt: 2, fontSize: '0.8rem' }}>
-            Valores referenciales · Instalación certificada SEC · Cotización formal tras visita técnica
+            Instalación certificada SEC · Tu compra protegida ·
           </Alert>
         )}
       </Box>
@@ -732,7 +767,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipoC === 'portable'}
-              onClick={() => update({ tipoC: 'portable', chargerId: null })}
+              onClick={() => update({ tipoC: 'portable', chargerId: 'own' })}
               icon="🔌"
               title="Portátil"
               subtitle="Cable de carga"
@@ -741,7 +776,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipoC === 'wallbox'}
-              onClick={() => update({ tipoC: 'wallbox', chargerId: null })}
+              onClick={() => update({ tipoC: 'wallbox', chargerId: 'own' })}
               icon="⚡"
               title="Wallbox"
               subtitle="Mayor potencia · Fijo en pared"
@@ -1123,6 +1158,23 @@ export default function CotizadorWizard() {
               </Typography>
             </Box>
           ))}
+        </Box>
+
+        {/* Nueva simulación */}
+        <Box sx={{ textAlign: 'center', mt: 3 }}>
+          <Button
+            variant="text"
+            onClick={resetAll}
+            sx={{
+              color: TEXT_MUTED,
+              fontSize: '0.82rem',
+              textTransform: 'none',
+              textDecoration: 'underline',
+              '&:hover': { color: '#2A3547', bgcolor: 'transparent' },
+            }}
+          >
+            ← Nueva simulación
+          </Button>
         </Box>
       </Box>
     )

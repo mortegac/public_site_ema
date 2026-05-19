@@ -676,15 +676,8 @@ export default function CotizadorWizard() {
                 {geoAddress}
               </Typography>
             </Box>
-            {/* Action buttons stacked vertically */}
+            {/* Action buttons */}
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0.25, flexShrink: 0 }}>
-              <Button
-                size="small"
-                onClick={requestGeoLocation}
-                sx={{ fontSize: '0.7rem', color: TEAL, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap', py: 0.25 }}
-              >
-                Actualizar
-              </Button>
               <Button
                 size="small"
                 onClick={() => setShowManualInput(true)}

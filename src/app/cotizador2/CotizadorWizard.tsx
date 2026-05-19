@@ -943,32 +943,32 @@ export default function CotizadorWizard() {
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2 }}>
           <Button
             fullWidth
-            variant={state.activePanel === 'pago' ? 'contained' : 'outlined'}
+            variant="contained"
             onClick={() => update({ activePanel: state.activePanel === 'pago' ? null : 'pago' })}
             sx={{
-              bgcolor: state.activePanel === 'pago' ? PINK : 'transparent',
-              borderColor: PINK,
-              color: state.activePanel === 'pago' ? '#fff' : PINK,
-              '&:hover': { bgcolor: state.activePanel === 'pago' ? PINK_DARK : 'rgba(232,26,104,0.06)', borderColor: PINK_DARK },
+              bgcolor: 'rgb(240, 56, 107)',
+              color: '#ffffff',
+              '&:hover': { bgcolor: 'rgb(239, 97, 136)' },
               fontWeight: 700,
               fontSize: '0.85rem',
               py: 1.25,
+              boxShadow: 'none',
             }}
           >
             Pagar e iniciar proceso de instalación
           </Button>
           <Button
             fullWidth
-            variant={state.activePanel === 'email' ? 'contained' : 'outlined'}
+            variant="contained"
             onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
             sx={{
-              bgcolor: state.activePanel === 'email' ? TEAL : 'transparent',
-              borderColor: TEAL,
-              color: state.activePanel === 'email' ? '#fff' : TEAL,
-              '&:hover': { bgcolor: state.activePanel === 'email' ? '#0777a0' : 'rgba(8,152,185,0.06)', borderColor: '#0777a0' },
+              bgcolor: TEAL,
+              color: '#ffffff',
+              '&:hover': { bgcolor: 'rgb(91, 196, 210)' },
               fontWeight: 700,
               fontSize: '0.85rem',
               py: 1.25,
+              boxShadow: 'none',
             }}
           >
             Enviar mi cotización por email

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import amplifyOutputsProd from '../../../../amplify_outputs.json'
 import amplifyOutputsDev from '../../../../amplify_outputs_dev.json'
 
-// ─── AppSync config (same pattern as /api/cotizar) ───────────────────────────
+// ─── AppSync config ───────────────────────────────────────────────────────────
 function getAppSyncConfig() {
   const isProd = process.env.NEXT_PUBLIC_ENVIRONMENT !== 'DEV'
   const outputs = isProd ? amplifyOutputsProd : amplifyOutputsDev
@@ -10,11 +10,13 @@ function getAppSyncConfig() {
   return { url: data.url as string, apiKey: data.api_key as string }
 }
 
+// Returns json.data — logs full response; throws only on HTTP error
 async function callAppSync(
   url: string,
   apiKey: string,
   query: string,
-  variables: Record<string, unknown>
+  variables: Record<string, unknown>,
+  label: string
 ) {
   const res = await fetch(url, {
     method: 'POST',
@@ -22,10 +24,21 @@ async function callAppSync(
     body: JSON.stringify({ query, variables }),
     cache: 'no-store',
   })
-  if (!res.ok) throw new Error(`AppSync HTTP ${res.status}: ${await res.text()}`)
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`${label}: AppSync HTTP ${res.status} — ${text.slice(0, 300)}`)
+  }
+
   const json = await res.json()
-  if (json.errors?.length) throw new Error(json.errors.map((e: any) => e.message).join('; '))
-  return json.data
+  console.log(`[payment] ${label} raw response:`, JSON.stringify(json).slice(0, 500))
+
+  // Surface AppSync errors (but still return data if present)
+  if (json.errors?.length && !json.data) {
+    throw new Error(`${label}: ${json.errors.map((e: any) => e.message).join('; ')}`)
+  }
+
+  return json
 }
 
 // ─── GraphQL mutations ────────────────────────────────────────────────────────
@@ -39,6 +52,18 @@ const CREATE_SHOPPING_CART = /* GraphQL */ `
       paymentMethod
       status
       customerId
+    }
+  }
+`
+
+const CREATE_SHOPPING_CART_DETAIL = /* GraphQL */ `
+  mutation CreateShoppingCartDetail($input: CreateShoppingCartDetailInput!) {
+    createShoppingCartDetail(input: $input) {
+      shoppingCartDetailId
+      shoppingCartId
+      glosa
+      price
+      typeOfItem
     }
   }
 `
@@ -58,14 +83,14 @@ const WEBPAY_START = /* GraphQL */ `
 
 // ─── Request body schema ──────────────────────────────────────────────────────
 interface PaymentBody {
-  total: number           // gross price with IVA in CLP
-  vat: number             // IVA amount in CLP
-  email: string           // customer email (used as customerId)
-  glosa?: string          // description for Webpay (default: "Visita técnica instalación cargador EV")
-  address?: string        // installation address (for reference)
-  tipo?: string           // 'casa' | 'edificio'
-  chargerName?: string    // charger model name
-  dist?: number           // distance in meters
+  total: number
+  vat: number
+  email?: string
+  glosa?: string
+  address?: string
+  tipo?: string
+  chargerName?: string
+  dist?: number
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -78,58 +103,90 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { total, vat, email, glosa = 'Visita técnica instalación cargador EV' } = body
+  const {
+    total,
+    vat = 0,
+    email,
+    glosa = 'Visita técnica instalación cargador EV',
+    chargerName = 'Instalación cargador EV',
+  } = body
 
   if (!total || total <= 0) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
-  // email is optional — used only for ShoppingCart identification
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
+  const shoppingCartId = crypto.randomUUID()
+
+  console.log(`[payment] Starting payment flow — total=${total}, cartId=${shoppingCartId}`)
 
   // ── Step 1: Create ShoppingCart ──────────────────────────────────────────────
-  let shoppingCartId: string
-
   try {
     const cartInput: Record<string, unknown> = {
-      shoppingCartId: crypto.randomUUID(),
+      shoppingCartId,
       total: Math.round(total),
-      vat: Math.round(vat ?? 0),
-      typeOfCart: 'visit',       // 'visit' matches the WebpayStart Lambda expectation
+      vat: Math.round(vat),
+      typeOfCart: 'service',
       paymentMethod: 'transbank',
       status: 'pending',
-      // Note: omit customerId to avoid GSI type mismatch when customer doesn't exist yet
-      // The email is passed as glosa context instead
+      ...(email ? { customerId: email } : {}),
     }
 
-    console.log('[/api/payment] Creating ShoppingCart:', cartInput)
+    console.log('[payment] Creating ShoppingCart:', JSON.stringify(cartInput))
 
-    const cartData = await callAppSync(appsyncUrl, apiKey, CREATE_SHOPPING_CART, { input: cartInput })
-    shoppingCartId = cartData?.createShoppingCart?.shoppingCartId
+    const cartJson = await callAppSync(appsyncUrl, apiKey, CREATE_SHOPPING_CART, { input: cartInput }, 'createShoppingCart')
+    const createdId = cartJson?.data?.createShoppingCart?.shoppingCartId
 
-    if (!shoppingCartId) throw new Error('createShoppingCart returned no shoppingCartId')
+    if (!createdId) {
+      const errMsg = cartJson?.errors?.map((e: any) => e.message).join('; ') ?? 'null response'
+      throw new Error(`createShoppingCart returned no ID: ${errMsg}`)
+    }
 
-    console.log('[/api/payment] ShoppingCart created:', shoppingCartId)
+    console.log('[payment] ShoppingCart created:', createdId)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[/api/payment] createShoppingCart error:', message)
-    return NextResponse.json({ error: `createShoppingCart failed: ${message}` }, { status: 502 })
+    console.error('[payment] createShoppingCart error:', message)
+    return NextResponse.json({ error: `createShoppingCart failed: ${message}`, shoppingCartId }, { status: 502 })
   }
 
-  // ── Step 2: WebpayStart ──────────────────────────────────────────────────────
+  // ── Step 2: Create ShoppingCartDetail (Lambda may require at least one item) ─
   try {
-    console.log('[/api/payment] Starting Webpay for cart:', shoppingCartId, 'glosa:', glosa)
-
-    const webpayData = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, {
+    const detailInput = {
+      shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
-      glosa,
-    })
+      glosa: chargerName,
+      price: Math.round(total),
+      typeOfItem: 'service',
+    }
 
-    const result = webpayData?.WebpayStart
+    console.log('[payment] Creating ShoppingCartDetail:', JSON.stringify(detailInput))
 
-    if (!result?.token) throw new Error('WebpayStart returned no token')
+    const detailJson = await callAppSync(appsyncUrl, apiKey, CREATE_SHOPPING_CART_DETAIL, { input: detailInput }, 'createShoppingCartDetail')
+    console.log('[payment] ShoppingCartDetail created:', detailJson?.data?.createShoppingCartDetail?.shoppingCartDetailId)
+  } catch (err: unknown) {
+    // Non-fatal — log but continue to WebpayStart
+    console.warn('[payment] createShoppingCartDetail error (non-fatal):', err instanceof Error ? err.message : err)
+  }
 
-    console.log('[/api/payment] WebpayStart success, order:', result.order)
+  // ── Step 3: WebpayStart ───────────────────────────────────────────────────────
+  try {
+    console.log(`[payment] Calling WebpayStart — cartId=${shoppingCartId}, glosa="${glosa}"`)
+
+    const webpayJson = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, { shoppingCartId, glosa }, 'WebpayStart')
+    const result = webpayJson?.data?.WebpayStart
+
+    console.log('[payment] WebpayStart result:', JSON.stringify(result))
+
+    if (!result?.token) {
+      const appSyncErrors = webpayJson?.errors?.map((e: any) => e.message).join('; ')
+      throw new Error(
+        appSyncErrors
+          ? `AppSync errors: ${appSyncErrors}`
+          : `WebpayStart returned null — cart may not satisfy Lambda conditions (cartId: ${shoppingCartId})`
+      )
+    }
+
+    console.log('[payment] Webpay token obtained, order:', result.order)
 
     return NextResponse.json({
       shoppingCartId,
@@ -142,7 +199,10 @@ export async function POST(req: NextRequest) {
     })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[/api/payment] WebpayStart error:', message)
-    return NextResponse.json({ error: `WebpayStart failed: ${message}` }, { status: 502 })
+    console.error('[payment] WebpayStart error:', message)
+    return NextResponse.json(
+      { error: `WebpayStart failed: ${message}`, shoppingCartId },
+      { status: 502 }
+    )
   }
 }

@@ -1451,14 +1451,22 @@ export default function CotizadorWizard() {
               </Box>
             )}
           </Box>
-        </Container>
-      </Box>
 
-      {/* ── Trust footer ─────────────────────────────────────────────────── */}
-      <Box sx={{ py: 3, textAlign: 'center', bgcolor: SURFACE }}>
-        <Typography variant="caption" sx={{ color: TEXT_MUTED }}>
-          Valores referenciales · Instalación certificada SEC · Cotización formal tras visita técnica
-        </Typography>
+          {/* ── Trust text — below white card, steps 0-2 only ─────────── */}
+          {state.step <= 2 && !state.paid && (
+            <Typography
+              variant="caption"
+              sx={{
+                display: 'block',
+                textAlign: 'center',
+                color: TEXT_MUTED,
+                mt: '10px',
+              }}
+            >
+              Instalación certificada SEC · Garantía de 3 meses · Tu compra esta protegida
+            </Typography>
+          )}
+        </Container>
       </Box>
     </Box>
   )

@@ -2,6 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Related Projects
+
+> **CRITICAL: Only reference code from these three projects. Do not access or modify any other projects.**
+
+| Role | Path |
+|------|------|
+| **Frontend (this project)** | `/Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema` |
+| **Backend (Amplify Gen 2)** | `/Users/manu/_CODE/ENERGICA/_CODE/EMA/ema-back` |
+| **Backoffice** | `/Users/manu/_CODE/ENERGICA/_CODE/EMA/ema-backofficev2` |
+
 ## Commands
 
 ```bash

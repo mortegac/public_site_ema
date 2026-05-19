@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
       shoppingCartId,
       total: Math.round(total),
       vat: Math.round(vat),
-      typeOfCart: 'charger-installation' as any, // Custom type for EV charger installation flow
+      typeOfCart: 'charger-installation',
       paymentMethod: 'transbank',
       status: 'pending',
       ...(email ? { customerId: email } : {}),
@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
       shoppingCartId,
       glosa: chargerName,
       price: Math.round(total),
-      typeOfItem: 'charger-installation' as any,
+      typeOfItem: 'charger-installation',
     }
 
     console.log('[payment] Creating ShoppingCartDetail:', JSON.stringify(detailInput))

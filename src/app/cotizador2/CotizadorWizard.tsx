@@ -123,6 +123,8 @@ interface WizardState {
     isOwn: boolean
   } | null
   formId: string | null
+  webpayLoading: boolean
+  webpayError: string
 }
 
 interface CalcResult {
@@ -343,6 +345,8 @@ export default function CotizadorWizard() {
     estimateLoading: false,
     apiResult: null,
     formId: null,
+    webpayLoading: false,
+    webpayError: '',
   })
 
   const [geoStatus, setGeoStatus] = useState<'loading' | 'detected' | 'error'>('loading')
@@ -575,8 +579,56 @@ export default function CotizadorWizard() {
     }
   }
 
-  function handlePay() {
-    update({ paid: true, step: 3, activePanel: null })
+  // ─── Webpay payment flow ─────────────────────────────────────────────────────
+  async function handlePay() {
+    const displayResult = state.apiResult ?? result
+    if (!state.emailPago || !displayResult) return
+
+    update({ webpayLoading: true, webpayError: '' })
+    console.log('[payment] Calling /api/payment...')
+
+    try {
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          total: displayResult.total,
+          vat: displayResult.iva,
+          email: state.emailPago,
+          address: state.address,
+          tipo: state.tipo,
+          chargerName: displayResult.chargerName,
+          dist: state.dist,
+          glosa: 'Visita técnica instalación cargador EV',
+        }),
+      })
+
+      const data = await res.json()
+      console.log('[payment] Response:', data)
+
+      if (!res.ok || !data.token) {
+        throw new Error(data.error ?? 'Error al iniciar el pago')
+      }
+
+      // Redirect to Webpay via POST form (required by Transbank)
+      console.log('[payment] Redirecting to Webpay:', data.url, 'order:', data.order)
+      update({ webpayLoading: false })
+
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = data.url
+      const tokenInput = document.createElement('input')
+      tokenInput.type = 'hidden'
+      tokenInput.name = 'token_ws'
+      tokenInput.value = data.token
+      form.appendChild(tokenInput)
+      document.body.appendChild(form)
+      form.submit()
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al procesar el pago'
+      console.error('[payment] Error:', message)
+      update({ webpayLoading: false, webpayError: message })
+    }
   }
 
   function handleSendEmail() {
@@ -609,6 +661,8 @@ export default function CotizadorWizard() {
       estimateLoading: false,
       apiResult: null,
       formId: null,
+      webpayLoading: false,
+      webpayError: '',
     })
     setGeoStatus('loading')
     setGeoAddress('')
@@ -1034,20 +1088,32 @@ export default function CotizadorWizard() {
               onChange={e => update({ emailPago: e.target.value })}
               sx={{ mb: 2.5 }}
             />
+            {/* Webpay error */}
+            {state.webpayError && (
+              <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
+                {state.webpayError}
+              </Alert>
+            )}
+
             <Button
               fullWidth
               variant="contained"
               onClick={handlePay}
-              disabled={!state.emailPago}
+              disabled={!state.emailPago || state.webpayLoading}
               sx={{
-                bgcolor: PINK,
-                '&:hover': { bgcolor: PINK_DARK },
+                bgcolor: !state.emailPago || state.webpayLoading ? '#e0e0e0' : PINK,
+                color: !state.emailPago || state.webpayLoading ? '#aaa' : '#fff',
+                '&:hover': { bgcolor: state.emailPago && !state.webpayLoading ? PINK_DARK : '#e0e0e0' },
+                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
                 fontWeight: 700,
                 py: 1.5,
                 fontSize: '0.95rem',
+                boxShadow: 'none',
               }}
             >
-              Pagar {fmt(displayResult.total)} con Webpay →
+              {state.webpayLoading
+                ? 'Procesando pago…'
+                : `Pagar ${fmt(displayResult.total)} con Webpay →`}
             </Button>
             <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
               Pago seguro · Visa, Mastercard, Redcompra, débito

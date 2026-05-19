@@ -12,6 +12,10 @@ import {
   Divider,
   Chip,
   Alert,
+  FormControl,
+  Select,
+  MenuItem,
+  type SelectChangeEvent,
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
 
@@ -498,6 +502,10 @@ export default function CotizadorWizard() {
           if (est) {
             const chargerPrice = charger ? charger.precio : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
+            // API returns costs without the selected charger price — add it to get correct totals
+            const installNeto = Number(est.netPrice ?? 0)
+            const totalNeto = installNeto + chargerPrice
+            const totalIva = Math.round(totalNeto * 0.19)
             update({
               estimateLoading: false,
               step: 2,
@@ -508,9 +516,9 @@ export default function CotizadorWizard() {
                 sec: Number(est.SECCost ?? 0),
                 chargerPrice,
                 chargerName,
-                neto: Number(est.netPrice ?? 0),
-                iva: Number(est.VAT ?? 0),
-                total: Number(est.grossPrice ?? 0),
+                neto: totalNeto,
+                iva: totalIva,
+                total: totalNeto + totalIva,
                 isOwn: state.chargerId === 'own',
               },
             })
@@ -727,7 +735,7 @@ export default function CotizadorWizard() {
               onClick={() => update({ tipoC: 'portable', chargerId: null })}
               icon="🔌"
               title="Portátil"
-              subtitle="Enchufe estándar · Flexible"
+              subtitle="Cable de carga"
             />
           </Grid>
           <Grid size={{ xs: 6 }}>
@@ -776,45 +784,44 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* Wallbox card list */}
+        {/* Wallbox dropdown Select (Image #13 style) */}
         {state.tipoC === 'wallbox' && (
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>
-                Selecciona tu wallbox
-              </Typography>
-              <Chip
-                label="Catálogo completo"
-                size="small"
-                sx={{ height: 18, fontSize: '0.65rem', bgcolor: 'rgba(8,152,185,0.1)', color: TEAL }}
-              />
-            </Box>
-            {wallboxes.map(c => (
-              <ChargerListItem
-                key={c.id}
-                charger={c}
-                selected={state.chargerId === c.id}
-                onClick={() => update({ chargerId: c.id })}
-              />
-            ))}
-            <Box
-              onClick={() => update({ chargerId: 'own' })}
-              sx={{
-                border: `2px solid ${state.chargerId === 'own' ? PINK : BORDER}`,
-                borderRadius: 2,
-                p: 2,
-                cursor: 'pointer',
-                bgcolor: state.chargerId === 'own' ? 'rgba(232,26,104,0.04)' : '#fff',
-                transition: 'all 0.2s',
-                '&:hover': { borderColor: PINK },
-                mb: 1,
-              }}
-            >
-              <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', color: state.chargerId === 'own' ? PINK : '#2A3547' }}>
-                Ya tengo mi cargador
-              </Typography>
-              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Solo necesito la instalación</Typography>
-            </Box>
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+              Modelo
+            </Typography>
+            <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+              <Select
+                displayEmpty
+                value={state.chargerId ?? ''}
+                onChange={(e: SelectChangeEvent<string>) => update({ chargerId: (e.target.value as string) || null })}
+                renderValue={(val: string) => {
+                  if (!val) return <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Elige un wallbox...</Typography>
+                  if (val === 'own') return 'Ya tengo mi cargador (solo instalación)'
+                  const ch = wallboxes.find(c => c.id === val)
+                  return ch ? `${ch.name} — ${fmt(ch.precio)} — ${ch.kw} kW` : val
+                }}
+                sx={{
+                  bgcolor: '#fff',
+                  '& .MuiOutlinedInput-notchedOutline': { borderColor: BORDER },
+                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
+                  fontSize: '0.875rem',
+                }}
+              >
+                <MenuItem value="" disabled>
+                  <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Elige un wallbox...</Typography>
+                </MenuItem>
+                {wallboxes.map(c => (
+                  <MenuItem key={c.id} value={c.id} sx={{ fontSize: '0.875rem' }}>
+                    {c.name} — {fmt(c.precio)} — {c.kw} kW
+                  </MenuItem>
+                ))}
+                <MenuItem value="own" sx={{ fontSize: '0.875rem' }}>
+                  Ya tengo mi cargador (solo instalación)
+                </MenuItem>
+              </Select>
+            </FormControl>
           </Box>
         )}
 
@@ -853,8 +860,23 @@ export default function CotizadorWizard() {
     const displayResult = state.apiResult ?? localResult
     if (!displayResult) return null
 
+    // Summary params for the header (Image #14)
+    const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
+    const chargerLabel = displayResult.chargerName || 'Cargador propio'
+    const distLabel2 = `${state.dist}m`
+
     return (
       <Box>
+        {/* Estimación summary header (Image #14) */}
+        <Box sx={{ textAlign: 'center', mb: 2 }}>
+          <Typography sx={{ fontSize: '0.95rem', fontWeight: 700, color: '#2A3547' }}>
+            Tu estimación
+          </Typography>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.25 }}>
+            {tipoLabel} · {chargerLabel} · {distLabel2}
+          </Typography>
+        </Box>
+
         {/* Price hero */}
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 0.5 }}>Total estimado (con IVA)</Typography>
@@ -910,45 +932,48 @@ export default function CotizadorWizard() {
           </Box>
         </Box>
 
-        {/* Action panels */}
-        <Grid container spacing={1.5} sx={{ mb: 2 }}>
-          <Grid size={{ xs: 6 }}>
-            <Button
-              fullWidth
-              variant={state.activePanel === 'pago' ? 'contained' : 'outlined'}
-              onClick={() => update({ activePanel: state.activePanel === 'pago' ? null : 'pago' })}
-              sx={{
-                bgcolor: state.activePanel === 'pago' ? PINK : 'transparent',
-                borderColor: PINK,
-                color: state.activePanel === 'pago' ? '#fff' : PINK,
-                '&:hover': { bgcolor: state.activePanel === 'pago' ? PINK_DARK : 'rgba(232,26,104,0.06)', borderColor: PINK_DARK },
-                fontWeight: 700,
-                fontSize: '0.85rem',
-                py: 1.25,
-              }}
-            >
-              Pagar ahora
-            </Button>
-          </Grid>
-          <Grid size={{ xs: 6 }}>
-            <Button
-              fullWidth
-              variant={state.activePanel === 'email' ? 'contained' : 'outlined'}
-              onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
-              sx={{
-                bgcolor: state.activePanel === 'email' ? TEAL : 'transparent',
-                borderColor: TEAL,
-                color: state.activePanel === 'email' ? '#fff' : TEAL,
-                '&:hover': { bgcolor: state.activePanel === 'email' ? '#0777a0' : 'rgba(8,152,185,0.06)', borderColor: '#0777a0' },
-                fontWeight: 700,
-                fontSize: '0.85rem',
-                py: 1.25,
-              }}
-            >
-              Recibir por email
-            </Button>
-          </Grid>
-        </Grid>
+        {/* Info text below breakdown (Image #15) */}
+        <Box sx={{ bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.2)`, borderRadius: 1.5, px: 2, py: 1.25, mb: 3 }}>
+          <Typography sx={{ fontSize: '0.8rem', color: '#0777a0', lineHeight: 1.5 }}>
+            Incluye tablero, canalización, cableado y declaración TE6 ante SEC. Normativa RIC N°15.
+          </Typography>
+        </Box>
+
+        {/* Action buttons — full width, stacked vertically */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2 }}>
+          <Button
+            fullWidth
+            variant={state.activePanel === 'pago' ? 'contained' : 'outlined'}
+            onClick={() => update({ activePanel: state.activePanel === 'pago' ? null : 'pago' })}
+            sx={{
+              bgcolor: state.activePanel === 'pago' ? PINK : 'transparent',
+              borderColor: PINK,
+              color: state.activePanel === 'pago' ? '#fff' : PINK,
+              '&:hover': { bgcolor: state.activePanel === 'pago' ? PINK_DARK : 'rgba(232,26,104,0.06)', borderColor: PINK_DARK },
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              py: 1.25,
+            }}
+          >
+            Pagar e iniciar proceso de instalación
+          </Button>
+          <Button
+            fullWidth
+            variant={state.activePanel === 'email' ? 'contained' : 'outlined'}
+            onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
+            sx={{
+              bgcolor: state.activePanel === 'email' ? TEAL : 'transparent',
+              borderColor: TEAL,
+              color: state.activePanel === 'email' ? '#fff' : TEAL,
+              '&:hover': { bgcolor: state.activePanel === 'email' ? '#0777a0' : 'rgba(8,152,185,0.06)', borderColor: '#0777a0' },
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              py: 1.25,
+            }}
+          >
+            Enviar mi cotización por email
+          </Button>
+        </Box>
 
         {/* Panel: pago */}
         {state.activePanel === 'pago' && (
@@ -1067,8 +1092,8 @@ export default function CotizadorWizard() {
                   <path d="M12 12V16M10 14H14" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               ),
-              title: 'Devolución gratis.',
-              desc: 'Tienes 30 días desde que lo recibes.',
+              title: 'Tu dinero queda resguardado',
+              desc: 'hasta que la instalación se complete.',
             },
             {
               icon: (
@@ -1077,8 +1102,8 @@ export default function CotizadorWizard() {
                   <path d="M8 12L11 15L16 9" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               ),
-              title: 'Compra Protegida.',
-              desc: 'Recibe el producto que esperabas o te devolvemos tu dinero.',
+              title: 'Devolución sin preguntas.',
+              desc: 'Puedes solicitar la devolución de tu dinero en todo momento antes de la instalación.',
             },
             {
               icon: (
@@ -1087,8 +1112,8 @@ export default function CotizadorWizard() {
                   <path d="M12 7V12L15 15" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               ),
-              title: '3 meses de garantía.',
-              desc: 'Garantía técnica sobre la instalación completa.',
+              title: 'Garantía de 3 meses',
+              desc: 'sobre la instalación completa.',
             },
           ].map(({ icon, title, desc }) => (
             <Box key={title} sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2, '&:last-child': { mb: 0 } }}>

@@ -39,7 +39,7 @@ const ReturnPage = () => {
         to_email: '',
         glosa: '',
         shoppingCartId: '',
-        typeOfCart: '' as "product" | "service" | "input" | "visit" | "virtualVisit" | "",
+        typeOfCart: '' as "product" | "service" | "input" | "visit" | "virtualVisit" | "charger-installation" | "",
     }
     );
     
@@ -394,6 +394,13 @@ const ReturnPage = () => {
                 } else if (typeOfCart === "visit") {
                     console.log("----REDIRECT--- /agenda/recibo-pagado");
                     router.push('/agenda/recibo-pagado');
+                } else if (
+                    typeOfCart === "charger-installation" ||
+                    resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
+                    resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
+                ) {
+                    console.log("----REDIRECT--- /cotizador2/recibo-pago");
+                    router.push('/cotizador2/recibo-pago');
                 } else {
                     // product | service | input
                     console.log("----REDIRECT--- /cargadores/recibo-pago");
@@ -406,6 +413,13 @@ const ReturnPage = () => {
                 } else if (typeOfCart === "visit") {
                     console.log("----REDIRECT--- /agenda/rechazo-pago");
                     router.push('/agenda/rechazo-pago');
+                } else if (
+                    typeOfCart === "charger-installation" ||
+                    resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
+                    resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
+                ) {
+                    console.log("----REDIRECT--- /cotizador2/rechazo-pago");
+                    router.push('/cotizador2/rechazo-pago');
                 } else {
                     // product | service | input
                     console.log("----REDIRECT--- /cargadores/rechazo-pago");

@@ -301,7 +301,7 @@ const SLIDER_MARKS = [
 
 // ─── Hero title helpers ───────────────────────────────────────────────────────
 const STEP_TITLES = [
-  'Cotiza tu instalación de cargador EV',
+  'Simula el costo de tu instalación',
   'Elige tu cargador eléctrico',
   'Tu cotización al instante',
   'Agenda tu visita técnica',
@@ -453,7 +453,7 @@ export default function CotizadorWizard() {
     ? '¡Visita agendada!'
     : state.paid
     ? STEP_TITLES[state.step] ?? '¡Todo confirmado!'
-    : STEP_TITLES[state.step] ?? 'Cotiza tu instalación'
+    : STEP_TITLES[state.step] ?? 'Simula el costo de tu instalación'
 
   const heroSubtitle = state.booked
     ? 'Te contactaremos para confirmar los detalles'
@@ -605,7 +605,7 @@ export default function CotizadorWizard() {
               onClick={() => update({ tipo: 'edificio' })}
               icon="🏢"
               title="Edificio"
-              subtitle="Estacionamiento en subterráneo"
+              subtitle="Con comunidad"
             />
           </Grid>
         </Grid>
@@ -700,7 +700,7 @@ export default function CotizadorWizard() {
 
         {state.tipo === 'edificio' && (
           <Alert severity="info" sx={{ mt: 2, fontSize: '0.8rem' }}>
-            Para edificios se incluye trámite SEC y coordinación con la administración.
+            Valores referenciales · Instalación certificada SEC · Cotización formal tras visita técnica
           </Alert>
         )}
       </Box>

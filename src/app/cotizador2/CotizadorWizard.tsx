@@ -664,75 +664,75 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* ─── Detected address as h3 (input hidden by default) ─── */}
-        {geoStatus === 'detected' && geoAddress && (
-          <Box sx={{ mb: 1.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5, mb: 1 }}>
-              <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="caption" sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}>
-                  Ubicación detectada
-                </Typography>
-                <Typography component="h3" sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4, m: 0 }}>
-                  {geoAddress}
-                </Typography>
-              </Box>
+        {/* ─── Detected address box — shown when detected AND not in manual mode ─── */}
+        {geoStatus === 'detected' && geoAddress && !showManualInput && (
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, mb: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5 }}>
+            <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="caption" sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}>
+                Ubicación detectada
+              </Typography>
+              <Typography component="h3" sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4, m: 0 }}>
+                {geoAddress}
+              </Typography>
+            </Box>
+            {/* Action buttons stacked vertically */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0.25, flexShrink: 0 }}>
               <Button
                 size="small"
                 onClick={requestGeoLocation}
-                sx={{ fontSize: '0.7rem', color: TEAL, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap' }}
+                sx={{ fontSize: '0.7rem', color: TEAL, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap', py: 0.25 }}
               >
                 Actualizar
               </Button>
-            </Box>
-            {/* Toggle manual input */}
-            {!showManualInput ? (
               <Button
                 size="small"
                 onClick={() => setShowManualInput(true)}
-                sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textTransform: 'none', p: 0, '&:hover': { color: '#2A3547', bgcolor: 'transparent' } }}
+                sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap', py: 0.25, '&:hover': { color: '#2A3547' } }}
               >
-                ✏️ Ingresar dirección manualmente
+                Editar
               </Button>
-            ) : (
+            </Box>
+          </Box>
+        )}
+
+        {/* ─── Manual input — shown when user clicked Editar or geo failed ─── */}
+        {(geoStatus === 'error' || showManualInput) && (
+          <Box sx={{ mb: 1.5 }}>
+            {geoStatus === 'error' && (
+              <Alert
+                severity="warning"
+                sx={{ mb: 1.5, fontSize: '0.8rem', '& .MuiAlert-message': { lineHeight: 1.5 } }}
+                action={
+                  <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: 'inherit', textTransform: 'none' }}>
+                    Reintentar
+                  </Button>
+                }
+              >
+                {geoError || 'No se pudo detectar la ubicación. Ingresa tu dirección manualmente.'}
+              </Alert>
+            )}
+            <AddressInput2
+              value={state.address}
+              onAddressChange={(v) => update({ address: v, regionWarn: false })}
+              onSelectAddress={(details) => {
+                if (details) {
+                  const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                  update({ address: full, regionWarn: false })
+                }
+              }}
+            />
+            {/* Back to auto-detected address */}
+            {geoStatus === 'detected' && geoAddress && (
               <Button
                 size="small"
                 onClick={() => setShowManualInput(false)}
-                sx={{ fontSize: '0.78rem', color: TEAL, textTransform: 'none', p: 0, '&:hover': { bgcolor: 'transparent' } }}
+                sx={{ mt: 0.75, fontSize: '0.78rem', color: TEAL, textTransform: 'none', p: 0, '&:hover': { bgcolor: 'transparent' } }}
               >
                 ← Usar ubicación detectada
               </Button>
             )}
           </Box>
-        )}
-
-        {/* ─── Error state (show input directly) ─── */}
-        {geoStatus === 'error' && (
-          <Alert
-            severity="warning"
-            sx={{ mb: 1.5, fontSize: '0.8rem', '& .MuiAlert-message': { lineHeight: 1.5 } }}
-            action={
-              <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: 'inherit', textTransform: 'none' }}>
-                Reintentar
-              </Button>
-            }
-          >
-            {geoError || 'No se pudo detectar la ubicación. Ingresa tu dirección manualmente.'}
-          </Alert>
-        )}
-
-        {/* ─── Address input: shown when error, manual mode, or user toggled it ─── */}
-        {(geoStatus === 'error' || showManualInput) && (
-          <AddressInput2
-            value={state.address}
-            onAddressChange={(v) => update({ address: v, regionWarn: false })}
-            onSelectAddress={(details) => {
-              if (details) {
-                const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                update({ address: full, regionWarn: false })
-              }
-            }}
-          />
         )}
 
         {state.regionWarn && (

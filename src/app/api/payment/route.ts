@@ -83,9 +83,7 @@ export async function POST(req: NextRequest) {
   if (!total || total <= 0) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
-  if (!email) {
-    return NextResponse.json({ error: 'email is required' }, { status: 400 })
-  }
+  // email is optional — used only for ShoppingCart identification
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
 

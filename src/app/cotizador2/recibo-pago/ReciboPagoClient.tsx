@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Chip, Container, Paper, Typography } from '@mui/material'
 import Link from 'next/link'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import Footer from '@/app/components/shared/footer'
 import type { CalendarSlot } from '@/app/api/schedules/route'
 
 interface PaymentData {
@@ -146,7 +147,7 @@ export default function ReciboPagoClient() {
       <HpHeaderNew />
       <Box component="main">
         {/* ── Hero ── */}
-        <Box sx={{ background: 'linear-gradient(358deg, #0898b9 0%, #4dbfd9 100%)', py: { xs: 6, md: 8 }, textAlign: 'center' }}>
+        <Box sx={{ background: 'linear-gradient(180deg, #4dbfd9 10%, #0898b9 80%)', py: { xs: 6, md: 8 }, textAlign: 'center' }}>
           <Container maxWidth="md">
             <Typography variant="h1" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 800, color: '#000', mb: 1 }}>
               {booked ? '¡Todo listo!' : '¡Pago exitoso!'}
@@ -346,6 +347,7 @@ export default function ReciboPagoClient() {
           </Container>
         </Box>
       </Box>
+      <Footer />
     </>
   )
 }

@@ -18,6 +18,7 @@ import {
   type SelectChangeEvent,
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
+import Footer from '@/app/components/shared/footer'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -1473,7 +1474,7 @@ export default function CotizadorWizard() {
       )}
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <Box sx={{ background: `linear-gradient(358deg, ${TEAL} 0%, ${TEAL_LIGHT} 100%)`, py: { xs: 6, md: 8 } }}>
+      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, py: { xs: 6, md: 8 } }}>
         <Container maxWidth="sm">
           <Typography
             variant="h1"
@@ -1567,6 +1568,7 @@ export default function CotizadorWizard() {
           )}
         </Container>
       </Box>
+      <Footer />
     </Box>
   )
 }

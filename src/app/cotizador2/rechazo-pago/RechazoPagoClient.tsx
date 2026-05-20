@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Container, Typography } from '@mui/material'
 import Link from 'next/link'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import Footer from '@/app/components/shared/footer'
 import { fetchWebpayStart } from '@/store/Webpay/services'
 
 interface PaymentData {
@@ -79,7 +80,7 @@ export default function RechazoPagoClient() {
         {/* Hero */}
         <Box
           sx={{
-            background: 'linear-gradient(358deg, #0898b9 0%, #4dbfd9 100%)',
+            background: 'linear-gradient(180deg, #4dbfd9 10%, #0898b9 80%)',
             py: { xs: 6, md: 8 },
             textAlign: 'center',
           }}
@@ -94,7 +95,7 @@ export default function RechazoPagoClient() {
                 mb: 1,
               }}
             >
-              Error en el pago
+              Transacción rechazada
             </Typography>
           </Container>
         </Box>
@@ -237,6 +238,7 @@ export default function RechazoPagoClient() {
           </Container>
         </Box>
       </Box>
+      <Footer />
     </>
   )
 }

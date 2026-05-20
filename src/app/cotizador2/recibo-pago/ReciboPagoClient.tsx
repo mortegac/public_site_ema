@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Chip, Container, Paper, Typography } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import Footer from '@/app/components/shared/footer'
 import type { CalendarSlot } from '@/app/api/schedules/route'
@@ -75,6 +76,7 @@ function Stepper({ step, labels }: { step: number; labels: string[] }) {
 }
 
 export default function ReciboPagoClient() {
+  const router = useRouter()
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [dates, setDates] = useState<DateSlot[]>([])
   const [selectedDate, setSelectedDate] = useState<number | null>(null)
@@ -88,11 +90,15 @@ export default function ReciboPagoClient() {
     if (hasRead.current) return
     hasRead.current = true
 
-    // Read unified paymentData (wizard fields merged with payment confirmation by /return)
+    // Validate paymentData exists — redirect if missing (direct navigation without payment)
+    const raw = sessionStorage.getItem('paymentData')
+    if (!raw) { router.replace('/cotizador2'); return }
+
     try {
-      const raw = sessionStorage.getItem('paymentData')
-      if (raw) { setPaymentData(JSON.parse(raw)); sessionStorage.removeItem('paymentData') }
-    } catch { /* ignore */ }
+      setPaymentData(JSON.parse(raw))
+    } catch { /* ignore */ } finally {
+      sessionStorage.removeItem('paymentData')
+    }
 
     // Fetch real calendar slots from API
     const fetchDates = async () => {

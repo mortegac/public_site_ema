@@ -19,6 +19,7 @@ import {
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
 import Footer from '@/app/components/shared/footer'
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -1464,6 +1465,7 @@ export default function CotizadorWizard() {
 
   return (
     <Box>
+      <HpHeaderNew />
       {/* ── Loading overlay ───────────────────────────────────────────────── */}
       {state.estimateLoading && (
         <Box sx={{ position: 'fixed', inset: 0, bgcolor: 'rgba(255,255,255,0.85)', zIndex: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
@@ -1568,7 +1570,7 @@ export default function CotizadorWizard() {
           )}
         </Container>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </Box>
   )
 }

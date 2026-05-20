@@ -235,8 +235,9 @@ export default function ReciboPagoClient() {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                          customerId: paymentData?.email ?? 'guest',
+                          customerId: paymentData?.email ?? '',
                           calendarId,
+                          shoppingCartId: paymentData?.shoppingCartId ?? '',
                         }),
                       })
                       const data = await res.json()
@@ -347,7 +348,7 @@ export default function ReciboPagoClient() {
           </Container>
         </Box>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </>
   )
 }

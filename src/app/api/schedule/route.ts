@@ -40,7 +40,7 @@ async function callAppSync(
   return json
 }
 
-// ─── GraphQL mutation ─────────────────────────────────────────────────────────
+// ─── GraphQL queries / mutations ──────────────────────────────────────────────
 const MAKE_RESERVATION_AND_CART = /* GraphQL */ `
   mutation MakeReservationAndCart($customerId: String!, $calendarId: String!) {
     MakeReservationAndCart(customerId: $customerId, calendarId: $calendarId) {
@@ -50,10 +50,20 @@ const MAKE_RESERVATION_AND_CART = /* GraphQL */ `
   }
 `
 
+const GET_SHOPPING_CART = /* GraphQL */ `
+  query GetShoppingCart($shoppingCartId: ID!) {
+    getShoppingCart(shoppingCartId: $shoppingCartId) {
+      shoppingCartId
+      customerId
+    }
+  }
+`
+
 // ─── Request body schema ──────────────────────────────────────────────────────
 interface ScheduleBody {
-  customerId: string  // email of the user
-  calendarId: string  // ID of the selected CalendarVisit slot
+  calendarId: string
+  shoppingCartId?: string  // used to look up real customerId
+  customerId?: string      // fallback if shoppingCartId not provided
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -66,17 +76,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { customerId, calendarId } = body
+  const { calendarId, shoppingCartId, customerId: customerIdFromBody } = body
 
-  if (!customerId || !calendarId) {
-    return NextResponse.json(
-      { error: 'customerId and calendarId are required' },
-      { status: 400 }
-    )
+  if (!calendarId) {
+    return NextResponse.json({ error: 'calendarId is required' }, { status: 400 })
   }
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
 
+  // ── Resolve customerId ──────────────────────────────────────────────────────
+  let customerId = customerIdFromBody ?? ''
+
+  if (shoppingCartId && (!customerId || customerId === 'guest')) {
+    try {
+      const cartJson = await callAppSync(appsyncUrl, apiKey, GET_SHOPPING_CART, { shoppingCartId }, 'getShoppingCart')
+      const cartCustomerId: string = cartJson?.data?.getShoppingCart?.customerId ?? ''
+      if (cartCustomerId && cartCustomerId !== 'guest') {
+        customerId = cartCustomerId
+        console.log(`[schedule] Resolved customerId from ShoppingCart: ${customerId}`)
+      }
+    } catch (err) {
+      console.warn('[schedule] Could not resolve customerId from ShoppingCart:', err instanceof Error ? err.message : err)
+    }
+  }
+
+  if (!customerId || customerId === 'guest') {
+    return NextResponse.json(
+      { error: 'Could not resolve a valid customerId. Ensure the customer email was captured during payment.' },
+      { status: 400 }
+    )
+  }
+
+  // ── MakeReservationAndCart ──────────────────────────────────────────────────
   console.log(`[schedule] MakeReservationAndCart — customerId=${customerId}, calendarId=${calendarId}`)
 
   try {

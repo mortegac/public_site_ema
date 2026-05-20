@@ -20,7 +20,7 @@ const ConditionalFloatingVisitWidget = () => {
     if (
       pathname === '/agenda' ||
       pathname === '/cotizador' ||
-      pathname === '/cotizador2' ||
+      pathname.startsWith('/cotizador2') ||
       pathname === '/cargadores-vehiculos-electricos-sin-instalacion' ||
       pathname === '/cargadores-en-edificios' ||
       pathname === '/simulador' ||

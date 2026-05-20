@@ -367,54 +367,52 @@ const ReturnPage = () => {
         }
         
         const timeoutId = setTimeout(() => {
-            // Preparar los datos para enviar
-            
-            const paymentData = {
-                glosa: resTransaction?.glosa || "",
-                total: resTransaction?.total || "",
-                shoppingCartId: resTransaction?.shoppingCartId || null,
-                order: resTransaction?.order || "",
-                card: resTransaction?.card || "",
-                typePay: resTransaction?.typePay || "",
-                email: resTransaction?.to_email || "",
-                typeOfCart: resTransaction?.typeOfCart || "",
-            };
-
-            console.log("---paymentData---", paymentData);
-            sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-
             const typeOfCart = resTransaction?.typeOfCart;
 
-            // For cotizador2 charger flow: merge wizard context + payment data into cotizadorv2
             const isChargerFlow =
                 typeOfCart === "chargerInstallation" ||
                 resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
                 resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
 
-            if (isChargerFlow && resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
-                let wizardCtxRaw: Record<string, unknown> = {}
-                try {
-                    const raw = sessionStorage.getItem('wizardContext')
-                    if (raw) { wizardCtxRaw = JSON.parse(raw); sessionStorage.removeItem('wizardContext') }
-                } catch {}
+            const paymentConfirmFields = {
+                customerId: resTransaction?.to_email ?? '',
+                email: resTransaction?.to_email ?? '',
+                total: resTransaction?.total ?? '',
+                glosa: resTransaction?.glosa ?? '',
+                shoppingCartId: resTransaction?.shoppingCartId ?? '',
+                order: resTransaction?.order ?? '',
+                card: resTransaction?.card ?? '',
+                typePay: resTransaction?.typePay ?? '',
+                typeOfCart: resTransaction?.typeOfCart ?? '',
+            }
 
-                sessionStorage.setItem('cotizadorv2', JSON.stringify({
-                    customerId: resTransaction?.to_email ?? '',
-                    email: resTransaction?.to_email ?? '',
-                    total: resTransaction?.total ?? 0,
+            if (isChargerFlow && resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
+                // READ existing paymentData (wizard fields stored by CotizadorWizard before Webpay redirect)
+                // MERGE payment confirmation fields → WRITE back. Never discard wizard data.
+                let existing: Record<string, unknown> = {}
+                try {
+                    const raw = sessionStorage.getItem('paymentData')
+                    if (raw) existing = JSON.parse(raw)
+                } catch {}
+                sessionStorage.setItem('paymentData', JSON.stringify({ ...existing, ...paymentConfirmFields }))
+            } else {
+                // Non-charger flows: write payment fields only (existing behavior)
+                sessionStorage.setItem('paymentData', JSON.stringify({
                     glosa: resTransaction?.glosa ?? '',
-                    shoppingCartId: resTransaction?.shoppingCartId ?? '',
+                    total: resTransaction?.total ?? '',
+                    shoppingCartId: resTransaction?.shoppingCartId ?? null,
                     order: resTransaction?.order ?? '',
                     card: resTransaction?.card ?? '',
                     typePay: resTransaction?.typePay ?? '',
+                    email: resTransaction?.to_email ?? '',
                     typeOfCart: resTransaction?.typeOfCart ?? '',
-                    tipo: wizardCtxRaw?.tipo ?? '',
-                    chargerName: wizardCtxRaw?.chargerName ?? '',
-                    dist: wizardCtxRaw?.dist ?? null,
-                    address: wizardCtxRaw?.address ?? '',
-                    depto: wizardCtxRaw?.depto ?? '',
                 }))
             }
+            // Clean up legacy keys
+            sessionStorage.removeItem('cotizadorv2')
+            sessionStorage.removeItem('wizardContext')
+
+            console.log("---paymentData stored---", sessionStorage.getItem('paymentData'));
 
             const isVisitCart = typeOfCart === "visit" || typeOfCart === "virtualVisit";
 

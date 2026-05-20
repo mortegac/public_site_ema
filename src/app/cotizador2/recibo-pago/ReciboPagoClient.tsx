@@ -7,33 +7,29 @@ import Footer from '@/app/components/shared/footer'
 import type { CalendarSlot } from '@/app/api/schedules/route'
 
 interface PaymentData {
-  glosa: string; total: number | string; order: string
-  card: string; typePay: string; email: string; shoppingCartId: string
-}
-
-interface WizardContext {
-  tipo: string
-  chargerName: string
-  dist: number | null
-  address: string
-  depto: string
-}
-
-interface CotizadorV2Data {
-  customerId: string
-  email: string
-  total: number | string
-  glosa: string
-  shoppingCartId: string
-  order: string
-  card: string
-  typePay: string
-  typeOfCart: string
-  tipo: string
-  chargerName: string
-  dist: number | null
-  address: string
-  depto: string
+  // Payment confirmation fields (from /return after Webpay)
+  customerId?: string
+  email?: string
+  total?: number | string
+  glosa?: string
+  shoppingCartId?: string
+  order?: string
+  card?: string
+  typePay?: string
+  typeOfCart?: string
+  // Wizard context fields (from CotizadorWizard before Webpay redirect)
+  tipo?: string
+  chargerName?: string
+  dist?: number | null
+  address?: string
+  depto?: string
+  neto?: number
+  iva?: number
+  chargerPrice?: number
+  mat?: number
+  inst?: number
+  sec?: number
+  isOwn?: boolean
 }
 
 interface DateSlot {
@@ -80,7 +76,6 @@ function Stepper({ step, labels }: { step: number; labels: string[] }) {
 
 export default function ReciboPagoClient() {
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
-  const [wizardCtx, setWizardCtx] = useState<WizardContext | null>(null)
   const [dates, setDates] = useState<DateSlot[]>([])
   const [selectedDate, setSelectedDate] = useState<number | null>(null)
   const [booked, setBooked] = useState(false)
@@ -93,21 +88,10 @@ export default function ReciboPagoClient() {
     if (hasRead.current) return
     hasRead.current = true
 
-    // Try cotizadorv2 first (merged payment + wizard data from /return)
+    // Read unified paymentData (wizard fields merged with payment confirmation by /return)
     try {
-      const rawV2 = sessionStorage.getItem('cotizadorv2')
-      if (rawV2) {
-        const v2: CotizadorV2Data = JSON.parse(rawV2)
-        sessionStorage.removeItem('cotizadorv2')
-        setPaymentData({ glosa: v2.glosa, total: v2.total, order: v2.order, card: v2.card, typePay: v2.typePay, email: v2.email, shoppingCartId: v2.shoppingCartId })
-        setWizardCtx({ tipo: v2.tipo, chargerName: v2.chargerName, dist: v2.dist, address: v2.address, depto: v2.depto })
-      } else {
-        // Fallback: read separately
-        const raw = sessionStorage.getItem('paymentData')
-        if (raw) { setPaymentData(JSON.parse(raw)); sessionStorage.removeItem('paymentData') }
-        const rawCtx = sessionStorage.getItem('wizardContext')
-        if (rawCtx) { setWizardCtx(JSON.parse(rawCtx)); sessionStorage.removeItem('wizardContext') }
-      }
+      const raw = sessionStorage.getItem('paymentData')
+      if (raw) { setPaymentData(JSON.parse(raw)); sessionStorage.removeItem('paymentData') }
     } catch { /* ignore */ }
 
     // Fetch real calendar slots from API
@@ -304,12 +288,12 @@ export default function ReciboPagoClient() {
                   <Box sx={{ borderRadius: 2, border: '1px solid #E2E8F0', p: 2, mb: 2 }}>
                     <Typography fontSize="0.8rem" fontWeight={700} color="#2A3547" mb={1.5}>Resumen</Typography>
                     {([
-                      ['Tipo', wizardCtx?.tipo ? (wizardCtx.tipo.charAt(0).toUpperCase() + wizardCtx.tipo.slice(1)) : '—'],
-                      ['Cargador', wizardCtx?.chargerName ?? (paymentData?.glosa ?? '—')],
-                      ['Distancia est.', wizardCtx?.dist != null ? `${wizardCtx.dist}m` : '—'],
-                      ['Dirección', wizardCtx?.address ?? '—'],
-                      ['Referencia', wizardCtx?.depto || '—'],
-                      ['Total pagado', paymentData ? fmt(Number(paymentData.total)) : '—'],
+                      ['Tipo', paymentData?.tipo ? (paymentData.tipo.charAt(0).toUpperCase() + paymentData.tipo.slice(1)) : '—'],
+                      ['Cargador', paymentData?.chargerName ?? (paymentData?.glosa ?? '—')],
+                      ['Distancia est.', paymentData?.dist != null ? `${paymentData.dist}m` : '—'],
+                      ['Dirección', paymentData?.address ?? '—'],
+                      ['Referencia', paymentData?.depto || '—'],
+                      ['Total pagado', paymentData?.total ? fmt(Number(paymentData.total)) : '—'],
                     ] as [string, string][]).map(([label, value], i) => (
                       <Box key={label} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.75, borderTop: i > 0 ? '1px solid #F1F5F9' : 'none' }}>
                         <Typography fontSize="0.78rem" color="#64748B">{label}</Typography>

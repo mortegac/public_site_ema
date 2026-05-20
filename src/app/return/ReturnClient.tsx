@@ -384,6 +384,38 @@ const ReturnPage = () => {
             sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
 
             const typeOfCart = resTransaction?.typeOfCart;
+
+            // For cotizador2 charger flow: merge wizard context + payment data into cotizadorv2
+            const isChargerFlow =
+                typeOfCart === "chargerInstallation" ||
+                resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
+                resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
+
+            if (isChargerFlow && resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
+                let wizardCtxRaw: Record<string, unknown> = {}
+                try {
+                    const raw = sessionStorage.getItem('wizardContext')
+                    if (raw) { wizardCtxRaw = JSON.parse(raw); sessionStorage.removeItem('wizardContext') }
+                } catch {}
+
+                sessionStorage.setItem('cotizadorv2', JSON.stringify({
+                    customerId: resTransaction?.to_email ?? '',
+                    email: resTransaction?.to_email ?? '',
+                    total: resTransaction?.total ?? 0,
+                    glosa: resTransaction?.glosa ?? '',
+                    shoppingCartId: resTransaction?.shoppingCartId ?? '',
+                    order: resTransaction?.order ?? '',
+                    card: resTransaction?.card ?? '',
+                    typePay: resTransaction?.typePay ?? '',
+                    typeOfCart: resTransaction?.typeOfCart ?? '',
+                    tipo: wizardCtxRaw?.tipo ?? '',
+                    chargerName: wizardCtxRaw?.chargerName ?? '',
+                    dist: wizardCtxRaw?.dist ?? null,
+                    address: wizardCtxRaw?.address ?? '',
+                    depto: wizardCtxRaw?.depto ?? '',
+                }))
+            }
+
             const isVisitCart = typeOfCart === "visit" || typeOfCart === "virtualVisit";
 
             // Redirigir según el estado y tipo de carrito

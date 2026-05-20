@@ -14,7 +14,24 @@ interface PaymentData {
 interface WizardContext {
   tipo: string
   chargerName: string
-  dist: number
+  dist: number | null
+  address: string
+  depto: string
+}
+
+interface CotizadorV2Data {
+  customerId: string
+  email: string
+  total: number | string
+  glosa: string
+  shoppingCartId: string
+  order: string
+  card: string
+  typePay: string
+  typeOfCart: string
+  tipo: string
+  chargerName: string
+  dist: number | null
   address: string
   depto: string
 }
@@ -76,16 +93,21 @@ export default function ReciboPagoClient() {
     if (hasRead.current) return
     hasRead.current = true
 
-    // Read payment data from sessionStorage
+    // Try cotizadorv2 first (merged payment + wizard data from /return)
     try {
-      const raw = sessionStorage.getItem('paymentData')
-      if (raw) { setPaymentData(JSON.parse(raw)); sessionStorage.removeItem('paymentData') }
-    } catch { /* ignore */ }
-
-    // Read wizard context from sessionStorage
-    try {
-      const rawCtx = sessionStorage.getItem('wizardContext')
-      if (rawCtx) { setWizardCtx(JSON.parse(rawCtx)); sessionStorage.removeItem('wizardContext') }
+      const rawV2 = sessionStorage.getItem('cotizadorv2')
+      if (rawV2) {
+        const v2: CotizadorV2Data = JSON.parse(rawV2)
+        sessionStorage.removeItem('cotizadorv2')
+        setPaymentData({ glosa: v2.glosa, total: v2.total, order: v2.order, card: v2.card, typePay: v2.typePay, email: v2.email, shoppingCartId: v2.shoppingCartId })
+        setWizardCtx({ tipo: v2.tipo, chargerName: v2.chargerName, dist: v2.dist, address: v2.address, depto: v2.depto })
+      } else {
+        // Fallback: read separately
+        const raw = sessionStorage.getItem('paymentData')
+        if (raw) { setPaymentData(JSON.parse(raw)); sessionStorage.removeItem('paymentData') }
+        const rawCtx = sessionStorage.getItem('wizardContext')
+        if (rawCtx) { setWizardCtx(JSON.parse(rawCtx)); sessionStorage.removeItem('wizardContext') }
+      }
     } catch { /* ignore */ }
 
     // Fetch real calendar slots from API

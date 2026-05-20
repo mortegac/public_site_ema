@@ -68,6 +68,27 @@ const CREATE_SHOPPING_CART_DETAIL = /* GraphQL */ `
   }
 `
 
+// ── TEST ONLY: update mutations to force total=6 for Webpay sandbox testing ──
+const UPDATE_SHOPPING_CART = /* GraphQL */ `
+  mutation UpdateShoppingCart($input: UpdateShoppingCartInput!) {
+    updateShoppingCart(input: $input) {
+      shoppingCartId
+      total
+      vat
+    }
+  }
+`
+
+const UPDATE_SHOPPING_CART_DETAIL = /* GraphQL */ `
+  mutation UpdateShoppingCartDetail($input: UpdateShoppingCartDetailInput!) {
+    updateShoppingCartDetail(input: $input) {
+      shoppingCartDetailId
+      price
+    }
+  }
+`
+// ── END TEST ONLY mutations ───────────────────────────────────────────────────
+
 const WEBPAY_START = /* GraphQL */ `
   mutation webpayStart($shoppingCartId: ID!, $glosa: String!) {
     WebpayStart(shoppingCartId: $shoppingCartId, glosa: $glosa) {
@@ -143,6 +164,12 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('[payment] ShoppingCart created:', createdId)
+
+    // TEST ONLY: override cart total to 6 for Webpay sandbox ─────────────────
+    await callAppSync(appsyncUrl, apiKey, UPDATE_SHOPPING_CART, {
+      input: { shoppingCartId, total: 6, vat: 0 }
+    }, 'updateShoppingCart[TEST]')
+    // END TEST OVERRIDE ───────────────────────────────────────────────────────
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     console.error('[payment] createShoppingCart error:', message)
@@ -155,7 +182,8 @@ export async function POST(req: NextRequest) {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
       glosa: chargerName,
-      price: Math.round(total),
+      price: 6, // TEST ONLY: real value → Math.round(total)
+      // price: Math.round(total), // PRODUCTION VALUE — uncomment and remove line above to restore
       typeOfItem: 'service',
     }
 
@@ -163,6 +191,15 @@ export async function POST(req: NextRequest) {
 
     const detailJson = await callAppSync(appsyncUrl, apiKey, CREATE_SHOPPING_CART_DETAIL, { input: detailInput }, 'createShoppingCartDetail')
     console.log('[payment] ShoppingCartDetail created:', detailJson?.data?.createShoppingCartDetail?.shoppingCartDetailId)
+
+    // TEST ONLY: override detail price to 6 for Webpay sandbox ──────────────
+    const detailId = detailJson?.data?.createShoppingCartDetail?.shoppingCartDetailId
+    if (detailId) {
+      await callAppSync(appsyncUrl, apiKey, UPDATE_SHOPPING_CART_DETAIL, {
+        input: { shoppingCartDetailId: detailId, price: 6 }
+      }, 'updateShoppingCartDetail[TEST]')
+    }
+    // END TEST OVERRIDE ───────────────────────────────────────────────────────
   } catch (err: unknown) {
     // Non-fatal — log but continue to WebpayStart
     console.warn('[payment] createShoppingCartDetail error (non-fatal):', err instanceof Error ? err.message : err)

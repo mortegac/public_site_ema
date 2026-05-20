@@ -94,11 +94,11 @@ export default function ReciboPagoClient() {
     const raw = sessionStorage.getItem('paymentData')
     if (!raw) { router.replace('/cotizador2'); return }
 
+    // Read data but keep it in sessionStorage so refresh works.
+    // It is deleted only after booking is confirmed (see setBooked calls below).
     try {
       setPaymentData(JSON.parse(raw))
-    } catch { /* ignore */ } finally {
-      sessionStorage.removeItem('paymentData')
-    }
+    } catch { /* ignore */ }
 
     // Fetch real calendar slots from API
     const fetchDates = async () => {
@@ -238,7 +238,7 @@ export default function ReciboPagoClient() {
                     if (selectedDate === null) return
                     const slot = dates[selectedDate]
                     const calendarId = slot.slots?.[0]?.calendarId
-                    if (!calendarId) { setBooked(true); return }  // fallback if no calendarId
+                    if (!calendarId) { sessionStorage.removeItem('paymentData'); setBooked(true); return }
 
                     setBookingLoading(true)
                     setBookingError('')
@@ -256,6 +256,7 @@ export default function ReciboPagoClient() {
                       if (data.error) {
                         setBookingError(data.error)
                       } else {
+                        sessionStorage.removeItem('paymentData')
                         setBooked(true)
                       }
                     } catch {

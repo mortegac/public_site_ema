@@ -94,7 +94,7 @@ export default function RechazoPagoClient() {
                 mb: 1,
               }}
             >
-              Lamentamos informarte que hubo un problema con tu transacción
+              Error en el pago
             </Typography>
           </Container>
         </Box>

@@ -10,6 +10,14 @@ interface PaymentData {
   card: string; typePay: string; email: string; shoppingCartId: string
 }
 
+interface WizardContext {
+  tipo: string
+  chargerName: string
+  dist: number
+  address: string
+  depto: string
+}
+
 interface DateSlot {
   dateKey: string       // YYYY-MM-DD — used for grouping
   label: string         // e.g. "Jue, 21 may" — weekday short + day + month short, locale es-CL
@@ -54,10 +62,13 @@ function Stepper({ step, labels }: { step: number; labels: string[] }) {
 
 export default function ReciboPagoClient() {
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
+  const [wizardCtx, setWizardCtx] = useState<WizardContext | null>(null)
   const [dates, setDates] = useState<DateSlot[]>([])
   const [selectedDate, setSelectedDate] = useState<number | null>(null)
   const [booked, setBooked] = useState(false)
   const [loadingDates, setLoadingDates] = useState(true)
+  const [bookingLoading, setBookingLoading] = useState(false)
+  const [bookingError, setBookingError] = useState('')
   const hasRead = useRef(false)
 
   useEffect(() => {
@@ -68,6 +79,12 @@ export default function ReciboPagoClient() {
     try {
       const raw = sessionStorage.getItem('paymentData')
       if (raw) { setPaymentData(JSON.parse(raw)); sessionStorage.removeItem('paymentData') }
+    } catch { /* ignore */ }
+
+    // Read wizard context from sessionStorage
+    try {
+      const rawCtx = sessionStorage.getItem('wizardContext')
+      if (rawCtx) { setWizardCtx(JSON.parse(rawCtx)); sessionStorage.removeItem('wizardContext') }
     } catch { /* ignore */ }
 
     // Fetch real calendar slots from API
@@ -204,13 +221,42 @@ export default function ReciboPagoClient() {
                   </Box>
                   )}
 
-                  <Button variant="contained" fullWidth disabled={selectedDate === null || loadingDates} onClick={() => setBooked(true)} sx={{
+                  <Button variant="contained" fullWidth disabled={selectedDate === null || loadingDates || bookingLoading} onClick={async () => {
+                    if (selectedDate === null) return
+                    const slot = dates[selectedDate]
+                    const calendarId = slot.slots?.[0]?.calendarId
+                    if (!calendarId) { setBooked(true); return }  // fallback if no calendarId
+
+                    setBookingLoading(true)
+                    setBookingError('')
+                    try {
+                      const res = await fetch('/api/schedule', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          customerId: paymentData?.email ?? 'guest',
+                          calendarId,
+                        }),
+                      })
+                      const data = await res.json()
+                      if (data.error) {
+                        setBookingError(data.error)
+                      } else {
+                        setBooked(true)
+                      }
+                    } catch {
+                      setBookingError('No se pudo agendar la visita. Intenta nuevamente.')
+                    } finally {
+                      setBookingLoading(false)
+                    }
+                  }} sx={{
                     py: 1.5, borderRadius: '24px', fontWeight: 700, fontSize: '0.95rem',
                     bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' },
                     '&.Mui-disabled': { bgcolor: '#E2E8F0', color: '#94A3B8' },
                   }}>
-                    {selectedDate !== null ? `Confirmar visita · ${dates[selectedDate]?.label}` : 'Confirmar visita'}
+                    {bookingLoading ? 'Agendando...' : selectedDate !== null ? `Confirmar visita · ${dates[selectedDate]?.label}` : 'Confirmar visita'}
                   </Button>
+                  {bookingError && <Typography fontSize="0.78rem" color="error" textAlign="center" mt={1}>{bookingError}</Typography>}
                 </>
               ) : (
                 /* ── STEP 2: Confirmation ── */
@@ -234,11 +280,12 @@ export default function ReciboPagoClient() {
                   <Box sx={{ borderRadius: 2, border: '1px solid #E2E8F0', p: 2, mb: 2 }}>
                     <Typography fontSize="0.8rem" fontWeight={700} color="#2A3547" mb={1.5}>Resumen</Typography>
                     {([
-                      ['Servicio', paymentData?.glosa ?? '—'],
+                      ['Tipo', wizardCtx?.tipo ? (wizardCtx.tipo.charAt(0).toUpperCase() + wizardCtx.tipo.slice(1)) : '—'],
+                      ['Cargador', wizardCtx?.chargerName ?? (paymentData?.glosa ?? '—')],
+                      ['Distancia est.', wizardCtx?.dist != null ? `${wizardCtx.dist}m` : '—'],
+                      ['Dirección', wizardCtx?.address ?? '—'],
+                      ['Referencia', wizardCtx?.depto || '—'],
                       ['Total pagado', paymentData ? fmt(Number(paymentData.total)) : '—'],
-                      ['Orden', paymentData?.order ?? '—'],
-                      ['Tipo de pago', paymentData?.typePay ?? '—'],
-                      ['Visita técnica', dates[selectedDate!]?.label ?? '—'],
                     ] as [string, string][]).map(([label, value], i) => (
                       <Box key={label} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.75, borderTop: i > 0 ? '1px solid #F1F5F9' : 'none' }}>
                         <Typography fontSize="0.78rem" color="#64748B">{label}</Typography>

@@ -632,6 +632,17 @@ export default function CotizadorWizard() {
   function submitWebpay() {
     if (!state.webpayData) return
     console.log('[payment] Submitting to Webpay URL:', state.webpayData.url)
+
+    // Store wizard context so ReciboPagoClient can display a rich summary
+    const displayResult = state.apiResult ?? result
+    sessionStorage.setItem('wizardContext', JSON.stringify({
+      tipo: state.tipo,
+      chargerName: displayResult?.chargerName ?? state.tipoC,
+      dist: state.dist,
+      address: state.address,
+      depto: state.depto,
+    }))
+
     const form = document.createElement('form')
     form.method = 'POST'
     form.action = state.webpayData.url

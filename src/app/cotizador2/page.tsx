@@ -46,7 +46,7 @@ export default function Cotizador2Page() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <HpHeaderNew />
+      {/* <HpHeaderNew /> */}
       <CotizadorWizard />
     </>
   )

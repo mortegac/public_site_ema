@@ -20,7 +20,7 @@ const AppBarStyled = styled(AppBar)(({ theme }) => ({
   justifyContent: "center",
   [theme.breakpoints.up("lg")]: {
     minHeight: "81px",
-    background: "#0898b9",
+    background: "#4dbfd9",
   },
   backgroundColor: "#fcfcfc",
 }));
@@ -60,7 +60,7 @@ const HpHeaderNew = (props: any) => {
         sx={{
           maxWidth: "1200px !important",
           // background: "transparent",
-          background: "#0898b9",
+          background: "#4dbfd9",
         }}
       >
         <ToolbarStyled>

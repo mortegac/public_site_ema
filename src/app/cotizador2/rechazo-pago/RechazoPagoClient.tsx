@@ -238,7 +238,7 @@ export default function RechazoPagoClient() {
           </Container>
         </Box>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </>
   )
 }

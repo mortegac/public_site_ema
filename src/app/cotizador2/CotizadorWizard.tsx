@@ -540,9 +540,10 @@ export default function CotizadorWizard() {
           if (est) {
             const chargerPrice = charger ? charger.precio : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
-            // API returns costs without the selected charger price — add it to get correct totals
+            // Force SEC trámite from local base (API may return 0) so it always appears in the breakdown
+            const secTramite = isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec
             const installNeto = Number(est.netPrice ?? 0)
-            const totalNeto = installNeto + chargerPrice
+            const totalNeto = installNeto + chargerPrice + secTramite
             const totalIva = Math.round(totalNeto * 0.19)
             update({
               estimateLoading: false,
@@ -551,7 +552,7 @@ export default function CotizadorWizard() {
               apiResult: {
                 mat: Number(est.materialsCost ?? 0),
                 inst: Number(est.installationCost ?? 0),
-                sec: Number(est.SECCost ?? 0),
+                sec: secTramite,
                 chargerPrice,
                 chargerName,
                 neto: totalNeto,
@@ -1021,12 +1022,10 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Instalación certificada</Typography>
             <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.inst)}</Typography>
           </Box>
-          {displayResult.sec > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Trámites SEC</Typography>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.sec)}</Typography>
-            </Box>
-          )}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Trámite SEC</Typography>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.sec)}</Typography>
+          </Box>
 
           <Divider sx={{ my: 1.5 }} />
 

@@ -1005,9 +1005,6 @@ export default function CotizadorWizard() {
           <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
             {fmt(displayResult.total)}
           </Typography>
-          <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.5 }}>
-            Valor referencial · sujeto a visita técnica
-          </Typography>
         </Box>
 
         {/* Breakdown card */}
@@ -1061,18 +1058,22 @@ export default function CotizadorWizard() {
           </Typography>
         </Box>
 
-        {/* Action buttons — full width, stacked vertically */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2 }}>
+        {/* Pay button — red when panel hidden, gray when panel visible (acts as toggle) */}
+        <Box sx={{ mb: 2 }}>
           <Button
             fullWidth
             variant="contained"
-            onClick={initiatePayment}
-            disabled={state.webpayLoading}
+            onClick={() => {
+              if (state.activePanel === 'pago') {
+                update({ activePanel: null, webpayData: null, webpayError: '', webpayLoading: false })
+              } else {
+                initiatePayment()
+              }
+            }}
             sx={{
-              bgcolor: state.webpayLoading ? '#e0b0b8' : 'rgb(240, 56, 107)',
+              bgcolor: state.activePanel === 'pago' ? '#94A3B8' : 'rgb(240, 56, 107)',
               color: '#ffffff',
-              '&:hover': { bgcolor: state.webpayLoading ? '#e0b0b8' : 'rgb(239, 97, 136)' },
-              '&:disabled': { bgcolor: '#e0b0b8', color: '#fff' },
+              '&:hover': { bgcolor: state.activePanel === 'pago' ? '#64748B' : 'rgb(239, 97, 136)' },
               fontWeight: 700,
               fontSize: '0.85rem',
               py: 1.25,
@@ -1080,22 +1081,6 @@ export default function CotizadorWizard() {
             }}
           >
             {state.webpayLoading ? 'Iniciando pago…' : 'Pagar e iniciar proceso de instalación'}
-          </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
-            sx={{
-              bgcolor: TEAL,
-              color: '#ffffff',
-              '&:hover': { bgcolor: 'rgb(91, 196, 210)' },
-              fontWeight: 700,
-              fontSize: '0.85rem',
-              py: 1.25,
-              boxShadow: 'none',
-            }}
-          >
-            Enviar mi cotización por email
           </Button>
         </Box>
 
@@ -1165,6 +1150,26 @@ export default function CotizadorWizard() {
             </Typography>
           </Box>
         )}
+
+        {/* Email button — below pago panel */}
+        <Box sx={{ mb: 2 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
+            sx={{
+              bgcolor: TEAL,
+              color: '#ffffff',
+              '&:hover': { bgcolor: 'rgb(91, 196, 210)' },
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              py: 1.25,
+              boxShadow: 'none',
+            }}
+          >
+            Enviar mi cotización por email
+          </Button>
+        </Box>
 
         {/* Panel: email */}
         {state.activePanel === 'email' && (

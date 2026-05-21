@@ -314,7 +314,7 @@ export default function ReciboPagoClient() {
                     <Typography fontSize="0.8rem" fontWeight={700} color="#2A3547" mb={1}>Próximos pasos</Typography>
                     {[
                       'Un técnico visita tu domicilio en la fecha agendada.',
-                      'Recibes la cotización definitiva confirmada.',
+                      'Se revisarán las características técnicas de la instalación.',
                       'Se coordina la compra de materiales y la instalación.',
                     ].map((s, i) => (
                       <Typography key={i} fontSize="0.78rem" color="#64748B" lineHeight={1.8}>
@@ -345,7 +345,7 @@ export default function ReciboPagoClient() {
                     py: 1.5, borderRadius: '24px', fontWeight: 700,
                     bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' },
                   }}>
-                    Nueva cotización
+                    Cotizar una nueva instalación
                   </Button>
 
                   <Typography fontSize="0.75rem" color="#64748B" textAlign="center" mt={1.5}>

@@ -17,6 +17,7 @@ import {
   MenuItem,
   type SelectChangeEvent,
 } from '@mui/material'
+import { IconMail } from "@tabler/icons-react"
 import AddressInput2 from '@/app/components/AddressInput2'
 import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -46,7 +47,7 @@ const CHARGERS = [
 ]
 
 const INSTALL_BASE = {
-  casa:     { mat: 156000, inst: 182000, sec: 0 },
+  casa:     { mat: 156000, inst: 182000, sec: 25000 },
   edificio: { mat: 215000, inst: 258000, sec: 35000 },
 }
 
@@ -1150,13 +1151,15 @@ export default function CotizadorWizard() {
         <Box sx={{ mb: 2 }}>
           <Button
             fullWidth
-            variant="contained"
+            variant="outlined"
+            startIcon={<IconMail size={16} />}
             onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
             sx={{
-              bgcolor: TEAL,
-              color: '#ffffff',
-              '&:hover': { bgcolor: 'rgb(91, 196, 210)' },
-              fontWeight: 700,
+              bgcolor: '#fff',
+              borderColor: BORDER,
+              color: '#2A3547',
+              '&:hover': { bgcolor: '#F8FAFC', borderColor: '#CBD5E1' },
+              fontWeight: 600,
               fontSize: '0.85rem',
               py: 1.25,
               boxShadow: 'none',
@@ -1486,8 +1489,8 @@ export default function CotizadorWizard() {
       )}
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, py: { xs: 6, md: 8 } }}>
-        <Container maxWidth="sm">
+      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, pt: { xs: '10px', md: '64px' }, pb: { xs: 2, md: 4 } }}>
+        <Container maxWidth="sm" sx={{ px: { xs: 1, sm: 3 } }}>
           <Typography
             variant="h1"
             sx={{
@@ -1501,7 +1504,7 @@ export default function CotizadorWizard() {
           >
             {heroTitle}
           </Typography>
-          <Typography sx={{ color: '#000000', textAlign: 'center', mb: 4, fontSize: '0.9rem' }}>
+          <Typography sx={{ color: '#000000', textAlign: 'center', mb: { xs: 1, md: 4 }, fontSize: '0.9rem' }}>
             {heroSubtitle}
           </Typography>
           {!state.booked && <WizardStepper step={state.step} paid={state.paid} booked={state.booked} />}
@@ -1509,8 +1512,8 @@ export default function CotizadorWizard() {
       </Box>
 
       {/* ── Wizard body ───────────────────────────────────────────────────── */}
-      <Box sx={{ bgcolor: SURFACE, minHeight: '60vh', py: 4 }}>
-        <Container maxWidth="sm">
+      <Box sx={{ bgcolor: SURFACE, minHeight: '60vh', pt: { xs: 1, md: 4 }, pb: 4 }}>
+        <Container maxWidth="sm" sx={{ px: { xs: 1, sm: 3 } }}>
           <Box
             sx={{
               bgcolor: '#fff',

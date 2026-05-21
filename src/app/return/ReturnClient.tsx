@@ -11,10 +11,10 @@ const PAYMENT_MESSAGES = [
 ]
 
 const MESSAGE_STYLE: React.CSSProperties = {
-  fontSize: '2rem',
+  fontSize: '1.6rem',
   lineHeight: '2.75rem',
   fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif",
-  color: '#E81A68',
+  color: 'rgb(126, 118, 121)',
   fontWeight: 800,
   textAlign: 'center',
   margin: 0,
@@ -41,10 +41,11 @@ function PaymentLoadingMessages() {
   }, [index])
 
   return (
-    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px' }}>
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '350px', gap: '24px' }}>
       <p style={{ ...MESSAGE_STYLE, opacity: visible ? 1 : 0 }}>
         {PAYMENT_MESSAGES[index]}
       </p>
+      <LoadingIcon icon="puff" color="#E81A68" style={{ width: '60px', height: '60px' }} />
     </div>
   )
 }

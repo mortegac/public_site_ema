@@ -561,11 +561,11 @@ const ReturnPage = () => {
       */}
       {/* 
       */}
-      <div 
-        style={{ 
-            // minHeight: '80vh', 
-            display: 'flex', 
-            justifyContent: 'center', 
+      <div
+        style={{
+            minHeight: 'calc(100vh - 81px)',
+            display: 'flex',
+            justifyContent: 'center',
             alignItems: 'center',
             padding: '2rem',
             backgroundColor: '#f8fafc'

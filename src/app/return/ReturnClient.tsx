@@ -1,6 +1,54 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
+
+// ─── Loading messages ─────────────────────────────────────────────────────────
+const PAYMENT_MESSAGES = [
+  'Recibiendo informacion del pago',
+  'Validando transaccion',
+  'Generando el comprobante',
+  'Redireccionando ..',
+]
+
+const MESSAGE_STYLE: React.CSSProperties = {
+  fontSize: '2rem',
+  lineHeight: '2.75rem',
+  fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif",
+  color: '#E81A68',
+  fontWeight: 800,
+  textAlign: 'center',
+  margin: 0,
+  willChange: 'opacity',
+  transition: 'opacity 0.45s ease',
+}
+
+function PaymentLoadingMessages() {
+  const [index, setIndex] = useState(0)
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    if (index >= PAYMENT_MESSAGES.length - 1) return  // stop cycling at last message
+
+    const timer = setTimeout(() => {
+      setVisible(false)
+      setTimeout(() => {
+        setIndex(prev => prev + 1)
+        setVisible(true)
+      }, 450)  // matches transition duration
+    }, 4000)
+
+    return () => clearTimeout(timer)
+  }, [index])
+
+  return (
+    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px' }}>
+      <p style={{ ...MESSAGE_STYLE, opacity: visible ? 1 : 0 }}>
+        {PAYMENT_MESSAGES[index]}
+      </p>
+    </div>
+  )
+}
+// ─────────────────────────────────────────────────────────────────────────────
 import { useSearchParams, useRouter } from 'next/navigation';
 import PageContainer from '@/app/components/container/PageContainer';
 import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
@@ -525,11 +573,7 @@ const ReturnPage = () => {
         
           {/* <pre>{JSON.stringify(resTransaction?.statusRedirect, null, 2 )}</pre> */}
           {/* <pre>{JSON.stringify(resTransaction, null, 2 )}</pre> */}
-        {resTransaction?.status === "" &&
-          <Box id="box-loading" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '350px' }}>
-            <LoadingIcon icon="puff" color="#E81A68" style={{width:"60px", height:"60px"}}/>
-          </Box>
-        }
+        {resTransaction?.status === "" && <PaymentLoadingMessages />}
        
        {/* <Box id="returnPage" sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           

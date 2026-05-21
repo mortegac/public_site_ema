@@ -97,7 +97,10 @@ export default function ReciboPagoClient() {
     // Read data but keep it in sessionStorage so refresh works.
     // It is deleted only after booking is confirmed (see setBooked calls below).
     try {
-      setPaymentData(JSON.parse(raw))
+      const parsed = JSON.parse(raw)
+      console.log('[recibo-pago] paymentData from sessionStorage:', JSON.stringify(parsed))
+      console.log('[recibo-pago] email:', parsed?.email, '| customerId:', parsed?.customerId, '| shoppingCartId:', parsed?.shoppingCartId)
+      setPaymentData(parsed)
     } catch { /* ignore */ }
 
     // Fetch real calendar slots from API
@@ -246,16 +249,19 @@ export default function ReciboPagoClient() {
                     setBookingLoading(true)
                     setBookingError('')
                     try {
+                      const bookingPayload = {
+                        customerId: paymentData?.email ?? '',
+                        calendarId,
+                        shoppingCartId: paymentData?.shoppingCartId ?? '',
+                      }
+                      console.log('[recibo-pago] Booking POST payload:', JSON.stringify(bookingPayload))
                       const res = await fetch('/api/schedule', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          customerId: paymentData?.email ?? '',
-                          calendarId,
-                          shoppingCartId: paymentData?.shoppingCartId ?? '',
-                        }),
+                        body: JSON.stringify(bookingPayload),
                       })
                       const data = await res.json()
+                      console.log('[recibo-pago] Booking response status:', res.status, '| data:', JSON.stringify(data))
                       if (data.error) {
                         setBookingError(data.error)
                       } else {

@@ -108,7 +108,11 @@ export async function POST(req: NextRequest) {
   }
 
   // ── MakeReservationAndCart ──────────────────────────────────────────────────
-  console.log(`[schedule] MakeReservationAndCart — customerId=${customerId}, calendarId=${calendarId}`)
+  console.log(`[schedule] MakeReservationAndCart — customerId="${customerId}", calendarId="${calendarId}", shoppingCartId="${shoppingCartId ?? 'none'}"`)
+  if (!customerId || customerId.includes('sin-usuario')) {
+    console.error('[schedule] INVALID customerId — aborting mutation')
+    return NextResponse.json({ error: `Invalid customerId: "${customerId}". Ensure user email was captured during payment.` }, { status: 400 })
+  }
 
   try {
     const json = await callAppSync(
@@ -120,6 +124,7 @@ export async function POST(req: NextRequest) {
     )
 
     const result = json?.data?.MakeReservationAndCart
+    console.log('[schedule] MakeReservationAndCart result:', JSON.stringify(result))
     const message: string = result?.message ?? ''
     const cartId: string = result?.cartId ?? ''
 
@@ -127,6 +132,6 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     console.error('[schedule] MakeReservationAndCart error:', message)
-    return NextResponse.json({ error: message }, { status: 502 })
+    return NextResponse.json({ error: `MakeReservationAndCart failed: ${message}` }, { status: 502 })
   }
 }

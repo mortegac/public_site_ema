@@ -828,11 +828,6 @@ export default function CotizadorWizard() {
           </Alert>
         )}
 
-        {state.tipo === 'edificio' && (
-          <Alert severity="info" sx={{ mt: 2, fontSize: '0.8rem' }}>
-            Instalación certificada SEC · Tu compra protegida ·
-          </Alert>
-        )}
       </Box>
     )
   }

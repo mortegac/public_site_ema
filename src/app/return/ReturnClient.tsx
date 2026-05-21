@@ -1,6 +1,19 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import PageContainer from '@/app/components/container/PageContainer';
+import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
+import LoadingIcon from "@/app/components/shared/LoadingIcon";
+import { Box, Grid, Typography, Button, Paper } from '@mui/material';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { resetCart } from "@/store/ShoppingCart/slice";
+import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentTransaction/slice";
+import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
+import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
+import Invoice from './components/Invoice';
+import RetryTransaction from './components/RetryTransaction';
 
 // ─── Loading messages ─────────────────────────────────────────────────────────
 const PAYMENT_MESSAGES = [
@@ -27,14 +40,14 @@ function PaymentLoadingMessages() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    if (index >= PAYMENT_MESSAGES.length - 1) return  // stop cycling at last message
+    if (index >= PAYMENT_MESSAGES.length - 1) return
 
     const timer = setTimeout(() => {
       setVisible(false)
       setTimeout(() => {
         setIndex(prev => prev + 1)
         setVisible(true)
-      }, 450)  // matches transition duration
+      }, 450)
     }, 4000)
 
     return () => clearTimeout(timer)
@@ -50,21 +63,6 @@ function PaymentLoadingMessages() {
   )
 }
 // ─────────────────────────────────────────────────────────────────────────────
-import { useSearchParams, useRouter } from 'next/navigation';
-import PageContainer from '@/app/components/container/PageContainer';
-import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
-import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
-import LoadingIcon from "@/app/components/shared/LoadingIcon";
-import { Box, Grid, Typography, Button, Paper } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-// import { selectCustomer } from "@/store/Customer/slice";
-// import { selectCalendarVisits } from "@/store/CalendarVisits/slice";
-import { resetCart } from "@/store/ShoppingCart/slice";
-import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentTransaction/slice";
-import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
-import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
-import Invoice from './components/Invoice';
-import RetryTransaction from './components/RetryTransaction';
 
 
 const ReturnPage = () => {
@@ -443,7 +441,18 @@ const ReturnPage = () => {
                     const raw = sessionStorage.getItem('paymentData')
                     if (raw) existing = JSON.parse(raw)
                 } catch {}
-                sessionStorage.setItem('paymentData', JSON.stringify({ ...existing, ...paymentConfirmFields }))
+
+                // If Webpay returns "sin-usuario" or empty, keep the email the user entered in the wizard
+                const webpayEmail = resTransaction?.to_email ?? ''
+                const isValidEmail = webpayEmail && webpayEmail !== 'sin-usuario'
+                const resolvedEmail = isValidEmail ? webpayEmail : ((existing?.email as string) ?? '')
+
+                sessionStorage.setItem('paymentData', JSON.stringify({
+                    ...existing,
+                    ...paymentConfirmFields,
+                    customerId: resolvedEmail,
+                    email: resolvedEmail,
+                }))
             } else {
                 // Non-charger flows: write payment fields only (existing behavior)
                 sessionStorage.setItem('paymentData', JSON.stringify({

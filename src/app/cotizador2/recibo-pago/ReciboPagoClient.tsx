@@ -102,6 +102,8 @@ export default function ReciboPagoClient() {
 
     // Fetch real calendar slots from API
     const fetchDates = async () => {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000)
       try {
         const startDate = new Date()
         startDate.setDate(startDate.getDate() + 2)
@@ -112,7 +114,8 @@ export default function ReciboPagoClient() {
         endDate.setHours(23, 59, 59, 999)
 
         const res = await fetch(
-          `/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+          `/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+          { signal: controller.signal }
         )
         const { items } = await res.json()
 
@@ -142,9 +145,9 @@ export default function ReciboPagoClient() {
 
         setDates(allDates)
       } catch {
-        // On error leave dates empty — UI will show nothing available
         setDates([])
       } finally {
+        clearTimeout(timeoutId)
         setLoadingDates(false)
       }
     }
@@ -354,9 +357,6 @@ export default function ReciboPagoClient() {
                 </>
               )}
 
-              <Typography fontSize="0.65rem" color="#64748B" textAlign="center" mt={3} sx={{ borderTop: '1px solid #E2E8F0', pt: 2 }}>
-                Valores referenciales · Instalación certificada SEC · Cotización formal tras visita técnica
-              </Typography>
             </Paper>
           </Container>
         </Box>

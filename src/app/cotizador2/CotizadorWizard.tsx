@@ -608,7 +608,7 @@ export default function CotizadorWizard() {
           tipo: state.tipo,
           chargerName: displayResult.chargerName,
           dist: state.dist,
-          glosa: 'Visita técnica instalación cargador EV',
+          glosa: `Instalación Cargador eléctrico - ${state.dist} Mts`,
         }),
       })
 
@@ -646,6 +646,7 @@ export default function CotizadorWizard() {
       dist: state.dist,
       address: state.address,
       depto: state.depto ?? '',
+      email: state.emailPago ?? '',
       total: displayResult?.total ?? 0,
       neto: displayResult?.neto ?? 0,
       iva: displayResult?.iva ?? 0,

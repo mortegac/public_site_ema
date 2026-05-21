@@ -107,6 +107,7 @@ interface WizardState {
   activePanel: 'pago' | 'email' | null
   depto: string
   emailPago: string
+  emailPagoError: string
   nombreEmail: string
   emailSolo: string
   emailSent: boolean
@@ -340,6 +341,7 @@ export default function CotizadorWizard() {
     activePanel: null,
     depto: '',
     emailPago: '',
+    emailPagoError: '',
     nombreEmail: '',
     emailSolo: '',
     emailSent: false,
@@ -694,6 +696,7 @@ export default function CotizadorWizard() {
       activePanel: null,
       depto: '',
       emailPago: '',
+      emailPagoError: '',
       nombreEmail: '',
       emailSolo: '',
       emailSent: false,
@@ -1061,9 +1064,9 @@ export default function CotizadorWizard() {
             variant="contained"
             onClick={() => {
               if (state.activePanel === 'pago') {
-                update({ activePanel: null, webpayData: null, webpayError: '', webpayLoading: false })
+                update({ activePanel: null, webpayData: null, webpayError: '', webpayLoading: false, emailPagoError: '' })
               } else {
-                initiatePayment()
+                update({ activePanel: 'pago', webpayData: null, webpayError: '', emailPagoError: '' })
               }
             }}
             sx={{
@@ -1076,7 +1079,7 @@ export default function CotizadorWizard() {
               boxShadow: 'none',
             }}
           >
-            {state.webpayLoading ? 'Iniciando pago…' : 'Pagar e iniciar proceso de instalación'}
+            Pagar e iniciar proceso de instalación
           </Button>
         </Box>
 
@@ -1086,6 +1089,8 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
               Datos para la instalación
             </Typography>
+
+            {/* Address */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', flex: 1, bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 1, px: 1.5, py: 0.75 }}>
                 {state.address || 'Sin dirección ingresada'}
@@ -1094,6 +1099,7 @@ export default function CotizadorWizard() {
                 Cambiar
               </Button>
             </Box>
+
             <TextField
               fullWidth
               size="small"
@@ -1102,45 +1108,89 @@ export default function CotizadorWizard() {
               onChange={e => update({ depto: e.target.value })}
               sx={{ mb: 2 }}
             />
+
+            {/* Email — required */}
             <TextField
               fullWidth
               size="small"
-              label="Email para comprobante"
+              required
+              label="Email para comprobante *"
               type="email"
               value={state.emailPago}
-              onChange={e => update({ emailPago: e.target.value })}
+              onChange={e => update({ emailPago: e.target.value, emailPagoError: '' })}
+              error={!!state.emailPagoError}
+              helperText={state.emailPagoError || 'Recibirás el comprobante de pago aquí'}
               sx={{ mb: 2.5 }}
             />
+
             {/* Webpay error */}
             {state.webpayError && (
               <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
-                {state.webpayError}. <Button size="small" onClick={initiatePayment} sx={{ textTransform: 'none', fontSize: '0.78rem', p: 0, color: 'inherit', textDecoration: 'underline' }}>Reintentar</Button>
+                {state.webpayError}.{' '}
+                <Button size="small" onClick={initiatePayment} sx={{ textTransform: 'none', fontSize: '0.78rem', p: 0, color: 'inherit', textDecoration: 'underline' }}>
+                  Reintentar
+                </Button>
               </Alert>
             )}
 
-            {/* Webpay button — enabled only when token is ready */}
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={submitWebpay}
-              disabled={!state.webpayData || state.webpayLoading}
-              sx={{
-                bgcolor: state.webpayData ? PINK : '#e0e0e0',
-                color: state.webpayData ? '#fff' : '#aaa',
-                '&:hover': { bgcolor: state.webpayData ? PINK_DARK : '#e0e0e0' },
-                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                fontWeight: 700,
-                py: 1.5,
-                fontSize: '0.95rem',
-                boxShadow: 'none',
-              }}
-            >
-              {state.webpayLoading
-                ? 'Generando orden…'
-                : state.webpayData
-                  ? `Pagar ${fmt(displayResult.total)} con Webpay →`
-                  : `Pagar ${fmt(displayResult.total)} con Webpay →`}
-            </Button>
+            {/* Step A: Confirm button — shown before token is obtained */}
+            {!state.webpayData && (
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  const email = state.emailPago.trim()
+                  if (!email) {
+                    update({ emailPagoError: 'El email es obligatorio para continuar' })
+                    return
+                  }
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    update({ emailPagoError: 'Ingresa un email válido' })
+                    return
+                  }
+                  initiatePayment()
+                }}
+                disabled={state.webpayLoading}
+                sx={{
+                  bgcolor: PINK,
+                  color: '#fff',
+                  '&:hover': { bgcolor: PINK_DARK },
+                  '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                  fontWeight: 700,
+                  py: 1.5,
+                  fontSize: '0.95rem',
+                  boxShadow: 'none',
+                }}
+              >
+                {state.webpayLoading ? 'Generando orden…' : 'Confirmar y continuar →'}
+              </Button>
+            )}
+
+            {/* Step B: Webpay button — shown once token is ready */}
+            {state.webpayData && (
+              <>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, p: 1.25, bgcolor: 'rgba(0,196,124,0.08)', borderRadius: 1.5, border: '1px solid rgba(0,196,124,0.25)' }}>
+                  <Typography sx={{ fontSize: '0.8rem', color: '#166534' }}>✓ Orden generada · Comprobante se enviará a <strong>{state.emailPago}</strong></Typography>
+                </Box>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={submitWebpay}
+                  sx={{
+                    bgcolor: PINK,
+                    color: '#fff',
+                    '&:hover': { bgcolor: PINK_DARK },
+                    fontWeight: 700,
+                    py: 1.5,
+                    fontSize: '0.95rem',
+                    boxShadow: 'none',
+                  }}
+                >
+                  {`Pagar ${fmt(displayResult.total)} con Webpay →`}
+                </Button>
+              </>
+            )}
+
             <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
               Pago seguro · Visa, Mastercard, Redcompra, débito
             </Typography>

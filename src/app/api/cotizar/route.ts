@@ -80,6 +80,23 @@ const PROCESS_ESTIMATE = /* GraphQL */ `
   }
 `
 
+const LIST_NEXT_AVAILABLE = /* GraphQL */ `
+  query ListNextAvailable($startDate: String!, $endDate: String!) {
+    CalendarVisitsByState(
+      state: available
+      startDate: { between: [$startDate, $endDate] }
+      sortDirection: ASC
+      limit: 1
+    ) {
+      items {
+        calendarId
+        startDate
+        userId
+      }
+    }
+  }
+`
+
 // ─── Request body schema ──────────────────────────────────────────────────────
 interface CotizarBody {
   isHouse: boolean
@@ -136,16 +153,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `createClientForm failed: ${message}` }, { status: 502 })
   }
 
-  // ── Step 2: ProcessEstimate ─────────────────────────────────────────────────
+  // ── Step 2: ProcessEstimate + next available date (parallel) ────────────────
   try {
-    const estimateData = await callAppSync(url, apiKey, PROCESS_ESTIMATE, { formId })
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() + 1)
+    startDate.setHours(0, 0, 0, 0)
+
+    const endDate = new Date()
+    endDate.setDate(endDate.getDate() + 30)
+    endDate.setHours(23, 59, 59, 999)
+
+    const [estimateData, calendarData] = await Promise.all([
+      callAppSync(url, apiKey, PROCESS_ESTIMATE, { formId }),
+      callAppSync(url, apiKey, LIST_NEXT_AVAILABLE, {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      }).catch(() => null),
+    ])
 
     const result = estimateData?.ProcessEstimate
+    const nextSlot = calendarData?.CalendarVisitsByState?.items?.[0]
+    const nextAvailableDate: string | null = nextSlot?.startDate ?? null
+
+    console.log('[/api/cotizar] nextAvailableDate:', nextAvailableDate)
 
     return NextResponse.json({
       formId,
       message: result?.message ?? 'ok',
       estimates: result?.estimates ?? [],
+      nextAvailableDate,
     })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)

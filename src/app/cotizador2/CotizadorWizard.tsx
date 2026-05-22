@@ -21,8 +21,6 @@ import { IconMail } from "@tabler/icons-react"
 import AddressInput2 from '@/app/components/AddressInput2'
 import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
-import { useAppSelector, useAppDispatch } from '@/store/hooks'
-import { selectCalendarVisits, getLastScheduleInstallers } from '@/store/CalendarVisits/slice'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -132,6 +130,7 @@ interface WizardState {
     isOwn: boolean
   } | null
   formId: string | null
+  nextVisitDate: string | null
   webpayLoading: boolean
   webpayError: string
   webpayData: { order: string; token: string; url: string; buy_order: string } | null
@@ -355,14 +354,13 @@ export default function CotizadorWizard() {
     estimateLoading: false,
     apiResult: null,
     formId: null,
+    nextVisitDate: null,
     webpayLoading: false,
     webpayError: '',
     webpayData: null,
   })
 
   const [geoStatus, setGeoStatus] = useState<'loading' | 'detected' | 'error'>('loading')
-  const dispatch = useAppDispatch()
-  const { lastScheduleInstallers } = useAppSelector(selectCalendarVisits)
   const [geoAddress, setGeoAddress] = useState<string>('')
   const [geoError, setGeoError] = useState<string>('')
   // Controls whether the manual address input is visible
@@ -371,10 +369,6 @@ export default function CotizadorWizard() {
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
-
-  useEffect(() => {
-    dispatch(getLastScheduleInstallers())
-  }, [dispatch])
 
   // ─── Auto-detect location via IP on mount (no user gesture needed) ────────
   const autoGeoStarted = useRef(false)
@@ -561,6 +555,7 @@ export default function CotizadorWizard() {
               estimateLoading: false,
               step: 2,
               formId,
+              nextVisitDate: (data as any).nextAvailableDate ?? null,
               apiResult: {
                 mat: Number(est.materialsCost ?? 0),
                 inst: Number(est.installationCost ?? 0),
@@ -715,6 +710,7 @@ export default function CotizadorWizard() {
       estimateLoading: false,
       apiResult: null,
       formId: null,
+      nextVisitDate: null,
       webpayLoading: false,
       webpayError: '',
       webpayData: null,
@@ -998,12 +994,9 @@ export default function CotizadorWizard() {
           {/* Steps */}
           {([
             { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
-            { label: 'Visita técnica gratuita', sub: (() => {
-                const raw = lastScheduleInstallers?.[0]?.startDate
-                if (!raw) return 'Próxima fecha: cargando...'
-                const d = new Date(raw)
-                return `Próxima fecha: ${d.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })}`
-              })(), active: true },
+            { label: 'Visita técnica gratuita', sub: state.nextVisitDate
+                ? `Próxima fecha: ${new Date(state.nextVisitDate).toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })}`
+                : 'Próxima fecha disponible', active: true },
             { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
             { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
           ] as { label: string; sub: string; active: boolean }[]).map((s, i) => (

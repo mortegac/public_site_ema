@@ -1595,7 +1595,7 @@ export default function CotizadorWizard() {
           <Typography sx={{ color: '#000000', textAlign: 'center', mb: { xs: 1, md: 4 }, fontSize: '0.9rem' }}>
             {heroSubtitle}
           </Typography>
-          {!state.booked && <WizardStepper step={state.step} paid={state.paid} booked={state.booked} />}
+          {!state.booked && <Box sx={{ mb: '10px' }}><WizardStepper step={state.step} paid={state.paid} booked={state.booked} /></Box>}
         </Container>
       </Box>
 

@@ -899,6 +899,15 @@ export default function CotizadorWizard() {
     )
   }
 
+  function formatVisitDate(iso: string): string {
+    const d = new Date(iso)
+    const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+    const weekday = d.toLocaleDateString('es-CL', { weekday: 'long' })
+    const day = d.getDate()
+    const month = d.toLocaleDateString('es-CL', { month: 'long' })
+    return `${cap(weekday)}, ${day} ${cap(month)}`
+  }
+
   function renderStep2() {
     const localResult = result
     const displayResult = state.apiResult ?? localResult
@@ -995,7 +1004,7 @@ export default function CotizadorWizard() {
           {([
             { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
             { label: 'Visita técnica gratuita', sub: state.nextVisitDate
-                ? `Próxima fecha: ${new Date(state.nextVisitDate).toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })}`
+                ? `Próxima fecha: ${formatVisitDate(state.nextVisitDate)}`
                 : 'Próxima fecha disponible', active: true },
             { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
             { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
@@ -1214,6 +1223,16 @@ export default function CotizadorWizard() {
               </>
             )}
           </Box>
+        )}
+
+        {/* Próxima visita disponible — between pay and email buttons */}
+        {state.nextVisitDate && (
+          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textAlign: 'center', mb: 2, mt: -1 }}>
+            Próxima visita disponible:{' '}
+            <Box component="span" sx={{ color: TEAL, fontWeight: 600 }}>
+              {formatVisitDate(state.nextVisitDate)}
+            </Box>
+          </Typography>
         )}
 
         {/* Email button — below pago panel */}

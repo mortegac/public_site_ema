@@ -66,17 +66,21 @@ function fmt(n: number): string {
   return '$' + Math.round(n).toLocaleString('es-CL')
 }
 
-const VALID_REGIONS = [
-  'metropolitana', 'santiago', 'las condes', 'providencia', 'ñuñoa', 'vitacura',
+const RM_KEYWORDS = [
+  'región metropolitana', 'region metropolitana', 'metropolitana',
+  'santiago', 'las condes', 'providencia', 'ñuñoa', 'vitacura',
   'la florida', 'maipú', 'puente alto', 'la reina', 'peñalolén', 'macul',
   'san miguel', 'huechuraba', 'colina', 'lo barnechea', 'independencia',
-  'san bernardo', 'valparaíso', 'viña del mar', 'quilpué', 'villa alemana',
-  'concón', 'hamlet',
+  'san bernardo', 'pudahuel', 'cerrillos', 'cerro navia', 'conchalí',
+  'el bosque', 'estación central', 'la cisterna', 'la granja', 'la pintana',
+  'lo espejo', 'lo prado', 'quinta normal', 'recoleta', 'renca',
+  'san joaquín', 'san ramón', 'quilicura', 'padre hurtado', 'peñaflor',
+  'melipilla', 'talagante', 'buin', 'calera de tango', 'paine',
 ]
 
-function checkRegion(addr: string): boolean {
-  if (addr.length < 4) return false
-  return !VALID_REGIONS.some(r => addr.toLowerCase().includes(r))
+function isRegionMetropolitana(addr: string): boolean {
+  if (!addr || addr.trim().length < 4) return true // sin dirección → no bloquear
+  return RM_KEYWORDS.some(k => addr.toLowerCase().includes(k))
 }
 
 function genDates(): Array<{ label: string; available: boolean }> {
@@ -1080,57 +1084,80 @@ export default function CotizadorWizard() {
                 Por el momento solo atendemos la Región Metropolitana y Valparaíso.
               </Alert>
             )}
-            <TextField
-              fullWidth
-              size="small"
-              label="Depto / Referencia (opcional)"
-              value={state.depto}
-              onChange={e => update({ depto: e.target.value })}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              size="small"
-              required
-              label="Email para comprobante"
-              type="email"
-              value={state.emailPago}
-              onChange={e => update({ emailPago: e.target.value })}
-              helperText="Requerido para proceder al pago"
-              sx={{ mb: 2.5 }}
-            />
 
-            {/* Webpay error */}
-            {state.webpayError && (
-              <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
-                {state.webpayError}. <Button size="small" onClick={initiatePayment} sx={{ textTransform: 'none', fontSize: '0.78rem', p: 0, color: 'inherit', textDecoration: 'underline' }}>Reintentar</Button>
-              </Alert>
+            {/* ── Validación de cobertura RM ───────────────────────────────── */}
+            {state.address && !isRegionMetropolitana(state.address) ? (
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#92400E', mb: 0.75 }}>
+                  Sin cobertura en tu región
+                </Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: '#78350F', lineHeight: 1.6, mb: 1.5 }}>
+                  De momento no tenemos cobertura en tu región por esta vía. Contáctanos para evaluar tu caso con un ejecutivo.
+                </Typography>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => { setShowManualInput(true); update({ address: '' }) }}
+                  sx={{ fontSize: '0.78rem', borderColor: '#92400E', color: '#92400E', textTransform: 'none', '&:hover': { borderColor: '#78350F', bgcolor: 'rgba(146,64,14,0.05)' } }}
+                >
+                  Cambiar dirección
+                </Button>
+              </Box>
+            ) : (
+              <>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Depto / Referencia (opcional)"
+                  value={state.depto}
+                  onChange={e => update({ depto: e.target.value })}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  label="Email para comprobante"
+                  type="email"
+                  value={state.emailPago}
+                  onChange={e => update({ emailPago: e.target.value })}
+                  helperText="Requerido para proceder al pago"
+                  sx={{ mb: 2.5 }}
+                />
+
+                {/* Webpay error */}
+                {state.webpayError && (
+                  <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
+                    {state.webpayError}. <Button size="small" onClick={initiatePayment} sx={{ textTransform: 'none', fontSize: '0.78rem', p: 0, color: 'inherit', textDecoration: 'underline' }}>Reintentar</Button>
+                  </Alert>
+                )}
+
+                {/* Webpay button — enabled only when token is ready AND email is filled */}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={submitWebpay}
+                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim()}
+                  sx={{
+                    bgcolor: PINK,
+                    color: '#fff',
+                    '&:hover': { bgcolor: PINK_DARK },
+                    '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                    fontWeight: 700,
+                    py: 1.5,
+                    fontSize: '0.95rem',
+                    boxShadow: 'none',
+                  }}
+                >
+                  {state.webpayLoading
+                    ? 'Generando orden…'
+                    : `Pagar ${fmt(displayResult.total)} con Webpay →`}
+                </Button>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                  Pago seguro · Visa, Mastercard, Redcompra, débito
+                </Typography>
+              </>
             )}
-
-            {/* Webpay button — enabled only when token is ready AND email is filled */}
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={submitWebpay}
-              disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim()}
-              sx={{
-                bgcolor: PINK,
-                color: '#fff',
-                '&:hover': { bgcolor: PINK_DARK },
-                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                fontWeight: 700,
-                py: 1.5,
-                fontSize: '0.95rem',
-                boxShadow: 'none',
-              }}
-            >
-              {state.webpayLoading
-                ? 'Generando orden…'
-                : `Pagar ${fmt(displayResult.total)} con Webpay →`}
-            </Button>
-            <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-              Pago seguro · Visa, Mastercard, Redcompra, débito
-            </Typography>
           </Box>
         )}
 

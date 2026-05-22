@@ -746,90 +746,6 @@ export default function CotizadorWizard() {
           </Grid>
         </Grid>
 
-        <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', mb: 1, color: '#2A3547' }}>
-          Dirección de instalación
-        </Typography>
-
-        {/* ─── Loading (auto IP detection on mount) ─── */}
-        {geoStatus === 'loading' && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, mb: 1.5 }}>
-            <Typography sx={{ fontSize: '1.1rem' }}>📍</Typography>
-            <Box sx={{ flex: 1 }}>
-              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
-              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED }}>Calculando automáticamente</Typography>
-            </Box>
-          </Box>
-        )}
-
-        {/* ─── Detected address box — shown when detected AND not in manual mode ─── */}
-        {geoStatus === 'detected' && geoAddress && !showManualInput && (
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, mb: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5 }}>
-            <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="caption" sx={{ fontSize: '0.72rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.5 }}>
-                Ubicación detectada
-              </Typography>
-              <Typography component="h3" sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4, m: 0 }}>
-                {geoAddress}
-              </Typography>
-            </Box>
-            {/* Action buttons */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0.25, flexShrink: 0 }}>
-              <Button
-                size="small"
-                onClick={() => setShowManualInput(true)}
-                sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap', py: 0.25, '&:hover': { color: '#2A3547' } }}
-              >
-                Editar
-              </Button>
-            </Box>
-          </Box>
-        )}
-
-        {/* ─── Manual input — shown when user clicked Editar or geo failed ─── */}
-        {(geoStatus === 'error' || showManualInput) && (
-          <Box sx={{ mb: 1.5 }}>
-            {geoStatus === 'error' && (
-              <Alert
-                severity="warning"
-                sx={{ mb: 1.5, fontSize: '0.8rem', '& .MuiAlert-message': { lineHeight: 1.5 } }}
-                action={
-                  <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: 'inherit', textTransform: 'none' }}>
-                    Reintentar
-                  </Button>
-                }
-              >
-                {geoError || 'No se pudo detectar la ubicación. Ingresa tu dirección manualmente.'}
-              </Alert>
-            )}
-            <AddressInput2
-              value={state.address}
-              onAddressChange={(v) => update({ address: v, regionWarn: false })}
-              onSelectAddress={(details) => {
-                if (details) {
-                  const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                  update({ address: full, regionWarn: false })
-                }
-              }}
-            />
-            {/* Back to auto-detected address */}
-            {geoStatus === 'detected' && geoAddress && (
-              <Button
-                size="small"
-                onClick={() => setShowManualInput(false)}
-                sx={{ mt: 0.75, fontSize: '0.78rem', color: TEAL, textTransform: 'none', p: 0, '&:hover': { bgcolor: 'transparent' } }}
-              >
-                ← Usar ubicación detectada
-              </Button>
-            )}
-          </Box>
-        )}
-
-        {state.regionWarn && (
-          <Alert severity="warning" sx={{ fontSize: '0.8rem', mt: 1 }}>
-            Por el momento solo atendemos la Región Metropolitana y Valparaíso. Igualmente continúa para recibir tu cotización de referencia.
-          </Alert>
-        )}
 
       </Box>
     )
@@ -1086,14 +1002,84 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
               Datos para la instalación
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', flex: 1, bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 1, px: 1.5, py: 0.75 }}>
-                {state.address || 'Sin dirección ingresada'}
-              </Typography>
-              <Button size="small" onClick={() => update({ step: 0 })} sx={{ color: TEAL, fontSize: '0.72rem', minWidth: 'auto', whiteSpace: 'nowrap' }}>
-                Cambiar
-              </Button>
-            </Box>
+            {/* ─── Dirección de instalación ─── */}
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+              Dirección de instalación
+            </Typography>
+
+            {/* Loading */}
+            {geoStatus === 'loading' && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5, bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 1.5, mb: 1.5 }}>
+                <Typography sx={{ fontSize: '1rem' }}>📍</Typography>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', color: '#2A3547' }}>Detectando tu ubicación…</Typography>
+              </Box>
+            )}
+
+            {/* Dirección detectada */}
+            {geoStatus === 'detected' && geoAddress && !showManualInput && (
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, mb: 1.5, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.25)`, borderRadius: 1.5 }}>
+                <Typography sx={{ fontSize: '1rem', mt: 0.1, flexShrink: 0 }}>📍</Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 600, color: TEAL, display: 'block', mb: 0.25 }}>
+                    Ubicación detectada
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.88rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.4 }}>
+                    {geoAddress}
+                  </Typography>
+                </Box>
+                <Button
+                  size="small"
+                  onClick={() => setShowManualInput(true)}
+                  sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textTransform: 'none', minWidth: 'auto', whiteSpace: 'nowrap', py: 0.25 }}
+                >
+                  Editar
+                </Button>
+              </Box>
+            )}
+
+            {/* Input manual */}
+            {(geoStatus === 'error' || showManualInput || (!geoAddress && geoStatus !== 'loading')) && (
+              <Box sx={{ mb: 1.5 }}>
+                {geoStatus === 'error' && (
+                  <Alert
+                    severity="warning"
+                    sx={{ mb: 1, fontSize: '0.78rem', '& .MuiAlert-message': { lineHeight: 1.5 } }}
+                    action={
+                      <Button size="small" onClick={requestGeoLocation} sx={{ fontSize: '0.7rem', color: 'inherit', textTransform: 'none' }}>
+                        Reintentar
+                      </Button>
+                    }
+                  >
+                    {geoError || 'No se pudo detectar la ubicación. Ingresa tu dirección manualmente.'}
+                  </Alert>
+                )}
+                <AddressInput2
+                  value={state.address}
+                  onAddressChange={(v) => update({ address: v, regionWarn: false })}
+                  onSelectAddress={(details) => {
+                    if (details) {
+                      const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                      update({ address: full, regionWarn: false })
+                    }
+                  }}
+                />
+                {geoStatus === 'detected' && geoAddress && (
+                  <Button
+                    size="small"
+                    onClick={() => setShowManualInput(false)}
+                    sx={{ mt: 0.5, fontSize: '0.75rem', color: TEAL, textTransform: 'none', p: 0 }}
+                  >
+                    ← Usar ubicación detectada
+                  </Button>
+                )}
+              </Box>
+            )}
+
+            {state.regionWarn && (
+              <Alert severity="warning" sx={{ fontSize: '0.78rem', mb: 1.5 }}>
+                Por el momento solo atendemos la Región Metropolitana y Valparaíso.
+              </Alert>
+            )}
             <TextField
               fullWidth
               size="small"
@@ -1490,7 +1476,7 @@ export default function CotizadorWizard() {
       )}
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, pt: { xs: '10px', md: '64px' }, pb: { xs: 2, md: 4 } }}>
+      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, pt: 0, pb: 0 }}>
         <Container maxWidth="sm" sx={{ px: { xs: 1, sm: 3 } }}>
           <Typography
             variant="h1"

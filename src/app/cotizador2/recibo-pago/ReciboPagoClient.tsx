@@ -165,13 +165,13 @@ export default function ReciboPagoClient() {
       <HpHeaderNew />
       <Box component="main">
         {/* ── Hero ── */}
-        <Box sx={{ background: 'linear-gradient(180deg, #4dbfd9 10%, #0898b9 80%)', py: { xs: 6, md: 8 }, textAlign: 'center' }}>
+        <Box sx={{ background: 'linear-gradient(180deg, #4dbfd9 10%, #0898b9 80%)', py: 0, textAlign: 'center' }}>
           <Container maxWidth="md">
             <Typography variant="h1" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 800, color: '#000', mb: 1 }}>
               {booked ? '¡Todo listo!' : '¡Pago exitoso!'}
             </Typography>
             <Typography sx={{ color: '#000', fontSize: '0.9rem' }}>
-              {booked ? 'Tu visita técnica ha sido agendada' : 'Elige una fecha para tu visita técnica'}
+              {booked ? 'Visita agendada' : 'Elige una fecha para tu visita técnica'}
             </Typography>
           </Container>
         </Box>

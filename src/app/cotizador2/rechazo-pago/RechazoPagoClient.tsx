@@ -81,7 +81,7 @@ export default function RechazoPagoClient() {
         <Box
           sx={{
             background: 'linear-gradient(180deg, #4dbfd9 10%, #0898b9 80%)',
-            py: { xs: 6, md: 8 },
+            py: 0,
             textAlign: 'center',
           }}
         >

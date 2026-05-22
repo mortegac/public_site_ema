@@ -895,6 +895,15 @@ export default function CotizadorWizard() {
     )
   }
 
+  function nextVisitDate(): string {
+    const d = new Date()
+    d.setDate(d.getDate() + 2)
+    // skip weekend
+    if (d.getDay() === 6) d.setDate(d.getDate() + 2)
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1)
+    return d.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })
+  }
+
   function renderStep2() {
     const localResult = result
     const displayResult = state.apiResult ?? localResult
@@ -972,6 +981,55 @@ export default function CotizadorWizard() {
           <Typography sx={{ fontSize: '0.8rem', color: '#0777a0', lineHeight: 1.5 }}>
             Incluye tablero, canalización, cableado y declaración TE6 ante SEC. Normativa RIC N°15.
           </Typography>
+        </Box>
+
+        {/* ── Cronograma de instalación ───────────────────────────────────── */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
+          {/* Header */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#0898b9" strokeWidth="1.5"/>
+              <path d="M12 7v5l3 3" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>
+              Tu proceso de instalación
+            </Typography>
+          </Box>
+
+          {/* Steps */}
+          {([
+            { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
+            { label: 'Visita técnica gratuita', sub: `Próxima fecha: ${nextVisitDate()}`, active: true },
+            { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
+            { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
+          ] as { label: string; sub: string; active: boolean }[]).map((s, i) => (
+            <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: i < 3 ? 1.75 : 0 }}>
+              <Box sx={{
+                width: 24, height: 24, borderRadius: '50%', flexShrink: 0, mt: 0.1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                bgcolor: s.active ? PINK : '#E2E8F0',
+              }}>
+                <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: s.active ? '#fff' : '#94A3B8' }}>
+                  {i + 1}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.3 }}>
+                  {s.label}
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: s.active ? PINK : TEXT_MUTED, mt: 0.15 }}>
+                  {s.sub}
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+
+          {/* Footer */}
+          <Box sx={{ mt: 2, pt: 1.5, borderTop: `1px solid ${BORDER}`, bgcolor: 'rgba(8,152,185,0.05)', borderRadius: 1, px: 1.5, py: 1 }}>
+            <Typography sx={{ fontSize: '0.78rem', color: TEAL, fontWeight: 600, textAlign: 'center' }}>
+              De pago a cargador funcionando: ~7 a 12 días hábiles
+            </Typography>
+          </Box>
         </Box>
 
         {/* Pay button — red when panel hidden, gray when panel visible (acts as toggle) */}

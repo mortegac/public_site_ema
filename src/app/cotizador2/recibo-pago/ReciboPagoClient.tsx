@@ -336,23 +336,14 @@ export default function ReciboPagoClient() {
                     ))}
                   </Box>
 
-                  {/* Share buttons */}
-                  <Box sx={{ display: 'flex', gap: 1.5, mb: 2 }}>
-                    <Button fullWidth variant="outlined" onClick={() => {
-                      const body = `Visita agendada: ${dates[selectedDate!]?.label}. Total: ${paymentData ? fmt(Number(paymentData.total)) : ''}.`
-                      window.open(`mailto:${paymentData?.email ?? ''}?subject=Confirmación Enérgica City&body=${encodeURIComponent(body)}`, '_blank')
-                    }} sx={{ py: 1.25, borderRadius: 2, borderColor: '#E2E8F0', color: '#2A3547', fontSize: '0.8rem', fontWeight: 600, gap: 0.75 }}>
-                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="#64748B" strokeWidth="1.5" fill="none"/><path d="M2 6L10 11L18 6" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                      Email
-                    </Button>
-                    <Button fullWidth variant="contained" onClick={() => {
-                      const text = `Hola, agendé mi instalación:\n- Servicio: ${paymentData?.glosa}\n- Total: ${paymentData ? fmt(Number(paymentData.total)) : ''}\n- Visita: ${dates[selectedDate!]?.label}`
-                      window.open(`https://api.whatsapp.com/send?phone=56967666652&text=${encodeURIComponent(text)}`, '_blank')
-                    }} sx={{ py: 1.25, borderRadius: 2, bgcolor: '#25D366', '&:hover': { bgcolor: '#1da851' }, fontSize: '0.8rem', fontWeight: 600, gap: 0.75 }}>
-                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 1C5 1 1 5 1 10C1 11.8 1.5 13.4 2.4 14.8L1 19L5.4 17.7C6.8 18.5 8.3 19 10 19C15 19 19 15 19 10C19 5 15 1 10 1Z" fill="white"/><path d="M7 12.5C9 14.5 12 14 13.5 12.5L12.5 11.5C12 12 11 12.5 9.5 11C8 9.5 8.5 8.5 9 8L7.5 7C6 8.5 5 11 7 12.5Z" fill="#25D366"/></svg>
-                      WhatsApp
-                    </Button>
-                  </Box>
+                  {/* WhatsApp button — full width */}
+                  <Button fullWidth variant="contained" onClick={() => {
+                    const text = `Hola, agendé mi instalación:\n- Servicio: ${paymentData?.glosa}\n- Total: ${paymentData ? fmt(Number(paymentData.total)) : ''}\n- Visita: ${dates[selectedDate!]?.label}`
+                    window.open(`https://api.whatsapp.com/send?phone=56967666652&text=${encodeURIComponent(text)}`, '_blank')
+                  }} sx={{ py: 1.25, borderRadius: 2, bgcolor: '#25D366', '&:hover': { bgcolor: '#1da851' }, fontSize: '0.8rem', fontWeight: 600, gap: 0.75, mb: 2 }}>
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 1C5 1 1 5 1 10C1 11.8 1.5 13.4 2.4 14.8L1 19L5.4 17.7C6.8 18.5 8.3 19 10 19C15 19 19 15 19 10C19 5 15 1 10 1Z" fill="white"/><path d="M7 12.5C9 14.5 12 14 13.5 12.5L12.5 11.5C12 12 11 12.5 9.5 11C8 9.5 8.5 8.5 9 8L7.5 7C6 8.5 5 11 7 12.5Z" fill="#25D366"/></svg>
+                    Contáctanos por WhatsApp
+                  </Button>
 
                   <Button variant="contained" fullWidth component={Link} href="/cotizador2" sx={{
                     py: 1.5, borderRadius: '24px', fontWeight: 700,

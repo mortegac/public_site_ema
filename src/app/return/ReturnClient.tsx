@@ -176,13 +176,30 @@ const ReturnPage = () => {
                       throw new Error('Error en getWPStatus o respuesta inválida');
                   }
 
+                  // Resolve email: Webpay returns 'sin-usuario' for /cotizador2 flow.
+                  // Fall back to email stored in sessionStorage by CotizadorWizard.
+                  const rawWebpayEmail = statusResponse?.email ?? ''
+                  const isValidWebpayEmail = rawWebpayEmail && rawWebpayEmail !== 'sin-usuario'
+                  let resolvedEmail = rawWebpayEmail
+                  if (!isValidWebpayEmail) {
+                    try {
+                      const stored = sessionStorage.getItem('paymentData')
+                      if (stored) {
+                        const storedData = JSON.parse(stored)
+                        resolvedEmail = storedData?.email || storedData?.customerId || ''
+                        console.log('[return] email resolved from sessionStorage:', resolvedEmail)
+                      }
+                    } catch { /* ignore */ }
+                  }
+                  console.log('[return] sendEmail to_email:', resolvedEmail, '| webpayEmail:', rawWebpayEmail)
+
                   const objEmail = {
                       glosa: statusResponse?.glosa,
                       total: statusResponse?.amount,
                       order: statusResponse?.buy_order,
                       card: statusResponse?.card_number,
                       typePay: statusResponse?.payment_type_code,
-                      to_email: statusResponse?.email,
+                      to_email: resolvedEmail,
                   };
                   await sendEmail({ ...objEmail });
 

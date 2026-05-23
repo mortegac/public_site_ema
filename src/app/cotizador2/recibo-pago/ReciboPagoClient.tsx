@@ -253,12 +253,13 @@ export default function ReciboPagoClient() {
                     setBookingError('')
                     try {
                       const bookingPayload = {
-                        customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         calendarId,
-                        shoppingCartId: paymentData?.shoppingCartId ?? '',
+                        customerId: paymentData?.customerId ?? paymentData?.email ?? '',
+                        address: paymentData?.address ?? '',
+                        chargerName: paymentData?.chargerName ?? 'Instalación cargador EV',
                       }
-                      console.log('[recibo-pago] Booking POST payload:', JSON.stringify(bookingPayload))
-                      const res = await fetch('/api/schedule', {
+                      console.log('[recibo-pago] ConfirmChargerVisit payload:', JSON.stringify(bookingPayload))
+                      const res = await fetch('/api/confirm-charger-visit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(bookingPayload),

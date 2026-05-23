@@ -244,13 +244,16 @@ export default function ReciboPagoClient() {
                     if (selectedDate === null) return
                     const slot = dates[selectedDate]
                     const calendarId = slot.slots?.[0]?.calendarId
-                    if (!calendarId) { sessionStorage.removeItem('paymentData'); setBooked(true); return }
+                    if (!calendarId) {
+                      setBookingError('No hay horario disponible para esta fecha. Selecciona otra.')
+                      return
+                    }
 
                     setBookingLoading(true)
                     setBookingError('')
                     try {
                       const bookingPayload = {
-                        customerId: paymentData?.email ?? '',
+                        customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         calendarId,
                         shoppingCartId: paymentData?.shoppingCartId ?? '',
                       }

@@ -795,7 +795,7 @@ export default function CotizadorWizard() {
         {/* Estimación summary header (Image #14) */}
         <Box sx={{ textAlign: 'center', mb: 2 }}>
           <Typography sx={{ fontSize: '0.95rem', fontWeight: 700, color: '#2A3547' }}>
-            Tu estimación
+            Tu cotización
           </Typography>
           <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.25 }}>
             {tipoLabel} · {chargerLabel} · {distLabel2}
@@ -804,7 +804,7 @@ export default function CotizadorWizard() {
 
         {/* Price hero */}
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 0.5 }}>Total estimado (con IVA)</Typography>
+          <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 0.5 }}>Total (con IVA)</Typography>
           <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
             {fmt(displayResult.total)}
           </Typography>

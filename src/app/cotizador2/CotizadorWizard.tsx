@@ -326,7 +326,7 @@ const STEP_TITLES = [
 const STEP_SUBTITLES = [
   'Instalación certificada SEC · Precios claros · Sin sorpresas',
   'Selecciona el equipo que mejor se adapta a tus necesidades',
-  'Precio estimado basado en tu perfil. Sin compromiso.',
+  'Precio real basado en tu perfil',
   'Coordina la visita técnica a tu domicilio',
   'Nuestro equipo coordinará contigo los detalles finales',
 ]
@@ -808,46 +808,82 @@ export default function CotizadorWizard() {
           <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
             {fmt(displayResult.total)}
           </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.75, mt: 1.5 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L3 5.5V12C3 16.5 7 20.5 12 22C17 20.5 21 16.5 21 12V5.5L12 2Z" fill="#22c55e" stroke="#22c55e" strokeWidth="0.5"/>
+              <path d="M8 12L11 15L16 9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <Typography sx={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 600 }}>
+              Tu reserva protegida
+            </Typography>
+          </Box>
         </Box>
 
         {/* Breakdown card */}
-        <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', mb: 2, color: '#2A3547' }}>Desglose</Typography>
-
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, overflow: 'hidden', mb: 3 }}>
           {!displayResult.isOwn && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Cargador ({displayResult.chargerName})</Typography>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.chargerPrice)}</Typography>
-            </Box>
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
+                <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>🔌</Box>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
+                    {displayResult.chargerName}
+                  </Typography>
+                </Box>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
+                  {fmt(displayResult.chargerPrice)}
+                </Typography>
+              </Box>
+              <Divider />
+            </>
           )}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Materiales eléctricos</Typography>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.mat)}</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
+            <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>🔧</Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
+                Materiales certificados
+              </Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>
+                Tablero, canalización, cableado, protecciones
+              </Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
+              {fmt(displayResult.mat)}
+            </Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Instalación certificada</Typography>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.inst)}</Typography>
+          <Divider />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
+            <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>👷</Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
+                Instalación por técnico SEC
+              </Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>
+                Mano de obra certificada
+              </Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
+              {fmt(displayResult.inst)}
+            </Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>Trámite SEC</Typography>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{fmt(displayResult.sec)}</Typography>
+          <Divider />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
+            <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>📋</Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
+                Trámites y declaración TE6
+              </Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>
+                Certificación ante SEC incluida
+              </Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
+              {fmt(displayResult.sec)}
+            </Typography>
           </Box>
-
-          <Divider sx={{ my: 1.5 }} />
-
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.75 }}>
-            <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>Subtotal neto</Typography>
-            <Typography sx={{ fontSize: '0.85rem' }}>{fmt(displayResult.neto)}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.75 }}>
-            <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>IVA 19%</Typography>
-            <Typography sx={{ fontSize: '0.85rem' }}>{fmt(displayResult.iva)}</Typography>
-          </Box>
-
-          <Divider sx={{ my: 1.5 }} />
-
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>Total con IVA</Typography>
+          <Divider />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2.5, py: 2 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>Total (IVA incl.)</Typography>
             <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: PINK }}>{fmt(displayResult.total)}</Typography>
           </Box>
         </Box>
@@ -908,6 +944,33 @@ export default function CotizadorWizard() {
               De pago a cargador funcionando: ~7 a 12 días hábiles
             </Typography>
           </Box>
+        </Box>
+
+        {/* Social proof */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5, mb: 1 }}>
+          <Box sx={{ display: 'flex' }}>
+            {[
+              { letter: 'H', color: '#FBBF24' },
+              { letter: 'C', color: '#93C5FD' },
+              { letter: 'J', color: '#86EFAC' },
+              { letter: 'R', color: '#FCA5A5' },
+            ].map(({ letter, color }, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 28, height: 28, borderRadius: '50%', position: 'relative',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  bgcolor: color, border: '2px solid #fff',
+                  ml: i > 0 ? -0.75 : 0, zIndex: 4 - i,
+                }}
+              >
+                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
+              </Box>
+            ))}
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
+            +120 instalaciones completadas en Santiago
+          </Typography>
         </Box>
 
         {/* Pay button — red when panel hidden, gray when panel visible (acts as toggle) */}
@@ -1031,7 +1094,7 @@ export default function CotizadorWizard() {
                 >
                   {state.webpayLoading
                     ? 'Generando orden…'
-                    : `Pagar ${fmt(displayResult.total)} con Webpay →`}
+                    : 'Reservar mi instalación'}
                 </Button>
                 <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
                   Pago seguro · Visa, Mastercard, Redcompra, débito
@@ -1071,6 +1134,27 @@ export default function CotizadorWizard() {
           >
             Enviar mi cotización por email
           </Button>
+        </Box>
+
+        {/* WhatsApp button */}
+        <Box
+          component="a"
+          href={`https://wa.me/56999999999?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1,
+            py: 1.25, mb: 2, textDecoration: 'none', cursor: 'pointer',
+            '&:hover .wa-text': { color: '#25D366' },
+          }}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="12" fill="#25D366"/>
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#fff"/>
+          </svg>
+          <Typography className="wa-text" sx={{ fontSize: '0.9rem', color: TEXT_MUTED, fontWeight: 500, transition: 'color 0.2s' }}>
+            ¿Tienes dudas? Habla con nosotros
+          </Typography>
         </Box>
 
         {/* Panel: email */}
@@ -1126,7 +1210,7 @@ export default function CotizadorWizard() {
         {/* Trust box — redesigned */}
         <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 3 }}>
           <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
-            Tu compra protegida
+            Tu reserva protegida
           </Typography>
 
           {[
@@ -1328,7 +1412,7 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              href="https://wa.me/56999999999?text=Hola,%20acabo%20de%20agendar%20mi%20instalación%20de%20cargador%20EV"
+              href={`https://wa.me/56999999999?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               component="a"

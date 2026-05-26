@@ -31,7 +31,7 @@ test.describe('Geolocation diagnosis', () => {
       })
     })
 
-    await page.goto('http://localhost:3000/cotizador2', { waitUntil: 'load' })
+    await page.goto('http://localhost:3000/cotizador', { waitUntil: 'load' })
     await page.waitForSelector('[data-testid="btn-next"]', { timeout: 20000 })
     await page.waitForTimeout(5000)
 
@@ -64,7 +64,7 @@ test.describe('Geolocation diagnosis', () => {
     })
 
     // Do NOT grant geolocation — browser will deny
-    await page.goto('http://localhost:3000/cotizador2', { waitUntil: 'load' })
+    await page.goto('http://localhost:3000/cotizador', { waitUntil: 'load' })
     await page.waitForSelector('[data-testid="btn-next"]', { timeout: 20000 })
     await page.waitForTimeout(6000)  // wait for 5s timeout to fire
 
@@ -84,7 +84,7 @@ test.describe('Geolocation diagnosis', () => {
 
   test('geo: "Ingresar manual" button escapes detecting state', async ({ page }) => {
     // Don't grant permission — page will show detecting
-    await page.goto('http://localhost:3000/cotizador2', { waitUntil: 'load' })
+    await page.goto('http://localhost:3000/cotizador', { waitUntil: 'load' })
     await page.waitForSelector('[data-testid="btn-next"]', { timeout: 20000 })
     await page.waitForTimeout(1500)
 

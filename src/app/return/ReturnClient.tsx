@@ -504,8 +504,8 @@ const ReturnPage = () => {
                     resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
                     resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
                 ) {
-                    console.log("----REDIRECT--- /cotizador2/recibo-pago");
-                    router.push('/cotizador2/recibo-pago');
+                    console.log("----REDIRECT--- /cotizador/recibo-pago");
+                    router.push('/cotizador/recibo-pago');
                 } else {
                     // product | service | input
                     console.log("----REDIRECT--- /cargadores/recibo-pago");
@@ -523,8 +523,8 @@ const ReturnPage = () => {
                     resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
                     resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
                 ) {
-                    console.log("----REDIRECT--- /cotizador2/rechazo-pago");
-                    router.push('/cotizador2/rechazo-pago');
+                    console.log("----REDIRECT--- /cotizador/rechazo-pago");
+                    router.push('/cotizador/rechazo-pago');
                 } else {
                     // product | service | input
                     console.log("----REDIRECT--- /cargadores/rechazo-pago");

@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const BASE = '/cotizador2'
+const BASE = '/cotizador'
 const GEO = { latitude: -33.4489, longitude: -70.6693, accuracy: 10 }
 
 // Minimal valid paymentData blob for recibo-pago tests
@@ -162,15 +162,11 @@ async function mockConfirmChargerVisitError(page: Page) {
 }
 
 // ─── Click helpers ────────────────────────────────────────────────────────────
-// Native DOM click via evaluate — consistent with proven working tests
 const nativeClick = (page: Page, sel: string) =>
-  page.evaluate((s: string) => {
-    const el = document.querySelector(s) as HTMLElement | null
-    if (el) el.click()
-  }, sel)
+  page.locator(sel).click()
 
 const clickCard = (page: Page, testId: string) =>
-  nativeClick(page, `[data-testid="${testId}"]`)
+  page.getByTestId(testId).click()
 
 // Poll until btn-next loses its disabled attribute
 const waitNextEnabled = (page: Page) =>
@@ -206,7 +202,7 @@ async function goToStep2(page: Page) {
 
   // Click "Ver mi cotización"
   await nativeClick(page, '[data-testid="btn-next"]')
-  await page.waitForSelector('text=/Total estimado|Total con IVA/', { timeout: 20000 })
+  await page.waitForSelector('text=/Tu cotización/', { timeout: 20000 })
 }
 
 // Like goToStep2 but uses a cotizar mock that includes nextAvailableDate
@@ -223,12 +219,12 @@ async function goToStep2WithNextDate(page: Page) {
   await page.waitForTimeout(400)
 
   await nativeClick(page, '[data-testid="btn-next"]')
-  await page.waitForSelector('text=/Total estimado|Total con IVA/', { timeout: 20000 })
+  await page.waitForSelector('text=/Tu cotización/', { timeout: 20000 })
 }
 
 // Open the payment panel (calls /api/payment, waits for token to be ready)
 async function openPaymentPanel(page: Page) {
-  await page.getByRole('button', { name: /Pagar e iniciar proceso/ }).click()
+  await page.getByRole('button', { name: /Reservar instalación/i }).click()
   // Wait until the panel heading appears
   await expect(page.getByText('Datos para la instalación')).toBeVisible({ timeout: 10000 })
 }
@@ -332,7 +328,7 @@ test.describe('Step 1 — Charger type selection', () => {
   test('selects Wallbox model and reaches step 2', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText(/Tu estimación/).first()).toBeVisible()
+    await expect(page.getByText(/Tu cotización/).first()).toBeVisible()
   })
 
   test('selecting Portátil shows charger list cards', async ({ page }) => {
@@ -362,31 +358,31 @@ test.describe('Step 2 — Price breakdown', () => {
   test('shows Trámite SEC line', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('Trámite SEC').first()).toBeVisible()
+    await expect(page.getByText('Trámites y declaración TE6').first()).toBeVisible()
   })
 
   test('shows Materiales eléctricos line', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('Materiales eléctricos').first()).toBeVisible()
+    await expect(page.getByText('Materiales certificados').first()).toBeVisible()
   })
 
   test('shows Total con IVA line', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('Total con IVA').first()).toBeVisible()
+    await expect(page.getByText('Total (con IVA)').first()).toBeVisible()
   })
 
   test('shows IVA 19% line', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('IVA 19%').first()).toBeVisible()
+    await expect(page.getByText('Total (IVA incl.)').first()).toBeVisible()
   })
 
   test('shows "Total estimado (con IVA)" hero label', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('Total estimado (con IVA)').first()).toBeVisible()
+    await expect(page.getByText('Total (con IVA)').first()).toBeVisible()
   })
 
   test('shows selected charger name in breakdown', async ({ page }) => {
@@ -398,13 +394,13 @@ test.describe('Step 2 — Price breakdown', () => {
   test('shows Instalación certificada line', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('Instalación certificada').first()).toBeVisible()
+    await expect(page.getByText('Instalación por técnico SEC').first()).toBeVisible()
   })
 
-  test('shows Desglose section heading', async ({ page }) => {
+  test('shows breakdown total line', async ({ page }) => {
     await setupPage(page)
     await goToStep2(page)
-    await expect(page.getByText('Desglose').first()).toBeVisible()
+    await expect(page.getByText('Total (IVA incl.)').first()).toBeVisible()
   })
 
 })
@@ -424,7 +420,7 @@ test.describe('Step 2 — Installation timeline', () => {
     await setupPage(page)
     await goToStep2(page)
     await expect(page.getByText('Pago y agenda de visita').first()).toBeVisible()
-    await expect(page.getByText('Visita técnica gratuita').first()).toBeVisible()
+    await expect(page.getByText(/Visita técnica/).first()).toBeVisible()
     await expect(page.getByText('Compra de materiales').first()).toBeVisible()
     await expect(page.getByText('Instalación de tu cargador').first()).toBeVisible()
   })
@@ -491,7 +487,7 @@ test.describe('Step 2 — Payment panel toggle', () => {
 
     await expect(page.getByText('Datos para la instalación')).not.toBeVisible()
 
-    await page.getByRole('button', { name: /Pagar e iniciar proceso/ }).click()
+    await page.getByRole('button', { name: /Reservar instalación/i }).click()
     await page.waitForTimeout(1500)
 
     await expect(page.getByText('Datos para la instalación')).toBeVisible({ timeout: 8000 })
@@ -502,7 +498,7 @@ test.describe('Step 2 — Payment panel toggle', () => {
     await setupPage(page)
     await goToStep2(page)
 
-    const payBtn = page.getByRole('button', { name: /Pagar e iniciar proceso/ })
+    const payBtn = page.getByRole('button', { name: /Reservar instalación/i })
 
     // Open
     await payBtn.click()
@@ -520,7 +516,7 @@ test.describe('Step 2 — Payment panel toggle', () => {
     await setupPage(page)
     await goToStep2(page)
 
-    await page.getByRole('button', { name: /Pagar e iniciar proceso/ }).click()
+    await page.getByRole('button', { name: /Reservar instalación/i }).click()
     await page.waitForTimeout(1500)
 
     await expect(page.getByLabel('Email para comprobante')).toBeVisible({ timeout: 8000 })
@@ -531,10 +527,10 @@ test.describe('Step 2 — Payment panel toggle', () => {
     await setupPage(page)
     await goToStep2(page)
 
-    await page.getByRole('button', { name: /Pagar e iniciar proceso/ }).click()
+    await page.getByRole('button', { name: /Reservar instalación/i }).click()
 
     await expect(
-      page.getByRole('button', { name: /Pagar .* con Webpay/ })
+      page.getByRole('button', { name: /Pagar .* con webpay/i })
     ).toBeVisible({ timeout: 10000 })
   })
 
@@ -549,7 +545,7 @@ test.describe('Step 2 — Payment panel toggle', () => {
     await setupPage(page)
     await goToStep2(page)
 
-    await page.getByRole('button', { name: /Pagar e iniciar proceso/ }).click()
+    await page.getByRole('button', { name: /Reservar instalación/i }).click()
     await page.waitForTimeout(3000)
 
     await expect(page.locator('[role="alert"]').first()).toBeVisible({ timeout: 8000 })
@@ -570,7 +566,7 @@ test.describe('Step 2 — Payment panel RM coverage validation', () => {
     await openPaymentPanel(page)
     // Wait for Webpay token to be ready (panel fully initialised)
     await expect(
-      page.getByRole('button', { name: /Pagar .* con Webpay/ })
+      page.getByRole('button', { name: /Pagar .* con webpay/i })
     ).toBeVisible({ timeout: 10000 })
   }
 
@@ -658,14 +654,14 @@ test.describe('Step 2 — Email required to enable Webpay button', () => {
     await openPaymentPanel(page)
     // Wait for token to arrive so the button exists
     await expect(
-      page.getByRole('button', { name: /Pagar .* con Webpay/ })
+      page.getByRole('button', { name: /Pagar .* con webpay/i })
     ).toBeVisible({ timeout: 10000 })
   }
 
   test('Webpay button is disabled when email is empty', async ({ page }) => {
     await goToStep2WithOpenPanel(page)
 
-    const webpayBtn = page.getByRole('button', { name: /Pagar .* con Webpay/ })
+    const webpayBtn = page.getByRole('button', { name: /Pagar .* con webpay/i })
 
     // Clear the email field if it has any content
     const emailField = page.getByLabel('Email para comprobante')
@@ -678,7 +674,7 @@ test.describe('Step 2 — Email required to enable Webpay button', () => {
   test('Webpay button is enabled after filling a valid email with RM address', async ({ page }) => {
     await goToStep2WithOpenPanel(page)
 
-    const webpayBtn = page.getByRole('button', { name: /Pagar .* con Webpay/ })
+    const webpayBtn = page.getByRole('button', { name: /Pagar .* con webpay/i })
     const emailField = page.getByLabel('Email para comprobante')
 
     // Fill a valid email — geoip should have auto-set an RM address
@@ -691,7 +687,7 @@ test.describe('Step 2 — Email required to enable Webpay button', () => {
   test('Webpay button becomes disabled again after clearing the email', async ({ page }) => {
     await goToStep2WithOpenPanel(page)
 
-    const webpayBtn = page.getByRole('button', { name: /Pagar .* con Webpay/ })
+    const webpayBtn = page.getByRole('button', { name: /Pagar .* con webpay/i })
     const emailField = page.getByLabel('Email para comprobante')
 
     await emailField.fill('cliente@test.com')
@@ -706,16 +702,16 @@ test.describe('Step 2 — Email required to enable Webpay button', () => {
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TEST SUITE 9: /cotizador2/recibo-pago — sessionStorage guard
+// TEST SUITE 9: /cotizador/recibo-pago — sessionStorage guard
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('/cotizador2/recibo-pago — sessionStorage guard', () => {
+test.describe('/cotizador/recibo-pago — sessionStorage guard', () => {
 
-  test('redirects to /cotizador2 when paymentData is absent', async ({ page }) => {
+  test('redirects to /cotizador when paymentData is absent', async ({ page }) => {
     // Navigate directly — sessionStorage is empty (fresh context)
     await page.goto(`${BASE}/recibo-pago`, { waitUntil: 'domcontentloaded' })
     await page.waitForURL(`**${BASE}`, { timeout: 10000 })
 
-    expect(page.url()).toContain('/cotizador2')
+    expect(page.url()).toContain('/cotizador')
     expect(page.url()).not.toContain('recibo-pago')
   })
 
@@ -735,9 +731,9 @@ test.describe('/cotizador2/recibo-pago — sessionStorage guard', () => {
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TEST SUITE 10: /cotizador2/recibo-pago — content with valid paymentData
+// TEST SUITE 10: /cotizador/recibo-pago — content with valid paymentData
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('/cotizador2/recibo-pago — with valid paymentData', () => {
+test.describe('/cotizador/recibo-pago — with valid paymentData', () => {
 
   async function goToReciboPago(page: Page) {
     await page.addInitScript((data: object) => {
@@ -798,9 +794,9 @@ test.describe('/cotizador2/recibo-pago — with valid paymentData', () => {
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TEST SUITE 11: /cotizador2/recibo-pago — booking flow
+// TEST SUITE 11: /cotizador/recibo-pago — booking flow
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('/cotizador2/recibo-pago — booking flow', () => {
+test.describe('/cotizador/recibo-pago — booking flow', () => {
 
   // Set up recibo-pago with a slot that has a calendarId so booking is possible
   async function goToReciboPagoWithSlot(page: Page) {

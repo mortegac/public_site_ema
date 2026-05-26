@@ -21,6 +21,7 @@ import { IconMail } from "@tabler/icons-react"
 import AddressInput2 from '@/app/components/AddressInput2'
 import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import { sendEmail } from '@/store/Estimate/services'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -114,6 +115,8 @@ interface WizardState {
   nombreEmail: string
   emailSolo: string
   emailSent: boolean
+  emailSending: boolean
+  emailError: string
   paid: boolean
   selectedDate: number | null
   booked: boolean
@@ -348,6 +351,8 @@ export default function CotizadorWizard() {
     nombreEmail: '',
     emailSolo: '',
     emailSent: false,
+    emailSending: false,
+    emailError: '',
     paid: false,
     selectedDate: null,
     booked: false,
@@ -557,8 +562,44 @@ export default function CotizadorWizard() {
   // Legacy alias kept for compatibility (not used in new flow)
   function handlePay() { submitWebpay() }
 
-  function handleSendEmail() {
-    update({ emailSent: true })
+  async function handleSendEmail() {
+    const displayResult = state.apiResult ?? result
+    update({ emailSending: true, emailError: '' })
+    try {
+      // DB: create/update customer and link to the client form (non-blocking on failure)
+      fetch('/api/send-quote-to-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: state.nombreEmail,
+          email: state.emailSolo,
+          formId: state.formId,
+          address: state.address,
+        }),
+      }).catch(() => null)
+
+      // Email: use existing emailjs-com service (client-side, browser-compatible)
+      const ok = await sendEmail({
+        email: state.emailSolo,
+        to_email: state.emailSolo,
+        name: state.nombreEmail,
+        address: state.address,
+        mts: String(state.dist),
+        typeOfResidence: state.tipo === 'casa' ? 'Casa' : 'Edificio',
+        materiales_22: fmt(displayResult?.mat ?? 0),
+        instalacion_22: fmt(displayResult?.inst ?? 0),
+        SEC_22: fmt(displayResult?.sec ?? 0),
+        cargador_22: fmt(displayResult?.chargerPrice ?? 0),
+        neto_22: fmt(displayResult?.neto ?? 0),
+        iva_22: fmt(displayResult?.iva ?? 0),
+        bruto_22: fmt(displayResult?.total ?? 0),
+      })
+
+      if (!ok) throw new Error('email failed')
+      update({ emailSent: true, emailSending: false })
+    } catch {
+      update({ emailSending: false, emailError: 'No se pudo enviar. Intenta nuevamente.' })
+    }
   }
 
   function handleBookDate() {
@@ -578,9 +619,11 @@ export default function CotizadorWizard() {
       activePanel: null,
       depto: '',
       emailPago: '',
-        nombreEmail: '',
+      nombreEmail: '',
       emailSolo: '',
       emailSent: false,
+      emailSending: false,
+      emailError: '',
       paid: false,
       selectedDate: null,
       booked: false,
@@ -1164,7 +1207,9 @@ export default function CotizadorWizard() {
               <Box sx={{ textAlign: 'center', py: 2 }}>
                 <Typography sx={{ fontSize: '2rem', mb: 1 }}>📬</Typography>
                 <Typography sx={{ fontWeight: 700, color: SUCCESS, mb: 0.5 }}>¡Cotización enviada!</Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED }}>Revisa tu bandeja de entrada.</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED }}>
+                  Enviado a <Box component="span" sx={{ fontWeight: 600, color: '#2A3547' }}>{state.emailSolo}</Box>
+                </Typography>
               </Box>
             ) : (
               <>
@@ -1188,11 +1233,16 @@ export default function CotizadorWizard() {
                   onChange={e => update({ emailSolo: e.target.value })}
                   sx={{ mb: 2.5 }}
                 />
+                {state.emailError && (
+                  <Typography sx={{ fontSize: '0.78rem', color: '#dc2626', mb: 1.5, textAlign: 'center' }}>
+                    {state.emailError}
+                  </Typography>
+                )}
                 <Button
                   fullWidth
                   variant="contained"
                   onClick={handleSendEmail}
-                  disabled={!state.emailSolo || !state.nombreEmail}
+                  disabled={!state.emailSolo || !state.nombreEmail || state.emailSending}
                   sx={{
                     bgcolor: TEAL,
                     '&:hover': { bgcolor: '#0777a0' },
@@ -1200,7 +1250,7 @@ export default function CotizadorWizard() {
                     py: 1.25,
                   }}
                 >
-                  Enviar cotización
+                  {state.emailSending ? 'Enviando…' : 'Enviar cotización'}
                 </Button>
               </>
             )}
@@ -1277,7 +1327,7 @@ export default function CotizadorWizard() {
 
   function renderStep3() {
     return (
-      <Box>
+      <Box id="simulacion-pagina">
         {/* Confirmed banner */}
         <Box sx={{ bgcolor: 'rgba(0,196,124,0.1)', border: `1px solid ${SUCCESS}`, borderRadius: 2, p: 2, mb: 3, textAlign: 'center' }}>
           <Typography sx={{ fontSize: '2rem', mb: 0.5 }}>🎉</Typography>

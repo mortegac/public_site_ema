@@ -92,7 +92,7 @@ export default function ReciboPagoClient() {
 
     // Validate paymentData exists — redirect if missing (direct navigation without payment)
     const raw = sessionStorage.getItem('paymentData')
-    if (!raw) { router.replace('/cotizador2'); return }
+    if (!raw) { router.replace('/cotizador'); return }
 
     // Read data but keep it in sessionStorage so refresh works.
     // It is deleted only after booking is confirmed (see setBooked calls below).
@@ -163,7 +163,7 @@ export default function ReciboPagoClient() {
   return (
     <>
       <HpHeaderNew />
-      <Box component="main">
+      <Box id="VISITA-PRESENCIAL-PAGADO" component="main">
         {/* ── Hero ── */}
         <Box sx={{ background: 'linear-gradient(180deg, #4dbfd9 10%, #0898b9 80%)', py: 0, textAlign: 'center' }}>
           <Container maxWidth="md">
@@ -345,7 +345,7 @@ export default function ReciboPagoClient() {
                     Contáctanos por WhatsApp
                   </Button>
 
-                  <Button variant="contained" fullWidth component={Link} href="/cotizador2" sx={{
+                  <Button variant="contained" fullWidth component={Link} href="/cotizador" sx={{
                     py: 1.5, borderRadius: '24px', fontWeight: 700,
                     bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' },
                   }}>

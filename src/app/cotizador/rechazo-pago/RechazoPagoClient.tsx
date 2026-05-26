@@ -76,7 +76,7 @@ export default function RechazoPagoClient() {
   return (
     <>
       <HpHeaderNew />
-      <Box component="main">
+      <Box id="VISITA-PRESENCIAL-RECHAZO" component="main">
         {/* Hero */}
         <Box
           sx={{
@@ -173,7 +173,7 @@ export default function RechazoPagoClient() {
                       variant="outlined"
                       fullWidth
                       component={Link}
-                      href="/cotizador2"
+                      href="/cotizador"
                       sx={{
                         py: 1.5,
                         borderRadius: '24px',
@@ -220,7 +220,7 @@ export default function RechazoPagoClient() {
                   <Button
                     variant="contained"
                     component={Link}
-                    href="/cotizador2"
+                    href="/cotizador"
                     sx={{
                       py: 1.5,
                       px: 4,

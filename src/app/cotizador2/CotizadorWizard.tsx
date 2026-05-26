@@ -316,7 +316,7 @@ const SLIDER_MARKS = [
 
 // ─── Hero title helpers ───────────────────────────────────────────────────────
 const STEP_TITLES = [
-  'Simula el costo de tu instalación',
+  'Cotiza tu instalación',
   'Elige tu cargador eléctrico',
   'Tu cotización al instante',
   'Agenda tu visita técnica',
@@ -378,7 +378,7 @@ export default function CotizadorWizard() {
     ? '¡Visita agendada!'
     : state.paid
     ? STEP_TITLES[state.step] ?? '¡Todo confirmado!'
-    : STEP_TITLES[state.step] ?? 'Simula el costo de tu instalación'
+    : STEP_TITLES[state.step] ?? 'Cotiza tu instalación'
 
   const heroSubtitle = state.booked
     ? 'Te contactaremos para confirmar los detalles'
@@ -621,7 +621,7 @@ export default function CotizadorWizard() {
               onClick={() => update({ tipo: 'edificio' })}
               icon="🏢"
               title="Edificio"
-              subtitle="Con comunidad"
+              subtitle="Estacionamiento propio"
             />
           </Grid>
         </Grid>
@@ -814,7 +814,7 @@ export default function CotizadorWizard() {
               <path d="M8 12L11 15L16 9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <Typography sx={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 600 }}>
-              Tu reserva protegida
+              Compra protegida
             </Typography>
           </Box>
         </Box>
@@ -911,7 +911,7 @@ export default function CotizadorWizard() {
           {/* Steps */}
           {([
             { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
-            { label: 'Visita técnica gratuita', sub: state.nextVisitDate
+            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: state.nextVisitDate
                 ? `Próxima fecha: ${formatVisitDate(state.nextVisitDate)}`
                 : 'Próxima fecha disponible', active: true },
             { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
@@ -995,7 +995,7 @@ export default function CotizadorWizard() {
               boxShadow: 'none',
             }}
           >
-            {state.webpayLoading ? 'Iniciando pago…' : 'Pagar e iniciar proceso de instalación'}
+            {state.webpayLoading ? 'Pagar e iniciar proceso de instalación' : 'Reservar instalación'}
           </Button>
         </Box>
 
@@ -1094,7 +1094,7 @@ export default function CotizadorWizard() {
                 >
                   {state.webpayLoading
                     ? 'Generando orden…'
-                    : 'Reservar mi instalación'}
+                    : `Pagar ${fmt(displayResult.total)} con webpay`}
                 </Button>
                 <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
                   Pago seguro · Visa, Mastercard, Redcompra, débito
@@ -1125,7 +1125,7 @@ export default function CotizadorWizard() {
               bgcolor: '#fff',
               borderColor: BORDER,
               color: '#2A3547',
-              '&:hover': { bgcolor: '#F8FAFC', borderColor: '#CBD5E1' },
+              '&:hover': { bgcolor: '#F8FAFC', borderColor: '#CBD5E1', color: 'rgb(8, 152, 185)' },
               fontWeight: 600,
               fontSize: '0.85rem',
               py: 1.25,
@@ -1139,7 +1139,7 @@ export default function CotizadorWizard() {
         {/* WhatsApp button */}
         <Box
           component="a"
-          href={`https://wa.me/56999999999?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
+          href={`https://wa.me/56967666652?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
           target="_blank"
           rel="noopener noreferrer"
           sx={{
@@ -1210,7 +1210,7 @@ export default function CotizadorWizard() {
         {/* Trust box — redesigned */}
         <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 3 }}>
           <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
-            Tu reserva protegida
+            Compra protegida
           </Typography>
 
           {[
@@ -1412,7 +1412,7 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              href={`https://wa.me/56999999999?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
+              href={`https://wa.me/56967666652?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               component="a"

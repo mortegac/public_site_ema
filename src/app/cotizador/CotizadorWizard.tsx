@@ -168,7 +168,7 @@ function calcResult(state: WizardState): CalcResult | null {
   const inst = Math.round(base.inst * f)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
-  const chargerPrice = charger ? charger.precio : 0
+  const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
   const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
   const neto = mat + inst + sec + chargerPrice
   const iva = Math.round(neto * 0.19)
@@ -442,7 +442,7 @@ export default function CotizadorWizard() {
           const est = estimates.find((e: any) => Number(e.chargerPotence) === targetPotence) ?? estimates[0]
 
           if (est) {
-            const chargerPrice = charger ? charger.precio : 0
+            const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
             // Force SEC trámite from local base (API may return 0) so it always appears in the breakdown
             const secTramite = isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec
@@ -782,7 +782,7 @@ export default function CotizadorWizard() {
                   if (!val) return <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Elige un wallbox...</Typography>
                   if (val === 'own') return 'Ya tengo mi cargador (solo instalación)'
                   const ch = wallboxes.find(c => c.id === val)
-                  return ch ? `${ch.name} — ${fmt(ch.precio)} — ${ch.kw} kW` : val
+                  return ch ? `${ch.name} — ${fmt(Math.round(ch.precio / 1.19))} — ${ch.kw} kW` : val
                 }}
                 sx={{
                   bgcolor: '#fff',
@@ -797,7 +797,7 @@ export default function CotizadorWizard() {
                 </MenuItem>
                 {wallboxes.map(c => (
                   <MenuItem key={c.id} value={c.id} sx={{ fontSize: '0.875rem' }}>
-                    {c.name} — {fmt(c.precio)} — {c.kw} kW
+                    {c.name} — {fmt(Math.round(c.precio / 1.19))} — {c.kw} kW
                   </MenuItem>
                 ))}
                 <MenuItem value="own" sx={{ fontSize: '0.875rem' }}>

@@ -1038,7 +1038,7 @@ export default function CotizadorWizard() {
               boxShadow: 'none',
             }}
           >
-            {state.webpayLoading ? 'Pagar e iniciar proceso de instalación' : 'Reservar instalación'}
+            Reservar instalación
           </Button>
         </Box>
 

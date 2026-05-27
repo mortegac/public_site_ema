@@ -104,6 +104,12 @@ interface WizardState {
   step: number
   tipo: 'casa' | 'edificio' | null
   address: string
+  addressValidated: boolean
+  addressCity: string
+  addressState: string
+  addressZipCode: string
+  addressLat: string
+  addressLng: string
   editingAddr: boolean
   regionWarn: boolean
   tipoC: 'portable' | 'wallbox' | null
@@ -340,6 +346,12 @@ export default function CotizadorWizard() {
     step: 0,
     tipo: null,
     address: '',
+    addressValidated: false,
+    addressCity: '',
+    addressState: '',
+    addressZipCode: '',
+    addressLat: '',
+    addressLng: '',
     editingAddr: true,
     regionWarn: false,
     tipoC: null,
@@ -611,6 +623,12 @@ export default function CotizadorWizard() {
       step: 0,
       tipo: null,
       address: '',
+      addressValidated: false,
+      addressCity: '',
+      addressState: '',
+      addressZipCode: '',
+      addressLat: '',
+      addressLng: '',
       editingAddr: true,
       regionWarn: false,
       tipoC: null,
@@ -925,9 +943,19 @@ export default function CotizadorWizard() {
             </Typography>
           </Box>
           <Divider />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2.5, py: 2 }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>Total (IVA incl.)</Typography>
-            <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: PINK }}>{fmt(displayResult.total)}</Typography>
+          <Box sx={{ px: 2.5, py: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.4 }}>
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>Neto</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>{fmt(displayResult.neto)}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>IVA (19%)</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>{fmt(displayResult.iva)}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>Total (IVA incl.)</Typography>
+              <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: PINK }}>{fmt(displayResult.total)}</Typography>
+            </Box>
           </Box>
         </Box>
 
@@ -1052,18 +1080,34 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
               Dirección de instalación
             </Typography>
-            <Box sx={{ mb: 1.5 }}>
+            <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
               <AddressInput2
                 value={state.address}
-                onAddressChange={(v) => update({ address: v, regionWarn: false })}
+                error={!!state.address && !state.addressValidated}
+                onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                onValidationChange={(isValid) => update({ addressValidated: isValid })}
                 onSelectAddress={(details) => {
                   if (details) {
                     const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                    update({ address: full, regionWarn: false })
+                    update({
+                      address: full,
+                      addressValidated: true,
+                      addressCity: details.City ?? '',
+                      addressState: details.State ?? '',
+                      addressZipCode: details.ZipCode ?? '',
+                      addressLat: String(details.Latitude ?? ''),
+                      addressLng: String(details.Longitude ?? ''),
+                      regionWarn: false,
+                    })
                   }
                 }}
               />
             </Box>
+            {state.address && !state.addressValidated && (
+              <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                Selecciona una dirección del menú desplegable para continuar
+              </Typography>
+            )}
 
             {state.regionWarn && (
               <Alert severity="warning" sx={{ fontSize: '0.78rem', mb: 1.5 }}>
@@ -1107,6 +1151,26 @@ export default function CotizadorWizard() {
                   type="email"
                   value={state.emailPago}
                   onChange={e => update({ emailPago: e.target.value })}
+                  onBlur={async (e) => {
+                    const email = e.target.value.trim().toLowerCase()
+                    if (!email || !/\S+@\S+\.\S+/.test(email)) return
+                    fetch('/api/customer', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        email,
+                        address: state.address || '',
+                        city: state.addressCity || '',
+                        state: state.addressState || '',
+                        zipCode: state.addressZipCode || '',
+                        lat: state.addressLat || '',
+                        lng: state.addressLng || '',
+                        depto: state.depto || '',
+                        typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
+                        formId: state.formId ?? null,
+                      }),
+                    }).catch(() => null)
+                  }}
                   helperText="Requerido para proceder al pago"
                   sx={{ mb: 2.5 }}
                 />
@@ -1123,7 +1187,7 @@ export default function CotizadorWizard() {
                   fullWidth
                   variant="contained"
                   onClick={submitWebpay}
-                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim() || !state.address.trim()}
+                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim() || !state.addressValidated}
                   sx={{
                     bgcolor: PINK,
                     color: '#fff',

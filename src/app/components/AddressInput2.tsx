@@ -26,6 +26,8 @@ interface Props {
     Latitude: number | null;
     Longitude: number | null;
   } | null) => void;
+  /** Called when Google Maps validates (true) or the user invalidates by typing (false). */
+  onValidationChange?: (isValid: boolean) => void;
   /** Controlled value (e.g. from formik). When provided, typed input is synced back via onAddressChange. */
   value?: string;
   /** Called when the user types in the address field so parent (e.g. formik) can keep address in sync for validation. */
@@ -76,7 +78,7 @@ const loadGoogleMapsScript = (): Promise<void> => {
   return googleMapsScriptPromise;
 };
 
-const AddressInput: React.FC<Props> = ({ onSelectAddress, value: controlledValue, onAddressChange, error, helperText }) => {
+const AddressInput: React.FC<Props> = ({ onSelectAddress, onValidationChange, value: controlledValue, onAddressChange, error, helperText }) => {
   const [address, setAddress] = useState(controlledValue ?? '');
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const autoCompleteRef = useRef<HTMLInputElement>(null);
@@ -116,6 +118,7 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress, value: controlledValue
           if (countryComponent?.short_name !== 'CL') {
             setAddress('');
             onSelectAddress(null);
+            onValidationChange?.(false);
             alert('Por favor, selecciona una dirección en Chile.');
             return;
           }
@@ -140,9 +143,11 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress, value: controlledValue
               Latitude: latitude,
               Longitude: longitude,
             });
+            onValidationChange?.(true);
           } else {
             setAddress('');
             onSelectAddress(null);
+            onValidationChange?.(false);
           }
         // } else {
         //   setAddress('');
@@ -165,6 +170,7 @@ const AddressInput: React.FC<Props> = ({ onSelectAddress, value: controlledValue
     const v = event.target.value;
     setAddress(v);
     onAddressChange?.(v);
+    onValidationChange?.(false);
   };
 
   return (

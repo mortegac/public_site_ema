@@ -143,6 +143,8 @@ interface WizardState {
   webpayLoading: boolean
   webpayError: string
   webpayData: { order: string; token: string; url: string; buy_order: string } | null
+  customerSaving: boolean
+  customerSaved: boolean
 }
 
 interface CalcResult {
@@ -375,6 +377,8 @@ export default function CotizadorWizard() {
     webpayLoading: false,
     webpayError: '',
     webpayData: null,
+    customerSaving: false,
+    customerSaved: false,
   })
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
@@ -652,6 +656,8 @@ export default function CotizadorWizard() {
       webpayLoading: false,
       webpayError: '',
       webpayData: null,
+      customerSaving: false,
+      customerSaved: false,
     })
   }
 
@@ -1150,28 +1156,38 @@ export default function CotizadorWizard() {
                   label="Email para comprobante"
                   type="email"
                   value={state.emailPago}
-                  onChange={e => update({ emailPago: e.target.value })}
+                  onChange={e => update({ emailPago: e.target.value, customerSaved: false })}
                   onBlur={async (e) => {
                     const email = e.target.value.trim().toLowerCase()
                     if (!email || !/\S+@\S+\.\S+/.test(email)) return
-                    fetch('/api/customer', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        email,
-                        address: state.address || '',
-                        city: state.addressCity || '',
-                        state: state.addressState || '',
-                        zipCode: state.addressZipCode || '',
-                        lat: state.addressLat || '',
-                        lng: state.addressLng || '',
-                        depto: state.depto || '',
-                        typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
-                        formId: state.formId ?? null,
-                      }),
-                    }).catch(() => null)
+                    update({ customerSaving: true, customerSaved: false })
+                    try {
+                      const res = await fetch('/api/customer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          email,
+                          address: state.address || '',
+                          city: state.addressCity || '',
+                          state: state.addressState || '',
+                          zipCode: state.addressZipCode || '',
+                          lat: state.addressLat || '',
+                          lng: state.addressLng || '',
+                          depto: state.depto || '',
+                          typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
+                          formId: state.formId ?? null,
+                        }),
+                      })
+                      update({ customerSaving: false, customerSaved: res.ok })
+                    } catch {
+                      update({ customerSaving: false, customerSaved: false })
+                    }
                   }}
-                  helperText="Requerido para proceder al pago"
+                  helperText={
+                    state.customerSaving
+                      ? 'Verificando datos…'
+                      : 'Requerido para proceder al pago'
+                  }
                   sx={{ mb: 2.5 }}
                 />
 
@@ -1187,7 +1203,7 @@ export default function CotizadorWizard() {
                   fullWidth
                   variant="contained"
                   onClick={submitWebpay}
-                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim() || !state.addressValidated}
+                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim() || !state.addressValidated || state.customerSaving || !state.customerSaved}
                   sx={{
                     bgcolor: PINK,
                     color: '#fff',

@@ -23,17 +23,9 @@ async function callAppSync(
   })
   if (!res.ok) throw new Error(`AppSync HTTP ${res.status}`)
   const json = await res.json()
-  if (json.errors?.length && !json.data) throw new Error(json.errors.map((e: any) => e.message).join('; '))
+  if (json.errors?.length) throw new Error(json.errors.map((e: any) => e.message).join('; '))
   return json.data
 }
-
-const GET_CUSTOMER = /* GraphQL */ `
-  query GetCustomer($customerId: String!) {
-    getCustomer(customerId: $customerId) {
-      customerId
-    }
-  }
-`
 
 const CREATE_CUSTOMER = /* GraphQL */ `
   mutation CreateCustomer($input: CreateCustomerInput!) {
@@ -73,15 +65,15 @@ interface CustomerBody {
   formId?: string | null
 }
 
-// Same normalization as src/store/Customer/services.ts
 function normalizeEmail(value: string): string {
   return value
-    .replace(/[\u200B-\u200D\uFEFF\u2060]/g, '')
-    .replace(/\u00A0/g, ' ')
+    .replace(/[​-‍﻿⁠]/g, '')
+    .replace(/ /g, ' ')
     .trim()
     .normalize('NFC')
     .toLowerCase()
 }
+
 export async function POST(req: NextRequest) {
   let body: CustomerBody
   try {
@@ -99,45 +91,31 @@ export async function POST(req: NextRequest) {
   const { url, apiKey } = getAppSyncConfig()
   const customerId = normalizeEmail(email)
 
-  // ── Upsert Customer ────────────────────────────────────────────────────────
-  try {
-    const existing = await callAppSync(url, apiKey, GET_CUSTOMER, { customerId }).catch(() => null)
+  const customerInput = {
+    customerId,
+    name: '-',
+    phone: '-',
+    address: address ?? '',
+    city: city ?? '',
+    state: state ?? '',
+    zipCode: zipCode ?? '',
+    lat: lat ?? '',
+    long: lng ?? '',
+    referenceAddress: depto ?? '',
+    zoomLevel: '15',
+    typeOfResidence: typeOfResidence ?? 'other',
+  }
 
-    if (existing?.getCustomer) {
-      await callAppSync(url, apiKey, UPDATE_CUSTOMER, {
-        input: {
-          customerId,
-          ...(address ? { address } : {}),
-          ...(city ? { city } : {}),
-          ...(state ? { state } : {}),
-          ...(zipCode ? { zipCode } : {}),
-          ...(lat ? { lat } : {}),
-          ...(lng ? { long: lng } : {}),
-          ...(depto !== undefined ? { referenceAddress: depto } : {}),
-          ...(typeOfResidence ? { typeOfResidence } : {}),
-        },
-      }).catch(() => null)
-    } else {
-      await callAppSync(url, apiKey, CREATE_CUSTOMER, {
-        input: {
-          customerId,
-          name: '-',
-          phone: '-',
-          address: address ?? '',
-          city: city ?? '',
-          state: state ?? '',
-          zipCode: zipCode ?? '',
-          lat: lat ?? '',
-          long: lng ?? '',
-          referenceAddress: depto ?? '',
-          zoomLevel: '15',
-          typeOfResidence: typeOfResidence ?? 'other',
-        },
-      })
+  // ── Upsert: CREATE first, UPDATE as fallback (mirrors services.ts pattern) ──
+  try {
+    await callAppSync(url, apiKey, CREATE_CUSTOMER, { input: customerInput })
+  } catch {
+    try {
+      await callAppSync(url, apiKey, UPDATE_CUSTOMER, { input: customerInput })
+    } catch (updateErr) {
+      console.error('[customer] upsert error:', updateErr)
+      return NextResponse.json({ error: 'Failed to save customer' }, { status: 500 })
     }
-  } catch (err) {
-    console.error('[customer] upsert error:', err)
-    return NextResponse.json({ error: 'Failed to save customer' }, { status: 500 })
   }
 
   // ── Link ClientForm to Customer ────────────────────────────────────────────

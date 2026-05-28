@@ -22,6 +22,7 @@ import AddressInput2 from '@/app/components/AddressInput2'
 import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { sendEmail } from '@/store/Estimate/services'
+import emailjs, { init as initEmailjs } from 'emailjs-com'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -594,24 +595,117 @@ export default function CotizadorWizard() {
         }),
       }).catch(() => null)
 
-      // Email: use existing emailjs-com service (client-side, browser-compatible)
-      const ok = await sendEmail({
-        email: state.emailSolo,
+      // Build quote HTML for the email template
+      const charger = CHARGERS.find(c => c.id === state.chargerId)
+      const fmtN = (n: number) => Math.round(n).toLocaleString('es-CL')
+      const valor = fmtN(displayResult?.total ?? 0)
+      const kws = charger?.kw ?? '7.3'
+      const materiales = fmtN(displayResult?.mat ?? 0)
+      const instalacion = fmtN(displayResult?.inst ?? 0)
+      const sec = fmtN(displayResult?.sec ?? 0)
+      const cargador = fmtN(displayResult?.chargerPrice ?? 0)
+      const neto = fmtN(displayResult?.neto ?? 0)
+      const iva = fmtN(displayResult?.iva ?? 0)
+      const bruto = fmtN(displayResult?.total ?? 0)
+      const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
+      const mts = String(state.dist)
+
+      const HTML = `<tr>
+                          <td
+                            style="
+                              font-family: proxima-nova, sans-serif;
+                              box-sizing: border-box;
+                              text-align: center;
+                              padding: 1rem 4rem;
+                            "
+                          >
+                            <p
+                              style="
+                                box-sizing: border-box;
+                                color: #37373c;
+                                font-size: 14px;
+                                line-height: 24px;
+                                font-weight: 300;
+                                font-family:
+                                  proxima-nova, sans-serif !important;
+                                text-align: center;
+                              "
+                            >
+                              A continuaci&oacute;n encontrar&aacute;s el
+                              detalle de tu compra:
+                            </p>
+
+                            <p style="box-sizing:border-box;color:#37373c;font-size:14px;line-height:24px;font-weight:300;font-family:proxima-nova,sans-serif!important;text-align:left;margin:0 0 16px;">
+                              Hola <strong>${state.nombreEmail}</strong>, aqu&iacute; est&aacute; tu cotizaci&oacute;n para la instalaci&oacute;n de tu cargador:
+                            </p>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:16px;">
+                              <tr><td align="center" style="padding-bottom:4px;"><p style="font-family:proxima-nova,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#74787e;margin:0;">TOTAL</p></td></tr>
+                              <tr><td align="center" style="padding-bottom:4px;"><p style="font-family:proxima-nova,sans-serif;font-size:46px;font-weight:700;color:#F0386B;margin:0;line-height:1.1;">$${valor}</p></td></tr>
+                              <tr><td align="center" style="padding-bottom:16px;"><p style="font-family:proxima-nova,sans-serif;font-size:13px;color:#74787e;margin:0;">IVA incluido &middot; ${kws} kW</p></td></tr>
+                            </table>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:16px;"><tr><td style="border-top:1px solid #e8e8e8;height:1px;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+
+                            <p style="font-family:proxima-nova,sans-serif;font-size:15px;font-weight:700;color:#37373c;text-align:left;margin:0 0 12px;">Desglose de tu cotizaci&oacute;n</p>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;margin-bottom:16px;">
+                              <thead>
+                                <tr style="background-color:#f8fafc;">
+                                  <th style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:600;color:#37373c;text-align:left;padding:10px 14px;border-bottom:1px solid #e8e8e8;">Concepto</th>
+                                  <th style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:600;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #e8e8e8;">Valor</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align: left;">Materiales</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #f0f0f0;">$${materiales}</td></tr>
+                                <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align: left;">Instalaci&oacute;n</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #f0f0f0;">$${instalacion}</td></tr>
+                                <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align: left;">Tr&aacute;mites SEC</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #f0f0f0;">$${sec}</td></tr>
+                                <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align: left;">Cargador</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #f0f0f0;">$${cargador}</td></tr>
+                                <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #e8e8e8;text-align: left;">Total neto</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #e8e8e8;">$${neto}</td></tr>
+                                <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align: left;">IVA 19%</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;text-align:right;padding:10px 14px;border-bottom:1px solid #f0f0f0;">$${iva}</td></tr>
+                                <tr style="background-color:#fef2f5;"><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;text-align: left;">Total bruto</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#F0386B;text-align:right;padding:10px 14px;">$${bruto}</td></tr>
+                              </tbody>
+                            </table>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
+                              <tr>
+                                <td style="background-color:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 16px;font-family:proxima-nova,sans-serif;font-size:12px;line-height:20px;color:#15803d;text-align:left;">
+                                  Incluye tablero, canalizaci&oacute;n sobrepuesta y cableado. Cotizado para <strong>${mts} metros</strong> entre tablero el&eacute;ctrico y estacionamiento. Declaraci&oacute;n TE6 ante SEC y medici&oacute;n de puesta a tierra incluidas. Cumple normativa RIC N&deg;15.<br>
+                                  Tipo de residencia: <strong>${tipoLabel}</strong>
+                                </td>
+                              </tr>
+                            </table>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:20px;"><tr><td style="border-top:1px solid #e8e8e8;height:1px;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
+                              <tr><td align="center" style="padding-bottom:8px;"><p style="font-family:proxima-nova,sans-serif;font-size:16px;font-weight:700;color:#37373c;margin:0;">&iquest;Necesitas un cargador?</p></td></tr>
+                              <tr><td align="center" style="padding-bottom:14px;"><p style="font-family:proxima-nova,sans-serif;font-size:13px;color:#74787e;margin:0;">Revisa nuestro cat&aacute;logo de cargadores con disponibilidad inmediata.</p></td></tr>
+                              <tr><td align="center"><a href="https://www.energica.city/instalacion_cargadores" target="_blank" rel="noopener noreferrer" style="border:1.5px solid #37373c;color:#37373c;font-family:proxima-nova,sans-serif;font-size:14px;font-weight:500;text-decoration:none;padding:10px 30px;border-radius:40px;display:inline-block;">Ver cargadores</a></td></tr>
+                            </table>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                              <tr>
+                                <td style="background-color:#F0386B;border-radius:8px;padding:28px 24px;text-align:center;">
+                                  <p style="font-family:proxima-nova,sans-serif;font-size:16px;font-weight:700;color:#ffffff;margin:0 0 8px;">&iquest;Vives en edificio?</p>
+                                  <p style="font-family:proxima-nova,sans-serif;font-size:13px;color:#ffffff;margin:0 0 16px;">Postula aqu&iacute; para instalar una electrolinera sin costo en tu comunidad.</p>
+                                  <a href="https://www.energica.city/cargadores-en-edificios" target="_blank" rel="noopener noreferrer" style="border:1.5px solid #ffffff;color:#ffffff;font-family:proxima-nova,sans-serif;font-size:14px;font-weight:500;text-decoration:none;padding:10px 30px;border-radius:40px;display:inline-block;">Postular mi edificio</a>
+                                </td>
+                              </tr>
+                            </table>
+
+                          </td>
+                        </tr>`
+
+      // Send email with HTML quote content
+      initEmailjs('UYcrSeCqLGW8xqT4S')
+      await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
         to_email: state.emailSolo,
         name: state.nombreEmail,
-        address: state.address,
-        mts: String(state.dist),
-        typeOfResidence: state.tipo === 'casa' ? 'Casa' : 'Edificio',
-        materiales_22: fmt(displayResult?.mat ?? 0),
-        instalacion_22: fmt(displayResult?.inst ?? 0),
-        SEC_22: fmt(displayResult?.sec ?? 0),
-        cargador_22: fmt(displayResult?.chargerPrice ?? 0),
-        neto_22: fmt(displayResult?.neto ?? 0),
-        iva_22: fmt(displayResult?.iva ?? 0),
-        bruto_22: fmt(displayResult?.total ?? 0),
+        subject: 'Resultado de su cotización',
+        CONTENT_HTML: HTML,
       })
 
-      if (!ok) throw new Error('email failed')
       update({ emailSent: true, emailSending: false })
     } catch {
       update({ emailSending: false, emailError: 'No se pudo enviar. Intenta nuevamente.' })

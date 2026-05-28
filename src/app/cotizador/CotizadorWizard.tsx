@@ -683,6 +683,7 @@ export default function CotizadorWizard() {
                               <tr><td align="center" style="padding-bottom:14px;"><p style="font-family:proxima-nova,sans-serif;font-size:13px;color:#74787e;margin:0;">Revisa nuestro cat&aacute;logo de cargadores con disponibilidad inmediata.</p></td></tr>
                               <tr><td align="center"><a href="https://www.energica.city/cargadores-vehiculos-electricos-sin-instalacion" target="_blank" rel="noopener noreferrer" style="border:1.5px solid #37373c;color:#37373c;font-family:proxima-nova,sans-serif;font-size:14px;font-weight:500;text-decoration:none;padding:10px 30px;border-radius:40px;display:inline-block;">Ver cargadores</a></td></tr>
                             </table>
+                            
 
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                               <tr>

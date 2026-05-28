@@ -1407,80 +1407,83 @@ export default function CotizadorWizard() {
 
   function renderStep3() {
     return (
-      <Box id="simulacion-pagina">
-        {/* Confirmed banner */}
-        <Box sx={{ bgcolor: 'rgba(0,196,124,0.1)', border: `1px solid ${SUCCESS}`, borderRadius: 2, p: 2, mb: 3, textAlign: 'center' }}>
-          <Typography sx={{ fontSize: '2rem', mb: 0.5 }}>🎉</Typography>
-          <Typography sx={{ fontWeight: 800, color: SUCCESS, fontSize: '1.1rem', mb: 0.25 }}>¡Pago confirmado!</Typography>
-          <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED }}>
-            Enviamos el comprobante a {state.emailPago || 'tu correo'}
-          </Typography>
-        </Box>
+      <>
+       <div id="COTIZADOR-RESULTADO"></div> 
+        <Box>
+          {/* Confirmed banner */}
+          <Box sx={{ bgcolor: 'rgba(0,196,124,0.1)', border: `1px solid ${SUCCESS}`, borderRadius: 2, p: 2, mb: 3, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '2rem', mb: 0.5 }}>🎉</Typography>
+            <Typography sx={{ fontWeight: 800, color: SUCCESS, fontSize: '1.1rem', mb: 0.25 }}>¡Pago confirmado!</Typography>
+            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED }}>
+              Enviamos el comprobante a {state.emailPago || 'tu correo'}
+            </Typography>
+          </Box>
 
-        {/* What's next */}
-        <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>¿Qué sigue?</Typography>
-          {[
-            'Elige una fecha y hora para la visita técnica',
-            'Nuestro técnico certificado irá a tu domicilio',
-            'Instalación completa en el mismo día',
-          ].map((t, i) => (
-            <Box key={i} sx={{ display: 'flex', gap: 1.5, mb: 1, alignItems: 'flex-start' }}>
-              <Box sx={{ width: 22, height: 22, borderRadius: '50%', bgcolor: TEAL, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, mt: 0.1 }}>
-                <Typography sx={{ color: '#fff', fontSize: '0.7rem', fontWeight: 700 }}>{i + 1}</Typography>
+          {/* What's next */}
+          <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>¿Qué sigue?</Typography>
+            {[
+              'Elige una fecha y hora para la visita técnica',
+              'Nuestro técnico certificado irá a tu domicilio',
+              'Instalación completa en el mismo día',
+            ].map((t, i) => (
+              <Box key={i} sx={{ display: 'flex', gap: 1.5, mb: 1, alignItems: 'flex-start' }}>
+                <Box sx={{ width: 22, height: 22, borderRadius: '50%', bgcolor: TEAL, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, mt: 0.1 }}>
+                  <Typography sx={{ color: '#fff', fontSize: '0.7rem', fontWeight: 700 }}>{i + 1}</Typography>
+                </Box>
+                <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>{t}</Typography>
               </Box>
-              <Typography sx={{ fontSize: '0.85rem', color: '#2A3547' }}>{t}</Typography>
-            </Box>
-          ))}
-        </Box>
+            ))}
+          </Box>
 
-        {/* Date picker */}
-        <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
-          Elige tu fecha preferida
-        </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, mb: 3 }}>
-          {dates.map((d, i) => (
-            <Box
-              key={i}
-              onClick={() => d.available && update({ selectedDate: i })}
-              sx={{
-                border: `2px solid ${state.selectedDate === i ? PINK : d.available ? BORDER : '#f0f0f0'}`,
-                borderRadius: 1.5,
-                p: 1.25,
-                cursor: d.available ? 'pointer' : 'not-allowed',
-                bgcolor: state.selectedDate === i ? 'rgba(232,26,104,0.04)' : d.available ? '#fff' : '#fafafa',
-                opacity: d.available ? 1 : 0.5,
-                textAlign: 'center',
-                transition: 'all 0.2s',
-                '&:hover': d.available ? { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' } : {},
-              }}
-            >
-              <Typography sx={{ fontSize: '0.82rem', fontWeight: state.selectedDate === i ? 700 : 500, color: state.selectedDate === i ? PINK : d.available ? '#2A3547' : TEXT_MUTED }}>
-                {d.label}
-              </Typography>
-              <Typography sx={{ fontSize: '0.68rem', color: d.available ? SUCCESS : TEXT_MUTED, mt: 0.25 }}>
-                {d.available ? 'Disponible' : 'No disponible'}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
+          {/* Date picker */}
+          <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+            Elige tu fecha preferida
+          </Typography>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, mb: 3 }}>
+            {dates.map((d, i) => (
+              <Box
+                key={i}
+                onClick={() => d.available && update({ selectedDate: i })}
+                sx={{
+                  border: `2px solid ${state.selectedDate === i ? PINK : d.available ? BORDER : '#f0f0f0'}`,
+                  borderRadius: 1.5,
+                  p: 1.25,
+                  cursor: d.available ? 'pointer' : 'not-allowed',
+                  bgcolor: state.selectedDate === i ? 'rgba(232,26,104,0.04)' : d.available ? '#fff' : '#fafafa',
+                  opacity: d.available ? 1 : 0.5,
+                  textAlign: 'center',
+                  transition: 'all 0.2s',
+                  '&:hover': d.available ? { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' } : {},
+                }}
+              >
+                <Typography sx={{ fontSize: '0.82rem', fontWeight: state.selectedDate === i ? 700 : 500, color: state.selectedDate === i ? PINK : d.available ? '#2A3547' : TEXT_MUTED }}>
+                  {d.label}
+                </Typography>
+                <Typography sx={{ fontSize: '0.68rem', color: d.available ? SUCCESS : TEXT_MUTED, mt: 0.25 }}>
+                  {d.available ? 'Disponible' : 'No disponible'}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
 
-        <Button
-          fullWidth
-          variant="contained"
-          disabled={state.selectedDate === null}
-          onClick={handleBookDate}
-          sx={{
-            bgcolor: PINK,
-            '&:hover': { bgcolor: PINK_DARK },
-            fontWeight: 700,
-            py: 1.5,
-            fontSize: '1rem',
-          }}
-        >
-          Confirmar visita técnica →
-        </Button>
-      </Box>
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={state.selectedDate === null}
+            onClick={handleBookDate}
+            sx={{
+              bgcolor: PINK,
+              '&:hover': { bgcolor: PINK_DARK },
+              fontWeight: 700,
+              py: 1.5,
+              fontSize: '1rem',
+            }}
+          >
+            Confirmar visita técnica →
+          </Button>
+        </Box>
+      </>
     )
   }
 

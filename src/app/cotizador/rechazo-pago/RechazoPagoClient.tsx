@@ -76,7 +76,8 @@ export default function RechazoPagoClient() {
   return (
     <>
       <HpHeaderNew />
-      <Box id="VISITA-PRESENCIAL-RECHAZO" component="main">
+      <div id="VISITA-PRESENCIAL-RECHAZO"></div>
+      <Box component="main">
         {/* Hero */}
         <Box
           sx={{

@@ -617,7 +617,21 @@ export default function CotizadorWizard() {
           const linkRes = await fetch('/api/generate-payment-link', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ formId: state.formId, email: state.emailSolo }),
+            body: JSON.stringify({
+              formId: state.formId,
+              email: state.emailSolo,
+              tipo: state.tipo,
+              dist: state.dist,
+              mat: displayResult?.mat ?? 0,
+              inst: displayResult?.inst ?? 0,
+              sec: displayResult?.sec ?? 0,
+              chargerPrice: displayResult?.chargerPrice ?? 0,
+              chargerName: displayResult?.chargerName ?? '',
+              neto: displayResult?.neto ?? 0,
+              iva: displayResult?.iva ?? 0,
+              total: displayResult?.total ?? 0,
+              isOwn: displayResult?.isOwn ?? false,
+            }),
           })
           if (linkRes.ok) {
             const linkData = await linkRes.json()

@@ -37,6 +37,11 @@ const SUCCESS = '#00C47C'
 // ─── Constants ───────────────────────────────────────────────────────────────
 const GMAPS_KEY = 'AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ'
 
+const PARKING_FLOORS = [
+  'Piso 1', 'Piso 2', 'Piso 3',
+  'Subterráneo -1', 'Subterráneo -2', 'Subterráneo -3', 'Subterráneo -4',
+]
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 const CHARGERS = [
   { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 299000, stock: 2 },
@@ -146,6 +151,11 @@ interface WizardState {
   webpayData: { order: string; token: string; url: string; buy_order: string } | null
   customerSaving: boolean
   customerSaved: boolean
+  showEdificioData: boolean
+  edificioFloor: string
+  edificioParkingFloor: string
+  edificioVisitorParking: boolean | null
+  edificioOption: 'dedicated' | 'shared' | null
 }
 
 interface CalcResult {
@@ -380,6 +390,11 @@ export default function CotizadorWizard() {
     webpayData: null,
     customerSaving: false,
     customerSaved: false,
+    showEdificioData: false,
+    edificioFloor: '',
+    edificioParkingFloor: '',
+    edificioVisitorParking: null,
+    edificioOption: null,
   })
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
@@ -391,8 +406,8 @@ export default function CotizadorWizard() {
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
     if (state.step === 0) return state.tipo !== null
-    // 'own' is pre-selected by default so just need tipoC chosen
-    if (state.step === 1) return state.tipoC !== null
+    if (state.step === 1 && !state.showEdificioData) return state.tipoC !== null
+    if (state.showEdificioData) return state.edificioFloor.trim() !== '' && state.edificioParkingFloor !== ''
     return true
   })()
 
@@ -400,12 +415,16 @@ export default function CotizadorWizard() {
     ? '¡Visita agendada!'
     : state.paid
     ? STEP_TITLES[state.step] ?? '¡Todo confirmado!'
+    : state.showEdificioData
+    ? 'Tu edificio'
     : STEP_TITLES[state.step] ?? 'Cotiza tu instalación'
 
   const heroSubtitle = state.booked
     ? 'Te contactaremos para confirmar los detalles'
     : state.paid
     ? STEP_SUBTITLES[state.step] ?? ''
+    : state.showEdificioData
+    ? 'Datos de tu edificio para calcular el costo de instalación'
     : STEP_SUBTITLES[state.step] ?? ''
 
   // ─── Handlers ────────────────────────────────────────────────────────────
@@ -414,15 +433,22 @@ export default function CotizadorWizard() {
   }
 
   async function goNext() {
-    if (state.step === 1) {
-      update({ estimateLoading: true })
+    // Edificio: intercept step 1 → show edificio data form first
+    if (state.step === 1 && state.tipo === 'edificio' && !state.showEdificioData) {
+      update({ showEdificioData: true })
+      return
+    }
+
+    // Trigger cotizar: from step 1 (casa) OR after completing edificio data form
+    const shouldCotizar = (state.step === 1 && state.tipo === 'casa') || state.showEdificioData
+    if (shouldCotizar) {
+      update({ showEdificioData: false, estimateLoading: true })
       try {
         const isWallbox = state.tipoC === 'wallbox'
         const isPortable = state.tipoC === 'portable'
         const isHouse = state.tipo === 'casa'
         const charger = state.chargerId !== 'own' ? CHARGERS.find(c => c.id === state.chargerId) : null
 
-        // Call Next.js API route — server-side AppSync call avoids client auth issues
         const res = await fetch('/api/cotizar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -445,7 +471,6 @@ export default function CotizadorWizard() {
           if (est) {
             const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
-            // Force SEC trámite from local base (API may return 0) so it always appears in the breakdown
             const secTramite = isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec
             const installNeto = Number(est.netPrice ?? 0)
             const totalNeto = installNeto + chargerPrice + secTramite
@@ -471,21 +496,25 @@ export default function CotizadorWizard() {
           }
         } else {
           const err = await res.json().catch(() => ({}))
-          console.error('[cotizador2] /api/cotizar error:', err)
+          console.error('[cotizador] /api/cotizar error:', err)
         }
       } catch (err) {
-        console.error('[cotizador2] fetch /api/cotizar failed, falling back to local calc:', err)
+        console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
-      // Fallback: show local calculation
       update({ estimateLoading: false, step: 2 })
       return
     }
+
     if (state.step < 2) {
       update({ step: state.step + 1 })
     }
   }
 
   function goBack() {
+    if (state.showEdificioData) {
+      update({ showEdificioData: false })
+      return
+    }
     if (state.step > 0) {
       update({ step: state.step - 1, activePanel: null })
     }
@@ -778,6 +807,11 @@ export default function CotizadorWizard() {
       webpayData: null,
       customerSaving: false,
       customerSaved: false,
+      showEdificioData: false,
+      edificioFloor: '',
+      edificioParkingFloor: '',
+      edificioVisitorParking: null,
+      edificioOption: null,
     })
   }
 
@@ -958,6 +992,318 @@ export default function CotizadorWizard() {
     )
   }
 
+  // ─── Step: edificio data collection ──────────────────────────────────────────
+  function renderEdificioData() {
+    return (
+      <Box>
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
+          Cuéntanos de tu edificio
+        </Typography>
+        <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3, lineHeight: 1.6 }}>
+          En edificios el costo depende del recorrido del cable desde el tablero común hasta tu estacionamiento.
+        </Typography>
+
+        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+          ¿En qué piso vives?
+        </Typography>
+        <TextField
+          fullWidth
+          size="small"
+          type="number"
+          placeholder="5"
+          inputProps={{ min: -10, max: 60 }}
+          value={state.edificioFloor}
+          onChange={e => update({ edificioFloor: e.target.value })}
+          sx={{
+            mb: 3,
+            '& .MuiOutlinedInput-root': {
+              bgcolor: '#fff',
+              '& fieldset': { borderColor: BORDER },
+              '&:hover fieldset': { borderColor: TEAL },
+              '&.Mui-focused fieldset': { borderColor: TEAL },
+            },
+          }}
+        />
+
+        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+          ¿En qué piso está tu estacionamiento?
+        </Typography>
+        <FormControl fullWidth size="small" sx={{ mb: 3 }}>
+          <Select
+            displayEmpty
+            value={state.edificioParkingFloor}
+            onChange={(e: SelectChangeEvent<string>) => update({ edificioParkingFloor: e.target.value as string })}
+            renderValue={(val: string) =>
+              val
+                ? val
+                : <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
+            }
+            sx={{
+              bgcolor: '#fff',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: BORDER },
+              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
+              fontSize: '0.875rem',
+            }}
+          >
+            <MenuItem value="" disabled>
+              <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
+            </MenuItem>
+            {PARKING_FLOORS.map(f => (
+              <MenuItem key={f} value={f} sx={{ fontSize: '0.875rem' }}>{f}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5, color: '#2A3547' }}>
+          ¿Tu edificio tiene estacionamiento de visitas?
+        </Typography>
+        <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 1.5 }}>
+          Es donde podríamos instalar la electrolinera compartida.
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 6 }}>
+            <Box
+              onClick={() => update({ edificioVisitorParking: true })}
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: true })}
+              sx={{
+                border: `2px solid ${state.edificioVisitorParking === true ? PINK : BORDER}`,
+                borderRadius: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: state.edificioVisitorParking === true ? 'rgba(232,26,104,0.04)' : '#fff',
+                textAlign: 'center',
+                transition: 'all 0.2s',
+                '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
+              }}
+            >
+              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === true ? PINK : '#2A3547' }}>
+                Sí
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 6 }}>
+            <Box
+              onClick={() => update({ edificioVisitorParking: false })}
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: false })}
+              sx={{
+                border: `2px solid ${state.edificioVisitorParking === false ? PINK : BORDER}`,
+                borderRadius: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: state.edificioVisitorParking === false ? 'rgba(232,26,104,0.04)' : '#fff',
+                textAlign: 'center',
+                transition: 'all 0.2s',
+                '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
+              }}
+            >
+              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === false ? PINK : '#2A3547' }}>
+                No
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    )
+  }
+
+  // ─── Step 2: edificio option selector ────────────────────────────────────────
+  function renderStep2Edificio() {
+    const localResult = result
+    const displayResult = state.apiResult ?? localResult
+    if (!displayResult) return null
+
+    const rangeLow = Math.round(displayResult.total * 0.82)
+    const rangeHigh = Math.round(displayResult.total * 1.38)
+
+    return (
+      <Box>
+        <Box sx={{ textAlign: 'center', mb: 2 }}>
+          <Typography sx={{ fontSize: '0.95rem', fontWeight: 700, color: '#2A3547' }}>
+            Tu estimación referencial
+          </Typography>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.25 }}>
+            Edificio · recorrido estimado {state.dist} m
+          </Typography>
+        </Box>
+
+        {/* Community notice */}
+        <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1.5, p: 2, mb: 3 }}>
+          <Box sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+            <Typography sx={{ fontSize: '1rem', flexShrink: 0 }}>🏢</Typography>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: '#2A3547', lineHeight: 1.4 }}>
+              En un edificio no decides solo: necesitas el OK de la comunidad
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, lineHeight: 1.6, pl: '1.75rem' }}>
+            Por eso no te cobramos una instalación que aún no está aprobada. Te damos las herramientas para conseguir ese permiso — y la opción que casi siempre lo logra más rápido.
+          </Typography>
+        </Box>
+
+        {/* Price range */}
+        <Box sx={{ textAlign: 'center', mb: 3 }}>
+          <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, mb: 0.5, letterSpacing: '0.03em' }}>
+            Rango referencial de instalación dedicada
+          </Typography>
+          <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.75rem' }, fontWeight: 900, color: '#2A3547', lineHeight: 1.1 }}>
+            {fmt(rangeLow)} – {fmt(rangeHigh)}
+          </Typography>
+          <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.5 }}>
+            El precio definitivo se confirma con visita técnica.
+          </Typography>
+        </Box>
+
+        {/* Option 1: Instalación dedicada */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: { xs: 2, sm: 2.5 }, mb: 2 }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.75 }}>
+            Instalación dedicada en tu estacionamiento
+          </Typography>
+          <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.6 }}>
+            Recibe tu presupuesto definitivo <strong>+ el kit para conseguir la aprobación</strong> de tu comunidad.
+          </Typography>
+
+          <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', mb: 1.25, color: '#2A3547' }}>
+            Después de pagar la visita recibes:
+          </Typography>
+          {[
+            'Visita técnica con profesional certificado SEC',
+            'Presupuesto definitivo en 48 horas',
+            'Carta tipo para presentar a la administración',
+            'Memoria técnica firmada',
+            'Fotos del recorrido propuesto',
+          ].map(item => (
+            <Box key={item} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+              <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+              <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', lineHeight: 1.5 }}>{item}</Typography>
+            </Box>
+          ))}
+
+          <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1.5 }}>
+              <Typography sx={{ fontWeight: 900, fontSize: '1.5rem', color: '#2A3547' }}>$29.000</Typography>
+              <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>acreditable al presupuesto final</Typography>
+            </Box>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => update({ edificioOption: 'dedicated' })}
+              sx={{
+                bgcolor: PINK,
+                '&:hover': { bgcolor: PINK_DARK },
+                fontWeight: 700,
+                py: 1.25,
+                fontSize: '0.9rem',
+                boxShadow: 'none',
+                borderRadius: 2,
+              }}
+            >
+              Pagar visita y recibir mi kit →
+            </Button>
+          </Box>
+        </Box>
+
+        {/* Option 2: Electrolinera compartida */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, overflow: 'hidden', mb: 3 }}>
+          <Box sx={{ bgcolor: PINK, px: 2, py: 0.875, display: 'flex', alignItems: 'center', gap: 0.75 }}>
+            <Typography sx={{ fontSize: '0.8rem' }}>🔥</Typography>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.08em' }}>
+              LA MÁS ELEGIDA
+            </Typography>
+          </Box>
+          <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.5 }}>
+              Electrolinera compartida · sin costo para ti
+            </Typography>
+            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.6 }}>
+              Energica instala y financia un cargador en el estacionamiento de visitas. Pagas solo lo que cargas.
+            </Typography>
+
+            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2.5, mb: 2 }}>
+              <Box>
+                <Typography sx={{ fontWeight: 900, fontSize: '2rem', color: '#2A3547', lineHeight: 1 }}>$0</Typography>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>inversión</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: '1.1rem', color: '#2A3547', lineHeight: 1 }}>$330/kWh</Typography>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>solo lo que cargas</Typography>
+              </Box>
+            </Box>
+
+            {[
+              'Sin obra en tu estacionamiento privado',
+              'No requiere asamblea sobre tu estacionamiento, solo permiso de uso común',
+              'La opción más fácil y rápida de aprobar',
+            ].map(item => (
+              <Box key={item} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', lineHeight: 1.5 }}>{item}</Typography>
+              </Box>
+            ))}
+
+            <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', mt: 2, mb: 1.25, color: '#2A3547' }}>
+              Te entregamos para tu comité:
+            </Typography>
+            {[
+              'Presentación lista para llevar a la reunión',
+              'Carta de solicitud de autorización',
+              'Visita comercial a la administración (si la pides)',
+            ].map(item => (
+              <Box key={item} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', lineHeight: 1.5 }}>{item}</Typography>
+              </Box>
+            ))}
+
+            <Box sx={{ mt: 2.5 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  sessionStorage.setItem('edificioPostulacion', JSON.stringify({
+                    address: state.address,
+                    dist: state.dist,
+                    formId: state.formId,
+                    floor: state.edificioFloor,
+                    parking: state.edificioParkingFloor,
+                  }))
+                  window.location.href = '/postulacion-cargadores-edificios'
+                }}
+                sx={{
+                  bgcolor: PINK,
+                  '&:hover': { bgcolor: PINK_DARK },
+                  fontWeight: 700,
+                  py: 1.25,
+                  fontSize: '0.9rem',
+                  boxShadow: 'none',
+                  borderRadius: 2,
+                }}
+              >
+                Quiero electrolinera en mi edificio →
+              </Button>
+              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                Sin compromiso si la comunidad la rechaza.
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box sx={{ textAlign: 'center' }}>
+          <Button
+            variant="text"
+            onClick={resetAll}
+            sx={{ color: TEXT_MUTED, fontSize: '0.82rem', textTransform: 'none', textDecoration: 'underline', '&:hover': { color: '#2A3547', bgcolor: 'transparent' } }}
+          >
+            ← Nueva simulación
+          </Button>
+        </Box>
+      </Box>
+    )
+  }
+
   function formatVisitDate(iso: string): string {
     const d = new Date(iso)
     const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -968,11 +1314,15 @@ export default function CotizadorWizard() {
   }
 
   function renderStep2() {
+    // Flujo B: edificio shows option selector unless dedicated was chosen
+    if (state.tipo === 'edificio' && state.edificioOption !== 'dedicated') {
+      return renderStep2Edificio()
+    }
+
     const localResult = result
     const displayResult = state.apiResult ?? localResult
     if (!displayResult) return null
 
-    // Summary params for the header (Image #14)
     const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
     const chargerLabel = displayResult.chargerName || 'Cargador propio'
     const distLabel2 = `${state.dist}m`
@@ -1763,8 +2113,9 @@ export default function CotizadorWizard() {
               p: { xs: 3, md: 4 },
             }}
           >
-            {state.step === 0 && renderStep0()}
-            {state.step === 1 && renderStep1()}
+            {state.step === 0 && !state.showEdificioData && renderStep0()}
+            {state.step === 1 && !state.showEdificioData && renderStep1()}
+            {state.showEdificioData && renderEdificioData()}
             {state.step === 2 && renderStep2()}
             {state.step === 3 && renderStep3()}
             {state.step === 4 && renderStep4()}

@@ -151,6 +151,7 @@ interface WizardState {
   webpayData: { order: string; token: string; url: string; buy_order: string } | null
   customerSaving: boolean
   customerSaved: boolean
+  selectedReserveOption: 'r70' | 'r30' | 'visita' | null
   showEdificioData: boolean
   edificioFloor: string
   edificioParkingFloor: string
@@ -390,6 +391,7 @@ export default function CotizadorWizard() {
     webpayData: null,
     customerSaving: false,
     customerSaved: false,
+    selectedReserveOption: null,
     showEdificioData: false,
     edificioFloor: '',
     edificioParkingFloor: '',
@@ -505,6 +507,63 @@ export default function CotizadorWizard() {
   function goBack() {
     if (state.step > 0) {
       update({ step: state.step - 1, activePanel: null })
+    }
+  }
+
+  // Calls /api/payment and immediately submits form to Webpay (no intermediate panel)
+  async function payDirect(amount: number, glosa: string) {
+    update({ webpayLoading: true, webpayError: '' })
+    const displayResult = state.apiResult ?? result
+    const vat = Math.round(amount * 0.19 / 1.19)
+    try {
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          total: amount,
+          vat,
+          email: state.emailPago || undefined,
+          address: state.address || undefined,
+          tipo: state.tipo,
+          chargerName: displayResult?.chargerName ?? '',
+          dist: state.dist,
+          glosa,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.token) throw new Error(data.error ?? 'Error al iniciar el pago')
+
+      sessionStorage.setItem('paymentData', JSON.stringify({
+        tipo: state.tipo ?? '',
+        chargerName: displayResult?.chargerName ?? '',
+        dist: state.dist,
+        address: state.address,
+        depto: state.depto ?? '',
+        email: state.emailPago ?? '',
+        total: amount,
+        neto: amount - vat,
+        iva: vat,
+        chargerPrice: displayResult?.chargerPrice ?? 0,
+        mat: displayResult?.mat ?? 0,
+        inst: displayResult?.inst ?? 0,
+        sec: displayResult?.sec ?? 0,
+        isOwn: displayResult?.isOwn ?? false,
+      }))
+      sessionStorage.removeItem('wizardContext')
+
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = data.url
+      const tokenInput = document.createElement('input')
+      tokenInput.type = 'hidden'
+      tokenInput.name = 'token_ws'
+      tokenInput.value = data.token
+      form.appendChild(tokenInput)
+      document.body.appendChild(form)
+      form.submit()
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al procesar el pago'
+      update({ webpayLoading: false, webpayError: message })
     }
   }
 
@@ -795,6 +854,7 @@ export default function CotizadorWizard() {
       webpayData: null,
       customerSaving: false,
       customerSaved: false,
+      selectedReserveOption: null,
       showEdificioData: false,
       edificioFloor: '',
       edificioParkingFloor: '',
@@ -1295,16 +1355,12 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              onClick={() => {
-                if (state.activePanel === 'pago') {
-                  update({ activePanel: null, webpayData: null, webpayError: '', webpayLoading: false })
-                } else {
-                  initiatePayment()
-                }
-              }}
+              disabled={state.webpayLoading}
+              onClick={() => payDirect(29000, 'Visita técnica · Electrolinera en edificio')}
               sx={{
-                bgcolor: state.activePanel === 'pago' ? '#94A3B8' : PINK,
-                '&:hover': { bgcolor: state.activePanel === 'pago' ? '#64748B' : PINK_DARK },
+                bgcolor: PINK,
+                '&:hover': { bgcolor: PINK_DARK },
+                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
                 fontWeight: 700,
                 py: 1.25,
                 fontSize: '0.9rem',
@@ -1312,7 +1368,7 @@ export default function CotizadorWizard() {
                 borderRadius: 2,
               }}
             >
-              Pagar visita y recibir mi kit →
+              {state.webpayLoading ? 'Redirigiendo…' : 'Pagar visita y recibir mi kit →'}
             </Button>
           </Box>
         </Box>
@@ -1544,6 +1600,190 @@ export default function CotizadorWizard() {
     return `${cap(weekday)}, ${day} ${cap(month)}`
   }
 
+  // ─── Casa booking options (Image #7) ─────────────────────────────────────────
+  function renderBookingOptions(displayResult: NonNullable<ReturnType<typeof calcResult>>) {
+    const installBase = displayResult.neto - displayResult.chargerPrice
+
+    const inst70 = Math.round(installBase * 0.85)
+    const save70 = installBase - inst70
+    const pay70 = Math.round(inst70 * 0.70)
+    const bal70 = inst70 - pay70
+
+    const inst30 = Math.round(installBase * 0.93)
+    const save30 = installBase - inst30
+    const pay30 = Math.round(inst30 * 0.30)
+    const bal30 = inst30 - pay30
+
+    const visitaAmount = 10000
+
+    const opts = [
+      {
+        key: 'r70' as const,
+        title: 'Reserva 70%',
+        badge: { label: 'MEJOR PRECIO', color: '#00C47C' },
+        instDisc: inst70,
+        instOrig: installBase,
+        savings: save70,
+        savingsPct: 15,
+        payToday: pay70,
+        balance: bal70,
+        chargerDeferred: displayResult.chargerPrice,
+        features: ['Prioridad máxima en la agenda de instalación', 'Visita técnica sin costo', 'Puedes desistir tras la visita y te devolvemos lo pagado'],
+        disclaimer: 'Si en la visita técnica detectamos algún impedimento técnico para instalar, te devolvemos el 100% de lo pagado, sin preguntas.',
+        btnLabel: `Reservar con ${fmt(pay70)} →`,
+        payAmount: pay70,
+        glosa: 'Reserva 70% · Instalación cargador eléctrico',
+        highlight: false,
+      },
+      {
+        key: 'r30' as const,
+        title: 'Reserva 30%',
+        badge: { label: '🔥 LA MÁS ELEGIDA', color: PINK },
+        instDisc: inst30,
+        instOrig: installBase,
+        savings: save30,
+        savingsPct: 7,
+        payToday: pay30,
+        balance: bal30,
+        chargerDeferred: displayResult.chargerPrice,
+        features: ['Prioridad en la instalación', 'Visita técnica sin costo', 'Puedes desistir tras la visita y te devolvemos lo pagado'],
+        disclaimer: null,
+        btnLabel: `Reservar con ${fmt(pay30)} →`,
+        payAmount: pay30,
+        glosa: 'Reserva 30% · Instalación cargador eléctrico',
+        highlight: true,
+      },
+    ]
+
+    return (
+      <Box sx={{ mb: 2 }}>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2 }}>
+          Elige cómo reservar tu instalación
+        </Typography>
+
+        {state.webpayError && (
+          <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
+        )}
+
+        {opts.map(opt => (
+          <Box
+            key={opt.key}
+            sx={{
+              bgcolor: '#fff',
+              border: `2px solid ${opt.highlight ? PINK : BORDER}`,
+              borderRadius: 2,
+              overflow: 'hidden',
+              mb: 2,
+            }}
+          >
+            {opt.badge && (
+              <Box sx={{ bgcolor: opt.badge.color, px: 2, py: 0.75, display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>
+                  {opt.badge.label}
+                </Typography>
+              </Box>
+            )}
+            <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.75 }}>{opt.title}</Typography>
+
+              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.25 }}>
+                <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547' }}>{fmt(opt.instDisc)}</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(opt.instOrig)}</Typography>
+              </Box>
+              <Typography sx={{ fontSize: '0.8rem', color: SUCCESS, fontWeight: 600, mb: 1.5 }}>
+                {opt.savingsPct}% dcto · ahorras {fmt(opt.savings)} en la instalación
+              </Typography>
+
+              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 0.5, lineHeight: 1.6 }}>
+                Pagas hoy <strong>{fmt(opt.payToday)}</strong> ({opt.key === 'r70' ? '70' : '30'}% de la instalación). Saldo <strong>{fmt(opt.balance)}</strong> tras la visita técnica.
+              </Typography>
+              {!displayResult.isOwn && (
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+                  Cargador {fmt(opt.chargerDeferred)}, se paga después de la visita técnica.
+                </Typography>
+              )}
+
+              {opt.features.map(f => (
+                <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
+                  <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                  <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', fontWeight: 600 }}>{f}</Typography>
+                </Box>
+              ))}
+              {opt.disclaimer && (
+                <Typography sx={{ fontSize: '0.73rem', color: TEXT_MUTED, mt: 1, lineHeight: 1.5, fontStyle: 'italic' }}>
+                  {opt.disclaimer}
+                </Typography>
+              )}
+
+              <Button
+                fullWidth
+                variant="contained"
+                disabled={state.webpayLoading}
+                onClick={() => payDirect(opt.payAmount, opt.glosa)}
+                sx={{
+                  bgcolor: PINK,
+                  '&:hover': { bgcolor: PINK_DARK },
+                  '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                  fontWeight: 700,
+                  py: 1.25,
+                  fontSize: '0.9rem',
+                  boxShadow: 'none',
+                  borderRadius: 2,
+                  mt: 2,
+                }}
+              >
+                {state.webpayLoading ? 'Redirigiendo…' : opt.btnLabel}
+              </Button>
+            </Box>
+          </Box>
+        ))}
+
+        {/* Solo visita técnica */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: { xs: 2, sm: 2.5 }, mb: 2 }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.5 }}>
+            Solo visita técnica
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.5 }}>
+            <Typography sx={{ fontWeight: 800, fontSize: '1.35rem', color: '#2A3547' }}>{fmt(visitaAmount)}</Typography>
+            <Typography sx={{ fontSize: '0.82rem', color: TEAL, fontWeight: 600 }}>acreditable a tu instalación</Typography>
+          </Box>
+          <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+            Agenda la visita, recibe tu presupuesto definitivo y decide después. Sin compromiso de instalar.
+          </Typography>
+          {[
+            'Profesional certificado SEC en terreno',
+            'Presupuesto definitivo y plan de instalación',
+            'Si avanzas, los $10.000 se descuentan',
+          ].map(f => (
+            <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
+              <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+              <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
+            </Box>
+          ))}
+          <Button
+            fullWidth
+            variant="outlined"
+            disabled={state.webpayLoading}
+            onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador')}
+            sx={{
+              borderColor: BORDER,
+              color: '#2A3547',
+              '&:hover': { borderColor: '#2A3547', bgcolor: 'rgba(0,0,0,0.02)' },
+              '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
+              fontWeight: 700,
+              py: 1.25,
+              fontSize: '0.9rem',
+              mt: 2,
+              borderRadius: 2,
+            }}
+          >
+            {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
+          </Button>
+        </Box>
+      </Box>
+    )
+  }
+
   function renderStep2() {
     if (state.tipo === 'edificio') return renderStep2Edificio()
 
@@ -1748,33 +1988,10 @@ export default function CotizadorWizard() {
           </Typography>
         </Box>
 
-        {/* Pay button — red when panel hidden, gray when panel visible (acts as toggle) */}
-        <Box sx={{ mb: 2 }}>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={() => {
-              if (state.activePanel === 'pago') {
-                update({ activePanel: null, webpayData: null, webpayError: '', webpayLoading: false })
-              } else {
-                initiatePayment()
-              }
-            }}
-            sx={{
-              bgcolor: state.activePanel === 'pago' ? '#94A3B8' : 'rgb(240, 56, 107)',
-              color: '#ffffff',
-              '&:hover': { bgcolor: state.activePanel === 'pago' ? '#64748B' : 'rgb(239, 97, 136)' },
-              fontWeight: 700,
-              fontSize: '0.85rem',
-              py: 1.25,
-              boxShadow: 'none',
-            }}
-          >
-            Reservar instalación
-          </Button>
-        </Box>
+        {/* Booking options — replaces single "Reservar" button */}
+        {renderBookingOptions(displayResult)}
 
-        {/* Panel: pago */}
+        {/* Panel: pago — kept for legacy/fallback */}
         {state.activePanel === 'pago' && (
           <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
             <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>

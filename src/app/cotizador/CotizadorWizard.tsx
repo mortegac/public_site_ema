@@ -1222,8 +1222,8 @@ export default function CotizadorWizard() {
     const displayResult = state.apiResult ?? localResult
     if (!displayResult) return null
 
-    const rangeLow = Math.round(displayResult.total * 0.82)
-    const rangeHigh = Math.round(displayResult.total * 1.38)
+    const RANGE_LOW = 2350000
+    const RANGE_HIGH = 4110000
 
     return (
       <Box>
@@ -1255,7 +1255,7 @@ export default function CotizadorWizard() {
             Rango referencial de instalación dedicada
           </Typography>
           <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.75rem' }, fontWeight: 900, color: '#2A3547', lineHeight: 1.1 }}>
-            {fmt(rangeLow)} – {fmt(rangeHigh)}
+            {fmt(RANGE_LOW)} – {fmt(RANGE_HIGH)}
           </Typography>
           <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.5 }}>
             El precio definitivo se confirma con visita técnica.
@@ -1295,10 +1295,16 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              onClick={() => update({ edificioOption: 'dedicated' })}
+              onClick={() => {
+                if (state.activePanel === 'pago') {
+                  update({ activePanel: null, webpayData: null, webpayError: '', webpayLoading: false })
+                } else {
+                  initiatePayment()
+                }
+              }}
               sx={{
-                bgcolor: PINK,
-                '&:hover': { bgcolor: PINK_DARK },
+                bgcolor: state.activePanel === 'pago' ? '#94A3B8' : PINK,
+                '&:hover': { bgcolor: state.activePanel === 'pago' ? '#64748B' : PINK_DARK },
                 fontWeight: 700,
                 py: 1.25,
                 fontSize: '0.9rem',
@@ -1396,6 +1402,126 @@ export default function CotizadorWizard() {
           </Box>
         </Box>
 
+        {/* Panel de pago — se muestra al hacer clic en "Pagar visita" */}
+        {state.activePanel === 'pago' && (
+          <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
+              Datos para la visita técnica
+            </Typography>
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+              Dirección del edificio
+            </Typography>
+            <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+              <AddressInput2
+                value={state.address}
+                error={!!state.address && !state.addressValidated}
+                onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                onSelectAddress={(details) => {
+                  if (details) {
+                    const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                    update({
+                      address: full,
+                      addressValidated: true,
+                      addressCity: details.City ?? '',
+                      addressState: details.State ?? '',
+                      addressZipCode: details.ZipCode ?? '',
+                      addressLat: String(details.Latitude ?? ''),
+                      addressLng: String(details.Longitude ?? ''),
+                      regionWarn: false,
+                    })
+                  }
+                }}
+              />
+            </Box>
+            {state.address && !state.addressValidated && (
+              <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                Selecciona una dirección del menú desplegable para continuar
+              </Typography>
+            )}
+            {state.regionWarn && (
+              <Alert severity="warning" sx={{ fontSize: '0.78rem', mb: 1.5 }}>
+                Por el momento solo atendemos la Región Metropolitana y Valparaíso.
+              </Alert>
+            )}
+            {state.address && !isRegionMetropolitana(state.address) ? (
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#92400E', mb: 0.75 }}>
+                  Sin cobertura en tu región
+                </Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: '#78350F', lineHeight: 1.6, mb: 1.5 }}>
+                  De momento no tenemos cobertura en tu región por esta vía. Contáctanos para evaluar tu caso.
+                </Typography>
+                <Button size="small" variant="outlined" onClick={() => update({ address: '' })}
+                  sx={{ fontSize: '0.78rem', borderColor: '#92400E', color: '#92400E', textTransform: 'none' }}>
+                  Cambiar dirección
+                </Button>
+              </Box>
+            ) : (
+              <>
+                <TextField fullWidth size="small" label="Depto / N° de estacionamiento (opcional)"
+                  value={state.depto} onChange={e => update({ depto: e.target.value })} sx={{ mb: 2 }} />
+                <TextField
+                  fullWidth size="small" required label="Email para comprobante" type="email"
+                  value={state.emailPago}
+                  onChange={e => update({ emailPago: e.target.value, customerSaved: false })}
+                  onBlur={async (e) => {
+                    const email = e.target.value.trim().toLowerCase()
+                    if (!email || !/\S+@\S+\.\S+/.test(email)) return
+                    update({ customerSaving: true, customerSaved: false })
+                    try {
+                      const res = await fetch('/api/customer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          email,
+                          address: state.address || '',
+                          city: state.addressCity || '',
+                          state: state.addressState || '',
+                          zipCode: state.addressZipCode || '',
+                          lat: state.addressLat || '',
+                          lng: state.addressLng || '',
+                          depto: state.depto || '',
+                          typeOfResidence: 'appartment',
+                          formId: state.formId ?? null,
+                        }),
+                      })
+                      update({ customerSaving: false, customerSaved: res.ok })
+                    } catch {
+                      update({ customerSaving: false, customerSaved: false })
+                    }
+                  }}
+                  helperText={state.customerSaving ? 'Verificando datos…' : 'Requerido para proceder al pago'}
+                  sx={{ mb: 2.5 }}
+                />
+                {state.webpayError && (
+                  <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
+                    {state.webpayError}.{' '}
+                    <Button size="small" onClick={initiatePayment}
+                      sx={{ textTransform: 'none', fontSize: '0.78rem', p: 0, color: 'inherit', textDecoration: 'underline' }}>
+                      Reintentar
+                    </Button>
+                  </Alert>
+                )}
+                <Button fullWidth variant="contained" onClick={submitWebpay}
+                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim() || !state.addressValidated || state.customerSaving || !state.customerSaved}
+                  sx={{
+                    bgcolor: PINK, color: '#fff',
+                    '&:hover': { bgcolor: PINK_DARK },
+                    '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                    fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none',
+                  }}
+                >
+                  {state.webpayLoading ? 'Generando orden…' : 'Pagar $29.000 con Webpay →'}
+                </Button>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                  Pago seguro · Visa, Mastercard, Redcompra, débito
+                </Typography>
+              </>
+            )}
+          </Box>
+        )}
+
         <Box sx={{ textAlign: 'center' }}>
           <Button
             variant="text"
@@ -1419,10 +1545,7 @@ export default function CotizadorWizard() {
   }
 
   function renderStep2() {
-    // Flujo B: edificio shows option selector unless dedicated was chosen
-    if (state.tipo === 'edificio' && state.edificioOption !== 'dedicated') {
-      return renderStep2Edificio()
-    }
+    if (state.tipo === 'edificio') return renderStep2Edificio()
 
     const localResult = result
     const displayResult = state.apiResult ?? localResult

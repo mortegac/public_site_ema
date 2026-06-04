@@ -610,6 +610,22 @@ export default function CotizadorWizard() {
       const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
       const mts = String(state.dist)
 
+      // Get signed payment URL for the email CTA button
+      let paymentUrl = 'https://www.energica.city/cotizador/pago'
+      if (state.formId && state.emailSolo) {
+        try {
+          const linkRes = await fetch('/api/generate-payment-link', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ formId: state.formId, email: state.emailSolo }),
+          })
+          if (linkRes.ok) {
+            const linkData = await linkRes.json()
+            paymentUrl = linkData.url
+          }
+        } catch { /* keep fallback url */ }
+      }
+
       const HTML = `<tr>
                           <td
                             style="
@@ -677,6 +693,15 @@ export default function CotizadorWizard() {
                             </table>
 
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:20px;"><tr><td style="border-top:1px solid #e8e8e8;height:1px;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
+                              <tr>
+                                <td align="center" style="padding-bottom:8px;">
+                                  <p style="font-family:proxima-nova,sans-serif;font-size:13px;color:#74787e;margin:0 0 16px;">Tu cotizaci&oacute;n est&aacute; lista. Haz clic para completar tu pago y agendar la instalaci&oacute;n:</p>
+                                  <a href="${paymentUrl}" target="_blank" rel="noopener noreferrer" style="background-color:#e81a68;color:#ffffff;font-family:proxima-nova,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:8px;display:inline-block;letter-spacing:0.5px;">PAGA AQU&Iacute; TU INSTALACI&Oacute;N</a>
+                                </td>
+                              </tr>
+                            </table>
 
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
                               <tr><td align="center" style="padding-bottom:8px;"><p style="font-family:proxima-nova,sans-serif;font-size:16px;font-weight:700;color:#37373c;margin:0;">&iquest;Necesitas un cargador?</p></td></tr>

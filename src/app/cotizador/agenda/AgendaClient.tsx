@@ -339,11 +339,20 @@ function AgendaContent() {
               {!booked ? (
                 /* ── STEP 1: Date picker ── */
                 <>
-                  {/* Neutral info banner (no payment confirmation) */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1.5, borderRadius: 2, bgcolor: '#EBF7F9', mb: 2 }}>
-                    <Typography fontSize="0.8rem" fontWeight={600} color="#0777a0">
-                      Elige una fecha para tu visita técnica
-                    </Typography>
+                  {/* Customer identity + info banner */}
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1.5, borderRadius: 2, bgcolor: '#EBF7F9', mb: 2 }}>
+                    <Box sx={{ flex: 1 }}>
+                      {(jwtPayload?.name || paymentData.email) && (
+                        <Typography fontSize="0.8rem" fontWeight={700} color="#0777a0" mb={0.25}>
+                          {jwtPayload?.name && <>{jwtPayload.name}</>}
+                          {jwtPayload?.name && paymentData.email && ' · '}
+                          {paymentData.email && <Box component="span" sx={{ fontWeight: 400 }}>{paymentData.email}</Box>}
+                        </Typography>
+                      )}
+                      <Typography fontSize="0.8rem" fontWeight={600} color="#0777a0">
+                        Elige una fecha para tu visita técnica
+                      </Typography>
+                    </Box>
                   </Box>
 
                   {/* What's next info card */}

@@ -115,18 +115,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
+  // --ONLY TEST-- Bloque de modo de prueba: fuerza el monto a $6 CLP.
+  // --ONLY TEST-- Activado por la variable WEBPAY_TEST_MODE=true en .env.local.
+  // --ONLY TEST-- ELIMINAR este bloque completo antes de desplegar a producción.
+  const isTestMode = process.env.WEBPAY_TEST_MODE === 'true'
+  const effectiveTotal = isTestMode ? 6 : Math.round(total)
+  const effectiveVat   = isTestMode ? 1 : Math.round(vat)
+  if (isTestMode) {
+    console.warn('[payment] ⚠️  --ONLY TEST-- TEST MODE ACTIVO: monto forzado a $6 CLP (original: $' + total + ')')
+  }
+  // --ONLY TEST-- Fin del bloque de modo de prueba. ───────────────────────────
+
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()
 
-  console.log(`[payment] Starting payment flow — total=${total}, cartId=${shoppingCartId}`)
+  console.log(`[payment] Starting payment flow — total=${effectiveTotal}, cartId=${shoppingCartId}`)
   console.log(`[payment] email=${email ?? 'NOT_PROVIDED'}, typeOfCart=chargerInstallation`)
 
   // ── Step 1: Create ShoppingCart ──────────────────────────────────────────────
   try {
     const cartInput: Record<string, unknown> = {
       shoppingCartId,
-      total: Math.round(total),
-      vat: Math.round(vat),
+      total: effectiveTotal, // --ONLY TEST-- usar Math.round(total) en producción
+      vat: effectiveVat,     // --ONLY TEST-- usar Math.round(vat) en producción
       typeOfCart: 'chargerInstallation',
       paymentMethod: 'transbank',
       status: 'pending',
@@ -157,7 +168,7 @@ export async function POST(req: NextRequest) {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
       glosa: chargerName,
-      price: Math.round(total),
+      price: effectiveTotal, // --ONLY TEST-- usar Math.round(total) en producción
       typeOfItem: 'service',
     }
 

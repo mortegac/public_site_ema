@@ -11,9 +11,209 @@ import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { resetCart } from "@/store/ShoppingCart/slice";
 import { selectPaymentTransaction, getPaymentTransaction} from "@/store/PaymentTransaction/slice";
 import { selectWebpay, getWebpayStart} from "@/store/Webpay/slice";
-import { fetchWebpayCommit, fetchWebpayStatus, sendEmail} from "@/store/Webpay/services";
+import { fetchWebpayCommit, fetchWebpayStatus } from "@/store/Webpay/services";
+import emailjs, { init as initEmailjs } from 'emailjs-com'
+import { fetchPaymentTransactionByToken } from '@/utils/queries/PaymentTransaction/fetchTransactionByToken'
+import { fecthShoppingCart } from '@/store/ShoppingCart/services'
 import Invoice from './components/Invoice';
 import RetryTransaction from './components/RetryTransaction';
+
+// ─── Receipt email ────────────────────────────────────────────────────────────
+
+function fmtCLP(amount: number): string {
+  return '$' + Math.round(amount).toLocaleString('es-CL')
+}
+
+function paymentMethodLabel(typeCode: string, cardNumber: string): string {
+  const brands: Record<string, string> = {
+    VD: 'Débito', VN: 'Visa', VC: 'Visa Cuotas', MC: 'Mastercard',
+    SI: 'Sin interés', S2: 'Sin interés', NC: 'Cuotas', VP: 'Prepago',
+  }
+  const brand = brands[typeCode] ?? 'Tarjeta'
+  return cardNumber ? `${brand} ****${cardNumber}` : brand
+}
+
+function fmtTxDate(isoStr: string): string {
+  try {
+    const d = new Date(isoStr)
+    const p = (n: number) => String(n).padStart(2, '0')
+    return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`
+  } catch {
+    const d = new Date()
+    const p = (n: number) => String(n).padStart(2, '0')
+    return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`
+  }
+}
+
+function extractKw(name: string): string {
+  const m = name.match(/(\d+(?:[.,]\d+)?)\s*kw/i)
+  return m ? `${m[1].replace(',', '.')} kW` : ''
+}
+
+function buildDetailRow(label: string, value: string): string {
+  return `<tr><td style="padding:12px 16px;font-size:13px;line-height:18px;color:#4B4B5C;border-bottom:1px solid #EEF0F3;">${label}</td><td align="right" style="padding:12px 16px;font-size:13px;line-height:18px;color:#1A1A2E;border-bottom:1px solid #EEF0F3;">${value}</td></tr>`
+}
+
+async function sendReceiptEmail(params: {
+  token: string
+  to_email: string
+  amount: number
+  buy_order: string
+  card_number: string
+  payment_type_code: string
+  shoppingCartId: string
+}): Promise<void> {
+  const { token, to_email, amount, buy_order, card_number, payment_type_code, shoppingCartId } = params
+
+  let sessionData: Record<string, unknown> = {}
+  try {
+    const raw = sessionStorage.getItem('paymentData')
+    if (raw) sessionData = JSON.parse(raw)
+  } catch {}
+
+  let txDateStr = new Date().toISOString()
+  let authCode = ''
+  try {
+    const tx = await fetchPaymentTransactionByToken({ token })
+    if (tx?.transaction_date) txDateStr = tx.transaction_date
+    if (tx?.authorization_code) authCode = tx.authorization_code
+  } catch {}
+
+  // Resolve real email: to_email is "sin-usuario" for charger flows — cart.customerId IS the email
+  const isValidEmail = (v: string) => !!v && v !== 'sin-usuario' && v.includes('@')
+  let resolvedEmail = isValidEmail(to_email) ? to_email : ''
+  let customerName = resolvedEmail || to_email
+  try {
+    const cart = await fecthShoppingCart({ shoppingCartId })
+    if (cart?.customer?.Name) customerName = cart.customer.Name
+    if (!resolvedEmail) {
+      const cartEmail = cart?.customer?.Email || cart?.customerId || ''
+      if (isValidEmail(cartEmail)) resolvedEmail = cartEmail
+    }
+    if (!customerName || customerName === 'sin-usuario') customerName = resolvedEmail
+  } catch {}
+
+  const total = Number(sessionData.total ?? amount)
+  const neto = Number(sessionData.neto ?? Math.round(total / 1.19))
+  const iva = Number(sessionData.iva ?? (total - neto))
+  const mat = Number(sessionData.mat ?? 0)
+  const inst = Number(sessionData.inst ?? 0)
+  const sec = Number(sessionData.sec ?? 0)
+  const chargerPrice = Number(sessionData.chargerPrice ?? 0)
+
+  const chargerName = String(sessionData.chargerName ?? '')
+  const kwLabel = extractKw(chargerName)
+  const tipoLabel = sessionData.tipo === 'edificio' ? 'Departamento' : sessionData.tipo === 'casa' ? 'Casa' : ''
+  const distLabel = sessionData.dist ? `${sessionData.dist} m al tablero` : ''
+
+  const paymentMethod = paymentMethodLabel(payment_type_code, card_number)
+  const dateTimeLabel = fmtTxDate(txDateStr)
+
+  let lineRows = ''
+  if (mat > 0) lineRows += buildDetailRow('Materiales', fmtCLP(mat))
+  if (inst > 0) lineRows += buildDetailRow('Instalaci&oacute;n', fmtCLP(inst))
+  if (sec > 0) lineRows += buildDetailRow('Tr&aacute;mites SEC', fmtCLP(sec))
+  if (chargerPrice > 0) lineRows += buildDetailRow('Cargador', fmtCLP(chargerPrice))
+  lineRows += buildDetailRow('Neto', fmtCLP(neto))
+  lineRows += buildDetailRow('IVA (19%)', fmtCLP(iva))
+
+  const authRow = authCode ? `<tr>
+    <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;border-bottom:1px solid #EEF0F3;">C&oacute;d. autorizaci&oacute;n</td>
+    <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${authCode}</td>
+  </tr>` : ''
+
+  const chargerDomRow = (chargerName || tipoLabel) ? `<tr>
+    <td style="padding:24px 36px 28px 36px;font-family:Arial,Helvetica,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+        ${chargerName ? `<td width="50%" valign="top" style="padding:0 8px 0 0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #E5E7EB;border-radius:10px;">
+            <tr><td style="padding:14px 16px;">
+              <p style="margin:0 0 6px 0;font-size:11px;line-height:14px;color:#9097A3;text-transform:uppercase;letter-spacing:0.5px;">Cargador</p>
+              <p style="margin:0;font-size:13px;line-height:19px;color:#1A1A2E;font-weight:bold;">${chargerName}</p>
+              ${kwLabel ? `<p style="margin:2px 0 0 0;font-size:12px;line-height:18px;color:#6B7280;">${kwLabel}</p>` : ''}
+            </td></tr>
+          </table>
+        </td>` : '<td width="50%" style="padding:0 8px 0 0;"></td>'}
+        <td width="50%" valign="top" style="padding:0 0 0 8px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #E5E7EB;border-radius:10px;">
+            <tr><td style="padding:14px 16px;">
+              <p style="margin:0 0 6px 0;font-size:11px;line-height:14px;color:#9097A3;text-transform:uppercase;letter-spacing:0.5px;">Domicilio</p>
+              <p style="margin:0;font-size:13px;line-height:19px;color:#1A1A2E;font-weight:bold;">${tipoLabel || 'Domicilio'}</p>
+              ${distLabel ? `<p style="margin:2px 0 0 0;font-size:12px;line-height:18px;color:#6B7280;">${distLabel}</p>` : ''}
+            </td></tr>
+          </table>
+        </td>
+      </tr></table>
+    </td>
+  </tr>` : '<tr><td style="height:28px;font-size:0;line-height:0;">&nbsp;</td></tr>'
+
+  const HTML = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F4F5F7" style="background-color:#F4F5F7;"><tr><td align="center" style="padding:32px 16px;">
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#FFFFFF" style="width:600px;max-width:600px;background-color:#FFFFFF;border-radius:12px;overflow:hidden;">
+    <tr><td style="padding:22px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 6px 0;font-size:16px;line-height:24px;color:#1A1A2E;font-weight:bold;">Hola ${customerName},</p>
+      <p style="margin:0;font-size:14px;line-height:22px;color:#4B4B5C;">Tu pago fue procesado con &eacute;xito. Este es tu comprobante.</p>
+    </td></tr>
+    <tr><td style="padding:22px 36px 0 36px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFF1F5" style="background-color:#FFF1F5;border:1px solid #FBD0DE;border-radius:12px;">
+        <tr><td align="center" style="padding:22px 20px;font-family:Arial,Helvetica,sans-serif;">
+          <p style="margin:0 0 4px 0;font-size:12px;line-height:16px;color:#8A4A60;text-transform:uppercase;letter-spacing:1px;">Total pagado</p>
+          <p style="margin:0;font-size:40px;line-height:46px;color:#F0386B;font-weight:bold;">${fmtCLP(total)}</p>
+          <p style="margin:6px 0 0 0;font-size:12px;line-height:18px;color:#6B7280;">IVA incluido${kwLabel ? ' &middot; ' + kwLabel : ''}</p>
+        </td></tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 12px 0;font-size:13px;line-height:18px;color:#1A1A2E;font-weight:bold;">Datos de la transacci&oacute;n</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FAFAFB" style="background-color:#FAFAFB;border:1px solid #E5E7EB;border-radius:10px;">
+        <tr>
+          <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;border-bottom:1px solid #EEF0F3;">N&deg; de orden</td>
+          <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${buy_order}</td>
+        </tr>
+        ${authRow}
+        <tr>
+          <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;border-bottom:1px solid #EEF0F3;">M&eacute;todo de pago</td>
+          <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${paymentMethod}</td>
+        </tr>
+        <tr>
+          <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;">Fecha y hora</td>
+          <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;">${dateTimeLabel}</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 12px 0;font-size:13px;line-height:18px;color:#1A1A2E;font-weight:bold;">Detalle de tu compra</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #E5E7EB;border-radius:10px;">
+        ${lineRows}
+        <tr>
+          <td bgcolor="#FAFAFB" style="padding:13px 16px;font-size:14px;line-height:18px;color:#1A1A2E;font-weight:bold;background-color:#FAFAFB;">Total pagado</td>
+          <td align="right" bgcolor="#FAFAFB" style="padding:13px 16px;font-size:14px;line-height:18px;color:#F0386B;font-weight:bold;background-color:#FAFAFB;">${fmtCLP(total)}</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 36px 0 36px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F1FBF5" style="background-color:#F1FBF5;border:1px solid #CDEBD8;border-radius:10px;">
+        <tr><td style="padding:18px 18px 6px 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;color:#157347;font-weight:bold;">Tu reserva protegida</td></tr>
+        <tr><td style="padding:0 18px 14px 18px;font-family:Arial,Helvetica,sans-serif;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr><td valign="top" width="22" style="padding:5px 0;font-size:13px;color:#16A34A;font-weight:bold;">&#10003;</td><td style="padding:5px 0;font-size:12px;line-height:18px;color:#3F5A49;">Visita t&eacute;cnica de confirmaci&oacute;n sin costo.</td></tr>
+            <tr><td valign="top" width="22" style="padding:5px 0;font-size:13px;color:#16A34A;font-weight:bold;">&#10003;</td><td style="padding:5px 0;font-size:12px;line-height:18px;color:#3F5A49;">Devoluci&oacute;n garantizada si decides no continuar.</td></tr>
+            <tr><td valign="top" width="22" style="padding:5px 0;font-size:13px;color:#16A34A;font-weight:bold;">&#10003;</td><td style="padding:5px 0;font-size:12px;line-height:18px;color:#3F5A49;">Instalaci&oacute;n certificada SEC con garant&iacute;a de 3 meses.</td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </td></tr>
+    ${chargerDomRow}
+  </table>
+</td></tr></table>`
+
+  initEmailjs('UYcrSeCqLGW8xqT4S')
+  await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+    to_email: resolvedEmail || to_email,
+    name: customerName,
+    subject: 'Comprobante de tu pago en Energica',
+    CONTENT_HTML: HTML,
+  })
+}
 
 // ─── Loading messages ─────────────────────────────────────────────────────────
 const PAYMENT_MESSAGES = [
@@ -193,15 +393,19 @@ const ReturnPage = () => {
                   }
                   console.log('[return] sendEmail to_email:', resolvedEmail, '| webpayEmail:', rawWebpayEmail)
 
-                  const objEmail = {
-                      glosa: statusResponse?.glosa,
-                      total: statusResponse?.amount,
-                      order: statusResponse?.buy_order,
-                      card: statusResponse?.card_number,
-                      typePay: statusResponse?.payment_type_code,
+                  try {
+                    await sendReceiptEmail({
+                      token,
                       to_email: resolvedEmail,
-                  };
-                  await sendEmail({ ...objEmail });
+                      amount: statusResponse?.amount ?? 0,
+                      buy_order: statusResponse?.buy_order ?? '',
+                      card_number: statusResponse?.card_number ?? '',
+                      payment_type_code: statusResponse?.payment_type_code ?? '',
+                      shoppingCartId: statusResponse?.shoppingCartId ?? '',
+                    })
+                  } catch (emailErr) {
+                    console.error('[return] receipt email failed:', emailErr)
+                  }
 
                   setResTransaction((prev) => ({
                       ...prev,

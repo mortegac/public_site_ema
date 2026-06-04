@@ -406,8 +406,11 @@ export default function CotizadorWizard() {
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
     if (state.step === 0) return state.tipo !== null
-    if (state.step === 1 && !state.showEdificioData) return state.tipoC !== null
-    if (state.showEdificioData) return state.edificioFloor.trim() !== '' && state.edificioParkingFloor !== ''
+    if (state.step === 1) {
+      if (!state.tipoC) return false
+      if (state.tipo === 'edificio') return state.edificioFloor.trim() !== '' && state.edificioParkingFloor !== ''
+      return true
+    }
     return true
   })()
 
@@ -415,16 +418,12 @@ export default function CotizadorWizard() {
     ? '¡Visita agendada!'
     : state.paid
     ? STEP_TITLES[state.step] ?? '¡Todo confirmado!'
-    : state.showEdificioData
-    ? 'Tu edificio'
     : STEP_TITLES[state.step] ?? 'Cotiza tu instalación'
 
   const heroSubtitle = state.booked
     ? 'Te contactaremos para confirmar los detalles'
     : state.paid
     ? STEP_SUBTITLES[state.step] ?? ''
-    : state.showEdificioData
-    ? 'Datos de tu edificio para calcular el costo de instalación'
     : STEP_SUBTITLES[state.step] ?? ''
 
   // ─── Handlers ────────────────────────────────────────────────────────────
@@ -433,16 +432,9 @@ export default function CotizadorWizard() {
   }
 
   async function goNext() {
-    // Edificio: intercept step 1 → show edificio data form first
-    if (state.step === 1 && state.tipo === 'edificio' && !state.showEdificioData) {
-      update({ showEdificioData: true })
-      return
-    }
-
-    // Trigger cotizar: from step 1 (casa) OR after completing edificio data form
-    const shouldCotizar = (state.step === 1 && state.tipo === 'casa') || state.showEdificioData
-    if (shouldCotizar) {
-      update({ showEdificioData: false, estimateLoading: true })
+    // Trigger cotizar API from step 1 (both casa and edificio)
+    if (state.step === 1) {
+      update({ estimateLoading: true })
       try {
         const isWallbox = state.tipoC === 'wallbox'
         const isPortable = state.tipoC === 'portable'
@@ -511,10 +503,6 @@ export default function CotizadorWizard() {
   }
 
   function goBack() {
-    if (state.showEdificioData) {
-      update({ showEdificioData: false })
-      return
-    }
     if (state.step > 0) {
       update({ step: state.step - 1, activePanel: null })
     }
@@ -988,6 +976,123 @@ export default function CotizadorWizard() {
             <Chip label={`${state.dist} m`} size="small" sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700 }} />
           </Box>
         </Box>
+
+        {/* Edificio extra fields — only shown when tipo === 'edificio' */}
+        {state.tipo === 'edificio' && (
+          <Box sx={{ mt: 3, pt: 3, borderTop: `1px solid ${BORDER}` }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>
+              Cuéntanos de tu edificio
+            </Typography>
+            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2.5, lineHeight: 1.6 }}>
+              El costo depende del recorrido del cable desde el tablero común hasta tu estacionamiento.
+            </Typography>
+
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+              ¿En qué piso vives?
+            </Typography>
+            <TextField
+              fullWidth
+              size="small"
+              type="number"
+              placeholder="5"
+              inputProps={{ min: -10, max: 60 }}
+              value={state.edificioFloor}
+              onChange={e => update({ edificioFloor: e.target.value })}
+              sx={{
+                mb: 2.5,
+                '& .MuiOutlinedInput-root': {
+                  bgcolor: '#fff',
+                  '& fieldset': { borderColor: BORDER },
+                  '&:hover fieldset': { borderColor: TEAL },
+                  '&.Mui-focused fieldset': { borderColor: TEAL },
+                },
+              }}
+            />
+
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+              ¿En qué piso está tu estacionamiento?
+            </Typography>
+            <FormControl fullWidth size="small" sx={{ mb: 2.5 }}>
+              <Select
+                displayEmpty
+                value={state.edificioParkingFloor}
+                onChange={(e: SelectChangeEvent<string>) => update({ edificioParkingFloor: e.target.value as string })}
+                renderValue={(val: string) =>
+                  val
+                    ? val
+                    : <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
+                }
+                sx={{
+                  bgcolor: '#fff',
+                  '& .MuiOutlinedInput-notchedOutline': { borderColor: BORDER },
+                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
+                  fontSize: '0.875rem',
+                }}
+              >
+                <MenuItem value="" disabled>
+                  <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
+                </MenuItem>
+                {PARKING_FLOORS.map(f => (
+                  <MenuItem key={f} value={f} sx={{ fontSize: '0.875rem' }}>{f}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5, color: '#2A3547' }}>
+              ¿Tu edificio tiene estacionamiento de visitas?
+            </Typography>
+            <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 1.5 }}>
+              Es donde podríamos instalar la electrolinera compartida.
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 6 }}>
+                <Box
+                  onClick={() => update({ edificioVisitorParking: true })}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: true })}
+                  sx={{
+                    border: `2px solid ${state.edificioVisitorParking === true ? PINK : BORDER}`,
+                    borderRadius: 2,
+                    p: 2,
+                    cursor: 'pointer',
+                    bgcolor: state.edificioVisitorParking === true ? 'rgba(232,26,104,0.04)' : '#fff',
+                    textAlign: 'center',
+                    transition: 'all 0.2s',
+                    '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === true ? PINK : '#2A3547' }}>
+                    Sí
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <Box
+                  onClick={() => update({ edificioVisitorParking: false })}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: false })}
+                  sx={{
+                    border: `2px solid ${state.edificioVisitorParking === false ? PINK : BORDER}`,
+                    borderRadius: 2,
+                    p: 2,
+                    cursor: 'pointer',
+                    bgcolor: state.edificioVisitorParking === false ? 'rgba(232,26,104,0.04)' : '#fff',
+                    textAlign: 'center',
+                    transition: 'all 0.2s',
+                    '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === false ? PINK : '#2A3547' }}>
+                    No
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
       </Box>
     )
   }
@@ -2113,9 +2218,8 @@ export default function CotizadorWizard() {
               p: { xs: 3, md: 4 },
             }}
           >
-            {state.step === 0 && !state.showEdificioData && renderStep0()}
-            {state.step === 1 && !state.showEdificioData && renderStep1()}
-            {state.showEdificioData && renderEdificioData()}
+            {state.step === 0 && renderStep0()}
+            {state.step === 1 && renderStep1()}
             {state.step === 2 && renderStep2()}
             {state.step === 3 && renderStep3()}
             {state.step === 4 && renderStep4()}

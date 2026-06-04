@@ -61,6 +61,19 @@ const CREATE_CLIENT_FORM = /* GraphQL */ `
   }
 `
 
+const UPDATE_CLIENT_FORM = /* GraphQL */ `
+  mutation ($input: UpdateClientFormInput!) {
+    updateClientForm(input: $input) {
+      formId
+      isWallbox
+      isPortable
+      isHouse
+      distance
+      numberOfChargers
+    }
+  }
+`
+
 const PROCESS_ESTIMATE = /* GraphQL */ `
   mutation ProcessEstimate($formId: String!) {
     ProcessEstimate(formId: $formId) {
@@ -104,6 +117,7 @@ interface CotizarBody {
   isPortable: boolean
   distance: number
   numberOfChargers?: number
+  existingFormId?: string
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -116,7 +130,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { isHouse, isWallbox, isPortable, distance, numberOfChargers = 1 } = body
+  const { isHouse, isWallbox, isPortable, distance, numberOfChargers = 1, existingFormId } = body
 
   if (typeof isHouse !== 'boolean' || typeof isWallbox !== 'boolean' || typeof isPortable !== 'boolean') {
     return NextResponse.json(
@@ -127,30 +141,39 @@ export async function POST(req: NextRequest) {
 
   const { url, apiKey } = getAppSyncConfig()
 
-  // ── Step 1: createClientForm ────────────────────────────────────────────────
+  // ── Step 1: upsert ClientForm ───────────────────────────────────────────────
+  // Re-use an existing formId (user went back and changed params) to avoid
+  // creating orphan forms on every step-1→step-2 transition.
   let formId: string
 
-  try {
-    const formData = await callAppSync(url, apiKey, CREATE_CLIENT_FORM, {
-      input: {
-        formId: crypto.randomUUID(),
-        isHouse,
-        isWallbox,
-        isPortable,
-        distance: distance ?? 10,
-        numberOfChargers,
-        // omit customerId — DynamoDB GSI gsi-Customer.ClientForms expects String not NULL
-      },
-    })
+  const formInput = {
+    formId: existingFormId ?? crypto.randomUUID(),
+    isHouse,
+    isWallbox,
+    isPortable,
+    distance: distance ?? 10,
+    numberOfChargers,
+  }
 
-    formId = formData?.createClientForm?.formId
-    if (!formId) {
-      throw new Error('createClientForm returned no formId')
+  try {
+    if (existingFormId) {
+      // Update the existing form with the latest params
+      await callAppSync(url, apiKey, UPDATE_CLIENT_FORM, { input: formInput })
+      formId = existingFormId
+    } else {
+      const formData = await callAppSync(url, apiKey, CREATE_CLIENT_FORM, {
+        input: {
+          ...formInput,
+          // omit customerId — DynamoDB GSI gsi-Customer.ClientForms expects String not NULL
+        },
+      })
+      formId = formData?.createClientForm?.formId
+      if (!formId) throw new Error('createClientForm returned no formId')
     }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[/api/cotizar] createClientForm error:', message)
-    return NextResponse.json({ error: `createClientForm failed: ${message}` }, { status: 502 })
+    console.error('[/api/cotizar] upsert ClientForm error:', message)
+    return NextResponse.json({ error: `ClientForm upsert failed: ${message}` }, { status: 502 })
   }
 
   // ── Step 2: ProcessEstimate + next available date (parallel) ────────────────

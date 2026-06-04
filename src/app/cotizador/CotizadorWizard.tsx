@@ -432,6 +432,7 @@ export default function CotizadorWizard() {
             isWallbox,
             distance: state.dist,
             numberOfChargers: 1,
+            ...(state.formId ? { existingFormId: state.formId } : {}),
           }),
         })
 

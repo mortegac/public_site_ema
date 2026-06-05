@@ -73,10 +73,6 @@ const validationSchema = yup.object({
   typeofresidence: yup
     .string()
     .required("Campo obligatorio"),
-  nameofresidence: yup
-    .string()
-    .min(2, "El nombre de la residencia debe tener al menos 2 caracteres")
-    .required("Campo obligatorio"),
   address: yup
     .string()
     .min(5, "La dirección debe tener al menos 5 caracteres")
@@ -90,8 +86,7 @@ const validationSchema = yup.object({
     .required("Campo obligatorio"),
   message: yup
     .string()
-    .min(5, "El mensaje debe tener al menos 5 caracteres")
-    .required("Campo obligatorio"),
+    .optional(),
 });
 
 const PageContainer = styled(Box)(({ theme }) => ({
@@ -364,7 +359,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
   const phone = primaryDefault?.phone;
   const position = primaryDefault?.position;
   const typeofresidence = primaryDefault?.typeofresidence;
-  const nameofresidence = primaryDefault?.nameofresidence;
   const address = primaryDefault?.address;
   const visitorparkingstatus = primaryDefault?.visitorparkingstatus;
   const evusercount = primaryDefault?.evusercount;
@@ -386,7 +380,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
       email: "",
       phone: "",
       typeofresidence: "",
-      nameofresidence: "",
       address: "",
       visitorparkingstatus: "",
       evusercount: "",
@@ -436,7 +429,7 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             message: `Cargo: ${values?.position} | Dirección: ${values?.address} | Estacionamientos de visita: ${values?.visitorparkingstatus} | Usuarios EV: ${values?.evusercount} | Mensaje: ${values?.message}`,
             subject: "Postulación Cargadores Edificios",
             category: values?.typeofresidence || "",
-            companyName: values?.nameofresidence || "",
+            companyName: "",
             cantidadVehiculos: 0,
             customerId: values?.email,
           })
@@ -494,9 +487,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                                 
                                 <p >
                                     Tipo de establecimiento: <b>${values?.typeofresidence ? values.typeofresidence:""}</b></p>
-                                
-                                <p >
-                                    Nombre del establecimiento / comunidad: <b>${values?.nameofresidence ? values.nameofresidence:""}</b></p>
                                 
                                 <p >
                                     Dirección completa: <b>${values?.address ? values.address:""}</b></p>
@@ -938,30 +928,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             <Box>
               <Typography
                 component="label"
-                htmlFor="nameofresidence"
-                sx={{ display: "block", mb: 0.5 }}
-              >
-                {nameofresidence && Array.isArray(nameofresidence) && nameofresidence.length > 0
-                  ? asText(nameofresidence as any)
-                  : typeof nameofresidence === "string"
-                  ? nameofresidence
-                  : "Nombre de la residencia"}
-              </Typography>
-              <TextField
-                fullWidth
-                id="nameofresidence"
-                name="nameofresidence"
-                value={formik.values.nameofresidence}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.nameofresidence && Boolean(formik.errors.nameofresidence)}
-                helperText={formik.touched.nameofresidence && formik.errors.nameofresidence}
-              />
-            </Box>
-            
-            <Box>
-              <Typography
-                component="label"
                 htmlFor="address"
                 sx={{ display: "block", mb: 0.5 }}
               >
@@ -1132,17 +1098,22 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
               padding: '0px',
               margin: '0px',
             }}>
-              <Typography
-                component="label"
-                htmlFor="message"
-                sx={{ display: "block", mb: 0.5 }}
-              >
-                {message && Array.isArray(message) && message.length > 0
-                  ? asText(message as any)
-                  : typeof message === "string"
-                  ? message
-                  : "Mensaje"}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                <Typography
+                  component="label"
+                  htmlFor="message"
+                  sx={{ display: "block" }}
+                >
+                  {message && Array.isArray(message) && message.length > 0
+                    ? asText(message as any)
+                    : typeof message === "string"
+                    ? message
+                    : "Mensaje"}
+                </Typography>
+                <Typography component="span" sx={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                  * Opcional
+                </Typography>
+              </Box>
               <TextField
                 fullWidth
                 id="message"

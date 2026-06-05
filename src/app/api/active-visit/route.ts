@@ -25,6 +25,24 @@ async function callAppSync(url: string, apiKey: string, query: string, variables
 // States that represent an active/confirmed booking (not available, not stale)
 const ACTIVE_STATES = new Set(['reserved', 'payed', 'payedAndAgended', 'waiting'])
 
+const GET_FORM_WITH_VISITS = /* GraphQL */ `
+  query GetFormWithVisits($formId: ID!) {
+    getClientForm(formId: $formId) {
+      formId
+      CalendarVisits {
+        items {
+          calendarId
+          startDate
+          endDate
+          summary
+          location
+          state
+        }
+      }
+    }
+  }
+`
+
 const LIST_VISITS_BY_CUSTOMER = /* GraphQL */ `
   query ListVisitsByCustomer($customerId: ID!) {
     listCalendarVisits(
@@ -54,13 +72,46 @@ export interface ActiveVisit {
 }
 
 export async function GET(req: NextRequest) {
+  const formId = req.nextUrl.searchParams.get('formId')?.trim()
   const customerId = req.nextUrl.searchParams.get('customerId')?.trim()
 
-  if (!customerId) {
-    return NextResponse.json({ error: 'customerId query param is required' }, { status: 400 })
+  if (!formId && !customerId) {
+    return NextResponse.json({ error: 'formId or customerId query param is required' }, { status: 400 })
   }
 
   const { url, apiKey } = getAppSyncConfig()
+
+  // Path 1: query by formId (more precise)
+  if (formId) {
+    try {
+      const data = await callAppSync(url, apiKey, GET_FORM_WITH_VISITS, { formId })
+      const items: any[] = data?.getClientForm?.CalendarVisits?.items ?? []
+      const active = items
+        .filter(v => ACTIVE_STATES.has(v.state))
+        .sort((a, b) => (b.startDate ?? '').localeCompare(a.startDate ?? ''))
+
+      if (active.length > 0) {
+        const visit = active[0]
+        const result: ActiveVisit = {
+          calendarId: visit.calendarId,
+          startDate: visit.startDate,
+          endDate: visit.endDate ?? null,
+          summary: visit.summary ?? null,
+          location: visit.location ?? null,
+          state: visit.state,
+        }
+        console.log(`[/api/active-visit] formId=${formId} → found visit ${visit.calendarId} state=${visit.state}`)
+        return NextResponse.json({ visit: result })
+      }
+    } catch (err) {
+      console.error('[/api/active-visit] getClientForm query error (falling back to customerId):', err)
+    }
+  }
+
+  // Path 2: fallback to customerId
+  if (!customerId) {
+    return NextResponse.json({ visit: null })
+  }
 
   try {
     const data = await callAppSync(url, apiKey, LIST_VISITS_BY_CUSTOMER, { customerId })

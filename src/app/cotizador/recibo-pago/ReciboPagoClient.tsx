@@ -31,6 +31,7 @@ interface PaymentData {
   inst?: number
   sec?: number
   isOwn?: boolean
+  formId?: string
 }
 
 interface DateSlot {
@@ -257,6 +258,8 @@ export default function ReciboPagoClient() {
                         customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         address: paymentData?.address ?? '',
                         chargerName: paymentData?.chargerName ?? 'Instalación cargador EV',
+                        formId: paymentData?.formId ?? '',
+                        shoppingCartId: paymentData?.shoppingCartId ?? '',
                       }
                       console.log('[recibo-pago] ConfirmChargerVisit payload:', JSON.stringify(bookingPayload))
                       const res = await fetch('/api/confirm-charger-visit', {

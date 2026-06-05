@@ -231,9 +231,13 @@ function AgendaContent() {
 
     const run = async () => {
       // 1. Check if customer already has an active booking
-      if (customerId) {
+      const formId = jwtPayload?.formid ?? ''
+      if (formId || customerId) {
         try {
-          const res = await fetch(`/api/active-visit?customerId=${encodeURIComponent(customerId)}`)
+          const params = new URLSearchParams()
+          if (formId) params.set('formId', formId)
+          if (customerId) params.set('customerId', customerId)
+          const res = await fetch(`/api/active-visit?${params.toString()}`)
           if (res.ok) {
             const { visit } = await res.json() as { visit: ActiveVisit | null }
             if (visit) {
@@ -417,6 +421,7 @@ function AgendaContent() {
                         customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         address: paymentData?.address ?? '',
                         chargerName: paymentData?.chargerName ?? 'Instalación cargador EV',
+                        formId: jwtPayload?.formid ?? '',
                       }
                       const res = await fetch('/api/confirm-charger-visit', {
                         method: 'POST',

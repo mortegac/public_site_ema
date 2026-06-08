@@ -91,6 +91,18 @@ interface JwtPayload {
   email?: string
   name?: string
   phone?: string
+  // Quote amounts embedded at email send time (exact wizard values)
+  tipo?: 'casa' | 'edificio'
+  dist?: number
+  mat?: number
+  inst?: number
+  sec?: number
+  chargerPrice?: number
+  chargerName?: string
+  neto?: number
+  iva?: number
+  total?: number
+  isOwn?: boolean
 }
 
 function decodeJwtPayload(token: string): JwtPayload | null {
@@ -179,6 +191,16 @@ function calcResult(state: WizardState): CalcResult | null {
   return { mat, inst, sec, chargerPrice, chargerName, neto, iva, total: neto + iva, isOwn: state.chargerId === 'own' }
 }
 
+// ─── Step tracker (fire-and-forget) ──────────────────────────────────────────
+function updateFormStep(formId: string | null | undefined, step: string) {
+  if (!formId) return
+  fetch('/api/update-step', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ formId, step }),
+  }).catch(() => null)
+}
+
 // ─── Main inner component (needs useSearchParams so must be wrapped in Suspense) ──
 function PagoContent() {
   const searchParams = useSearchParams()
@@ -226,7 +248,7 @@ function PagoContent() {
     setState(prev => ({ ...prev, ...partial }))
   }
 
-  // ─── Hydrate from /api/quote using formId from JWT ───────────────────────────
+  // ─── Hydrate from JWT (amounts) + /api/quote (address, nextVisitDate) ─────────
   const hydratedRef = useRef(false)
   useEffect(() => {
     if (hydratedRef.current) return
@@ -235,37 +257,69 @@ function PagoContent() {
     hydratedRef.current = true
 
     const controller = new AbortController()
-    update({ estimateLoading: true })
 
+    // If the JWT already carries all quote amounts (new format), use them directly.
+    // Only call /api/quote for address and nextVisitDate.
+    const jwtHasAmounts = jwtPayload?.total != null
+
+    if (jwtHasAmounts) {
+      // Immediately apply JWT amounts without waiting for the API
+      update({
+        formId,
+        tipo: jwtPayload!.tipo ?? null,
+        dist: jwtPayload!.dist ?? 10,
+        apiResult: {
+          mat: jwtPayload!.mat ?? 0,
+          inst: jwtPayload!.inst ?? 0,
+          sec: jwtPayload!.sec ?? 0,
+          chargerPrice: jwtPayload!.chargerPrice ?? 0,
+          chargerName: jwtPayload!.chargerName ?? '',
+          neto: jwtPayload!.neto ?? 0,
+          iva: jwtPayload!.iva ?? 0,
+          total: jwtPayload!.total!,
+          isOwn: jwtPayload!.isOwn ?? false,
+        },
+        estimateLoading: true,
+      })
+    } else {
+      update({ estimateLoading: true })
+    }
+
+    // Always fetch address + nextVisitDate from the DB
     fetch(`/api/quote?formId=${encodeURIComponent(formId)}`, { signal: controller.signal })
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then((data) => {
         update({
           estimateLoading: false,
-          formId: data.formId,
-          tipo: data.tipo,
-          dist: data.dist,
           address: data.address ?? '',
           addressValidated: !!(data.address),
           customerSaved: true,
           nextVisitDate: data.nextVisitDate ?? null,
-          apiResult: {
-            mat: data.mat,
-            inst: data.inst,
-            sec: data.sec,
-            chargerPrice: data.chargerPrice,
-            chargerName: data.chargerName,
-            neto: data.neto,
-            iva: data.iva,
-            total: data.total,
-            isOwn: data.isOwn,
-          },
+          // Only use DB amounts if JWT didn't carry them
+          ...(jwtHasAmounts ? {} : {
+            formId: data.formId,
+            tipo: data.tipo,
+            dist: data.dist,
+            apiResult: {
+              mat: data.mat,
+              inst: data.inst,
+              sec: data.sec,
+              chargerPrice: data.chargerPrice,
+              chargerName: data.chargerName,
+              neto: data.neto,
+              iva: data.iva,
+              total: data.total,
+              isOwn: data.isOwn,
+            },
+          }),
         })
+        // Mark form as PENDING_PAYMENT when customer visits /cotizador/pago
+        updateFormStep(data.formId ?? formId, '3')
       })
       .catch((err) => {
         if (err?.name === 'AbortError') return
         console.error('[PagoClient] /api/quote error:', err)
-        update({ estimateLoading: false })
+        update({ estimateLoading: false, customerSaved: jwtHasAmounts })
       })
 
     return () => controller.abort()
@@ -294,6 +348,7 @@ function PagoContent() {
           chargerName: displayResult.chargerName,
           dist: state.dist,
           glosa: `Instalación Cargador eléctrico - ${state.dist} Mts`,
+          ...(state.formId ? { formId: state.formId } : {}),
         }),
       })
 
@@ -333,6 +388,7 @@ function PagoContent() {
       inst: displayResult?.inst ?? 0,
       sec: displayResult?.sec ?? 0,
       isOwn: displayResult?.isOwn ?? false,
+      formId: state.formId ?? '',
     }))
     sessionStorage.removeItem('wizardContext')
 

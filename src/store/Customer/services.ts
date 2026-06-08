@@ -98,7 +98,8 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
 
       console.log("--createCustomer--", input);
 
-      const formData: any = {
+      // For CREATE: use placeholder '-' when fields are missing (schema requires them)
+      const createData_input: any = {
         customerId,
         name: name || '-',
         typeOfResidence: typeOfResidence || '-',
@@ -113,7 +114,23 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
         zoomLevel: normalizedInput.zoomLevel ?? '15',
       };
 
-      const { data: createData, errors: createErrors } = await client.models.Customer.create(formData);
+      // For UPDATE: never overwrite name/phone with placeholder '-'
+      const updateData_input: any = {
+        customerId,
+        typeOfResidence: typeOfResidence || '-',
+        referenceAddress: referenceAddress || '-',
+        address: address || '-',
+        city: normalizedInput.city ?? '',
+        state: normalizedInput.state ?? '',
+        zipCode: normalizedInput.zipCode ?? '',
+        lat: normalizedInput.lat ?? '',
+        long: normalizedInput.long ?? '',
+        zoomLevel: normalizedInput.zoomLevel ?? '15',
+      };
+      if (name && name !== '-') updateData_input.name = name;
+      if (phone && phone !== '-') updateData_input.phone = phone;
+
+      const { data: createData, errors: createErrors } = await client.models.Customer.create(createData_input);
 
       if (!createErrors || createErrors.length === 0) {
         console.log("--createCustomer--resolve", createData);
@@ -126,7 +143,7 @@ export const createCustomer = async (input: customerInput): Promise<any> => {
       }
 
       console.log("--createCustomer--errors (retrying with update)", createErrors);
-      const { data: updateData, errors: updateErrors } = await client.models.Customer.update(formData);
+      const { data: updateData, errors: updateErrors } = await client.models.Customer.update(updateData_input);
 
       if (updateErrors && updateErrors.length > 0) {
         console.log("--updateCustomer--errors", updateErrors);

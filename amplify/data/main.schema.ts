@@ -136,22 +136,26 @@ export const MainSchema = a
       endDate: a.datetime(),
       timeZone: a.string(),
       duration: a.integer(),
+      isSuccessful: a.boolean().default(false),
+      appointmentDateTime: a.datetime(),
       // Explicitly define the timestamp fields you want to index
       createdAt: a.datetime(),
       updatedAt: a.datetime(),
       state: a.enum([
         "available", // disponible
         "reserved", // reservada lo libera webpayStatus si falla 15m
-        "payed", // pagada  
+        "payed", // pagada
         "payedAndAgended", // pagada y se genero en google calendar
         "error", // fallo
         "occupied", // no disponible
-        "stale", // paso la fecha  
+        "stale", // paso la fecha
         "timedOut", //expiro
         "waiting", //la transaccion inicio pero no ha terminado; espera a q la transaccion termine asi no es limpiada automaticamente 15m
       ]),
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
+      formId: a.id(),
+      ClientForm: a.belongsTo("ClientForm", "formId"),
       userId: a.id(),
       User: a.belongsTo("User", "userId"),
       ShoppingCartDetail: a.hasOne("ShoppingCartDetail", "calendarId"),
@@ -160,10 +164,12 @@ export const MainSchema = a
       .secondaryIndexes(index => [
         index('state').sortKeys(['startDate']).queryField("CalendarVisitsByState"),
         index("state").sortKeys(['updatedAt']).queryField("CalendarVisitsByStateAndUpdatedAt"),
+        index("state").sortKeys(["createdAt"]).queryField("CalendarVisitsByStateAndCreatedAt"),
       ]),
 
     Customer: a.model({
       customerId: a.id().required(), // definido como el email
+      customer_creation_date: a.datetime(),
       name: a.string().required(),
       phone: a.string().required(),
       address: a.string().default(""),
@@ -173,7 +179,9 @@ export const MainSchema = a
       lat: a.string().default(""),
       long: a.string().default(""),
       referenceAddress: a.string().default(""),
+      numberOfSuccessfulVisits: a.integer().default(0),
       zoomLevel: a.string().default("15"),
+      PaymentTransactions: a.hasMany("PaymentTransaction", "customerId"),
       typeOfResidence: a.enum(["house", "appartment", "other"]),
       ClientForms: a.hasMany("ClientForm", "customerId"),
       CalendarVisits: a.hasMany("CalendarVisit", "customerId"),
@@ -187,23 +195,37 @@ export const MainSchema = a
 
     ClientForm: a.model({
       formId: a.id().required(),
+      period: a.string(),
+      clientFormTimeScope: a.string().default("_ALL"),
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
       //form client
       isWallbox: a.boolean().required(), // cotizacion x 7 y 3.5 kw
       isPortable: a.boolean().required(), // 2.2
       isHouse: a.boolean().required(),
       distance: a.float().required(),
       numberOfChargers: a.integer().default(1),
+      currentStep: a.string(),
       //siempre sobrepuesto
+      apartmentFloor: a.string(),
+      parkingLevel: a.enum(["groundLevel", "underground1", "underground2", "underground3", "underground4"]),
+      hasVisitorParking: a.boolean(),
 
       //relationships
       customerId: a.id(),
       Customer: a.belongsTo("Customer", "customerId"),
       Estimates: a.hasMany("Estimate", "formId"),
+      CalendarVisits: a.hasMany("CalendarVisit", "formId"),
+      ShoppingCarts: a.hasMany("ShoppingCart", "formId"),
     })
-      .identifier(["formId"]),
+      .identifier(["formId"])
+      .secondaryIndexes(index => [
+        index("clientFormTimeScope").sortKeys(["createdAt"]).queryField("ClientFormsByCreatedAt"),
+      ]),
 
     WebContactForm: a.model({
       webContactFormId: a.id().required(),
+      period: a.string(),
       date: a.datetime().required(),
       type: a.enum(["EMA", "GRETA", "EVE", "OTHER"]),
       name: a.string(),
@@ -222,8 +244,13 @@ export const MainSchema = a
 
     Estimate: a.model({
       estimateId: a.id().required(),
+      period: a.string(),
       stateValidation: a.enum(["automated", "installerVerified", "installerModified"]),
       isApproved: a.boolean().default(false),
+      sourceUrl: a.string().default("ENERGICA"),
+      dealerAdditionalPercentage: a.float().default(0),
+      dealerAdditionalAmount: a.integer().default(0),
+      dealerFee: a.integer().default(0),
 
       //form installer
       isUnderground: a.boolean(), //para la automatica siempre sobrepuesto
@@ -274,7 +301,7 @@ export const MainSchema = a
       energicaNetCost: a.integer(),//costo de lo q le costo a energica
       energicaMargin: a.float(), //22%
       energicaMarginCost: a.integer(), //valor margen energica
-      netCost: a.integer(), //costo total sin iva + energica 
+      netCost: a.integer(), //costo total sin iva + energica
       vat: a.integer(), //vat
       vatPercentage: a.float(), //19%
       totalInstallationGross: a.integer(), //lo q ve el cliente, iva incluido
@@ -425,9 +452,10 @@ export const MainSchema = a
 
     ShoppingCart: a.model({
       shoppingCartId: a.id().required(),
+      period: a.string(),
       total: a.integer(), //precio
       vat: a.integer(), //iva
-      typeOfCart: a.enum(["product", "service", "input", "visit", "virtualVisit"]),
+      typeOfCart: a.enum(["product", "service", "input", "visit", "virtualVisit", "chargerInstallation"]),
       paymentMethod: a.enum(["transbank", "bank_transfer", "cash", "on_site"]), //metodo de pago
       status: a.enum(["pending", "completed", "cancelled", "timed_out"]), //status
 
@@ -439,6 +467,8 @@ export const MainSchema = a
       //cotizacion
       estimateId: a.id(),
       Estimate: a.belongsTo("Estimate", "estimateId"),
+      formId: a.id(),
+      ClientForm: a.belongsTo("ClientForm", "formId"),
 
       //transaccion
       paymentTransactionId: a.id(), //transaction transbank
@@ -452,7 +482,7 @@ export const MainSchema = a
       shoppingCartDetailId: a.id().required(),
       glosa: a.string(),
       price: a.integer(),
-      typeOfItem: a.enum(["product", "service", "input", "visit", "virtualVisit"]),
+      typeOfItem: a.enum(["product", "service", "input", "visit", "virtualVisit", "chargerInstallation"]),
       shoppingCartId: a.id(),
       ShoppingCart: a.belongsTo("ShoppingCart", "shoppingCartId"),
       productId: a.id(),
@@ -485,6 +515,7 @@ export const MainSchema = a
     PaymentTransaction: a
       .model({
         paymentTransactionId: a.id().required(),
+        period: a.string(),
         status: a.string(), //AUTHORIZED, ERROR, //transbank
         amount: a.float().default(0),
         paymentsProcessorCommission: a.float().default(0),
@@ -506,6 +537,8 @@ export const MainSchema = a
         createdAt: a.datetime(),
         updatedAt: a.datetime(),
         usersPaymentTransactionsId: a.id(),
+        customerId: a.id(),
+        Customer: a.belongsTo("Customer", "customerId"),
         shoppingCartId: a.id(),
         ShoppingCart: a.belongsTo("ShoppingCart", "shoppingCartId"),
       })

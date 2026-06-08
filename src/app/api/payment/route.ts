@@ -91,6 +91,7 @@ interface PaymentBody {
   tipo?: string
   chargerName?: string
   dist?: number
+  formId?: string
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -109,22 +110,24 @@ export async function POST(req: NextRequest) {
     email,
     glosa = 'Visita técnica instalación cargador EV',
     chargerName = 'Instalación cargador EV',
+    formId,
   } = body
 
   if (!total || total <= 0) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  // --ONLY TEST-- Bloque de modo de prueba: fuerza el monto a $6 CLP.
-  // --ONLY TEST-- Activado por la variable WEBPAY_TEST_MODE=true en .env.local.
-  // --ONLY TEST-- ELIMINAR este bloque completo antes de desplegar a producción.
-  const isTestMode = process.env.WEBPAY_TEST_MODE === 'true'
-  const effectiveTotal = isTestMode ? 6 : Math.round(total)
-  const effectiveVat   = isTestMode ? 1 : Math.round(vat)
-  if (isTestMode) {
-    console.warn('[payment] ⚠️  --ONLY TEST-- TEST MODE ACTIVO: monto forzado a $6 CLP (original: $' + total + ')')
-  }
-  // --ONLY TEST-- Fin del bloque de modo de prueba. ───────────────────────────
+  // TEST PAGOS ─ Fuerza el monto a $6 CLP para pruebas de Webpay.
+  // TEST PAGOS ─ Para reactivar: cambiar isTestMode a true.
+  // const isTestMode = true // TEST PAGOS
+  // const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
+  // const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
+  // if (isTestMode) {
+  //   console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
+  // }
+  // TEST PAGOS ─ Fin del bloque de prueba. ────────────────────────────────────
+  const effectiveTotal = Math.round(total)
+  const effectiveVat   = Math.round(vat)
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()
@@ -136,12 +139,13 @@ export async function POST(req: NextRequest) {
   try {
     const cartInput: Record<string, unknown> = {
       shoppingCartId,
-      total: effectiveTotal, // --ONLY TEST-- usar Math.round(total) en producción
-      vat: effectiveVat,     // --ONLY TEST-- usar Math.round(vat) en producción
+      total: effectiveTotal,
+      vat: effectiveVat,
       typeOfCart: 'chargerInstallation',
       paymentMethod: 'transbank',
       status: 'pending',
       ...(email ? { customerId: email } : {}),
+      ...(formId ? { formId } : {}),
     }
 
     console.log('[payment] Creating ShoppingCart:', JSON.stringify(cartInput))
@@ -168,7 +172,7 @@ export async function POST(req: NextRequest) {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
       glosa: chargerName,
-      price: effectiveTotal, // --ONLY TEST-- usar Math.round(total) en producción
+      price: effectiveTotal,
       typeOfItem: 'service',
     }
 

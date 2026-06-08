@@ -31,6 +31,8 @@ npm run lint
 npm run sl
 ```
 
+> **CRITICAL: Before pushing any changes to git remote, always run `npm run build` first. Only push if the build succeeds with zero errors. A failing build breaks the Vercel production deployment.**
+
 No test commands are configured. Environment is controlled via `NEXT_PUBLIC_ENVIRONMENT` (DEV | PROD) — set this in `.env.local` to switch Amplify backends.
 
 ## Cloud Infrastructure

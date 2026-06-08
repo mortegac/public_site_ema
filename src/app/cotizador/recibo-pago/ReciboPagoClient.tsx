@@ -31,6 +31,7 @@ interface PaymentData {
   inst?: number
   sec?: number
   isOwn?: boolean
+  formId?: string
 }
 
 interface DateSlot {
@@ -101,6 +102,18 @@ export default function ReciboPagoClient() {
       console.log('[recibo-pago] paymentData from sessionStorage:', JSON.stringify(parsed))
       console.log('[recibo-pago] email:', parsed?.email, '| customerId:', parsed?.customerId, '| shoppingCartId:', parsed?.shoppingCartId)
       setPaymentData(parsed)
+      // Update ClientForm step to PAID_PENDING_SCHEDULE on page load
+      if (parsed?.formId) {
+        fetch('/api/update-step', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formId: parsed.formId, step: '4' }),
+        })
+          .then(r => r.ok ? null : r.json().then(e => console.error('[recibo-pago] update-step error:', e)))
+          .catch(err => console.error('[recibo-pago] update-step fetch error:', err))
+      } else {
+        console.warn('[recibo-pago] no formId in paymentData — skipping currentStep update')
+      }
     } catch { /* ignore */ }
 
     // Fetch real calendar slots from API
@@ -257,6 +270,8 @@ export default function ReciboPagoClient() {
                         customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         address: paymentData?.address ?? '',
                         chargerName: paymentData?.chargerName ?? 'Instalación cargador EV',
+                        formId: paymentData?.formId ?? '',
+                        shoppingCartId: paymentData?.shoppingCartId ?? '',
                       }
                       console.log('[recibo-pago] ConfirmChargerVisit payload:', JSON.stringify(bookingPayload))
                       const res = await fetch('/api/confirm-charger-visit', {
@@ -270,6 +285,14 @@ export default function ReciboPagoClient() {
                         setBookingError(data.error)
                       } else {
                         sessionStorage.removeItem('paymentData')
+                        // Update ClientForm step to SCHEDULED
+                        if (paymentData?.formId) {
+                          fetch('/api/update-step', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ formId: paymentData.formId, step: '5' }),
+                          }).catch(() => null)
+                        }
                         setBooked(true)
                       }
                     } catch {

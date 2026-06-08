@@ -452,6 +452,7 @@ export default function CotizadorWizard() {
             isWallbox,
             distance: state.dist,
             numberOfChargers: 1,
+            ...(state.formId ? { existingFormId: state.formId } : {}),
           }),
         })
 
@@ -508,6 +509,17 @@ export default function CotizadorWizard() {
     if (state.step > 0) {
       update({ step: state.step - 1, activePanel: null })
     }
+  }
+
+  // ─── Step tracking helper ─────────────────────────────────────────────────────
+
+  function updateFormStep(formId: string | null, step: string) {
+    if (!formId) return
+    fetch('/api/update-step', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formId, step }),
+    }).catch(() => null)
   }
 
   // Calls /api/payment and immediately submits form to Webpay (no intermediate panel)
@@ -575,6 +587,32 @@ export default function CotizadorWizard() {
     const displayResult = state.apiResult ?? result
     if (!displayResult) return
 
+    // Ensure customer is saved with name when user clicks "Reservar instalación"
+    const customerEmail = (state.emailPago || state.emailSolo || '').trim().toLowerCase()
+    const customerName = state.nombreEmail?.trim()
+    if (customerEmail && /\S+@\S+\.\S+/.test(customerEmail)) {
+      fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: customerEmail,
+          ...(customerName ? { name: customerName } : {}),
+          address: state.address || '',
+          city: state.addressCity || '',
+          state: state.addressState || '',
+          zipCode: state.addressZipCode || '',
+          lat: state.addressLat || '',
+          lng: state.addressLng || '',
+          depto: state.depto || '',
+          typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
+          formId: state.formId ?? null,
+        }),
+      }).catch(() => null) // best-effort, don't block payment flow
+    }
+
+    // Update ClientForm step to PENDING_PAYMENT
+    updateFormStep(state.formId, '3')
+
     update({ webpayLoading: true, webpayError: '', webpayData: null, activePanel: 'pago' })
     console.log('[payment] Calling /api/payment...')
 
@@ -591,6 +629,7 @@ export default function CotizadorWizard() {
           chargerName: displayResult.chargerName,
           dist: state.dist,
           glosa: `Instalación Cargador eléctrico - ${state.dist} Mts`,
+          ...(state.formId ? { formId: state.formId } : {}),
         }),
       })
 
@@ -637,6 +676,8 @@ export default function CotizadorWizard() {
       inst: displayResult?.inst ?? 0,
       sec: displayResult?.sec ?? 0,
       isOwn: displayResult?.isOwn ?? false,
+      formId: state.formId ?? '',
+      customerName: state.nombreEmail ?? '',
     }))
     sessionStorage.removeItem('wizardContext')
 
@@ -671,6 +712,18 @@ export default function CotizadorWizard() {
         }),
       }).catch(() => null)
 
+      // Also save directly via /api/customer to ensure name is persisted reliably
+      fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: state.emailSolo,
+          name: state.nombreEmail,
+          address: state.address || '',
+          formId: state.formId ?? null,
+        }),
+      }).catch(() => null)
+
       // Build quote HTML for the email template
       const charger = CHARGERS.find(c => c.id === state.chargerId)
       const fmtN = (n: number) => Math.round(n).toLocaleString('es-CL')
@@ -693,7 +746,21 @@ export default function CotizadorWizard() {
           const linkRes = await fetch('/api/generate-payment-link', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ formId: state.formId, email: state.emailSolo }),
+            body: JSON.stringify({
+              formId: state.formId,
+              email: state.emailSolo,
+              tipo: state.tipo,
+              dist: state.dist,
+              mat: displayResult?.mat ?? 0,
+              inst: displayResult?.inst ?? 0,
+              sec: displayResult?.sec ?? 0,
+              chargerPrice: displayResult?.chargerPrice ?? 0,
+              chargerName: displayResult?.chargerName ?? '',
+              neto: displayResult?.neto ?? 0,
+              iva: displayResult?.iva ?? 0,
+              total: displayResult?.total ?? 0,
+              isOwn: displayResult?.isOwn ?? false,
+            }),
           })
           if (linkRes.ok) {
             const linkData = await linkRes.json()
@@ -808,7 +875,15 @@ export default function CotizadorWizard() {
         CONTENT_HTML: HTML,
       })
 
-      update({ emailSent: true, emailSending: false })
+      // Update ClientForm step to QUOTE_SENT
+      updateFormStep(state.formId, '2')
+
+      update({
+        emailSent: true,
+        emailSending: false,
+        // Pre-fill payment email + mark customer as saved (already saved via send-quote-to-email)
+        ...(state.emailSolo && !state.emailPago ? { emailPago: state.emailSolo, customerSaved: true } : {}),
+      })
     } catch {
       update({ emailSending: false, emailError: 'No se pudo enviar. Intenta nuevamente.' })
     }
@@ -2067,6 +2142,42 @@ export default function CotizadorWizard() {
                 <TextField
                   fullWidth
                   size="small"
+                  label="Tu nombre completo (opcional)"
+                  value={state.nombreEmail}
+                  onChange={e => update({ nombreEmail: e.target.value })}
+                  onBlur={async (e) => {
+                    const nombre = e.target.value.trim()
+                    const email = state.emailPago.trim().toLowerCase()
+                    if (!nombre || !email || !/\S+@\S+\.\S+/.test(email)) return
+                    update({ customerSaving: true, customerSaved: false })
+                    try {
+                      const res = await fetch('/api/customer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          email,
+                          name: nombre,
+                          address: state.address || '',
+                          city: state.addressCity || '',
+                          state: state.addressState || '',
+                          zipCode: state.addressZipCode || '',
+                          lat: state.addressLat || '',
+                          lng: state.addressLng || '',
+                          depto: state.depto || '',
+                          typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
+                          formId: state.formId ?? null,
+                        }),
+                      })
+                      update({ customerSaving: false, customerSaved: res.ok })
+                    } catch {
+                      update({ customerSaving: false, customerSaved: false })
+                    }
+                  }}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  fullWidth
+                  size="small"
                   required
                   label="Email para comprobante"
                   type="email"
@@ -2091,6 +2202,7 @@ export default function CotizadorWizard() {
                           depto: state.depto || '',
                           typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
                           formId: state.formId ?? null,
+                          ...(state.nombreEmail?.trim() ? { name: state.nombreEmail.trim() } : {}),
                         }),
                       })
                       update({ customerSaving: false, customerSaved: res.ok })

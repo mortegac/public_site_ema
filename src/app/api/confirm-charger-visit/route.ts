@@ -57,11 +57,31 @@ const CONFIRM_CHARGER_VISIT = /* GraphQL */ `
   }
 `
 
+const UPDATE_CALENDAR_VISIT_FORMID = /* GraphQL */ `
+  mutation UpdateCalendarVisitFormId($input: UpdateCalendarVisitInput!) {
+    updateCalendarVisit(input: $input) {
+      calendarId
+      formId
+    }
+  }
+`
+
+const UPDATE_SHOPPING_CART_FORMID = /* GraphQL */ `
+  mutation UpdateShoppingCartFormId($input: UpdateShoppingCartInput!) {
+    updateShoppingCart(input: $input) {
+      shoppingCartId
+      formId
+    }
+  }
+`
+
 interface ConfirmBody {
   calendarId: string
   customerId: string
   address?: string
   chargerName?: string
+  formId?: string
+  shoppingCartId?: string
 }
 
 export async function POST(req: NextRequest) {
@@ -73,7 +93,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { calendarId, customerId, address, chargerName } = body
+  const { calendarId, customerId, address, chargerName, formId, shoppingCartId } = body
 
   if (!calendarId || !customerId) {
     return NextResponse.json({ error: 'calendarId and customerId are required' }, { status: 400 })
@@ -97,6 +117,24 @@ export async function POST(req: NextRequest) {
 
     if (!result?.calendarId) {
       return NextResponse.json({ error: result?.message ?? 'Booking failed' }, { status: 502 })
+    }
+
+    // Best-effort: associate formId with CalendarVisit and ShoppingCart.
+    // Failures here are logged but do NOT affect the booking response.
+    if (formId) {
+      callAppSync(appsyncUrl, apiKey, UPDATE_CALENDAR_VISIT_FORMID, {
+        input: { calendarId: result.calendarId, formId },
+      }, 'updateCalendarVisitFormId').catch(err =>
+        console.error('[confirm-charger-visit] updateCalendarVisit formId failed (non-critical):', err)
+      )
+
+      if (shoppingCartId) {
+        callAppSync(appsyncUrl, apiKey, UPDATE_SHOPPING_CART_FORMID, {
+          input: { shoppingCartId, formId },
+        }, 'updateShoppingCartFormId').catch(err =>
+          console.error('[confirm-charger-visit] updateShoppingCart formId failed (non-critical):', err)
+        )
+      }
     }
 
     return NextResponse.json({ message: result.message, calendarId: result.calendarId })

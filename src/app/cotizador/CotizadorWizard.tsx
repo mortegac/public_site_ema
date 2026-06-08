@@ -805,8 +805,8 @@ export default function CotizadorWizard() {
       update({
         emailSent: true,
         emailSending: false,
-        // Pre-fill payment email if not already set
-        ...(state.emailSolo && !state.emailPago ? { emailPago: state.emailSolo } : {}),
+        // Pre-fill payment email + mark customer as saved (already saved via send-quote-to-email)
+        ...(state.emailSolo && !state.emailPago ? { emailPago: state.emailSolo, customerSaved: true } : {}),
       })
     } catch {
       update({ emailSending: false, emailError: 'No se pudo enviar. Intenta nuevamente.' })

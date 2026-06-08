@@ -102,6 +102,14 @@ export default function ReciboPagoClient() {
       console.log('[recibo-pago] paymentData from sessionStorage:', JSON.stringify(parsed))
       console.log('[recibo-pago] email:', parsed?.email, '| customerId:', parsed?.customerId, '| shoppingCartId:', parsed?.shoppingCartId)
       setPaymentData(parsed)
+      // Update ClientForm step to PAID_PENDING_SCHEDULE on page load
+      if (parsed?.formId) {
+        fetch('/api/update-step', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formId: parsed.formId, step: '4' }),
+        }).catch(() => null)
+      }
     } catch { /* ignore */ }
 
     // Fetch real calendar slots from API

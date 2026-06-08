@@ -147,6 +147,26 @@ async function sendReceiptEmail(params: {
     </td>
   </tr>` : '<tr><td style="height:28px;font-size:0;line-height:0;">&nbsp;</td></tr>'
 
+  // Generate signed agenda link (JWT) for the CTA button in the receipt email
+  let agendaUrl = 'https://www.energica.city/cotizador/agenda'
+  if (resolvedEmail) {
+    try {
+      const agendaRes = await fetch('/api/generate-agenda-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: resolvedEmail,
+          ...(customerName && customerName !== resolvedEmail ? { name: customerName } : {}),
+          ...(sessionData.formId ? { formId: String(sessionData.formId) } : {}),
+        }),
+      })
+      if (agendaRes.ok) {
+        const agendaData = await agendaRes.json()
+        agendaUrl = agendaData.url
+      }
+    } catch { /* keep fallback url */ }
+  }
+
   const HTML = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F4F5F7" style="background-color:#F4F5F7;"><tr><td align="center" style="padding:32px 16px;">
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#FFFFFF" style="width:600px;max-width:600px;background-color:#FFFFFF;border-radius:12px;overflow:hidden;">
     <tr><td style="padding:22px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
@@ -201,6 +221,10 @@ async function sendReceiptEmail(params: {
           </table>
         </td></tr>
       </table>
+    </td></tr>
+    <tr><td style="padding:28px 36px 8px 36px;text-align:center;">
+      <a href="${agendaUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#f0386b;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;padding:14px 36px;border-radius:8px;min-width:220px;">Reservar instalaci&oacute;n</a>
+      <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#6B7280;margin:8px 0 0 0;">Reserva tu instalaci&oacute;n y agenda la visita t&eacute;cnica de confirmaci&oacute;n.</p>
     </td></tr>
     ${chargerDomRow}
   </table>

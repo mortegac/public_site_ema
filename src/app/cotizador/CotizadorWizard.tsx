@@ -539,6 +539,7 @@ export default function CotizadorWizard() {
           chargerName: displayResult.chargerName,
           dist: state.dist,
           glosa: `Instalación Cargador eléctrico - ${state.dist} Mts`,
+          ...(state.formId ? { formId: state.formId } : {}),
         }),
       })
 
@@ -1329,8 +1330,7 @@ export default function CotizadorWizard() {
                 <TextField
                   fullWidth
                   size="small"
-                  required
-                  label="Tu nombre completo"
+                  label="Tu nombre completo (opcional)"
                   value={state.nombreEmail}
                   onChange={e => update({ nombreEmail: e.target.value })}
                   onBlur={async (e) => {

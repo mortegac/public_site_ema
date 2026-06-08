@@ -91,6 +91,7 @@ interface PaymentBody {
   tipo?: string
   chargerName?: string
   dist?: number
+  formId?: string
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -109,6 +110,7 @@ export async function POST(req: NextRequest) {
     email,
     glosa = 'Visita técnica instalación cargador EV',
     chargerName = 'Instalación cargador EV',
+    formId,
   } = body
 
   if (!total || total <= 0) {
@@ -142,6 +144,7 @@ export async function POST(req: NextRequest) {
       paymentMethod: 'transbank',
       status: 'pending',
       ...(email ? { customerId: email } : {}),
+      ...(formId ? { formId } : {}),
     }
 
     console.log('[payment] Creating ShoppingCart:', JSON.stringify(cartInput))

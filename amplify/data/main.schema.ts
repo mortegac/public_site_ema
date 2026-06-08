@@ -205,6 +205,7 @@ export const MainSchema = a
       isHouse: a.boolean().required(),
       distance: a.float().required(),
       numberOfChargers: a.integer().default(1),
+      currentStep: a.string(),
       //siempre sobrepuesto
       apartmentFloor: a.string(),
       parkingLevel: a.enum(["groundLevel", "underground1", "underground2", "underground3", "underground4"]),

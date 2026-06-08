@@ -117,16 +117,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  // --ONLY TEST-- Bloque de modo de prueba: fuerza el monto a $6 CLP.
-  // --ONLY TEST-- Activado por la variable WEBPAY_TEST_MODE=true en .env.local.
-  // --ONLY TEST-- ELIMINAR este bloque completo antes de desplegar a producción.
-  const isTestMode = process.env.WEBPAY_TEST_MODE === 'true'
-  const effectiveTotal = isTestMode ? 6 : Math.round(total)
-  const effectiveVat   = isTestMode ? 1 : Math.round(vat)
+  // TEST PAGOS ─ Fuerza el monto a $6 CLP para pruebas de Webpay.
+  // TEST PAGOS ─ Eliminar este bloque completo al pasar a producción.
+  const isTestMode = true // TEST PAGOS
+  const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
+  const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
   if (isTestMode) {
-    console.warn('[payment] ⚠️  --ONLY TEST-- TEST MODE ACTIVO: monto forzado a $6 CLP (original: $' + total + ')')
+    console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
   }
-  // --ONLY TEST-- Fin del bloque de modo de prueba. ───────────────────────────
+  // TEST PAGOS ─ Fin del bloque de prueba. ────────────────────────────────────
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()
@@ -138,8 +137,8 @@ export async function POST(req: NextRequest) {
   try {
     const cartInput: Record<string, unknown> = {
       shoppingCartId,
-      total: effectiveTotal, // --ONLY TEST-- usar Math.round(total) en producción
-      vat: effectiveVat,     // --ONLY TEST-- usar Math.round(vat) en producción
+      total: effectiveTotal, // TEST PAGOS — usar Math.round(total) en producción
+      vat: effectiveVat,     // TEST PAGOS — usar Math.round(vat) en producción
       typeOfCart: 'chargerInstallation',
       paymentMethod: 'transbank',
       status: 'pending',
@@ -171,7 +170,7 @@ export async function POST(req: NextRequest) {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
       glosa: chargerName,
-      price: effectiveTotal, // --ONLY TEST-- usar Math.round(total) en producción
+      price: effectiveTotal, // TEST PAGOS — usar Math.round(total) en producción
       typeOfItem: 'service',
     }
 

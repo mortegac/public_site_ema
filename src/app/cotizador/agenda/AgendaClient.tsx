@@ -217,10 +217,11 @@ function AgendaContent() {
   const token = [...searchParams.keys()][0] ?? ''
   const jwtPayload = decodeJwtPayload(token)
 
-  const paymentData: PaymentData = {
-    email: jwtPayload?.email ?? jwtPayload?.sub ?? '',
-    customerId: jwtPayload?.email ?? jwtPayload?.sub ?? '',
-  }
+  const emailFromJwt = jwtPayload?.email ?? jwtPayload?.sub ?? ''
+  const [paymentData, setPaymentData] = useState<PaymentData>({
+    email: emailFromJwt,
+    customerId: emailFromJwt,
+  })
 
   const [dates, setDates] = useState<DateSlot[]>([])
   const [selectedDate, setSelectedDate] = useState<number | null>(null)
@@ -236,14 +237,51 @@ function AgendaContent() {
     if (hasRead.current) return
     hasRead.current = true
 
-    const customerId = paymentData.customerId ?? paymentData.email ?? ''
+    const customerId = emailFromJwt
 
     const run = async () => {
       // Mark form as PAID_PENDING_SCHEDULE when customer visits /cotizador/agenda
-      updateFormStep(jwtPayload?.formid, '4')
+      const formIdForStep = jwtPayload?.formid
+      if (formIdForStep) {
+        fetch('/api/update-step', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formId: formIdForStep, step: '4' }),
+        })
+          .then(r => r.ok ? null : r.json().then(e => console.error('[agenda] update-step error:', e)))
+          .catch(err => console.error('[agenda] update-step fetch error:', err))
+      } else {
+        console.warn('[agenda] no formid in JWT — skipping currentStep update')
+      }
 
       // 1. Check if customer already has an active booking
       const formId = jwtPayload?.formid ?? ''
+
+      // Fetch quote data from DB to populate summary card (non-blocking)
+      if (formId) {
+        fetch(`/api/quote?formId=${encodeURIComponent(formId)}`)
+          .then(r => r.ok ? r.json() : null)
+          .then(q => {
+            if (!q) return
+            setPaymentData(prev => ({
+              ...prev,
+              tipo: q.tipo ?? prev.tipo,
+              chargerName: q.chargerName ?? prev.chargerName,
+              dist: q.dist ?? prev.dist,
+              address: q.address ?? prev.address,
+              total: q.total ?? prev.total,
+              neto: q.neto ?? prev.neto,
+              iva: q.iva ?? prev.iva,
+              chargerPrice: q.chargerPrice ?? prev.chargerPrice,
+              mat: q.mat ?? prev.mat,
+              inst: q.inst ?? prev.inst,
+              sec: q.sec ?? prev.sec,
+              isOwn: q.isOwn ?? prev.isOwn,
+            }))
+          })
+          .catch(() => null)
+      }
+
       if (formId || customerId) {
         try {
           const params = new URLSearchParams()

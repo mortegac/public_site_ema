@@ -108,7 +108,11 @@ export default function ReciboPagoClient() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ formId: parsed.formId, step: '4' }),
-        }).catch(() => null)
+        })
+          .then(r => r.ok ? null : r.json().then(e => console.error('[recibo-pago] update-step error:', e)))
+          .catch(err => console.error('[recibo-pago] update-step fetch error:', err))
+      } else {
+        console.warn('[recibo-pago] no formId in paymentData — skipping currentStep update')
       }
     } catch { /* ignore */ }
 

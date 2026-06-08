@@ -28,7 +28,7 @@ async function callAppSync(
 }
 
 const GET_CUSTOMER = /* GraphQL */ `
-  query GetCustomer($customerId: String!) {
+  query GetCustomer($customerId: ID!) {
     getCustomer(customerId: $customerId) {
       customerId
       name
@@ -85,34 +85,33 @@ export async function POST(req: NextRequest) {
   const { url, apiKey } = getAppSyncConfig()
   const customerId = email.trim().toLowerCase()
 
-  // ── Create or update Customer ─────────────────────────────────────────────
+  // ── Upsert Customer via the same robust pattern as /api/customer ─────────
   try {
-    const existing = await callAppSync(url, apiKey, GET_CUSTOMER, { customerId }).catch(() => null)
-
-    if (existing?.getCustomer) {
-      await callAppSync(url, apiKey, UPDATE_CUSTOMER, {
-        input: { customerId, name: name.trim(), ...(address ? { address } : {}) },
-      }).catch(() => null)
-    } else {
-      await callAppSync(url, apiKey, CREATE_CUSTOMER, {
-        input: {
-          customerId,
-          name: name.trim(),
-          phone: '',
-          address: address ?? '',
-          city: '',
-          state: '',
-          zipCode: '',
-          lat: '',
-          long: '',
-          referenceAddress: '',
-          zoomLevel: '15',
-          numberOfSuccessfulVisits: 0,
-        },
-      })
+    // Try CREATE first (will fail with ConditionalCheckFailed if already exists)
+    const createInput = {
+      customerId,
+      name: name.trim(),
+      phone: '-',
+      address: address ?? '',
+      city: '',
+      state: '',
+      zipCode: '',
+      lat: '',
+      long: '',
+      referenceAddress: '',
+      zoomLevel: '15',
     }
-  } catch (err) {
-    console.error('[send-quote-to-email] customer upsert error:', err)
+    await callAppSync(url, apiKey, CREATE_CUSTOMER, { input: createInput })
+  } catch {
+    // Customer already exists — UPDATE name (and address if provided)
+    // Never overwrite with placeholder; only update fields with real values
+    const updateInput: Record<string, unknown> = { customerId, name: name.trim() }
+    if (address?.trim()) updateInput.address = address.trim()
+    try {
+      await callAppSync(url, apiKey, UPDATE_CUSTOMER, { input: updateInput })
+    } catch (updateErr) {
+      console.error('[send-quote-to-email] updateCustomer error:', updateErr)
+    }
   }
 
   // ── Link ClientForm to Customer ───────────────────────────────────────────

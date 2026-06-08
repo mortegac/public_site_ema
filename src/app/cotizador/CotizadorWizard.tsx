@@ -500,6 +500,29 @@ export default function CotizadorWizard() {
     const displayResult = state.apiResult ?? result
     if (!displayResult) return
 
+    // Ensure customer is saved with name when user clicks "Reservar instalación"
+    const customerEmail = (state.emailPago || state.emailSolo || '').trim().toLowerCase()
+    const customerName = state.nombreEmail?.trim()
+    if (customerEmail && /\S+@\S+\.\S+/.test(customerEmail)) {
+      fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: customerEmail,
+          ...(customerName ? { name: customerName } : {}),
+          address: state.address || '',
+          city: state.addressCity || '',
+          state: state.addressState || '',
+          zipCode: state.addressZipCode || '',
+          lat: state.addressLat || '',
+          lng: state.addressLng || '',
+          depto: state.depto || '',
+          typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
+          formId: state.formId ?? null,
+        }),
+      }).catch(() => null) // best-effort, don't block payment flow
+    }
+
     update({ webpayLoading: true, webpayError: '', webpayData: null, activePanel: 'pago' })
     console.log('[payment] Calling /api/payment...')
 
@@ -595,6 +618,18 @@ export default function CotizadorWizard() {
           email: state.emailSolo,
           formId: state.formId,
           address: state.address,
+        }),
+      }).catch(() => null)
+
+      // Also save directly via /api/customer to ensure name is persisted reliably
+      fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: state.emailSolo,
+          name: state.nombreEmail,
+          address: state.address || '',
+          formId: state.formId ?? null,
         }),
       }).catch(() => null)
 
@@ -749,7 +784,12 @@ export default function CotizadorWizard() {
         CONTENT_HTML: HTML,
       })
 
-      update({ emailSent: true, emailSending: false })
+      update({
+        emailSent: true,
+        emailSending: false,
+        // Pre-fill payment email if not already set
+        ...(state.emailSolo && !state.emailPago ? { emailPago: state.emailSolo } : {}),
+      })
     } catch {
       update({ emailSending: false, emailError: 'No se pudo enviar. Intenta nuevamente.' })
     }

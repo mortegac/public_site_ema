@@ -388,6 +388,7 @@ function PagoContent() {
       inst: displayResult?.inst ?? 0,
       sec: displayResult?.sec ?? 0,
       isOwn: displayResult?.isOwn ?? false,
+      formId: state.formId ?? '',
     }))
     sessionStorage.removeItem('wizardContext')
 

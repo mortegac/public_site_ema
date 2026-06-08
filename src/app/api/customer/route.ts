@@ -54,6 +54,8 @@ const UPDATE_CLIENT_FORM = /* GraphQL */ `
 
 interface CustomerBody {
   email: string
+  name?: string
+  phone?: string
   address?: string
   city?: string
   state?: string
@@ -82,7 +84,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { email, address, city, state, zipCode, lat, lng, depto, typeOfResidence, formId } = body
+  const { email, address, city, state, zipCode, lat, lng, depto, typeOfResidence, formId, name, phone } = body
 
   if (!email?.trim()) {
     return NextResponse.json({ error: 'email is required' }, { status: 400 })
@@ -91,10 +93,10 @@ export async function POST(req: NextRequest) {
   const { url, apiKey } = getAppSyncConfig()
   const customerId = normalizeEmail(email)
 
-  const customerInput = {
+  const createInput = {
     customerId,
-    name: '-',
-    phone: '-',
+    name: name?.trim() || '-',
+    phone: phone?.trim() || '-',
     address: address ?? '',
     city: city ?? '',
     state: state ?? '',
@@ -106,12 +108,27 @@ export async function POST(req: NextRequest) {
     typeOfResidence: typeOfResidence ?? 'other',
   }
 
+  const updateInput: Record<string, unknown> = {
+    customerId,
+    address: address ?? '',
+    city: city ?? '',
+    state: state ?? '',
+    zipCode: zipCode ?? '',
+    lat: lat ?? '',
+    long: lng ?? '',
+    referenceAddress: depto ?? '',
+    zoomLevel: '15',
+    typeOfResidence: typeOfResidence ?? 'other',
+  }
+  if (name?.trim() && name.trim() !== '-') updateInput.name = name.trim()
+  if (phone?.trim() && phone.trim() !== '-') updateInput.phone = phone.trim()
+
   // ── Upsert: CREATE first, UPDATE as fallback (mirrors services.ts pattern) ──
   try {
-    await callAppSync(url, apiKey, CREATE_CUSTOMER, { input: customerInput })
+    await callAppSync(url, apiKey, CREATE_CUSTOMER, { input: createInput })
   } catch {
     try {
-      await callAppSync(url, apiKey, UPDATE_CUSTOMER, { input: customerInput })
+      await callAppSync(url, apiKey, UPDATE_CUSTOMER, { input: updateInput })
     } catch (updateErr) {
       console.error('[customer] upsert error:', updateErr)
       return NextResponse.json({ error: 'Failed to save customer' }, { status: 500 })

@@ -1312,6 +1312,7 @@ export default function CotizadorWizard() {
                           depto: state.depto || '',
                           typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
                           formId: state.formId ?? null,
+                          ...(state.nombreEmail?.trim() ? { name: state.nombreEmail.trim() } : {}),
                         }),
                       })
                       update({ customerSaving: false, customerSaved: res.ok })

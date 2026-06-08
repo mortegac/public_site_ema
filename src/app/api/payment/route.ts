@@ -118,14 +118,16 @@ export async function POST(req: NextRequest) {
   }
 
   // TEST PAGOS ─ Fuerza el monto a $6 CLP para pruebas de Webpay.
-  // TEST PAGOS ─ Eliminar este bloque completo al pasar a producción.
-  const isTestMode = true // TEST PAGOS
-  const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
-  const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
-  if (isTestMode) {
-    console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
-  }
+  // TEST PAGOS ─ Para reactivar: cambiar isTestMode a true.
+  // const isTestMode = true // TEST PAGOS
+  // const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
+  // const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
+  // if (isTestMode) {
+  //   console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
+  // }
   // TEST PAGOS ─ Fin del bloque de prueba. ────────────────────────────────────
+  const effectiveTotal = Math.round(total)
+  const effectiveVat   = Math.round(vat)
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()
@@ -137,8 +139,8 @@ export async function POST(req: NextRequest) {
   try {
     const cartInput: Record<string, unknown> = {
       shoppingCartId,
-      total: effectiveTotal, // TEST PAGOS — usar Math.round(total) en producción
-      vat: effectiveVat,     // TEST PAGOS — usar Math.round(vat) en producción
+      total: effectiveTotal,
+      vat: effectiveVat,
       typeOfCart: 'chargerInstallation',
       paymentMethod: 'transbank',
       status: 'pending',
@@ -170,7 +172,7 @@ export async function POST(req: NextRequest) {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
       glosa: chargerName,
-      price: effectiveTotal, // TEST PAGOS — usar Math.round(total) en producción
+      price: effectiveTotal,
       typeOfItem: 'service',
     }
 

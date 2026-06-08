@@ -563,6 +563,7 @@ export default function CotizadorWizard() {
       sec: displayResult?.sec ?? 0,
       isOwn: displayResult?.isOwn ?? false,
       formId: state.formId ?? '',
+      customerName: state.nombreEmail ?? '',
     }))
     sessionStorage.removeItem('wizardContext')
 
@@ -1283,6 +1284,43 @@ export default function CotizadorWizard() {
                   label="Depto / Referencia (opcional)"
                   value={state.depto}
                   onChange={e => update({ depto: e.target.value })}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  label="Tu nombre completo"
+                  value={state.nombreEmail}
+                  onChange={e => update({ nombreEmail: e.target.value })}
+                  onBlur={async (e) => {
+                    const nombre = e.target.value.trim()
+                    const email = state.emailPago.trim().toLowerCase()
+                    if (!nombre || !email || !/\S+@\S+\.\S+/.test(email)) return
+                    update({ customerSaving: true, customerSaved: false })
+                    try {
+                      const res = await fetch('/api/customer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          email,
+                          name: nombre,
+                          address: state.address || '',
+                          city: state.addressCity || '',
+                          state: state.addressState || '',
+                          zipCode: state.addressZipCode || '',
+                          lat: state.addressLat || '',
+                          lng: state.addressLng || '',
+                          depto: state.depto || '',
+                          typeOfResidence: state.tipo === 'casa' ? 'house' : state.tipo === 'edificio' ? 'appartment' : 'other',
+                          formId: state.formId ?? null,
+                        }),
+                      })
+                      update({ customerSaving: false, customerSaved: res.ok })
+                    } catch {
+                      update({ customerSaving: false, customerSaved: false })
+                    }
+                  }}
                   sx={{ mb: 2 }}
                 />
                 <TextField

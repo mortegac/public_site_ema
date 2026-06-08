@@ -492,6 +492,17 @@ export default function CotizadorWizard() {
     }
   }
 
+  // ─── Step tracking helper ─────────────────────────────────────────────────────
+
+  function updateFormStep(formId: string | null, step: string) {
+    if (!formId) return
+    fetch('/api/update-step', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formId, step }),
+    }).catch(() => null)
+  }
+
   // ─── Webpay payment flow ─────────────────────────────────────────────────────
 
   // Step 1: called when user presses "Pagar e iniciar proceso de instalación"
@@ -522,6 +533,9 @@ export default function CotizadorWizard() {
         }),
       }).catch(() => null) // best-effort, don't block payment flow
     }
+
+    // Update ClientForm step to PENDING_PAYMENT
+    updateFormStep(state.formId, '3')
 
     update({ webpayLoading: true, webpayError: '', webpayData: null, activePanel: 'pago' })
     console.log('[payment] Calling /api/payment...')
@@ -784,6 +798,9 @@ export default function CotizadorWizard() {
         subject: 'Resultado de su cotización',
         CONTENT_HTML: HTML,
       })
+
+      // Update ClientForm step to QUOTE_SENT
+      updateFormStep(state.formId, '2')
 
       update({
         emailSent: true,

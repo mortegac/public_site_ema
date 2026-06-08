@@ -59,6 +59,15 @@ function decodeJwtPayload(token: string): JwtPayload | null {
   }
 }
 
+function updateFormStep(formId: string | null | undefined, step: string) {
+  if (!formId) return
+  fetch('/api/update-step', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ formId, step }),
+  }).catch(() => null)
+}
+
 function Stepper({ step, labels }: { step: number; labels: string[] }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', mb: 4 }}>
@@ -230,6 +239,9 @@ function AgendaContent() {
     const customerId = paymentData.customerId ?? paymentData.email ?? ''
 
     const run = async () => {
+      // Mark form as PAID_PENDING_SCHEDULE when customer visits /cotizador/agenda
+      updateFormStep(jwtPayload?.formid, '4')
+
       // 1. Check if customer already has an active booking
       const formId = jwtPayload?.formid ?? ''
       if (formId || customerId) {

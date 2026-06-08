@@ -273,6 +273,14 @@ export default function ReciboPagoClient() {
                         setBookingError(data.error)
                       } else {
                         sessionStorage.removeItem('paymentData')
+                        // Update ClientForm step to SCHEDULED
+                        if (paymentData?.formId) {
+                          fetch('/api/update-step', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ formId: paymentData.formId, step: '5' }),
+                          }).catch(() => null)
+                        }
                         setBooked(true)
                       }
                     } catch {

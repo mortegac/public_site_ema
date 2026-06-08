@@ -709,6 +709,18 @@ const ReturnPage = () => {
                     resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
                 ) {
                     console.log("----REDIRECT--- /cotizador/recibo-pago");
+                    // Update ClientForm step to PAID_PENDING_SCHEDULE
+                    try {
+                      const rawPd = sessionStorage.getItem('paymentData')
+                      const storedFormId = rawPd ? (JSON.parse(rawPd) as Record<string, unknown>)?.formId : undefined
+                      if (storedFormId) {
+                        fetch('/api/update-step', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ formId: storedFormId, step: '4' }),
+                        }).catch(() => null)
+                      }
+                    } catch {}
                     router.push('/cotizador/recibo-pago');
                 } else {
                     // product | service | input

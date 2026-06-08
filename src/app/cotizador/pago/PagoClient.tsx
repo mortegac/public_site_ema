@@ -191,6 +191,16 @@ function calcResult(state: WizardState): CalcResult | null {
   return { mat, inst, sec, chargerPrice, chargerName, neto, iva, total: neto + iva, isOwn: state.chargerId === 'own' }
 }
 
+// ─── Step tracker (fire-and-forget) ──────────────────────────────────────────
+function updateFormStep(formId: string | null | undefined, step: string) {
+  if (!formId) return
+  fetch('/api/update-step', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ formId, step }),
+  }).catch(() => null)
+}
+
 // ─── Main inner component (needs useSearchParams so must be wrapped in Suspense) ──
 function PagoContent() {
   const searchParams = useSearchParams()
@@ -303,6 +313,8 @@ function PagoContent() {
             },
           }),
         })
+        // Mark form as PENDING_PAYMENT when customer visits /cotizador/pago
+        updateFormStep(data.formId ?? formId, '3')
       })
       .catch((err) => {
         if (err?.name === 'AbortError') return

@@ -153,6 +153,7 @@ export async function POST(req: NextRequest) {
     isPortable,
     distance: distance ?? 10,
     numberOfChargers,
+    currentStep: '1',  // DRAFT — form created, user entering data
   }
 
   try {

@@ -114,6 +114,15 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               >
                 Contactar
               </Button>
+              <Button
+                component={Link}
+                href="/cotizador"
+                variant="contained"
+                size="large"
+                sx={{ bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' } }}
+              >
+                Ir al nuevo cotizador
+              </Button>
             </Box>
           </Container> 
         <Footer />

@@ -54,6 +54,9 @@ const CREATE_CLIENT_FORM = /* GraphQL */ `
       isHouse
       distance
       numberOfChargers
+      apartmentFloor
+      parkingLevel
+      hasVisitorParking
       customerId
       createdAt
       updatedAt
@@ -70,6 +73,9 @@ const UPDATE_CLIENT_FORM = /* GraphQL */ `
       isHouse
       distance
       numberOfChargers
+      apartmentFloor
+      parkingLevel
+      hasVisitorParking
     }
   }
 `
@@ -118,6 +124,9 @@ interface CotizarBody {
   distance: number
   numberOfChargers?: number
   existingFormId?: string
+  apartmentFloor?: string
+  parkingLevel?: string
+  hasVisitorParking?: boolean
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -130,7 +139,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { isHouse, isWallbox, isPortable, distance, numberOfChargers = 1, existingFormId } = body
+  const { isHouse, isWallbox, isPortable, distance, numberOfChargers = 1, existingFormId, apartmentFloor, parkingLevel, hasVisitorParking } = body
 
   if (typeof isHouse !== 'boolean' || typeof isWallbox !== 'boolean' || typeof isPortable !== 'boolean') {
     return NextResponse.json(
@@ -153,7 +162,10 @@ export async function POST(req: NextRequest) {
     isPortable,
     distance: distance ?? 10,
     numberOfChargers,
-    currentStep: '1',  // DRAFT — form created, user entering data
+    currentStep: '1',
+    ...(apartmentFloor !== undefined ? { apartmentFloor } : {}),
+    ...(parkingLevel !== undefined ? { parkingLevel } : {}),
+    ...(hasVisitorParking !== undefined ? { hasVisitorParking } : {}),
   }
 
   try {

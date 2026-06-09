@@ -609,7 +609,7 @@ export default function ArticlePage() {
                   Cotizar instalación
                 </Box>
               </Link>
-              <Link href="/agenda" style={{ textDecoration: 'none' }}>
+              <Link href="/cotizador" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
                     px: 4,

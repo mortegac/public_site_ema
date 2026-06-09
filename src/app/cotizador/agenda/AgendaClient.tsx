@@ -30,6 +30,7 @@ interface PaymentData {
   inst?: number
   sec?: number
   isOwn?: boolean
+  formId?: string
 }
 
 interface DateSlot {
@@ -218,9 +219,23 @@ function AgendaContent() {
   const jwtPayload = decodeJwtPayload(token)
 
   const emailFromJwt = jwtPayload?.email ?? jwtPayload?.sub ?? ''
-  const [paymentData, setPaymentData] = useState<PaymentData>({
-    email: emailFromJwt,
-    customerId: emailFromJwt,
+  const [paymentData, setPaymentData] = useState<PaymentData>(() => {
+    if (emailFromJwt) return { email: emailFromJwt, customerId: emailFromJwt }
+    try {
+      const stored = typeof window !== 'undefined' ? sessionStorage.getItem('paymentData') : null
+      if (stored) {
+        const d = JSON.parse(stored)
+        return {
+          email: d.email ?? '',
+          customerId: d.email ?? '',
+          address: d.address ?? '',
+          chargerName: d.chargerName ?? '',
+          formId: d.formId ?? '',
+          tipo: d.tipo ?? '',
+        }
+      }
+    } catch {}
+    return { email: '', customerId: '' }
   })
 
   const [dates, setDates] = useState<DateSlot[]>([])
@@ -466,12 +481,13 @@ function AgendaContent() {
                     setBookingLoading(true)
                     setBookingError('')
                     try {
+                      const sessionFormId = (() => { try { return JSON.parse(sessionStorage.getItem('paymentData') ?? '{}')?.formId ?? '' } catch { return '' } })()
                       const bookingPayload = {
                         calendarId,
                         customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         address: paymentData?.address ?? '',
                         chargerName: paymentData?.chargerName ?? 'Instalación cargador EV',
-                        formId: jwtPayload?.formid ?? '',
+                        formId: jwtPayload?.formid ?? sessionFormId,
                       }
                       const res = await fetch('/api/confirm-charger-visit', {
                         method: 'POST',

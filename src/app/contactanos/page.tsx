@@ -47,7 +47,7 @@ const HomePage = () => {
         description="Si quieres saber más de Enérgica City o lo que hacemos, conocer más de nuestros servicios para apoyar a tu empresa para dar el siguiente paso hacia la electromovilidad o simplemente cotizar, escríbenos un mensaje. Te responderemos lo antes posible."
 
         buttonText="Agenda tu visita"
-        buttonURI="/agenda"
+        buttonURI="/cotizador"
 
         buttonTextTwo="Simula el costo de la instalación"
         buttonURITwo="/cotizador"

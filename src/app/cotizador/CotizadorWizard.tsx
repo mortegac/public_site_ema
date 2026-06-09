@@ -121,7 +121,8 @@ interface WizardState {
   tipoC: 'portable' | 'wallbox' | null
   chargerId: string | null
   dist: number
-  activePanel: 'pago' | 'email' | null
+  activePanel: 'pago' | 'email' | 'visitaPago' | null
+  visitaTelefono: string
   depto: string
   emailPago: string
   nombreEmail: string
@@ -152,6 +153,8 @@ interface WizardState {
   customerSaving: boolean
   customerSaved: boolean
   selectedReserveOption: 'r70' | 'r30' | 'visita' | null
+  reservePendingAmount: number | null
+  reservePendingGlosa: string
   showEdificioData: boolean
   edificioFloor: string
   edificioParkingFloor: string
@@ -318,6 +321,17 @@ function ChargerListItem({ charger, selected, onClick }: ChargerListItemProps) {
   )
 }
 
+// Maps UI dropdown value to ClientFormParkingLevel enum
+function mapParkingLevel(val: string): string | undefined {
+  if (!val) return undefined
+  if (val.startsWith('Piso')) return 'groundLevel'
+  if (val === 'Subterráneo -1') return 'underground1'
+  if (val === 'Subterráneo -2') return 'underground2'
+  if (val === 'Subterráneo -3') return 'underground3'
+  if (val === 'Subterráneo -4') return 'underground4'
+  return undefined
+}
+
 // ─── Distance factor label ────────────────────────────────────────────────────
 function distLabel(d: number): string {
   if (d <= 5) return 'Distancia muy corta (descuento aplicado)'
@@ -372,6 +386,7 @@ export default function CotizadorWizard() {
     chargerId: null,
     dist: 10,
     activePanel: null,
+    visitaTelefono: '',
     depto: '',
     emailPago: '',
     nombreEmail: '',
@@ -392,6 +407,8 @@ export default function CotizadorWizard() {
     customerSaving: false,
     customerSaved: false,
     selectedReserveOption: null,
+    reservePendingAmount: null,
+    reservePendingGlosa: '',
     showEdificioData: false,
     edificioFloor: '',
     edificioParkingFloor: '',
@@ -453,6 +470,11 @@ export default function CotizadorWizard() {
             distance: state.dist,
             numberOfChargers: 1,
             ...(state.formId ? { existingFormId: state.formId } : {}),
+            ...(state.tipo === 'edificio' ? {
+              apartmentFloor: state.edificioFloor || undefined,
+              parkingLevel: mapParkingLevel(state.edificioParkingFloor),
+              hasVisitorParking: state.edificioVisitorParking ?? undefined,
+            } : {}),
           }),
         })
 
@@ -523,10 +545,34 @@ export default function CotizadorWizard() {
   }
 
   // Calls /api/payment and immediately submits form to Webpay (no intermediate panel)
-  async function payDirect(amount: number, glosa: string) {
+  async function payDirect(amount: number, glosa: string, typeOfCart: 'chargerInstallation' | 'visit' = 'chargerInstallation', pendingCart?: { amount: number; glosa: string }) {
     update({ webpayLoading: true, webpayError: '' })
     const displayResult = state.apiResult ?? result
     const vat = Math.round(amount * 0.19 / 1.19)
+
+    // Save customer non-blocking — links nombre + teléfono before payment
+    const email = state.emailPago?.trim().toLowerCase()
+    if (email) {
+      fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: state.nombreEmail || email,
+          phone: state.visitaTelefono || state.depto || '',
+          address: state.address || '',
+          city: state.addressCity || '',
+          state: state.addressState || '',
+          zipCode: state.addressZipCode || '',
+          lat: state.addressLat || '',
+          lng: state.addressLng || '',
+          depto: state.depto || '',
+          typeOfResidence: state.tipo === 'casa' ? 'house' : 'appartment',
+          formId: state.formId ?? null,
+        }),
+      }).catch(() => null)
+    }
+
     try {
       const res = await fetch('/api/payment', {
         method: 'POST',
@@ -534,17 +580,23 @@ export default function CotizadorWizard() {
         body: JSON.stringify({
           total: amount,
           vat,
-          email: state.emailPago || undefined,
+          email: email || undefined,
           address: state.address || undefined,
           tipo: state.tipo,
           chargerName: displayResult?.chargerName ?? '',
           dist: state.dist,
           glosa,
+          formId: state.formId ?? undefined,
+          typeOfCart,
+          typeOfItem: typeOfCart,
+          ...(pendingCart ? { pendingAmount: pendingCart.amount, pendingGlosa: pendingCart.glosa } : {}),
         }),
       })
       const data = await res.json()
       if (!res.ok || !data.token) throw new Error(data.error ?? 'Error al iniciar el pago')
 
+      const isEdificioVisit = typeOfCart === 'visit' && state.tipo === 'edificio'
+      console.log('[payDirect] typeOfCart:', typeOfCart, '| state.tipo:', state.tipo, '| isEdificioVisit:', isEdificioVisit)
       sessionStorage.setItem('paymentData', JSON.stringify({
         tipo: state.tipo ?? '',
         chargerName: displayResult?.chargerName ?? '',
@@ -552,6 +604,8 @@ export default function CotizadorWizard() {
         address: state.address,
         depto: state.depto ?? '',
         email: state.emailPago ?? '',
+        nombre: state.nombreEmail ?? '',
+        telefono: state.visitaTelefono ?? '',
         total: amount,
         neto: amount - vat,
         iva: vat,
@@ -560,7 +614,10 @@ export default function CotizadorWizard() {
         inst: displayResult?.inst ?? 0,
         sec: displayResult?.sec ?? 0,
         isOwn: displayResult?.isOwn ?? false,
+        formId: state.formId ?? '',
+        ...(isEdificioVisit ? { paymentType: 'edificioVisita' } : {}),
       }))
+      console.log('[payDirect] sessionStorage.paymentData written:', sessionStorage.getItem('paymentData'))
       sessionStorage.removeItem('wizardContext')
 
       const form = document.createElement('form')
@@ -910,6 +967,7 @@ export default function CotizadorWizard() {
       chargerId: null,
       dist: 10,
       activePanel: null,
+      visitaTelefono: '',
       depto: '',
       emailPago: '',
       nombreEmail: '',
@@ -930,6 +988,8 @@ export default function CotizadorWizard() {
       customerSaving: false,
       customerSaved: false,
       selectedReserveOption: null,
+      reservePendingAmount: null,
+      reservePendingGlosa: '',
       showEdificioData: false,
       edificioFloor: '',
       edificioParkingFloor: '',
@@ -1430,12 +1490,10 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              disabled={state.webpayLoading}
-              onClick={() => payDirect(29000, 'Visita técnica · Electrolinera en edificio')}
+              onClick={() => update({ activePanel: state.activePanel === 'visitaPago' ? null : 'visitaPago' })}
               sx={{
-                bgcolor: PINK,
-                '&:hover': { bgcolor: PINK_DARK },
-                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                bgcolor: state.activePanel === 'visitaPago' ? '#94A3B8' : PINK,
+                '&:hover': { bgcolor: state.activePanel === 'visitaPago' ? '#64748B' : PINK_DARK },
                 fontWeight: 700,
                 py: 1.25,
                 fontSize: '0.9rem',
@@ -1443,10 +1501,73 @@ export default function CotizadorWizard() {
                 borderRadius: 2,
               }}
             >
-              {state.webpayLoading ? 'Redirigiendo…' : 'Pagar visita y recibir mi kit →'}
+              Pagar visita y recibir mi kit →
             </Button>
           </Box>
         </Box>
+
+        {/* Panel datos de contacto para visita técnica */}
+        {state.activePanel === 'visitaPago' && (
+          <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
+              Datos para el comprobante
+            </Typography>
+            <TextField
+              fullWidth
+              size="small"
+              label="Tu nombre completo (opcional)"
+              value={state.nombreEmail}
+              onChange={e => update({ nombreEmail: e.target.value })}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              size="small"
+              required
+              label="Email para comprobante"
+              type="email"
+              value={state.emailPago}
+              onChange={e => update({ emailPago: e.target.value })}
+              helperText="Requerido para proceder al pago"
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              size="small"
+              label="Teléfono"
+              type="tel"
+              value={state.visitaTelefono}
+              onChange={e => update({ visitaTelefono: e.target.value })}
+              sx={{ mb: 2.5 }}
+            />
+            {state.webpayError && (
+              <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
+                {state.webpayError}
+              </Alert>
+            )}
+            <Button
+              fullWidth
+              variant="contained"
+              disabled={!state.emailPago.trim() || state.webpayLoading}
+              onClick={() => payDirect(29000, 'Visita técnica · Instalación dedicada edificio', 'visit')}
+              sx={{
+                bgcolor: PINK,
+                color: '#fff',
+                '&:hover': { bgcolor: PINK_DARK },
+                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                fontWeight: 700,
+                py: 1.5,
+                fontSize: '0.95rem',
+                boxShadow: 'none',
+              }}
+            >
+              {state.webpayLoading ? 'Redirigiendo…' : 'Pagar $29.000 con Webpay →'}
+            </Button>
+            <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+              Pago seguro · Visa, Mastercard, Redcompra, débito
+            </Typography>
+          </Box>
+        )}
 
         {/* Option 2: Electrolinera compartida */}
         <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, overflow: 'hidden', mb: 3 }}>
@@ -1530,6 +1651,79 @@ export default function CotizadorWizard() {
                 Sin compromiso si la comunidad la rechaza.
               </Typography>
             </Box>
+          </Box>
+        </Box>
+
+        {/* Cómo se aprueba en tu edificio */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: { xs: 2.5, sm: 3 }, mb: 2 }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
+            Cómo se aprueba en tu edificio
+          </Typography>
+
+          {([
+            { n: 1, title: 'Te registras hoy', desc: 'Recibes tu kit por correo' },
+            { n: 2, title: 'Presentas a tu comunidad', desc: 'Con la carta y presentación que te damos' },
+            { n: 3, title: 'Aprobación del comité', desc: 'Te acompañamos en la gestión' },
+            { n: 4, title: 'Instalación', desc: 'Energica instala y financia' },
+          ] as { n: number; title: string; desc: string }[]).map((s, i, arr) => (
+            <Box key={s.n} sx={{ display: 'flex', gap: 2, mb: i < arr.length - 1 ? 2 : 0, alignItems: 'flex-start' }}>
+              <Box sx={{
+                width: 28, height: 28, borderRadius: '50%', bgcolor: PINK,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, mt: 0.1,
+              }}>
+                <Typography sx={{ color: '#fff', fontSize: '0.75rem', fontWeight: 700 }}>{s.n}</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547', lineHeight: 1.3 }}>
+                  {s.title}
+                </Typography>
+                <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.2 }}>
+                  {s.desc}
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+
+          <Box sx={{ mt: 2.5, pt: 2, borderTop: `1px solid ${BORDER}`, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2 }}>
+              Ya operamos en{' '}
+              <Box component="span" sx={{ fontWeight: 700, color: '#2A3547' }}>14 edificios</Box>
+              {' · '}
+              <Box component="span" sx={{ fontWeight: 700, color: '#2A3547' }}>+100 usuarios</Box>
+              {' '}cargando
+            </Typography>
+
+            <Box
+              component="a"
+              href={`https://wa.me/56967666652?text=${encodeURIComponent('Hola, quiero información sobre la electrolinera compartida para mi edificio.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ display: 'block', textDecoration: 'none', mb: 1.5 }}
+            >
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  bgcolor: '#25D366',
+                  '&:hover': { bgcolor: '#1ebe5d' },
+                  fontWeight: 700,
+                  py: 1.25,
+                  fontSize: '0.9rem',
+                  color: '#fff',
+                  boxShadow: 'none',
+                  borderRadius: 2,
+                  display: 'flex',
+                  gap: 1,
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="12" fill="#25D366"/>
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#fff"/>
+                </svg>
+                💬 Hablar con un asesor por WhatsApp
+              </Button>
+            </Box>
+
           </Box>
         </Box>
 
@@ -1794,10 +1988,15 @@ export default function CotizadorWizard() {
                 fullWidth
                 variant="contained"
                 disabled={state.webpayLoading}
-                onClick={() => payDirect(opt.payAmount, opt.glosa)}
+                onClick={() => update({
+                  selectedReserveOption: opt.key,
+                  activePanel: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? null : 'visitaPago',
+                  reservePendingAmount: opt.balance,
+                  reservePendingGlosa: opt.key === 'r70' ? `Saldo 30% · Instalación cargador eléctrico` : `Saldo 70% · Instalación cargador eléctrico`,
+                })}
                 sx={{
-                  bgcolor: PINK,
-                  '&:hover': { bgcolor: PINK_DARK },
+                  bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? '#94A3B8' : PINK,
+                  '&:hover': { bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? '#64748B' : PINK_DARK },
                   '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
                   fontWeight: 700,
                   py: 1.25,
@@ -1809,6 +2008,46 @@ export default function CotizadorWizard() {
               >
                 {state.webpayLoading ? 'Redirigiendo…' : opt.btnLabel}
               </Button>
+
+              {state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key && (
+                <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+                  <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+                    Datos para el comprobante
+                  </Typography>
+                  <TextField fullWidth size="small" label="Tu nombre completo (opcional)"
+                    value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+                  <TextField fullWidth size="small" required label="Email para comprobante" type="email"
+                    value={state.emailPago}
+                    onChange={e => update({ emailPago: e.target.value })}
+                    helperText="Requerido para proceder al pago"
+                    sx={{ mb: 2 }} />
+                  <TextField fullWidth size="small" label="Teléfono" type="tel"
+                    value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                  {state.webpayError && (
+                    <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
+                  )}
+                  <Button fullWidth variant="contained"
+                    disabled={!state.emailPago.trim() || state.webpayLoading}
+                    onClick={() => payDirect(
+                      opt.payAmount,
+                      opt.glosa,
+                      'chargerInstallation',
+                      state.reservePendingAmount ? { amount: state.reservePendingAmount, glosa: state.reservePendingGlosa } : undefined
+                    )}
+                    sx={{
+                      bgcolor: PINK, color: '#fff',
+                      '&:hover': { bgcolor: PINK_DARK },
+                      '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                      fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2,
+                    }}
+                  >
+                    {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(opt.payAmount)} con Webpay →`}
+                  </Button>
+                  <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                    Pago seguro · Visa, Mastercard, Redcompra, débito
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
         ))}
@@ -1839,11 +2078,16 @@ export default function CotizadorWizard() {
             fullWidth
             variant="outlined"
             disabled={state.webpayLoading}
-            onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador')}
+            onClick={() => update({
+              selectedReserveOption: 'visita',
+              activePanel: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? null : 'visitaPago',
+              reservePendingAmount: null,
+              reservePendingGlosa: '',
+            })}
             sx={{
-              borderColor: BORDER,
-              color: '#2A3547',
-              '&:hover': { borderColor: '#2A3547', bgcolor: 'rgba(0,0,0,0.02)' },
+              borderColor: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#94A3B8' : BORDER,
+              color: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#94A3B8' : '#2A3547',
+              '&:hover': { borderColor: '#2A3547', bgcolor: 'rgba(0,0,0,0.02)', color: '#2A3547' },
               '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
               fontWeight: 700,
               py: 1.25,
@@ -1854,6 +2098,41 @@ export default function CotizadorWizard() {
           >
             {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
           </Button>
+
+          {state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' && (
+            <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+                Datos para el comprobante
+              </Typography>
+              <TextField fullWidth size="small" label="Tu nombre completo (opcional)"
+                value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+              <TextField fullWidth size="small" required label="Email para comprobante" type="email"
+                value={state.emailPago}
+                onChange={e => update({ emailPago: e.target.value })}
+                helperText="Requerido para proceder al pago"
+                sx={{ mb: 2 }} />
+              <TextField fullWidth size="small" label="Teléfono" type="tel"
+                value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+              {state.webpayError && (
+                <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
+              )}
+              <Button fullWidth variant="contained"
+                disabled={!state.emailPago.trim() || state.webpayLoading}
+                onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
+                sx={{
+                  bgcolor: PINK, color: '#fff',
+                  '&:hover': { bgcolor: PINK_DARK },
+                  '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                  fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2,
+                }}
+              >
+                {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
+              </Button>
+              <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                Pago seguro · Visa, Mastercard, Redcompra, débito
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     )

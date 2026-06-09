@@ -567,7 +567,7 @@ export default async function EnergicaVsCopecVoltexPage() {
               </Box>
               <Box
                 component={Link}
-                href="/agenda"
+                href="/cotizador"
                 sx={{
                   display: 'inline-block',
                   color: 'rgba(255,255,255,0.7)',

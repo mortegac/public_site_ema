@@ -589,7 +589,7 @@ export default function ArticlePage() {
                   Cotizar cargador domiciliario
                 </Box>
               </Link>
-              <Link href="/agenda" style={{ textDecoration: 'none' }}>
+              <Link href="/cotizador" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
                     px: 4,

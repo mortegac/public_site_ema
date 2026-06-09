@@ -139,7 +139,7 @@ const FormSupport: React.FC<SoporteProps> = (props) => {
             color:"#E81A68",
             border: "1px solid #E81A68",
           }}
-          href="/agenda"
+          href="/cotizador"
         //   onClick={() => dispatch(setStep(0))}
         >
           Agendar otra visita

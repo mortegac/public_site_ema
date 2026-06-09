@@ -64,7 +64,7 @@ const FaqsPage = () => {
         titleTwo="aprende más sobre la electromovilidad"
         description="Explora nuestro contenido para conocer de nuestros servicios y saber más sobre tópicos de electromovilidad"
         buttonText="Agenda tu visita"
-        buttonURI="/agenda"
+        buttonURI="/cotizador"
         buttonTextTwo="Simula el costo de la instalación"
         buttonURITwo="/cotizador"
         imageSrc="/images/headers/faqs.png"

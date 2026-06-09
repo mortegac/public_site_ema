@@ -6,7 +6,6 @@ const STATIC_LAST_MODIFIED = new Date('2026-04-10')
 
 const STATIC_ROUTES = [
   '/cotizador',
-  '/agenda',
   '/faqs',
   '/soporte',
   '/contactanos',

@@ -110,6 +110,24 @@ export default function PostulacionClient() {
       <Box sx={{ bgcolor: SURFACE, minHeight: '60vh', pt: { xs: 2, md: 4 }, pb: 6 }}>
         <Container maxWidth="sm" sx={{ px: { xs: 1, sm: 3 } }}>
 
+          {/* Back to cotizador */}
+          <Box sx={{ mb: 2 }}>
+            <Button
+              variant="text"
+              onClick={() => window.history.back()}
+              sx={{
+                color: TEXT_MUTED,
+                fontSize: '0.85rem',
+                textTransform: 'none',
+                fontWeight: 600,
+                p: 0,
+                '&:hover': { color: '#2A3547', bgcolor: 'transparent' },
+              }}
+            >
+              ← Volver a mi cotización
+            </Button>
+          </Box>
+
           {!form.submitted ? (
             /* ── Form ── */
             <Box sx={{ bgcolor: '#fff', borderRadius: 3, boxShadow: '0 2px 24px rgba(0,0,0,0.08)', p: { xs: 3, md: 4 } }}>

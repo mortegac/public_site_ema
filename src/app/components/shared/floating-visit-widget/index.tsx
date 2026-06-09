@@ -73,13 +73,13 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
 
   const handleAgendarClick = () => {
     // URL del tracking de HubSpot
-    const trackingUrl = "/agenda";
+    const trackingUrl = "/cotizador";
     
     window.open(trackingUrl, '_parent');
   };
 
   const handleImageClick = () => {
-    const imageTrackingUrl = "/agenda";
+    const imageTrackingUrl = "/cotizador";
     
     window.open(imageTrackingUrl, '_parent');
   };
@@ -155,7 +155,7 @@ const FloatingVisitWidget: React.FC<FloatingVisitWidgetProps> = ({ onClose }) =>
           >
             <Box
               component="a"
-              href="/agenda"
+              href="/cotizador"
               target="_parent"
               onClick={handleImageClick}
               sx={{

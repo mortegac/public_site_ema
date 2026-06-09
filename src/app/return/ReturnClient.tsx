@@ -722,11 +722,11 @@ const ReturnPage = () => {
             // Redirigir según el estado y tipo de carrito
             if (resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
                 if (typeOfCart === "virtualVisit") {
-                    console.log("----REDIRECT--- /agenda/recibo-pago-virtual");
-                    router.push('/agenda/recibo-pago-virtual');
+                    console.log("----REDIRECT--- /cotizador/recibo-pago");
+                    router.push('/cotizador/recibo-pago');
                 } else if (typeOfCart === "visit") {
-                    console.log("----REDIRECT--- /agenda/recibo-pagado");
-                    router.push('/agenda/recibo-pagado');
+                    console.log("----REDIRECT--- /cotizador/recibo-pago");
+                    router.push('/cotizador/recibo-pago');
                 } else if (
                     typeOfCart === "chargerInstallation" ||
                     resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
@@ -753,11 +753,11 @@ const ReturnPage = () => {
                 }
             } else if (resTransaction?.statusRedirect === "PAYMENT_REJECTED") {
                 if (typeOfCart === "virtualVisit") {
-                    console.log("----REDIRECT--- /agenda/rechazo-pago-virtual");
-                    router.push('/agenda/rechazo-pago-virtual');
+                    console.log("----REDIRECT--- /cotizador/rechazo-pago");
+                    router.push('/cotizador/rechazo-pago');
                 } else if (typeOfCart === "visit") {
-                    console.log("----REDIRECT--- /agenda/rechazo-pago");
-                    router.push('/agenda/rechazo-pago');
+                    console.log("----REDIRECT--- /cotizador/rechazo-pago");
+                    router.push('/cotizador/rechazo-pago');
                 } else if (
                     typeOfCart === "chargerInstallation" ||
                     resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||

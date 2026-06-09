@@ -175,7 +175,7 @@ export default async function AutoElectricoVsGasolinaChilePage() {
               </Box>
               <Box
                 component={Link}
-                href="/agenda"
+                href="/cotizador"
                 sx={{
                   display: 'inline-block',
                   color: 'rgba(255,255,255,0.85)',
@@ -469,7 +469,7 @@ export default async function AutoElectricoVsGasolinaChilePage() {
                   </Typography>
                   <Box
                     component={Link}
-                    href="/agenda"
+                    href="/cotizador"
                     sx={{
                       display: 'inline-block',
                       bgcolor: BLUE,

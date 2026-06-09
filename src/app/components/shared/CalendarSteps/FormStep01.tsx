@@ -208,7 +208,7 @@ export const FormStep01 = (props:any) => {
           };
 
           sessionStorage.setItem("paymentData", JSON.stringify(paymentData));
-          router.push("/agenda/recibo-virtual");
+          router.push("/cotizador/recibo-pago");
         }, 3000);
       }
       

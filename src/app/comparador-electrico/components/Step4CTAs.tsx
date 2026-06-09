@@ -124,7 +124,7 @@ export default function Step4CTAs() {
             title="Agenda una visita"
             description="Reserva una asesoría personalizada con nuestro equipo"
             cta="→ Ver disponibilidad"
-            href="/agenda"
+            href="/cotizador"
           />
         </Box>
       </Box>

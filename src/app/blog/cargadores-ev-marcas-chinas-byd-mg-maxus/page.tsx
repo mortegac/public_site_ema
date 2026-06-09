@@ -656,7 +656,7 @@ export default function ArticlePage() {
               </Box>
               <Box
                 component={Link}
-                href="/agenda"
+                href="/cotizador"
                 sx={{
                   display: 'inline-block',
                   bgcolor: 'transparent',

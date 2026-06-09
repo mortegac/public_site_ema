@@ -133,7 +133,7 @@ const Invoice: React.FC = () => {
                     width: { xs: '80%', md: 'auto' },
                     marginTop: '20px',
                   }}
-                  href="/agenda"
+                  href="/cotizador"
                 >
                   Agendar otra visita
                 </Button>
@@ -357,7 +357,7 @@ const Invoice: React.FC = () => {
                     border: "1px solid #E81A68",
                     width: { xs: '100%', md: 'auto' }
                   }}
-                  href="/agenda"
+                  href="/cotizador"
                 >
                   Agendar otra visita
                 </Button>

@@ -634,7 +634,7 @@ export default function FormResumeVirtual() {
                             border: "1px solid #E81A68",
                             width: { xs: "100%", md: "auto" },
                           }}
-                          href="/agenda"
+                          href="/cotizador"
                           //   onClick={() => dispatch(setStep(0))}
                         >
                           Agendar otra visita
@@ -740,7 +740,7 @@ export default function FormResumeVirtual() {
                             width: { xs: '80%', md: '300px' },
                             marginTop: '20px',
                           }}
-                          href="/agenda"
+                          href="/cotizador"
                         >
                           Agendar otra visita
                     </Button>

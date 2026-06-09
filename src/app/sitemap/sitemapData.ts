@@ -1,7 +1,6 @@
 export const STATIC_ROUTES: Array<{ path: string; label: string }> = [
   { path: '/', label: 'Inicio' },
   { path: '/cotizador', label: 'Cotizador de Instalación' },
-  { path: '/agenda', label: 'Agendar Visita Técnica' },
   { path: '/comparador-electrico', label: 'Comparador Eléctrico' },
   { path: '/simulador', label: 'Simulador de Ahorro' },
   { path: '/auto-electrico-vs-gasolina-chile', label: 'Auto Eléctrico vs Gasolina en Chile' },

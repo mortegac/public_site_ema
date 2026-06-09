@@ -230,7 +230,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               border: "1px solid #E81A68",
               width: { xs: '100%', md: 'auto' }
             }}
-            // href="/agenda"
+            // href="/cotizador"
             onClick={() => {
               getRetry();              
               trackEvent('reintentar_pago', 'AGENDA_EMA', 'volver a la pagina de reintento de pago')
@@ -275,7 +275,7 @@ const RetryTransaction: React.FC<RetryTransactionProps> = ({ glosa, total, order
               border: "1px solid #E81A68",
               width: { xs: '100%', md: 'auto' }
             }}
-            href="/agenda"
+            href="/cotizador"
             onClick={() => trackEvent('agendar_otra_visita', 'AGENDA_EMA', 'ir a la pagina agenda') }
           >
             Agendar otra visita

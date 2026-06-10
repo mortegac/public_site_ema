@@ -123,14 +123,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  // TEST PAGOS ─ Fuerza el monto a $6 CLP para pruebas de Webpay.
-  const isTestMode = true // TEST PAGOS
-  const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
-  const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
-  if (isTestMode) {
-    console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
-  }
-  // TEST PAGOS ─ Fin del bloque de prueba. ─────────────────────────────────────
+  const effectiveTotal = Math.round(total)
+  const effectiveVat   = Math.round(vat)
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()

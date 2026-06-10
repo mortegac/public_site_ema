@@ -58,7 +58,7 @@ export async function GET() {
         const tipo: 'portable' | 'wallbox' =
           item.productId === '4e9dcab3-e08d-4648-834a-0bc982cb14b5' ? 'portable' : 'wallbox'
         const potence: string = item.potence != null ? String(item.potence) : ''
-        const name = `${item.brand ?? ''} ${potence} kW`.trim()
+        const name = desc || `${item.brand ?? ''} ${potence} kW`.trim()
 
         const prices: any[] = item.Prices?.items ?? []
         const activePrice =

@@ -193,9 +193,9 @@ function calcResult(state: WizardState): CalcResult | null {
   const inst = Math.round(base.inst * f)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
-  // charger.precio is the NETO price (before IVA) — shown with "+IVA" in step 2
-  const chargerPrice = charger ? charger.precio : 0                        // neto
-  const chargerGrossPrice = charger ? Math.round(charger.precio * 1.19) : 0 // neto × 1.19
+  // charger.precio is the GROSS price (IVA incluido)
+  const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0   // neto (extraído del bruto)
+  const chargerGrossPrice = charger ? charger.precio : 0                  // bruto (precio ya incluye IVA)
   const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
   const neto = mat + inst + sec + chargerPrice
   const iva = Math.round(neto * 0.19)
@@ -328,7 +328,7 @@ function ChargerListItem({ charger, selected, onClick }: ChargerListItemProps) {
       </Box>
       <Box sx={{ textAlign: 'right', ml: 2, flexShrink: 0 }}>
         <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>{fmt(charger.precio)}</Typography>
-        <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>+IVA</Typography>
+        <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>IVA incluido</Typography>
       </Box>
     </Box>
   )
@@ -2484,7 +2484,7 @@ export default function CotizadorWizard() {
                   '&:hover': { bgcolor: 'rgba(232,26,104,0.05)' },
                 }}
               >
-                + Agregar {removedCharger.name} ({fmt(Math.round(removedCharger.precio * 1.19))})
+                + Agregar {removedCharger.name} ({fmt(removedCharger.precio)})
               </Box>
             )}
             <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 1.5, lineHeight: 1.5 }}>

@@ -185,14 +185,14 @@ interface CalcResult {
 }
 
 // ─── Price calc ───────────────────────────────────────────────────────────────
-function calcResult(state: WizardState): CalcResult | null {
+function calcResult(state: WizardState, chargers: typeof CHARGERS = CHARGERS): CalcResult | null {
   if (!state.tipo || !state.tipoC) return null
   const base = INSTALL_BASE[state.tipo]
   const f = dFactor(state.dist) * TIPO_FACTOR[state.tipo]
   const mat = Math.round(base.mat * f)
   const inst = Math.round(base.inst * f)
   const sec = base.sec
-  const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
+  const charger = state.chargerId === 'own' ? null : chargers.find(c => c.id === state.chargerId)
   // todos los precios en CHARGERS son bruto (IVA incluido)
   const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
   const chargerGrossPrice = charger ? charger.precio : 0
@@ -435,7 +435,16 @@ export default function CotizadorWizard() {
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
 
-  const result = calcResult(state)
+  // Charger list — loaded from /api/charger, falls back to static CHARGERS
+  const [chargerList, setChargerList] = useState<typeof CHARGERS>(CHARGERS)
+  useEffect(() => {
+    fetch('/api/charger')
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d.chargers) && d.chargers.length > 0) setChargerList(d.chargers) })
+      .catch(() => {/* keep static fallback */})
+  }, [])
+
+  const result = calcResult(state, chargerList)
 
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
@@ -473,7 +482,7 @@ export default function CotizadorWizard() {
         const isWallbox = state.tipoC === 'wallbox'
         const isPortable = state.tipoC === 'portable'
         const isHouse = state.tipo === 'casa'
-        const charger = state.chargerId !== 'own' ? CHARGERS.find(c => c.id === state.chargerId) : null
+        const charger = state.chargerId !== 'own' ? chargerList.find(c => c.id === state.chargerId) : null
 
         const res = await fetch('/api/cotizar', {
           method: 'POST',
@@ -803,7 +812,7 @@ export default function CotizadorWizard() {
       }).catch(() => null)
 
       // Build quote HTML for the email template
-      const charger = CHARGERS.find(c => c.id === state.chargerId)
+      const charger = chargerList.find(c => c.id === state.chargerId)
       const fmtN = (n: number) => Math.round(n).toLocaleString('es-CL')
       const valor = fmtN(displayResult?.total ?? 0)
       const kws = charger?.kw ?? '7.3'
@@ -1060,8 +1069,8 @@ export default function CotizadorWizard() {
   }
 
   function renderStep1() {
-    const portables = CHARGERS.filter(c => c.tipo === 'portable')
-    const wallboxes = CHARGERS.filter(c => c.tipo === 'wallbox')
+    const portables = chargerList.filter(c => c.tipo === 'portable')
+    const wallboxes = chargerList.filter(c => c.tipo === 'wallbox')
 
     return (
       <Box>
@@ -2395,7 +2404,7 @@ export default function CotizadorWizard() {
 
     const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
     const distLabel2 = `${state.dist}m`
-    const removedCharger = state.removedChargerId ? CHARGERS.find(c => c.id === state.removedChargerId) ?? null : null
+    const removedCharger = state.removedChargerId ? chargerList.find(c => c.id === state.removedChargerId) ?? null : null
 
     return (
       <Box>

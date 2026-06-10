@@ -55,7 +55,8 @@ export async function GET() {
     const chargers = items
       .map((item: any) => {
         const desc: string = item.description ?? ''
-        const tipo: 'portable' | 'wallbox' = desc.toLowerCase().includes('ortable') ? 'portable' : 'wallbox'
+        const tipo: 'portable' | 'wallbox' =
+          item.productId === '4e9dcab3-e08d-4648-834a-0bc982cb14b5' ? 'portable' : 'wallbox'
         const potence: string = item.potence != null ? String(item.potence) : ''
         const name = `${item.brand ?? ''} ${potence} kW`.trim()
 

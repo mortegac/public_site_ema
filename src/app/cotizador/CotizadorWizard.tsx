@@ -193,10 +193,9 @@ function calcResult(state: WizardState): CalcResult | null {
   const inst = Math.round(base.inst * f)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
-  // wallbox: precio = bruto (IVA incluido). portable: precio = neto (sin IVA).
-  const chargerIsPortable = charger?.tipo === 'portable'
-  const chargerPrice = charger ? (chargerIsPortable ? charger.precio : Math.round(charger.precio / 1.19)) : 0
-  const chargerGrossPrice = charger ? (chargerIsPortable ? Math.round(charger.precio * 1.19) : charger.precio) : 0
+  // todos los precios en CHARGERS son bruto (IVA incluido)
+  const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
+  const chargerGrossPrice = charger ? charger.precio : 0
   const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
   const neto = mat + inst + sec + chargerPrice
   const iva = Math.round(neto * 0.19)
@@ -328,7 +327,7 @@ function ChargerListItem({ charger, selected, onClick }: ChargerListItemProps) {
         <Chip label={`${charger.stock} en stock`} size="small" sx={{ mt: 0.75, height: 20, fontSize: '0.65rem', bgcolor: 'rgba(0,196,124,0.1)', color: SUCCESS }} />
       </Box>
       <Box sx={{ textAlign: 'right', ml: 2, flexShrink: 0 }}>
-        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>{fmt(charger.precio)}</Typography>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>{fmt(Math.round(charger.precio / 1.19))}</Typography>
         <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>+IVA</Typography>
       </Box>
     </Box>
@@ -502,9 +501,8 @@ export default function CotizadorWizard() {
           const est = estimates.find((e: any) => Number(e.chargerPotence) === targetPotence) ?? estimates[0]
 
           if (est) {
-            const chargerIsPortable = charger?.tipo === 'portable'
-            const chargerPrice = charger ? (chargerIsPortable ? charger.precio : Math.round(charger.precio / 1.19)) : 0
-            const chargerGrossPrice = charger ? (chargerIsPortable ? Math.round(charger.precio * 1.19) : charger.precio) : 0
+            const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
+            const chargerGrossPrice = charger ? charger.precio : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
             const secTramite = isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec
             const installNeto = Number(est.netPrice ?? 0)

@@ -45,7 +45,7 @@ const PARKING_FLOORS = [
 // ─── Data ────────────────────────────────────────────────────────────────────
 const CHARGERS = [
   // Portable
-  { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 355810, stock: 2 },
+  { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 299000, stock: 2 },
   // Wallbox — sincronizado con Prismic products (10 jun 2026)
   { id: 'zeero', name: 'ZEERO Minibox 7 kW', tipo: 'wallbox', kw: '7', desc: 'Wallbox · Con stock', precio: 549989, stock: 5 },
   { id: 'effitec', name: 'EFFITEC 7 kW', tipo: 'wallbox', kw: '7.3', desc: 'Cable tipo 2 · Con stock', precio: 599900, stock: 5 },
@@ -193,9 +193,10 @@ function calcResult(state: WizardState): CalcResult | null {
   const inst = Math.round(base.inst * f)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
-  // charger.precio is the GROSS price (IVA incluido)
-  const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0   // neto (extraído del bruto)
-  const chargerGrossPrice = charger ? charger.precio : 0                  // bruto (precio ya incluye IVA)
+  // wallbox: precio = bruto (IVA incluido). portable: precio = neto (sin IVA).
+  const chargerIsPortable = charger?.tipo === 'portable'
+  const chargerPrice = charger ? (chargerIsPortable ? charger.precio : Math.round(charger.precio / 1.19)) : 0
+  const chargerGrossPrice = charger ? (chargerIsPortable ? Math.round(charger.precio * 1.19) : charger.precio) : 0
   const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
   const neto = mat + inst + sec + chargerPrice
   const iva = Math.round(neto * 0.19)
@@ -328,7 +329,7 @@ function ChargerListItem({ charger, selected, onClick }: ChargerListItemProps) {
       </Box>
       <Box sx={{ textAlign: 'right', ml: 2, flexShrink: 0 }}>
         <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>{fmt(charger.precio)}</Typography>
-        <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>IVA incluido</Typography>
+        <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>+IVA</Typography>
       </Box>
     </Box>
   )
@@ -501,7 +502,9 @@ export default function CotizadorWizard() {
           const est = estimates.find((e: any) => Number(e.chargerPotence) === targetPotence) ?? estimates[0]
 
           if (est) {
-            const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
+            const chargerIsPortable = charger?.tipo === 'portable'
+            const chargerPrice = charger ? (chargerIsPortable ? charger.precio : Math.round(charger.precio / 1.19)) : 0
+            const chargerGrossPrice = charger ? (chargerIsPortable ? Math.round(charger.precio * 1.19) : charger.precio) : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
             const secTramite = isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec
             const installNeto = Number(est.netPrice ?? 0)
@@ -509,7 +512,6 @@ export default function CotizadorWizard() {
             const totalIva = Math.round(totalNeto * 0.19)
             const apiMat = Number(est.materialsCost ?? 0)
             const apiInst = Number(est.installationCost ?? 0)
-            const chargerGrossPrice = charger ? charger.precio : 0
             const installGross = Math.round((apiMat + apiInst + secTramite) * 1.19)
             update({
               estimateLoading: false,

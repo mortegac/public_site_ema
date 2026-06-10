@@ -144,6 +144,8 @@ interface WizardState {
     iva: number
     total: number
     isOwn: boolean
+    chargerGrossPrice: number
+    installGross: number
   } | null
   formId: string | null
   nextVisitDate: string | null
@@ -160,6 +162,7 @@ interface WizardState {
   edificioParkingFloor: string
   edificioVisitorParking: boolean | null
   edificioOption: 'dedicated' | 'shared' | null
+  removedChargerId: string | null  // remembers charger id when user clicks "quitar"
 }
 
 interface CalcResult {
@@ -172,6 +175,8 @@ interface CalcResult {
   iva: number
   total: number
   isOwn: boolean
+  chargerGrossPrice: number  // charger.precio (gross with IVA), 0 if no charger
+  installGross: number       // (mat+inst+sec) * 1.19 — installation only, WITH IVA, NO charger
 }
 
 // ─── Price calc ───────────────────────────────────────────────────────────────
@@ -187,7 +192,9 @@ function calcResult(state: WizardState): CalcResult | null {
   const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
   const neto = mat + inst + sec + chargerPrice
   const iva = Math.round(neto * 0.19)
-  return { mat, inst, sec, chargerPrice, chargerName, neto, iva, total: neto + iva, isOwn: state.chargerId === 'own' }
+  const chargerGrossPrice = charger ? charger.precio : 0
+  const installGross = Math.round((mat + inst + sec) * 1.19)
+  return { mat, inst, sec, chargerPrice, chargerName, neto, iva, total: neto + iva, isOwn: state.chargerId === 'own', chargerGrossPrice, installGross }
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -414,6 +421,7 @@ export default function CotizadorWizard() {
     edificioParkingFloor: '',
     edificioVisitorParking: null,
     edificioOption: null,
+    removedChargerId: null,
   })
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
@@ -492,14 +500,18 @@ export default function CotizadorWizard() {
             const installNeto = Number(est.netPrice ?? 0)
             const totalNeto = installNeto + chargerPrice + secTramite
             const totalIva = Math.round(totalNeto * 0.19)
+            const apiMat = Number(est.materialsCost ?? 0)
+            const apiInst = Number(est.installationCost ?? 0)
+            const chargerGrossPrice = charger ? charger.precio : 0
+            const installGross = Math.round((apiMat + apiInst + secTramite) * 1.19)
             update({
               estimateLoading: false,
               step: 2,
               formId,
               nextVisitDate: (data as any).nextAvailableDate ?? null,
               apiResult: {
-                mat: Number(est.materialsCost ?? 0),
-                inst: Number(est.installationCost ?? 0),
+                mat: apiMat,
+                inst: apiInst,
                 sec: secTramite,
                 chargerPrice,
                 chargerName,
@@ -507,6 +519,8 @@ export default function CotizadorWizard() {
                 iva: totalIva,
                 total: totalNeto + totalIva,
                 isOwn: state.chargerId === 'own',
+                chargerGrossPrice,
+                installGross,
               },
             })
             return
@@ -995,6 +1009,7 @@ export default function CotizadorWizard() {
       edificioParkingFloor: '',
       edificioVisitorParking: null,
       edificioOption: null,
+      removedChargerId: null,
     })
   }
 
@@ -1871,15 +1886,16 @@ export default function CotizadorWizard() {
 
   // ─── Casa booking options (Image #7) ─────────────────────────────────────────
   function renderBookingOptions(displayResult: NonNullable<ReturnType<typeof calcResult>>) {
-    const installBase = displayResult.neto - displayResult.chargerPrice
+    // Use IVA-inclusive installation price (no charger) for all calculations
+    const installBaseGross = displayResult.installGross
 
-    const inst70 = Math.round(installBase * 0.85)
-    const save70 = installBase - inst70
+    const inst70 = Math.round(installBaseGross * 0.85)
+    const save70 = installBaseGross - inst70
     const pay70 = Math.round(inst70 * 0.70)
     const bal70 = inst70 - pay70
 
-    const inst30 = Math.round(installBase * 0.93)
-    const save30 = installBase - inst30
+    const inst30 = Math.round(installBaseGross * 0.93)
+    const save30 = installBaseGross - inst30
     const pay30 = Math.round(inst30 * 0.30)
     const bal30 = inst30 - pay30
 
@@ -1891,7 +1907,7 @@ export default function CotizadorWizard() {
         title: 'Reserva 70%',
         badge: { label: 'MEJOR PRECIO', color: '#00C47C' },
         instDisc: inst70,
-        instOrig: installBase,
+        instOrig: installBaseGross,
         savings: save70,
         savingsPct: 15,
         payToday: pay70,
@@ -1909,7 +1925,7 @@ export default function CotizadorWizard() {
         title: 'Reserva 30%',
         badge: { label: '🔥 LA MÁS ELEGIDA', color: PINK },
         instDisc: inst30,
-        instOrig: installBase,
+        instOrig: installBaseGross,
         savings: save30,
         savingsPct: 7,
         payToday: pay30,
@@ -1956,6 +1972,7 @@ export default function CotizadorWizard() {
               <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.75 }}>{opt.title}</Typography>
 
               <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.25 }}>
+                <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mr: 0.5 }}>Instalación</Typography>
                 <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547' }}>{fmt(opt.instDisc)}</Typography>
                 <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(opt.instOrig)}</Typography>
               </Box>
@@ -1964,13 +1981,18 @@ export default function CotizadorWizard() {
               </Typography>
 
               <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 0.5, lineHeight: 1.6 }}>
-                Pagas hoy <strong>{fmt(opt.payToday)}</strong> ({opt.key === 'r70' ? '70' : '30'}% de la instalación). Saldo <strong>{fmt(opt.balance)}</strong> tras la visita técnica.
+                Pagas hoy <strong>{fmt(opt.payToday)}</strong> ({opt.key === 'r70' ? '70' : '30'}% de la instalación). Saldo <strong>{fmt(opt.balance)}</strong> {opt.key === 'r70' ? 'tras la visita técnica.' : 'cuando confirmemos el precio en la visita técnica.'}
               </Typography>
-              {!displayResult.isOwn && (
+              {/* Use live result (not stale apiResult) to reflect charger toggle */}
+              {(result?.isOwn ?? state.chargerId === 'own') ? (
                 <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-                  Cargador {fmt(opt.chargerDeferred)}, se paga después de la visita técnica.
+                  Cargador: lo pones tú ($0).
                 </Typography>
-              )}
+              ) : (result?.chargerGrossPrice ?? 0) > 0 ? (
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+                  Cargador <strong>{fmt(result?.chargerGrossPrice ?? 0)}</strong>, se paga después de la visita técnica.
+                </Typography>
+              ) : null}
 
               {opt.features.map(f => (
                 <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
@@ -2146,174 +2168,107 @@ export default function CotizadorWizard() {
     if (!displayResult) return null
 
     const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
-    const chargerLabel = displayResult.chargerName || 'Cargador propio'
     const distLabel2 = `${state.dist}m`
+    const removedCharger = state.removedChargerId ? CHARGERS.find(c => c.id === state.removedChargerId) ?? null : null
 
     return (
       <Box>
-        {/* Estimación summary header (Image #14) */}
-        <Box sx={{ textAlign: 'center', mb: 2 }}>
-          <Typography sx={{ fontSize: '0.95rem', fontWeight: 700, color: '#2A3547' }}>
-            Tu cotización
+        {/* ── Simplified summary header ── */}
+        <Box sx={{ textAlign: 'center', mb: 2.5 }}>
+          <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: '#2A3547', mb: 0.25 }}>
+            Tu cotización personalizada
           </Typography>
-          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.25 }}>
-            {tipoLabel} · {chargerLabel} · {distLabel2}
+          <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5 }}>
+            {tipoLabel} · instalación a {distLabel2} del tablero
           </Typography>
-        </Box>
-
-        {/* Price hero */}
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 0.5 }}>Total (con IVA)</Typography>
-          <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
-            {fmt(displayResult.total)}
+          <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mb: 0.5 }}>
+            Instalación llave en mano (IVA incl.)
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.75, mt: 1.5 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L3 5.5V12C3 16.5 7 20.5 12 22C17 20.5 21 16.5 21 12V5.5L12 2Z" fill="#22c55e" stroke="#22c55e" strokeWidth="0.5"/>
-              <path d="M8 12L11 15L16 9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <Typography sx={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 600 }}>
-              Compra protegida
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Breakdown card */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, overflow: 'hidden', mb: 3 }}>
-          {!displayResult.isOwn && (
-            <>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
-                <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>🔌</Box>
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
-                    {displayResult.chargerName}
-                  </Typography>
-                </Box>
-                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
-                  {fmt(displayResult.chargerPrice)}
-                </Typography>
-              </Box>
-              <Divider />
-            </>
-          )}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
-            <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>🔧</Box>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
-                Materiales certificados
-              </Typography>
-              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>
-                Tablero, canalización, cableado, protecciones
-              </Typography>
-            </Box>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
-              {fmt(displayResult.mat)}
-            </Typography>
-          </Box>
-          <Divider />
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
-            <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>👷</Box>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
-                Instalación por técnico SEC
-              </Typography>
-              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>
-                Mano de obra certificada
-              </Typography>
-            </Box>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
-              {fmt(displayResult.inst)}
-            </Typography>
-          </Box>
-          <Divider />
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2.5, py: 2 }}>
-            <Box sx={{ flexShrink: 0, fontSize: '1.25rem', lineHeight: 1 }}>📋</Box>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547' }}>
-                Trámites y declaración TE6
-              </Typography>
-              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>
-                Certificación ante SEC incluida
-              </Typography>
-            </Box>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, flexShrink: 0, ml: 1 }}>
-              {fmt(displayResult.sec)}
-            </Typography>
-          </Box>
-          <Divider />
-          <Box sx={{ px: 2.5, py: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.4 }}>
-              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>Neto</Typography>
-              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>{fmt(displayResult.neto)}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>IVA (19%)</Typography>
-              <Typography sx={{ fontSize: '0.75rem', fontWeight: 400, lineHeight: '1.334rem', fontFamily: "'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif", color: '#64748B' }}>{fmt(displayResult.iva)}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547' }}>Total (IVA incl.)</Typography>
-              <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: PINK }}>{fmt(displayResult.total)}</Typography>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Info text below breakdown (Image #15) */}
-        <Box sx={{ bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid rgba(8,152,185,0.2)`, borderRadius: 1.5, px: 2, py: 1.25, mb: 3 }}>
-          <Typography sx={{ fontSize: '0.8rem', color: '#0777a0', lineHeight: 1.5 }}>
-            Incluye tablero, canalización, cableado y declaración TE6 ante SEC. Normativa RIC N°15.
+          <Typography sx={{ fontSize: '2.4rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
+            {fmt(displayResult.installGross)}
+          </Typography>
+          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mt: 0.75, maxWidth: 280, mx: 'auto' }}>
+            Materiales, mano de obra, trámite SEC y visita técnica incluidos.
           </Typography>
         </Box>
 
-        {/* ── Cronograma de instalación ───────────────────────────────────── */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
-          {/* Header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke="#0898b9" strokeWidth="1.5"/>
-              <path d="M12 7v5l3 3" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>
-              Tu proceso de instalación
-            </Typography>
-          </Box>
-
-          {/* Steps */}
-          {([
-            { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
-            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: state.nextVisitDate
-                ? `Próxima fecha: ${formatVisitDate(state.nextVisitDate)}`
-                : 'Próxima fecha disponible', active: true },
-            { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
-            { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
-          ] as { label: string; sub: string; active: boolean }[]).map((s, i) => (
-            <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: i < 3 ? 1.75 : 0 }}>
-              <Box sx={{
-                width: 24, height: 24, borderRadius: '50%', flexShrink: 0, mt: 0.1,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                bgcolor: s.active ? PINK : '#E2E8F0',
-              }}>
-                <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: s.active ? '#fff' : '#94A3B8' }}>
-                  {i + 1}
-                </Typography>
-              </Box>
+        {/* ── Charger card — mode 1: charger selected and NOT removed ── */}
+        {!displayResult.isOwn && state.removedChargerId === null && (
+          <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
               <Box>
-                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.3 }}>
-                  {s.label}
+                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547' }}>
+                  {displayResult.chargerName}
                 </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: s.active ? PINK : TEXT_MUTED, mt: 0.15 }}>
-                  {s.sub}
+                <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mt: 0.2 }}>
+                  Equipo estándar, a precio de mercado
                 </Typography>
               </Box>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547', flexShrink: 0, ml: 2 }}>
+                {fmt(displayResult.chargerGrossPrice)}
+              </Typography>
             </Box>
-          ))}
-
-          {/* Footer */}
-          <Box sx={{ mt: 2, pt: 1.5, borderTop: `1px solid ${BORDER}`, bgcolor: 'rgba(8,152,185,0.05)', borderRadius: 1, px: 1.5, py: 1 }}>
-            <Typography sx={{ fontSize: '0.78rem', color: TEAL, fontWeight: 600, textAlign: 'center' }}>
-              De pago a cargador funcionando: ~7 a 12 días hábiles
+            <Box
+              component="span"
+              onClick={() => update({ removedChargerId: state.chargerId, chargerId: 'own' })}
+              sx={{ fontSize: '0.78rem', color: PINK, cursor: 'pointer', fontWeight: 600,
+                    '&:hover': { textDecoration: 'underline' } }}
+            >
+              Ya tengo el mío · quitar ($0)
+            </Box>
+            <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 1.5, lineHeight: 1.5 }}>
+              El cargador es un equipo estándar que puedes comprar donde quieras. Nosotros no lo encarecemos: nuestro valor es la instalación, rápida y a bajo costo.
             </Typography>
+            <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${BORDER}`, display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>Total proyecto:</Typography>
+              <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#2A3547' }}>
+                {fmt(displayResult.installGross + displayResult.chargerGrossPrice)} (instalación + cargador)
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
+
+        {/* ── Charger card — mode 2: own charger OR charger was removed ── */}
+        {(displayResult.isOwn || state.removedChargerId !== null) && (
+          <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547' }}>
+                  Cargador · lo pones tú
+                </Typography>
+                <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mt: 0.2 }}>
+                  Usarás tu propio cargador
+                </Typography>
+              </Box>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547', flexShrink: 0, ml: 2 }}>
+                $0
+              </Typography>
+            </Box>
+            {removedCharger && (
+              <Box
+                component="span"
+                onClick={() => update({ chargerId: state.removedChargerId!, removedChargerId: null })}
+                sx={{
+                  display: 'inline-block', fontSize: '0.78rem', color: PINK, cursor: 'pointer',
+                  fontWeight: 600, border: `1.5px solid ${PINK}`, borderRadius: 1,
+                  px: 1, py: 0.25, mt: 0.5,
+                  '&:hover': { bgcolor: 'rgba(232,26,104,0.05)' },
+                }}
+              >
+                + Agregar {removedCharger.name} ({fmt(removedCharger.precio)})
+              </Box>
+            )}
+            <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 1.5, lineHeight: 1.5 }}>
+              El cargador es un equipo estándar que puedes comprar donde quieras. Nosotros no lo encarecemos: nuestro valor es la instalación, rápida y a bajo costo.
+            </Typography>
+            <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${BORDER}`, display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>Total proyecto:</Typography>
+              <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#2A3547' }}>
+                {fmt(displayResult.installGross)} (Instalación)
+              </Typography>
+            </Box>
+          </Box>
+        )}
 
         {/* Social proof */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5, mb: 1 }}>
@@ -2642,6 +2597,48 @@ export default function CotizadorWizard() {
             )}
           </Box>
         )}
+
+        {/* ── Cronograma de instalación ───────────────────────────────────── */}
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#0898b9" strokeWidth="1.5"/>
+              <path d="M12 7v5l3 3" stroke="#0898b9" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>
+              Tu proceso de instalación
+            </Typography>
+          </Box>
+          {([
+            { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
+            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: state.nextVisitDate
+                ? `Próxima fecha: ${formatVisitDate(state.nextVisitDate)}`
+                : 'Próxima fecha disponible', active: true },
+            { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
+            { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
+          ] as { label: string; sub: string; active: boolean }[]).map((s, i) => (
+            <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: i < 3 ? 1.75 : 0 }}>
+              <Box sx={{
+                width: 24, height: 24, borderRadius: '50%', flexShrink: 0, mt: 0.1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                bgcolor: s.active ? PINK : '#E2E8F0',
+              }}>
+                <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: s.active ? '#fff' : '#94A3B8' }}>
+                  {i + 1}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#2A3547', lineHeight: 1.3 }}>{s.label}</Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: s.active ? PINK : TEXT_MUTED, mt: 0.15 }}>{s.sub}</Typography>
+              </Box>
+            </Box>
+          ))}
+          <Box sx={{ mt: 2, pt: 1.5, borderTop: `1px solid ${BORDER}`, bgcolor: 'rgba(8,152,185,0.05)', borderRadius: 1, px: 1.5, py: 1 }}>
+            <Typography sx={{ fontSize: '0.78rem', color: TEAL, fontWeight: 600, textAlign: 'center' }}>
+              De pago a cargador funcionando: ~7 a 12 días hábiles
+            </Typography>
+          </Box>
+        </Box>
 
         {/* Trust box — redesigned */}
         <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 3 }}>

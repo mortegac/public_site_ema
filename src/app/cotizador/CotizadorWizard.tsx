@@ -132,6 +132,7 @@ interface WizardState {
   nombreEmail: string
   emailSolo: string
   emailSent: boolean
+  electrolineraSubmitted: boolean
   emailSending: boolean
   emailError: string
   paid: boolean
@@ -192,11 +193,12 @@ function calcResult(state: WizardState): CalcResult | null {
   const inst = Math.round(base.inst * f)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
-  const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
+  // charger.precio is the NETO price (before IVA) — shown with "+IVA" in step 2
+  const chargerPrice = charger ? charger.precio : 0                        // neto
+  const chargerGrossPrice = charger ? Math.round(charger.precio * 1.19) : 0 // neto × 1.19
   const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
   const neto = mat + inst + sec + chargerPrice
   const iva = Math.round(neto * 0.19)
-  const chargerGrossPrice = charger ? charger.precio : 0
   const installGross = Math.round((mat + inst + sec) * 1.19)
   return { mat, inst, sec, chargerPrice, chargerName, neto, iva, total: neto + iva, isOwn: state.chargerId === 'own', chargerGrossPrice, installGross }
 }
@@ -403,6 +405,7 @@ export default function CotizadorWizard() {
     nombreEmail: '',
     emailSolo: '',
     emailSent: false,
+    electrolineraSubmitted: false,
     emailSending: false,
     emailError: '',
     paid: false,
@@ -992,6 +995,7 @@ export default function CotizadorWizard() {
       nombreEmail: '',
       emailSolo: '',
       emailSent: false,
+      electrolineraSubmitted: false,
       emailSending: false,
       emailError: '',
       paid: false,
@@ -1699,12 +1703,54 @@ export default function CotizadorWizard() {
               </Button>
               {state.activePanel === 'electrolinera' && (
                 <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+                  {state.electrolineraSubmitted ? (
+                    <Box sx={{ textAlign: 'center', py: 2 }}>
+                      <Typography sx={{ fontSize: '2rem', mb: 1 }}>✅</Typography>
+                      <Typography sx={{ fontWeight: 700, color: '#166534', mb: 0.5, fontSize: '1rem' }}>
+                        ¡Postulación enviada correctamente!
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, lineHeight: 1.6 }}>
+                        Nuestro equipo evaluará la factibilidad técnica. Recibirás una respuesta lo antes posible.
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <>
                   <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>
                     Regístrate para recibir tu kit
                   </Typography>
                   <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.5 }}>
                     Te enviamos todo lo que necesitas para presentar en la próxima reunión de tu comunidad.
                   </Typography>
+                  {/* Dirección con validación Google Maps + RM only */}
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                    Dirección del edificio
+                  </Typography>
+                  <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                    <AddressInput2
+                      value={state.address}
+                      error={!!state.address && !state.addressValidated}
+                      onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                      onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                      onSelectAddress={(details) => {
+                        if (details) {
+                          const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                          update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
+                        }
+                      }}
+                    />
+                  </Box>
+                  {state.address && !state.addressValidated && (
+                    <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                      Selecciona una dirección del menú desplegable para continuar
+                    </Typography>
+                  )}
+                  {state.address && !isRegionMetropolitana(state.address) && (
+                    <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                      <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                        Solo atendemos Región Metropolitana y Valparaíso
+                      </Typography>
+                    </Box>
+                  )}
                   <TextField fullWidth size="small" label="Nombre"
                     value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Email" type="email"
@@ -1717,9 +1763,9 @@ export default function CotizadorWizard() {
                   <Button
                     fullWidth
                     variant="contained"
-                    disabled={!state.emailPago.trim() || state.webpayLoading}
+                    disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
                     onClick={async () => {
-                      if (!state.emailPago.trim()) return
+                      if (!state.emailPago.trim() || !state.addressValidated) return
                       update({ webpayLoading: true, webpayError: '' })
                       try {
                         initEmailjs('UYcrSeCqLGW8xqT4S')
@@ -1735,12 +1781,18 @@ export default function CotizadorWizard() {
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Nombre</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.nombreEmail || '—'}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Email</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.emailPago}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Teléfono</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.visitaTelefono || '—'}</td></tr>
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Dirección edificio</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.address || '—'}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso departamento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioFloor || '—'}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso estacionamiento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${parkingLabel}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">¿Tiene estacionamiento visitas?</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${visitasLabel}</td></tr>
-                            </table>`,
+                            </table>
+                            <p style="font-family:sans-serif;font-size:13px;color:#4B4B5C;line-height:1.6;margin-top:16px;">
+                              Nuestro equipo evaluará la factibilidad técnica y la coordinación con la administración o entidad responsable.<br><br>
+                              💡 Este programa está orientado a comunidades, establecimientos y espacios de alto tránsito que busquen fomentar la movilidad eléctrica y compartir el beneficio entre sus residentes, huéspedes, clientes o colaboradores.<br><br>
+                              Recibirás una respuesta de nuestros consultores lo antes posible.
+                            </p>`,
                         })
-                        update({ webpayLoading: false, activePanel: null, emailSent: true })
+                        update({ webpayLoading: false, electrolineraSubmitted: true })
                       } catch {
                         update({ webpayLoading: false, webpayError: 'No se pudo enviar. Intenta nuevamente.' })
                       }
@@ -1757,6 +1809,8 @@ export default function CotizadorWizard() {
                   <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
                     Sin compromiso si la comunidad la rechaza.
                   </Typography>
+                    </>
+                  )}
                 </Box>
               )}
             </Box>
@@ -2370,7 +2424,7 @@ export default function CotizadorWizard() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
               <Box>
                 <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547' }}>
-                  {displayResult.chargerName}
+                  {result?.chargerName ?? displayResult.chargerName}
                 </Typography>
                 <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mt: 0.2 }}>
                   Equipo estándar, a precio de mercado
@@ -2378,7 +2432,7 @@ export default function CotizadorWizard() {
               </Box>
               <Box sx={{ textAlign: 'right', flexShrink: 0, ml: 2 }}>
                 <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547' }}>
-                  {fmt(displayResult.chargerGrossPrice)}
+                  {fmt(result?.chargerGrossPrice ?? displayResult.chargerGrossPrice)}
                 </Typography>
                 <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>IVA incluido</Typography>
               </Box>
@@ -2397,7 +2451,7 @@ export default function CotizadorWizard() {
             <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${BORDER}`, display: 'flex', justifyContent: 'space-between' }}>
               <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>Total proyecto:</Typography>
               <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#2A3547' }}>
-                {fmt(displayResult.installGross + displayResult.chargerGrossPrice)} (instalación + cargador)
+                {fmt((result?.installGross ?? displayResult.installGross) + (result?.chargerGrossPrice ?? displayResult.chargerGrossPrice))} (instalación + cargador)
               </Typography>
             </Box>
           </Box>
@@ -2430,7 +2484,7 @@ export default function CotizadorWizard() {
                   '&:hover': { bgcolor: 'rgba(232,26,104,0.05)' },
                 }}
               >
-                + Agregar {removedCharger.name} ({fmt(removedCharger.precio)})
+                + Agregar {removedCharger.name} ({fmt(Math.round(removedCharger.precio * 1.19))})
               </Box>
             )}
             <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 1.5, lineHeight: 1.5 }}>

@@ -1781,7 +1781,7 @@ export default function CotizadorWizard() {
                         const parkingLabel = state.edificioParkingFloor || 'No indicado'
                         const visitasLabel = state.edificioVisitorParking === true ? 'Sí' : state.edificioVisitorParking === false ? 'No' : 'No indicado'
                         await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
-                          to_email: 'hola@energica.city',
+                          to_email: state.emailPago,
                           name: state.nombreEmail || state.emailPago,
                           subject: `Nueva postulación electrolinera — ${state.nombreEmail || state.emailPago}`,
                           CONTENT_HTML: `

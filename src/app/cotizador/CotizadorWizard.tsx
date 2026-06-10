@@ -45,7 +45,7 @@ const PARKING_FLOORS = [
 // ─── Data ────────────────────────────────────────────────────────────────────
 const CHARGERS = [
   // Portable
-  { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 299000, stock: 2 },
+  { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 355810, stock: 2 },
   // Wallbox — sincronizado con Prismic products (10 jun 2026)
   { id: 'zeero', name: 'ZEERO Minibox 7 kW', tipo: 'wallbox', kw: '7', desc: 'Wallbox · Con stock', precio: 549989, stock: 5 },
   { id: 'effitec', name: 'EFFITEC 7 kW', tipo: 'wallbox', kw: '7.3', desc: 'Cable tipo 2 · Con stock', precio: 599900, stock: 5 },

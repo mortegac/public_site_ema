@@ -44,13 +44,17 @@ const PARKING_FLOORS = [
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 const CHARGERS = [
+  // Portable
   { id: 'workersbee', name: 'Workersbee 2.2–7 kW', tipo: 'portable', kw: '2.2–7', desc: 'Portable · Potencia regulable · Cable de carga', precio: 299000, stock: 2 },
-  { id: 'livoltek', name: 'LIVOLTEK Smart EV 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · Disponibilidad inmediata', precio: 599000, stock: 3 },
-  { id: 'effitec', name: 'EFFITEC 7 kW', tipo: 'wallbox', kw: '7', desc: 'Cable tipo 2 · Garantía 2 años', precio: 595000, stock: 5 },
+  // Wallbox — sincronizado con Prismic products (10 jun 2026)
+  { id: 'zeero', name: 'ZEERO Minibox 7 kW', tipo: 'wallbox', kw: '7', desc: 'Wallbox · Con stock', precio: 549989, stock: 5 },
+  { id: 'effitec', name: 'EFFITEC 7 kW', tipo: 'wallbox', kw: '7.3', desc: 'Cable tipo 2 · Con stock', precio: 599900, stock: 5 },
+  { id: 'livoltek', name: 'LIVOLTEK Smart EV 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · Con stock', precio: 650000, stock: 3 },
   { id: 'kpn-app', name: 'KPN Wallbox KBox App', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · App de usuario', precio: 606900, stock: 5 },
-  { id: 'beste-s', name: 'BESTE TS-EVC07 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Cable tipo 2 · Disponibilidad inmediata', precio: 773500, stock: 5 },
-  { id: 'beste-mini', name: 'BESTE Smart Mini 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Diseño compacto · Disponibilidad inmediata', precio: 773500, stock: 5 },
-  { id: 'kpn-ocpp', name: 'KPN Wallbox KBox OCPP 1.6', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · Protocolo OCPP 1.6', precio: 779450, stock: 5 },
+  { id: 'beste-s', name: 'BESTE TS-EVC07-003(S) 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Cable tipo 2 · Con stock', precio: 773500, stock: 5 },
+  { id: 'beste-mini', name: 'BESTE Smart Mini 7.3 kW', tipo: 'wallbox', kw: '7.3', desc: 'Diseño compacto · Con stock', precio: 773500, stock: 5 },
+  { id: 'kpn-ocpp', name: 'KPN Wallbox KBox OCPP 1.6', tipo: 'wallbox', kw: '7.3', desc: 'Protocolo OCPP · Con stock', precio: 779450, stock: 5 },
+  { id: 'beny', name: 'BENY 7 kW', tipo: 'wallbox', kw: '7.3', desc: 'Wallbox · Con stock', precio: 889800, stock: 3 },
 ]
 
 const INSTALL_BASE = {
@@ -121,7 +125,7 @@ interface WizardState {
   tipoC: 'portable' | 'wallbox' | null
   chargerId: string | null
   dist: number
-  activePanel: 'pago' | 'email' | 'visitaPago' | null
+  activePanel: 'pago' | 'email' | 'visitaPago' | 'electrolinera' | null
   visitaTelefono: string
   depto: string
   emailPago: string
@@ -965,6 +969,7 @@ export default function CotizadorWizard() {
   }
 
   function resetAll() {
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
     setState({
       step: 0,
       tipo: null,
@@ -1134,7 +1139,7 @@ export default function CotizadorWizard() {
                   if (!val) return <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Elige un wallbox...</Typography>
                   if (val === 'own') return 'Ya tengo mi cargador (solo instalación)'
                   const ch = wallboxes.find(c => c.id === val)
-                  return ch ? `${ch.name} — ${fmt(Math.round(ch.precio / 1.19))} — ${ch.kw} kW` : val
+                  return ch ? `${ch.name} — ${fmt(Math.round(ch.precio / 1.19))} +IVA — ${ch.kw} kW` : val
                 }}
                 sx={{
                   bgcolor: '#fff',
@@ -1149,7 +1154,7 @@ export default function CotizadorWizard() {
                 </MenuItem>
                 {wallboxes.map(c => (
                   <MenuItem key={c.id} value={c.id} sx={{ fontSize: '0.875rem' }}>
-                    {c.name} — {fmt(Math.round(c.precio / 1.19))} — {c.kw} kW
+                    {c.name} — {fmt(Math.round(c.precio / 1.19))} +IVA — {c.kw} kW
                   </MenuItem>
                 ))}
                 <MenuItem value="own" sx={{ fontSize: '0.875rem' }}>
@@ -1432,8 +1437,8 @@ export default function CotizadorWizard() {
     const displayResult = state.apiResult ?? localResult
     if (!displayResult) return null
 
-    const RANGE_LOW = 2350000
-    const RANGE_HIGH = 4110000
+    const RANGE_LOW = 1350000
+    const RANGE_HIGH = 3110000
 
     return (
       <Box>
@@ -1527,6 +1532,45 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
               Datos para el comprobante
             </Typography>
+            {/* Address */}
+            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+              Dirección de instalación
+            </Typography>
+            <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+              <AddressInput2
+                value={state.address}
+                error={!!state.address && !state.addressValidated}
+                onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                onSelectAddress={(details) => {
+                  if (details) {
+                    const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                    update({
+                      address: full,
+                      addressValidated: true,
+                      addressCity: details.City ?? '',
+                      addressState: details.State ?? '',
+                      addressZipCode: details.ZipCode ?? '',
+                      addressLat: String(details.Latitude ?? ''),
+                      addressLng: String(details.Longitude ?? ''),
+                      regionWarn: false,
+                    })
+                  }
+                }}
+              />
+            </Box>
+            {state.address && !state.addressValidated && (
+              <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                Selecciona una dirección del menú desplegable para continuar
+              </Typography>
+            )}
+            {state.address && !isRegionMetropolitana(state.address) && (
+              <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                  Solo atendemos Región Metropolitana y Valparaíso
+                </Typography>
+              </Box>
+            )}
             <TextField
               fullWidth
               size="small"
@@ -1563,7 +1607,7 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              disabled={!state.emailPago.trim() || state.webpayLoading}
+              disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
               onClick={() => payDirect(29000, 'Visita técnica · Instalación dedicada edificio', 'visit')}
               sx={{
                 bgcolor: PINK,
@@ -1640,19 +1684,10 @@ export default function CotizadorWizard() {
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => {
-                  sessionStorage.setItem('edificioPostulacion', JSON.stringify({
-                    address: state.address,
-                    dist: state.dist,
-                    formId: state.formId,
-                    floor: state.edificioFloor,
-                    parking: state.edificioParkingFloor,
-                  }))
-                  window.location.href = '/postulacion-cargadores-edificios'
-                }}
+                onClick={() => update({ activePanel: state.activePanel === 'electrolinera' ? null : 'electrolinera' })}
                 sx={{
-                  bgcolor: PINK,
-                  '&:hover': { bgcolor: PINK_DARK },
+                  bgcolor: state.activePanel === 'electrolinera' ? '#94A3B8' : PINK,
+                  '&:hover': { bgcolor: state.activePanel === 'electrolinera' ? '#64748B' : PINK_DARK },
                   fontWeight: 700,
                   py: 1.25,
                   fontSize: '0.9rem',
@@ -1662,9 +1697,68 @@ export default function CotizadorWizard() {
               >
                 Quiero electrolinera en mi edificio →
               </Button>
-              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                Sin compromiso si la comunidad la rechaza.
-              </Typography>
+              {state.activePanel === 'electrolinera' && (
+                <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+                  <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>
+                    Regístrate para recibir tu kit
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.5 }}>
+                    Te enviamos todo lo que necesitas para presentar en la próxima reunión de tu comunidad.
+                  </Typography>
+                  <TextField fullWidth size="small" label="Nombre"
+                    value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+                  <TextField fullWidth size="small" label="Email" type="email"
+                    value={state.emailPago} onChange={e => update({ emailPago: e.target.value })} sx={{ mb: 2 }} />
+                  <TextField fullWidth size="small" label="Teléfono" type="tel"
+                    value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                  {state.webpayError && (
+                    <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
+                  )}
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    disabled={!state.emailPago.trim() || state.webpayLoading}
+                    onClick={async () => {
+                      if (!state.emailPago.trim()) return
+                      update({ webpayLoading: true, webpayError: '' })
+                      try {
+                        initEmailjs('UYcrSeCqLGW8xqT4S')
+                        const parkingLabel = state.edificioParkingFloor || 'No indicado'
+                        const visitasLabel = state.edificioVisitorParking === true ? 'Sí' : state.edificioVisitorParking === false ? 'No' : 'No indicado'
+                        await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+                          to_email: 'hola@energica.city',
+                          name: state.nombreEmail || state.emailPago,
+                          subject: `Nueva postulación electrolinera — ${state.nombreEmail || state.emailPago}`,
+                          CONTENT_HTML: `
+                            <h3 style="font-family:sans-serif;">Nueva postulación: Electrolinera compartida en edificio</h3>
+                            <table style="border-collapse:collapse;width:100%;font-family:sans-serif;font-size:13px;">
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Nombre</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.nombreEmail || '—'}</td></tr>
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Email</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.emailPago}</td></tr>
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Teléfono</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.visitaTelefono || '—'}</td></tr>
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso departamento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioFloor || '—'}</td></tr>
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso estacionamiento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${parkingLabel}</td></tr>
+                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">¿Tiene estacionamiento visitas?</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${visitasLabel}</td></tr>
+                            </table>`,
+                        })
+                        update({ webpayLoading: false, activePanel: null, emailSent: true })
+                      } catch {
+                        update({ webpayLoading: false, webpayError: 'No se pudo enviar. Intenta nuevamente.' })
+                      }
+                    }}
+                    sx={{
+                      bgcolor: PINK, color: '#fff',
+                      '&:hover': { bgcolor: PINK_DARK },
+                      '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                      fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2,
+                    }}
+                  >
+                    {state.webpayLoading ? 'Enviando…' : 'Quiero electrolinera en mi edificio →'}
+                  </Button>
+                  <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                    Sin compromiso si la comunidad la rechaza.
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
@@ -2036,6 +2130,45 @@ export default function CotizadorWizard() {
                   <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
                     Datos para el comprobante
                   </Typography>
+                  {/* Address */}
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                    Dirección de instalación
+                  </Typography>
+                  <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                    <AddressInput2
+                      value={state.address}
+                      error={!!state.address && !state.addressValidated}
+                      onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                      onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                      onSelectAddress={(details) => {
+                        if (details) {
+                          const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                          update({
+                            address: full,
+                            addressValidated: true,
+                            addressCity: details.City ?? '',
+                            addressState: details.State ?? '',
+                            addressZipCode: details.ZipCode ?? '',
+                            addressLat: String(details.Latitude ?? ''),
+                            addressLng: String(details.Longitude ?? ''),
+                            regionWarn: false,
+                          })
+                        }
+                      }}
+                    />
+                  </Box>
+                  {state.address && !state.addressValidated && (
+                    <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                      Selecciona una dirección del menú desplegable para continuar
+                    </Typography>
+                  )}
+                  {state.address && !isRegionMetropolitana(state.address) && (
+                    <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                      <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                        Solo atendemos Región Metropolitana y Valparaíso
+                      </Typography>
+                    </Box>
+                  )}
                   <TextField fullWidth size="small" label="Tu nombre completo (opcional)"
                     value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" required label="Email para comprobante" type="email"
@@ -2049,7 +2182,7 @@ export default function CotizadorWizard() {
                     <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
                   )}
                   <Button fullWidth variant="contained"
-                    disabled={!state.emailPago.trim() || state.webpayLoading}
+                    disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
                     onClick={() => payDirect(
                       opt.payAmount,
                       opt.glosa,
@@ -2126,6 +2259,45 @@ export default function CotizadorWizard() {
               <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
                 Datos para el comprobante
               </Typography>
+              {/* Address */}
+              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                Dirección de instalación
+              </Typography>
+              <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                <AddressInput2
+                  value={state.address}
+                  error={!!state.address && !state.addressValidated}
+                  onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                  onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                  onSelectAddress={(details) => {
+                    if (details) {
+                      const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                      update({
+                        address: full,
+                        addressValidated: true,
+                        addressCity: details.City ?? '',
+                        addressState: details.State ?? '',
+                        addressZipCode: details.ZipCode ?? '',
+                        addressLat: String(details.Latitude ?? ''),
+                        addressLng: String(details.Longitude ?? ''),
+                        regionWarn: false,
+                      })
+                    }
+                  }}
+                />
+              </Box>
+              {state.address && !state.addressValidated && (
+                <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                  Selecciona una dirección del menú desplegable para continuar
+                </Typography>
+              )}
+              {state.address && !isRegionMetropolitana(state.address) && (
+                <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                  <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                    Solo atendemos Región Metropolitana y Valparaíso
+                  </Typography>
+                </Box>
+              )}
               <TextField fullWidth size="small" label="Tu nombre completo (opcional)"
                 value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
               <TextField fullWidth size="small" required label="Email para comprobante" type="email"
@@ -2139,7 +2311,7 @@ export default function CotizadorWizard() {
                 <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
               )}
               <Button fullWidth variant="contained"
-                disabled={!state.emailPago.trim() || state.webpayLoading}
+                disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
                 onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
                 sx={{
                   bgcolor: PINK, color: '#fff',
@@ -2204,9 +2376,12 @@ export default function CotizadorWizard() {
                   Equipo estándar, a precio de mercado
                 </Typography>
               </Box>
-              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547', flexShrink: 0, ml: 2 }}>
-                {fmt(displayResult.chargerGrossPrice)}
-              </Typography>
+              <Box sx={{ textAlign: 'right', flexShrink: 0, ml: 2 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#2A3547' }}>
+                  {fmt(displayResult.chargerGrossPrice)}
+                </Typography>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>IVA incluido</Typography>
+              </Box>
             </Box>
             <Box
               component="span"

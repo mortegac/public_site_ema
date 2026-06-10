@@ -2285,7 +2285,7 @@ export default function CotizadorWizard() {
           ))}
           <Button
             fullWidth
-            variant="outlined"
+            variant="contained"
             disabled={state.webpayLoading}
             onClick={() => update({
               selectedReserveOption: 'visita',
@@ -2294,15 +2294,15 @@ export default function CotizadorWizard() {
               reservePendingGlosa: '',
             })}
             sx={{
-              borderColor: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#94A3B8' : BORDER,
-              color: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#94A3B8' : '#2A3547',
-              '&:hover': { borderColor: '#2A3547', bgcolor: 'rgba(0,0,0,0.02)', color: '#2A3547' },
-              '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
+              bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#94A3B8' : PINK,
+              '&:hover': { bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#64748B' : PINK_DARK },
+              '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
               fontWeight: 700,
               py: 1.25,
               fontSize: '0.9rem',
-              mt: 2,
+              boxShadow: 'none',
               borderRadius: 2,
+              mt: 2,
             }}
           >
             {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
@@ -2451,7 +2451,7 @@ export default function CotizadorWizard() {
             <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${BORDER}`, display: 'flex', justifyContent: 'space-between' }}>
               <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>Total proyecto:</Typography>
               <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#2A3547' }}>
-                {fmt((result?.installGross ?? displayResult.installGross) + (result?.chargerGrossPrice ?? displayResult.chargerGrossPrice))} (instalación + cargador)
+                {fmt(displayResult.installGross + displayResult.chargerGrossPrice)} (instalación + cargador)
               </Typography>
             </Box>
           </Box>

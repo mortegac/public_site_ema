@@ -218,7 +218,7 @@ export default function ReciboPagoClient() {
 
                   {/* Date picker */}
                   <Typography fontSize="0.85rem" fontWeight={700} color="#2A3547" mb={0.25}>Elige una fecha</Typography>
-                  <Typography fontSize="0.75rem" color="#64748B" mb={1.5}>Horario AM (9:00–13:00) · Se confirma el día anterior</Typography>
+                  <Typography fontSize="0.75rem" color="#64748B" mb={1.5}>Horario se confirma posterior a reservar horario hábil entre 09:00 a 18:00 hrs</Typography>
 
                   {loadingDates ? (
                     <Typography fontSize="0.85rem" color="#64748B" sx={{ mb: 3, textAlign: 'center', py: 2 }}>

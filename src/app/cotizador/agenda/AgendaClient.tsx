@@ -30,6 +30,7 @@ interface PaymentData {
   inst?: number
   sec?: number
   isOwn?: boolean
+  formId?: string
 }
 
 interface DateSlot {
@@ -218,9 +219,28 @@ function AgendaContent() {
   const jwtPayload = decodeJwtPayload(token)
 
   const emailFromJwt = jwtPayload?.email ?? jwtPayload?.sub ?? ''
-  const [paymentData, setPaymentData] = useState<PaymentData>({
-    email: emailFromJwt,
-    customerId: emailFromJwt,
+  const [paymentData, setPaymentData] = useState<PaymentData>(() => {
+    if (emailFromJwt) return { email: emailFromJwt, customerId: emailFromJwt }
+    try {
+      const stored = typeof window !== 'undefined' ? sessionStorage.getItem('paymentData') : null
+      if (stored) {
+        const d = JSON.parse(stored)
+        return {
+          email: d.email ?? '',
+          customerId: d.email ?? '',
+          address: d.address ?? '',
+          chargerName: d.chargerName ?? '',
+          formId: d.formId ?? '',
+          tipo: d.tipo ?? '',
+          dist: d.dist ?? undefined,
+          depto: d.depto ?? '',
+          total: d.total ?? undefined,
+          neto: d.neto ?? undefined,
+          iva: d.iva ?? undefined,
+        }
+      }
+    } catch {}
+    return { email: '', customerId: '' }
   })
 
   const [dates, setDates] = useState<DateSlot[]>([])
@@ -255,7 +275,7 @@ function AgendaContent() {
       }
 
       // 1. Check if customer already has an active booking
-      const formId = jwtPayload?.formid ?? ''
+      const formId = jwtPayload?.formid ?? paymentData.formId ?? ''
 
       // Fetch quote data from DB to populate summary card (non-blocking)
       if (formId) {
@@ -419,7 +439,7 @@ function AgendaContent() {
 
                   {/* Date picker */}
                   <Typography fontSize="0.85rem" fontWeight={700} color="#2A3547" mb={0.25}>Elige una fecha</Typography>
-                  <Typography fontSize="0.75rem" color="#64748B" mb={1.5}>Horario AM (9:00–13:00) · Se confirma el día anterior</Typography>
+                  <Typography fontSize="0.75rem" color="#64748B" mb={1.5}>Horario se confirma posterior a reservar horario hábil entre 09:00 a 18:00 hrs</Typography>
 
                   {loadingDates ? (
                     <Typography fontSize="0.85rem" color="#64748B" sx={{ mb: 3, textAlign: 'center', py: 2 }}>
@@ -466,12 +486,13 @@ function AgendaContent() {
                     setBookingLoading(true)
                     setBookingError('')
                     try {
+                      const sessionFormId = (() => { try { return JSON.parse(sessionStorage.getItem('paymentData') ?? '{}')?.formId ?? '' } catch { return '' } })()
                       const bookingPayload = {
                         calendarId,
                         customerId: paymentData?.customerId ?? paymentData?.email ?? '',
                         address: paymentData?.address ?? '',
                         chargerName: paymentData?.chargerName ?? 'Instalación cargador EV',
-                        formId: jwtPayload?.formid ?? '',
+                        formId: jwtPayload?.formid ?? sessionFormId,
                       }
                       const res = await fetch('/api/confirm-charger-visit', {
                         method: 'POST',

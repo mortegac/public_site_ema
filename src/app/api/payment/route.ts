@@ -92,6 +92,10 @@ interface PaymentBody {
   chargerName?: string
   dist?: number
   formId?: string
+  typeOfCart?: 'chargerInstallation' | 'visit' | 'product' | 'service' | 'input' | 'virtualVisit'
+  typeOfItem?: 'chargerInstallation' | 'visit' | 'product' | 'service' | 'input' | 'virtualVisit'
+  pendingAmount?: number
+  pendingGlosa?: string
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -111,6 +115,8 @@ export async function POST(req: NextRequest) {
     glosa = 'Visita técnica instalación cargador EV',
     chargerName = 'Instalación cargador EV',
     formId,
+    typeOfCart = 'chargerInstallation',
+    typeOfItem = 'chargerInstallation',
   } = body
 
   if (!total || total <= 0) {
@@ -118,16 +124,13 @@ export async function POST(req: NextRequest) {
   }
 
   // TEST PAGOS ─ Fuerza el monto a $6 CLP para pruebas de Webpay.
-  // TEST PAGOS ─ Para reactivar: cambiar isTestMode a true.
-  // const isTestMode = true // TEST PAGOS
-  // const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
-  // const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
-  // if (isTestMode) {
-  //   console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
-  // }
-  // TEST PAGOS ─ Fin del bloque de prueba. ────────────────────────────────────
-  const effectiveTotal = Math.round(total)
-  const effectiveVat   = Math.round(vat)
+  const isTestMode = true // TEST PAGOS
+  const effectiveTotal = isTestMode ? 6 : Math.round(total) // TEST PAGOS
+  const effectiveVat   = isTestMode ? 1 : Math.round(vat)   // TEST PAGOS
+  if (isTestMode) {
+    console.warn('[payment] ⚠️  TEST PAGOS ACTIVO: monto forzado a $6 CLP (original: $' + total + ')') // TEST PAGOS
+  }
+  // TEST PAGOS ─ Fin del bloque de prueba. ─────────────────────────────────────
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()
@@ -141,7 +144,7 @@ export async function POST(req: NextRequest) {
       shoppingCartId,
       total: effectiveTotal,
       vat: effectiveVat,
-      typeOfCart: 'chargerInstallation',
+      typeOfCart,
       paymentMethod: 'transbank',
       status: 'pending',
       ...(email ? { customerId: email } : {}),
@@ -166,14 +169,48 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `createShoppingCart failed: ${message}`, shoppingCartId }, { status: 502 })
   }
 
+  // ── Step 1b: Create deferred ShoppingCart (pending balance) ─────────────────
+  if (body.pendingAmount && body.pendingAmount > 0) {
+    try {
+      const pendingCartId = crypto.randomUUID()
+      const pendingCartInput: Record<string, unknown> = {
+        shoppingCartId: pendingCartId,
+        total: Math.round(body.pendingAmount),
+        vat: Math.round(body.pendingAmount * 0.19 / 1.19),
+        typeOfCart: typeOfCart,
+        paymentMethod: 'transbank',
+        status: 'pending',
+        ...(email ? { customerId: email } : {}),
+        ...(formId ? { formId } : {}),
+      }
+      await callAppSync(appsyncUrl, apiKey, CREATE_SHOPPING_CART, { input: pendingCartInput }, 'createPendingShoppingCart')
+      // Create detail for the deferred cart
+      await callAppSync(appsyncUrl, apiKey, CREATE_SHOPPING_CART_DETAIL, {
+        input: {
+          shoppingCartDetailId: crypto.randomUUID(),
+          shoppingCartId: pendingCartId,
+          glosa: body.pendingGlosa ?? 'Saldo pendiente',
+          price: Math.round(body.pendingAmount),
+          typeOfItem: typeOfItem,
+        }
+      }, 'createPendingShoppingCartDetail')
+      console.log('[payment] Deferred pending cart created:', pendingCartId)
+    } catch (err: unknown) {
+      console.warn('[payment] createPendingShoppingCart error (non-fatal):', err instanceof Error ? err.message : err)
+    }
+  }
+
   // ── Step 2: Create ShoppingCartDetail (Lambda may require at least one item) ─
   try {
+    const detailGlosa = typeOfCart === 'visit'
+      ? 'Visita técnica - kit aprobación de tu comunidad.'
+      : (chargerName || glosa)
     const detailInput = {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
-      glosa: chargerName,
+      glosa: detailGlosa,
       price: effectiveTotal,
-      typeOfItem: 'service',
+      typeOfItem,
     }
 
     console.log('[payment] Creating ShoppingCartDetail:', JSON.stringify(detailInput))

@@ -239,6 +239,150 @@ async function sendReceiptEmail(params: {
   })
 }
 
+// ─── Receipt email for edificio technical visit ($29.000) ────────────────────
+async function sendEdificioVisitReceiptEmail(params: {
+  token: string
+  to_email: string
+  amount: number
+  buy_order: string
+  card_number: string
+  payment_type_code: string
+  shoppingCartId: string
+}): Promise<void> {
+  const { token, to_email, amount, buy_order, card_number, payment_type_code, shoppingCartId } = params
+
+  let sessionData: Record<string, unknown> = {}
+  try {
+    const raw = sessionStorage.getItem('paymentData')
+    if (raw) sessionData = JSON.parse(raw)
+  } catch {}
+
+  let txDateStr = new Date().toISOString()
+  let authCode = ''
+  try {
+    const tx = await fetchPaymentTransactionByToken({ token })
+    if (tx?.transaction_date) txDateStr = tx.transaction_date
+    if (tx?.authorization_code) authCode = tx.authorization_code
+  } catch {}
+
+  const isValidEmail = (v: string) => !!v && v !== 'sin-usuario' && v.includes('@')
+  let resolvedEmail = isValidEmail(to_email) ? to_email : ''
+  let customerName = String(sessionData.nombre || resolvedEmail || to_email)
+  try {
+    const cart = await fecthShoppingCart({ shoppingCartId })
+    if (cart?.customer?.Name) customerName = cart.customer.Name
+    if (!resolvedEmail) {
+      const cartEmail = cart?.customer?.Email || cart?.customerId || ''
+      if (isValidEmail(cartEmail)) resolvedEmail = cartEmail
+    }
+    if (!customerName || customerName === 'sin-usuario') customerName = resolvedEmail
+  } catch {}
+
+  const total = Number(sessionData.total ?? amount)
+  const neto = Math.round(total / 1.19)
+  const iva = total - neto
+
+  const paymentMethod = paymentMethodLabel(payment_type_code, card_number)
+  const dateTimeLabel = fmtTxDate(txDateStr)
+
+  const authRow = authCode ? `<tr>
+    <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;border-bottom:1px solid #EEF0F3;">C&oacute;d. autorizaci&oacute;n</td>
+    <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${authCode}</td>
+  </tr>` : ''
+
+  let agendaUrl = 'https://www.energica.city/cotizador/agenda'
+  if (resolvedEmail) {
+    try {
+      const agendaRes = await fetch('/api/generate-agenda-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: resolvedEmail,
+          ...(customerName && customerName !== resolvedEmail ? { name: customerName } : {}),
+          ...(sessionData.formId ? { formId: String(sessionData.formId) } : {}),
+        }),
+      })
+      if (agendaRes.ok) {
+        const agendaData = await agendaRes.json()
+        agendaUrl = agendaData.url
+      }
+    } catch { /* keep fallback */ }
+  }
+
+  const HTML = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F4F5F7" style="background-color:#F4F5F7;"><tr><td align="center" style="padding:32px 16px;">
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#FFFFFF" style="width:600px;max-width:600px;background-color:#FFFFFF;border-radius:12px;overflow:hidden;">
+    <tr><td style="padding:22px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 6px 0;font-size:16px;line-height:24px;color:#1A1A2E;font-weight:bold;">Hola ${customerName},</p>
+      <p style="margin:0;font-size:14px;line-height:22px;color:#4B4B5C;">Tu pago fue procesado con &eacute;xito. Este es tu comprobante.</p>
+    </td></tr>
+    <tr><td style="padding:22px 36px 0 36px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFF1F5" style="background-color:#FFF1F5;border:1px solid #FBD0DE;border-radius:12px;">
+        <tr><td align="center" style="padding:22px 20px;font-family:Arial,Helvetica,sans-serif;">
+          <p style="margin:0 0 4px 0;font-size:12px;line-height:16px;color:#8A4A60;text-transform:uppercase;letter-spacing:1px;">TOTAL PAGADO</p>
+          <p style="margin:0;font-size:40px;line-height:46px;color:#F0386B;font-weight:bold;">${fmtCLP(total)}</p>
+          <p style="margin:6px 0 0 0;font-size:12px;line-height:18px;color:#6B7280;">IVA incluido</p>
+        </td></tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 12px 0;font-size:13px;line-height:18px;color:#1A1A2E;font-weight:bold;">Datos de la transacci&oacute;n</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FAFAFB" style="background-color:#FAFAFB;border:1px solid #E5E7EB;border-radius:10px;">
+        <tr>
+          <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;border-bottom:1px solid #EEF0F3;">N&deg; de orden</td>
+          <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${buy_order}</td>
+        </tr>
+        ${authRow}
+        <tr>
+          <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;border-bottom:1px solid #EEF0F3;">M&eacute;todo de pago</td>
+          <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${paymentMethod}</td>
+        </tr>
+        <tr>
+          <td style="padding:11px 16px;font-size:12px;line-height:16px;color:#6B7280;">Fecha y hora</td>
+          <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;">${dateTimeLabel}</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 36px 0 36px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 12px 0;font-size:13px;line-height:18px;color:#1A1A2E;font-weight:bold;">Detalle de tu compra</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #E5E7EB;border-radius:10px;">
+        ${buildDetailRow('Visita t&eacute;cnica', '')}
+        ${buildDetailRow('Kit aprobaci&oacute;n comunidad', '')}
+        ${buildDetailRow('Neto', fmtCLP(neto))}
+        ${buildDetailRow('IVA (19%)', fmtCLP(iva))}
+        <tr>
+          <td bgcolor="#FAFAFB" style="padding:13px 16px;font-size:14px;line-height:18px;color:#1A1A2E;font-weight:bold;background-color:#FAFAFB;">Total pagado</td>
+          <td align="right" bgcolor="#FAFAFB" style="padding:13px 16px;font-size:14px;line-height:18px;color:#F0386B;font-weight:bold;background-color:#FAFAFB;">${fmtCLP(total)}</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 36px 0 36px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F1FBF5" style="background-color:#F1FBF5;border:1px solid #CDEBD8;border-radius:10px;">
+        <tr><td style="padding:18px 18px 6px 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;color:#157347;font-weight:bold;">Tu reserva protegida</td></tr>
+        <tr><td style="padding:0 18px 14px 18px;font-family:Arial,Helvetica,sans-serif;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr><td valign="top" width="22" style="padding:5px 0;font-size:13px;color:#16A34A;font-weight:bold;">&#10003;</td><td style="padding:5px 0;font-size:12px;line-height:18px;color:#3F5A49;">Visita t&eacute;cnica de confirmaci&oacute;n sin costo.</td></tr>
+            <tr><td valign="top" width="22" style="padding:5px 0;font-size:13px;color:#16A34A;font-weight:bold;">&#10003;</td><td style="padding:5px 0;font-size:12px;line-height:18px;color:#3F5A49;">Devoluci&oacute;n garantizada si decides no continuar.</td></tr>
+            <tr><td valign="top" width="22" style="padding:5px 0;font-size:13px;color:#16A34A;font-weight:bold;">&#10003;</td><td style="padding:5px 0;font-size:12px;line-height:18px;color:#3F5A49;">Instalaci&oacute;n certificada SEC con garant&iacute;a de 3 meses.</td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:28px 36px 36px 36px;text-align:center;">
+      <a href="${agendaUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#f0386b;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;padding:14px 36px;border-radius:8px;min-width:220px;">Reservar instalaci&oacute;n</a>
+      <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#6B7280;margin:8px 0 0 0;">Reserva tu instalaci&oacute;n y agenda la visita t&eacute;cnica de confirmaci&oacute;n.</p>
+    </td></tr>
+  </table>
+</td></tr></table>`
+
+  initEmailjs('UYcrSeCqLGW8xqT4S')
+  await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+    to_email: resolvedEmail || to_email,
+    name: customerName,
+    subject: 'Comprobante visita técnica · Energica',
+    CONTENT_HTML: HTML,
+  })
+}
+
 // ─── Loading messages ─────────────────────────────────────────────────────────
 const PAYMENT_MESSAGES = [
   'Recibiendo informacion del pago',
@@ -418,7 +562,9 @@ const ReturnPage = () => {
                   console.log('[return] sendEmail to_email:', resolvedEmail, '| webpayEmail:', rawWebpayEmail)
 
                   try {
-                    await sendReceiptEmail({
+                    let sessionPaymentType = ''
+                    try { sessionPaymentType = JSON.parse(sessionStorage.getItem('paymentData') ?? '{}')?.paymentType ?? '' } catch {}
+                    const emailParams = {
                       token,
                       to_email: resolvedEmail,
                       amount: statusResponse?.amount ?? 0,
@@ -426,7 +572,12 @@ const ReturnPage = () => {
                       card_number: statusResponse?.card_number ?? '',
                       payment_type_code: statusResponse?.payment_type_code ?? '',
                       shoppingCartId: statusResponse?.shoppingCartId ?? '',
-                    })
+                    }
+                    if (sessionPaymentType === 'edificioVisita') {
+                      await sendEdificioVisitReceiptEmail(emailParams)
+                    } else {
+                      await sendReceiptEmail(emailParams)
+                    }
                   } catch (emailErr) {
                     console.error('[return] receipt email failed:', emailErr)
                   }
@@ -661,10 +812,39 @@ const ReturnPage = () => {
         const timeoutId = setTimeout(() => {
             const typeOfCart = resTransaction?.typeOfCart;
 
+            // ── DIAGNOSTIC LOGS ──────────────────────────────────────────────
+            const rawSessionData = sessionStorage.getItem('paymentData')
+            console.log('[DIAG] === REDIRECT DECISION ===')
+            console.log('[DIAG] typeOfCart:', JSON.stringify(typeOfCart))
+            console.log('[DIAG] statusRedirect:', resTransaction?.statusRedirect)
+            console.log('[DIAG] glosa:', resTransaction?.glosa)
+            console.log('[DIAG] sessionStorage.paymentData (raw):', rawSessionData)
+            let parsedSession: Record<string, unknown> = {}
+            try { parsedSession = JSON.parse(rawSessionData ?? '{}') } catch {}
+            console.log('[DIAG] sessionStorage.paymentData.paymentType:', parsedSession?.paymentType)
+            console.log('[DIAG] sessionStorage.paymentData.tipo:', parsedSession?.tipo)
+            console.log('[DIAG] sessionStorage.paymentData.formId:', parsedSession?.formId)
+            // ─────────────────────────────────────────────────────────────────
+
+            let sessionPaymentType3 = ''
+            try { sessionPaymentType3 = JSON.parse(sessionStorage.getItem('paymentData') ?? '{}')?.paymentType ?? '' } catch {}
+
+            // Fallback: detect edificio visit from glosa when sessionStorage is empty
+            // Glosa set by payDirect: 'Visita técnica · Instalación dedicada edificio'
+            const glosaLower = resTransaction?.glosa?.toLowerCase() ?? ''
+            const isEdificioVisitByGlosa = typeOfCart === 'visit' && glosaLower.includes('edificio')
+            const isEdificioVisit = sessionPaymentType3 === 'edificioVisita' || isEdificioVisitByGlosa
+
+            console.log('[DIAG] sessionPaymentType3:', JSON.stringify(sessionPaymentType3))
+            console.log('[DIAG] isEdificioVisitByGlosa:', isEdificioVisitByGlosa, '| isEdificioVisit:', isEdificioVisit)
+
             const isChargerFlow =
                 typeOfCart === "chargerInstallation" ||
-                resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
-                resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
+                (typeOfCart === "visit" && isEdificioVisit) ||
+                glosaLower.includes('instalación cargador') ||
+                glosaLower.includes('instalacion cargador')
+
+            console.log('[DIAG] isChargerFlow:', isChargerFlow)
 
             const paymentConfirmFields = {
                 customerId: resTransaction?.to_email ?? '',
@@ -701,6 +881,7 @@ const ReturnPage = () => {
             } else {
                 // Non-charger flows: write payment fields only (existing behavior)
                 sessionStorage.setItem('paymentData', JSON.stringify({
+                    ...(isEdificioVisit ? { paymentType: 'edificioVisita' } : sessionPaymentType3 ? { paymentType: sessionPaymentType3 } : {}),
                     glosa: resTransaction?.glosa ?? '',
                     total: resTransaction?.total ?? '',
                     shoppingCartId: resTransaction?.shoppingCartId ?? null,
@@ -716,21 +897,27 @@ const ReturnPage = () => {
             sessionStorage.removeItem('wizardContext')
 
             console.log("---paymentData stored---", sessionStorage.getItem('paymentData'));
+            console.log('[DIAG] === REDIRECT EVALUATION ===')
+            console.log('[DIAG] typeOfCart:', typeOfCart, '| isEdificioVisit:', isEdificioVisit)
+            console.log('[DIAG] condition (visit && edificioVisit):', typeOfCart === "visit" && isEdificioVisit)
 
             const isVisitCart = typeOfCart === "visit" || typeOfCart === "virtualVisit";
 
             // Redirigir según el estado y tipo de carrito
             if (resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
                 if (typeOfCart === "virtualVisit") {
-                    console.log("----REDIRECT--- /cotizador/recibo-pago");
-                    router.push('/cotizador/recibo-pago');
+                    console.log("----REDIRECT--- /cotizador/agenda");
+                    router.push('/cotizador/agenda');
+                } else if (typeOfCart === "visit" && isEdificioVisit) {
+                    console.log("----REDIRECT--- /cotizador/agenda (edificio visita)");
+                    router.push('/cotizador/agenda');
                 } else if (typeOfCart === "visit") {
-                    console.log("----REDIRECT--- /cotizador/recibo-pago");
-                    router.push('/cotizador/recibo-pago');
+                    console.log("----REDIRECT--- /cotizador/agenda");
+                    router.push('/cotizador/agenda');
                 } else if (
                     typeOfCart === "chargerInstallation" ||
-                    resTransaction?.glosa?.toLowerCase().includes('instalación cargador') ||
-                    resTransaction?.glosa?.toLowerCase().includes('instalacion cargador')
+                    glosaLower.includes('instalación cargador') ||
+                    glosaLower.includes('instalacion cargador')
                 ) {
                     console.log("----REDIRECT--- /cotizador/recibo-pago");
                     // Update ClientForm step to PAID_PENDING_SCHEDULE

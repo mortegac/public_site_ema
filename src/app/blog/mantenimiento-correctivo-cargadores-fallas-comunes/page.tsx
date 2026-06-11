@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import AuthorByline from '@/app/components/shared/AuthorByline'
+import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -681,6 +682,9 @@ export default function ArticlePage() {
             ))}
           </Container>
         </Box>
+
+        {/* Related articles */}
+        <BlogRelatedArticles currentUid="mantenimiento-correctivo-cargadores-fallas-comunes" />
 
         {/* Author byline */}
         <AuthorByline />

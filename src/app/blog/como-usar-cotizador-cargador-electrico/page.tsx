@@ -1,16 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Container, Box, Typography, Grid, Chip } from '@mui/material'
+import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import CotizadorBanner from '@/app/components/shared/CotizadorBanner'
+import StepsList from '@/app/components/shared/StepsList'
+import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
 const TEAL_DARK = '#0777a0'
 const PINK = '#e81a68'
-const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
 
@@ -163,42 +164,30 @@ const breadcrumbSchema = {
   ],
 }
 
-const relatedArticles = [
+const COTIZADOR_STEPS = [
   {
-    href: '/blog/cargador-byd-seal-dolphin-atto-3-chile',
-    chip: 'BYD',
-    title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile',
-    desc: 'Tiempos de carga, compatibilidad y precios para los modelos BYD más vendidos en Chile.',
+    title: 'Elige tu tipo de propiedad',
+    body: 'En la primera pantalla del cotizador verás dos opciones: Casa o Edificio. Si vives en casa unifamiliar o en una propiedad individual, selecciona Casa. Si vives en un departamento dentro de un edificio con estacionamiento, selecciona Edificio. Esta elección activa flujos distintos: para casas el precio parte desde $159.000; para edificios aparecerán tres opciones de instalación, incluyendo la electrolinera comunitaria sin costo.',
   },
   {
-    href: '/blog/club-tesla-chile-cargador-edificio',
-    chip: 'Tesla',
-    title: 'Club Tesla Chile: Instala tu Cargador en Edificio',
-    desc: 'Wall Connector en departamento: electrolinera $0 o instalación privada certificada SEC.',
+    title: 'Selecciona tu cargador eléctrico',
+    body: 'El cotizador muestra el catálogo actual de cargadores con stock en tiempo real. Puedes elegir entre cargadores portátiles (2,2–7 kW), ideales si necesitas flexibilidad, o Wallbox fijos (7–7,3 kW), la opción más segura y rápida para uso diario. También puedes indicar que ya tienes tu cargador. Debajo del catálogo encontrarás un slider para ajustar la distancia estimada entre tu tablero eléctrico y el punto de instalación: este factor afecta el precio entre un 0,85× (descuento a menos de 5 metros) y un 1,55× (más de 40 metros).',
   },
   {
-    href: '/blog/electrolinera-edificio-inversion-cero',
-    chip: 'Edificios',
-    title: 'Electrolinera Comunitaria: $0 de Inversión',
-    desc: 'Cómo funciona la electrolinera financiada por Enérgica para estacionamientos de visitas.',
+    title: 'Revisa tu cotización detallada',
+    body: 'La tercera pantalla muestra el desglose completo del precio: materiales (ductos, breaker dedicado, cable), mano de obra, trámite SEC (certificado TE6) y el costo del cargador seleccionado. Verás el subtotal neto, el IVA (19%) y el total final. El precio del cotizador es el precio definitivo para instalaciones estándar en casas; en edificios se confirma tras la visita técnica.',
   },
   {
-    href: '/blog/instalar-cargador-ev-departamento-edificio',
-    chip: 'Edificios',
-    title: '3 Opciones para Cargador en Departamento',
-    desc: 'Electrolinera, visita técnica $29.000 o instalación dedicada: compara y elige.',
+    title: 'Elige tu opción de instalación (solo Edificio)',
+    body: 'Si seleccionaste Edificio, aparece una cuarta pantalla con tres opciones. La electrolinera comunitaria ($0 de inversión) instala el cargador en el estacionamiento de visitas financiado por Enérgica, pagando solo $330/kWh consumido. La visita técnica con kit de documentos ($29.000, acreditable al presupuesto final) incluye ingeniería in situ, presupuesto definitivo en 48 horas y documentos listos para tu comité. La instalación dedicada (desde $159.000) es tu propio cargador en tu estacionamiento privado.',
   },
   {
-    href: '/blog/cargador-portatil-vs-wallbox-cual-conviene',
-    chip: 'Comparativa',
-    title: 'Cargador Portátil vs. Wallbox: ¿Cuál es Mejor?',
-    desc: 'Potencia, seguridad y costos. Por qué la instalación fija protege la batería de tu EV.',
+    title: 'Ingresa tu dirección y datos de contacto',
+    body: 'El paso final solicita tu dirección completa. El cotizador valida que la dirección esté dentro de la cobertura del servicio: Región Metropolitana (39 comunas) y Región de Valparaíso. Si ingresas una dirección fuera del área, el sistema lo indica de inmediato. Luego completas nombre, correo electrónico y teléfono para recibir el presupuesto formal por email.',
   },
   {
-    href: '/blog/presupuesto-instalacion-cargador-electrico-desglose',
-    chip: 'Precios',
-    title: 'Presupuesto de Instalación: ¿Qué Pagas Realmente?',
-    desc: 'Desglose transparente de materiales, mano de obra, TE6 y cargador.',
+    title: 'Paga en línea y recibe confirmación',
+    body: 'Seleccionas el método de pago (Webpay acepta Visa, Mastercard, Redcompra y tarjeta de débito) y pagas en línea de forma segura a través de Transbank. Inmediatamente después recibes un correo de confirmación con el detalle completo de tu instalación y el link para coordinar la visita técnica con un profesional certificado SEC.',
   },
 ]
 
@@ -305,18 +294,16 @@ export default function ArticlePage() {
         {/* CotizadorBanner right after stats bar */}
         <CotizadorBanner />
 
-        {/* Main content */}
+        {/* Section 1 — Definition */}
         <Box sx={{ py: { xs: 6, md: 10 }, background: '#fff' }}>
           <Container maxWidth="md">
-
-            {/* Section 1 — Definition block */}
             <Typography
               component="h2"
               sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
             >
               ¿Qué es el cotizador de cargadores eléctricos de Enérgica City?
             </Typography>
-            <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 5 }}>
+            <Typography sx={{ color: '#334155', lineHeight: 1.8 }}>
               El cotizador de cargadores eléctricos de Enérgica City es una herramienta online que
               permite obtener el precio exacto de instalación de un cargador EV en casa o
               departamento en Chile, sin necesidad de registro ni llamada telefónica. El proceso toma
@@ -329,104 +316,42 @@ export default function ArticlePage() {
               al tablero eléctrico, que ajusta el precio según si el recorrido es de 5 metros o de
               más de 40 metros. El servicio cubre la Región Metropolitana y la Región de Valparaíso.
             </Typography>
+          </Container>
+        </Box>
 
-            {/* Section 2 — Step-by-step */}
+        {/* Section 2 — Steps intro */}
+        <Box sx={{ py: { xs: 5, md: 7 }, background: GRAY_BG }}>
+          <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{
-                fontSize: { xs: '1.6rem', md: '2rem' },
-                fontWeight: 700,
-                color: DARK,
-                mb: 2,
-                mt: 2,
-              }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
             >
               Cómo usar el cotizador: 6 pasos para obtener tu precio exacto
             </Typography>
-            <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 4 }}>
+            <Typography sx={{ color: TEXT_MUTED, lineHeight: 1.8 }}>
               El cotizador de Enérgica City guía al usuario a través de un flujo simple en pantallas
               secuenciales. A continuación detallamos cada paso para que llegues al precio final sin
               dudas.
             </Typography>
+          </Container>
+        </Box>
 
-            {[
-              {
-                n: '01',
-                title: 'Elige tu tipo de propiedad',
-                body: 'En la primera pantalla del cotizador verás dos opciones: Casa o Edificio. Si vives en casa unifamiliar o en una propiedad individual, selecciona Casa. Si vives en un departamento dentro de un edificio con estacionamiento, selecciona Edificio. Esta elección activa flujos distintos: para casas el precio parte desde $159.000; para edificios aparecerán tres opciones de instalación, incluyendo la electrolinera comunitaria sin costo.',
-              },
-              {
-                n: '02',
-                title: 'Selecciona tu cargador eléctrico',
-                body: 'El cotizador muestra el catálogo actual de cargadores con stock en tiempo real. Puedes elegir entre cargadores portátiles (2,2–7 kW), ideales si necesitas flexibilidad, o Wallbox fijos (7–7,3 kW), la opción más segura y rápida para uso diario. También puedes indicar que ya tienes tu cargador. Debajo del catálogo encontrarás un slider para ajustar la distancia estimada entre tu tablero eléctrico y el punto de instalación: este factor afecta el precio entre un 0,85× (descuento a menos de 5 metros) y un 1,55× (más de 40 metros).',
-              },
-              {
-                n: '03',
-                title: 'Revisa tu cotización detallada',
-                body: 'La tercera pantalla muestra el desglose completo del precio: materiales (ductos, breaker dedicado, cable), mano de obra, trámite SEC (certificado TE6) y el costo del cargador seleccionado. Verás el subtotal neto, el IVA (19%) y el total final. El precio del cotizador es el precio definitivo para instalaciones estándar en casas; en edificios se confirma tras la visita técnica.',
-              },
-              {
-                n: '04',
-                title: 'Elige tu opción de instalación (solo Edificio)',
-                body: 'Si seleccionaste Edificio, aparece una cuarta pantalla con tres opciones. La electrolinera comunitaria ($0 de inversión) instala el cargador en el estacionamiento de visitas financiado por Enérgica, pagando solo $330/kWh consumido. La visita técnica con kit de documentos ($29.000, acreditable al presupuesto final) incluye ingeniería in situ, presupuesto definitivo en 48 horas y documentos listos para tu comité. La instalación dedicada (desde $159.000) es tu propio cargador en tu estacionamiento privado.',
-              },
-              {
-                n: '05',
-                title: 'Ingresa tu dirección y datos de contacto',
-                body: 'El paso final solicita tu dirección completa. El cotizador valida que la dirección esté dentro de la cobertura del servicio: Región Metropolitana (39 comunas) y Región de Valparaíso. Si ingresas una dirección fuera del área, el sistema lo indica de inmediato. Luego completas nombre, correo electrónico y teléfono para recibir el presupuesto formal por email.',
-              },
-              {
-                n: '06',
-                title: 'Paga en línea y recibe confirmación',
-                body: 'Seleccionas el método de pago (Webpay acepta Visa, Mastercard, Redcompra y tarjeta de débito) y pagas en línea de forma segura a través de Transbank. Inmediatamente después recibes un correo de confirmación con el detalle completo de tu instalación y el link para coordinar la visita técnica con un profesional certificado SEC.',
-              },
-            ].map((step) => (
-              <Box
-                key={step.n}
-                sx={{
-                  display: 'flex',
-                  gap: 3,
-                  mb: 4,
-                  p: 3,
-                  background: GRAY_BG,
-                  borderRadius: 2,
-                  borderLeft: `4px solid ${TEAL}`,
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: '1.6rem',
-                    fontWeight: 800,
-                    color: TEAL,
-                    minWidth: 44,
-                    lineHeight: 1,
-                  }}
-                >
-                  {step.n}
-                </Typography>
-                <Box>
-                  <Typography sx={{ fontWeight: 700, color: DARK, mb: 0.5 }}>{step.title}</Typography>
-                  <Typography sx={{ color: '#475569', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                    {step.body}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
+        {/* Steps component */}
+        <StepsList
+          heading="El proceso es fácil y rápido"
+          steps={COTIZADOR_STEPS}
+        />
 
-            {/* Section 3 — EV compatibility */}
+        {/* Section 3 — EV compatibility */}
+        <Box sx={{ py: { xs: 6, md: 10 }, background: '#fff' }}>
+          <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{
-                fontSize: { xs: '1.6rem', md: '2rem' },
-                fontWeight: 700,
-                color: DARK,
-                mb: 2,
-                mt: 6,
-              }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
             >
               ¿El cotizador funciona para cualquier marca de auto eléctrico?
             </Typography>
-            <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 5 }}>
+            <Typography sx={{ color: '#334155', lineHeight: 1.8 }}>
               Sí. El cotizador y las instalaciones de Enérgica City son compatibles con todos los
               vehículos eléctricos que utilizan el conector Tipo 2 (IEC 62196), que es el estándar
               vigente en Chile. Esto incluye los modelos más vendidos del mercado nacional: BYD Seal,
@@ -436,77 +361,11 @@ export default function ArticlePage() {
               ante la SEC, que es obligatoria para cualquier instalación eléctrica en baja tensión en
               Chile independiente del vehículo utilizado.
             </Typography>
-
-            {/* Section 4 — Related articles */}
-            <Typography
-              component="h2"
-              sx={{
-                fontSize: { xs: '1.6rem', md: '2rem' },
-                fontWeight: 700,
-                color: DARK,
-                mb: 2,
-                mt: 6,
-              }}
-            >
-              Artículos relacionados: guías por vehículo y tipo de instalación
-            </Typography>
-            <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 4 }}>
-              Según tu vehículo y tipo de propiedad, estas guías te darán información técnica
-              específica antes o después de usar el cotizador:
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
-                gap: 3,
-                mb: 6,
-              }}
-            >
-              {relatedArticles.map((article) => (
-                <Box
-                  key={article.href}
-                  sx={{
-                    background: GRAY_BG,
-                    borderLeft: `4px solid ${TEAL}`,
-                    p: 2.5,
-                    borderRadius: 2,
-                  }}
-                >
-                  <Chip
-                    label={article.chip}
-                    size="small"
-                    sx={{
-                      mb: 1,
-                      height: 20,
-                      fontSize: '0.7rem',
-                      bgcolor: '#e0f4fa',
-                      color: TEAL_DARK,
-                      fontWeight: 600,
-                    }}
-                  />
-                  <Link href={article.href} style={{ textDecoration: 'none' }}>
-                    <Typography
-                      sx={{
-                        color: TEAL,
-                        fontWeight: 700,
-                        fontSize: '0.95rem',
-                        lineHeight: 1.4,
-                        mb: 0.75,
-                        '&:hover': { color: TEAL_DARK },
-                      }}
-                    >
-                      {article.title}
-                    </Typography>
-                  </Link>
-                  <Typography sx={{ color: TEXT_MUTED, fontSize: '0.85rem', lineHeight: 1.6 }}>
-                    {article.desc}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
           </Container>
         </Box>
+
+        {/* Related articles */}
+        <BlogRelatedArticles currentUid={SLUG} />
 
         {/* FAQ */}
         <Box sx={{ py: { xs: 6, md: 8 }, background: GRAY_BG }}>

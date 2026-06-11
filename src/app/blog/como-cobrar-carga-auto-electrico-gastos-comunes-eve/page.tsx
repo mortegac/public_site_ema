@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
@@ -160,6 +161,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Cómo cobrar la carga EV a través de los gastos comunes" />
       <Box component="main">
         {/* Featured image */}
 

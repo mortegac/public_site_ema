@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
@@ -122,6 +123,7 @@ export default function ArticlePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Cargador Monofásico vs. Trifásico: ¿Cuál necesita tu auto?" />
 
       <Box component="main">
         {/* Featured image */}
@@ -548,7 +550,11 @@ export default function ArticlePage() {
             </Typography>
             <Typography sx={{ color: '#94A3B8', mb: 5, fontSize: '1.05rem', maxWidth: 520, mx: 'auto' }}>
               Nuestros ingenieros revisan tu tipo de empalme, el OBC de tu vehículo y el tablero eléctrico antes de
-              recomendarte nada. Instalación certificada SEC desde $159.000 CLP.
+              recomendarte nada.
+              Rango referencial de instalación dedicada:{' '}
+              <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
+              definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
+              <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Box

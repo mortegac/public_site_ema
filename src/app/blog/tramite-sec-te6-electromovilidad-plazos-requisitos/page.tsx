@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
@@ -134,6 +135,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Trámite TE6 ante la SEC: Plazos y requisitos para tu cargador" />
       <Box component="main">
         {/* Featured image */}
 

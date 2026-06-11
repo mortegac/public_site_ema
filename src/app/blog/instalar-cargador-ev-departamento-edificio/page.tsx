@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
@@ -206,6 +207,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Cargador EV en tu Departamento: 3 Opciones para Edificios en Chile 2026" />
       <Box component="main">
         {/* Hero */}
         <Box

@@ -1,6 +1,7 @@
 // app/sitemap.ts
 import type { MetadataRoute } from 'next'
 import { createClient } from '@/prismicio'
+import { BLOG_ARTICLES } from '@/data/blog-articles'
 
 const STATIC_LAST_MODIFIED = new Date('2026-04-10')
 
@@ -48,6 +49,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(post.last_publication_date),
   }))
 
+  const staticBlogEntries = BLOG_ARTICLES.map((article) => ({
+    url: `https://www.energica.city/blog/${article.uid}`,
+    lastModified: new Date(article.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }))
+
   const staticEntries = STATIC_ROUTES.map((route) => ({
     url: `https://www.energica.city${route}`,
     lastModified: STATIC_LAST_MODIFIED,
@@ -62,6 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: 'https://www.energica.city', lastModified: STATIC_LAST_MODIFIED },
     ...prismicEntries,
     ...blogEntries,
+    ...staticBlogEntries,
     ...staticEntries,
     ...cityEntries,
   ]

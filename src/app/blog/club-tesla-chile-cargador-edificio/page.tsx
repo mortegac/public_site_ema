@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
@@ -135,6 +136,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Club Tesla Chile: Cargador en Edificio — Opciones y Precios 2026" />
       <Box component="main">
         {/* Hero */}
         <Box
@@ -568,8 +570,10 @@ export default function ArticlePage() {
                 fontSize: '1.05rem',
               }}
             >
-              Cotiza tu instalación en 2 minutos. Instalación certificada SEC desde $159.000 o
-              electrolinera comunitaria $0.
+              Rango referencial de instalación dedicada:{' '}
+              <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
+              definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
+              <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/cotizador" style={{ textDecoration: 'none' }}>

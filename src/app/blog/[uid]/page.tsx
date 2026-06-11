@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from 'next/image'
 
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb';
 
 import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { asText } from "@prismicio/client";
@@ -194,16 +195,18 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     ],
   };
 
-  const STATIC_IMAGE_FALLBACKS: Record<string, string> = {
+  // Override takes precedence over Prismic CMS image for specific posts
+  const STATIC_IMAGE_OVERRIDES: Record<string, string> = {
     'conoce-nuestra-metodologia-propia': '/images/post/01_1170x400.png',
   };
-  const postImageUrl = page?.data?.image?.url || STATIC_IMAGE_FALLBACKS[uid] || '';
+  const postImageUrl = STATIC_IMAGE_OVERRIDES[uid] || page?.data?.image?.url || '';
   const postImageAlt = page?.data?.image?.alt || 'Enérgica City — instalación de cargadores eléctricos';
 
   return <>
     <SchemaMarkup type="BlogPosting" data={blogPostingSchema} />
     <SchemaMarkup type="BreadcrumbList" data={breadcrumbSchema} />
       <HpHeaderNew />
+      <BlogBreadcrumb title={page?.data?.meta_title ?? uid} />
       {postImageUrl && (
         <Box sx={{ bgcolor: '#4dbfd9', pt: { xs: 3, md: 4 }, pb: 0 }}>
           <Container maxWidth="lg">

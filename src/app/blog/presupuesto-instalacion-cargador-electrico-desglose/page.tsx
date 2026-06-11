@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
@@ -152,6 +153,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Presupuesto para instalar cargador eléctrico: ¿Qué pagas realmente?" />
       <Box component="main">
         {/* Featured image */}
 
@@ -589,9 +591,10 @@ export default function ArticlePage() {
               Obtén tu Presupuesto Exacto en 5 Minutos
             </Typography>
             <Typography variant="body1" sx={{ color: '#94A3B8', mb: 4, maxWidth: 480, mx: 'auto' }}>
-              Cotización online sin compromiso. Instalación desde{' '}
-              <strong style={{ color: '#fff' }}>$159.000</strong> en casas y{' '}
-              <strong style={{ color: '#fff' }}>$369.000</strong> en edificios. TE6 incluido.
+              Rango referencial de instalación dedicada:{' '}
+              <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
+              definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
+              <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Box

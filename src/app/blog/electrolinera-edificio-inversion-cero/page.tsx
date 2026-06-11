@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
@@ -131,6 +132,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Electrolinera para Edificio: $0 de Inversión, Pagas Solo lo que Cargas" />
       <Box component="main">
         {/* Hero */}
         <Box

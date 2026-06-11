@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
@@ -163,6 +164,7 @@ export default function ArticlePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Hyundai Ioniq 5 y 6: Tiempos de carga y cargadores ideales" />
 
       <Box component="main">
         {/* Featured image */}
@@ -652,8 +654,10 @@ export default function ArticlePage() {
               Instala el Wallbox ideal para tu Ioniq 5 o Ioniq 6
             </Typography>
             <Typography sx={{ color: '#94A3B8', mb: 5, fontSize: '1.05rem', maxWidth: 520, mx: 'auto' }}>
-              Visita técnica gratuita, certificación SEC incluida y TE6 gestionado en máximo 5 días hábiles. Desde
-              $159.000 en casas y $369.000 en edificios y condominios.
+              Rango referencial de instalación dedicada:{' '}
+              <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
+              definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
+              <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Box

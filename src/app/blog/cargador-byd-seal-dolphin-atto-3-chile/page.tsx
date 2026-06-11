@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
@@ -131,6 +132,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Instala en Casa o Edificio" />
       <Box component="main">
         {/* Hero */}
         <Box
@@ -507,8 +509,10 @@ export default function ArticlePage() {
             <Typography
               sx={{ color: 'rgba(255,255,255,0.7)', textAlign: 'center', mb: 5, fontSize: '1.05rem' }}
             >
-              Instalación certificada SEC desde $159.000 en casas. También para edificios — elige
-              la opción que mejor se adapta a tu comunidad.
+              Rango referencial de instalación dedicada:{' '}
+              <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
+              definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
+              <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/cotizador" style={{ textDecoration: 'none' }}>

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
@@ -163,6 +164,7 @@ export default function ArticlePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Seguridad eléctrica: Protecciones críticas para tu cargador EV" />
 
       <Box component="main">
         {/* Featured image */}
@@ -609,7 +611,11 @@ export default function ArticlePage() {
             </Typography>
             <Typography sx={{ color: '#94A3B8', mb: 5, fontSize: '1.05rem', maxWidth: 520, mx: 'auto' }}>
               Diferencial Tipo A, termomagnético dedicado, cable 6 mm², puesta a tierra verificada y TE6 gestionado
-              en máximo 5 días hábiles. Desde $159.000 en casas y $369.000 en edificios.
+              en máximo 5 días hábiles.
+              Rango referencial de instalación dedicada:{' '}
+              <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
+              definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
+              <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Box

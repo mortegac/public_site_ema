@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import StepsList from '@/app/components/shared/StepsList'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
@@ -210,6 +211,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <BlogBreadcrumb title="Cómo Usar el Cotizador de Cargadores Eléctricos: Paso a Paso — Enérgica City" />
       <Box component="main">
         {/* Hero */}
         <Box

@@ -147,7 +147,7 @@ const Footer = () => {
       borderRadius={0}
       textAlign="center"
       py="14px"
-      mt={5}
+      mt={0}
       position="relative"
     >
       {/* SVG Background */}

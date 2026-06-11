@@ -624,7 +624,6 @@ export default function ArticlePage() {
                   mb: 3,
                   p: 3,
                   bgcolor: GRAY_BG,
-                  borderRadius: 2,
                   borderLeft: `4px solid ${TEAL}`,
                 }}
               >
@@ -666,7 +665,6 @@ export default function ArticlePage() {
                   color: '#fff',
                   px: 4,
                   py: 1.75,
-                  borderRadius: 2,
                   fontWeight: 700,
                   fontSize: 16,
                   textDecoration: 'none',
@@ -685,7 +683,6 @@ export default function ArticlePage() {
                   border: '2px solid rgba(255,255,255,0.4)',
                   px: 4,
                   py: 1.75,
-                  borderRadius: 2,
                   fontWeight: 700,
                   fontSize: 16,
                   textDecoration: 'none',

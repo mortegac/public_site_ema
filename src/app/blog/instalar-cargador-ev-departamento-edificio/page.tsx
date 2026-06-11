@@ -154,8 +154,8 @@ const optionCards = [
     badge: 'TU PROPIO CARGADOR',
     badgeBg: DARK,
     title: 'Instalación Dedicada',
-    price: 'Desde $159.000',
-    sub: 'Instalación privada en tu estacionamiento',
+    price: '$1.350.000 – $3.110.000',
+    sub: 'Rango referencial para edificios — precio exacto se confirma en visita técnica',
     borderColor: DARK,
     features: [
       'Cargador exclusivo para ti',
@@ -178,7 +178,7 @@ const comparisonRows = [
   ],
   [
     'Tengo estacionamiento privado y el edificio ya aprobó el cargador',
-    'Instalación Dedicada (desde $159.000)',
+    'Instalación Dedicada — rango $1.350.000–$3.110.000 (solo edificios)',
   ],
   [
     'Vivo en el piso 10 y el tablero está en el subterráneo -2',
@@ -572,7 +572,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     background: TEAL,
                     color: '#fff',
                     fontWeight: 700,
@@ -589,7 +588,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     border: `2px solid ${PINK}`,
                     color: PINK,
                     fontWeight: 700,

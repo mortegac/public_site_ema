@@ -580,7 +580,6 @@ export default function ArticlePage() {
                   mb: 3,
                   p: 3,
                   background: '#fff',
-                  borderRadius: 2,
                   boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
                 }}
               >
@@ -624,7 +623,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     background: TEAL,
                     color: '#fff',
                     fontWeight: 700,
@@ -641,7 +639,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     border: `2px solid ${PINK}`,
                     color: PINK,
                     fontWeight: 700,

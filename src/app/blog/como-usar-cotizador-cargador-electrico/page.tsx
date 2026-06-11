@@ -303,7 +303,7 @@ export default function ArticlePage() {
                     >
                       {stat.value}
                     </Typography>
-                    <Typography sx={{ fontSize: '0.9rem', opacity: 0.85 }}>{stat.label}</Typography>
+                    <Typography sx={{ fontSize: '0.9rem', opacity: 0.85, pt: 2 }}>{stat.label}</Typography>
                   </Box>
                 </Grid>
               ))}
@@ -453,7 +453,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     background: TEAL,
                     color: '#fff',
                     fontWeight: 700,
@@ -473,7 +472,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     border: `2px solid ${PINK}`,
                     color: PINK,
                     fontWeight: 700,

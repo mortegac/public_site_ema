@@ -339,7 +339,7 @@ export default function ArticlePage() {
               },
               {
                 number: '03',
-                title: 'Instalación Dedicada — desde $159.000',
+                title: 'Instalación Dedicada — rango $1.350.000–$3.110.000',
                 badge: 'Instalación completa',
                 badgeColor: DARK,
                 ideal: 'Propietarios con estacionamiento privado que tienen o pueden obtener aprobación del edificio',
@@ -577,7 +577,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     background: TEAL,
                     color: '#fff',
                     fontWeight: 700,
@@ -594,7 +593,6 @@ export default function ArticlePage() {
                   sx={{
                     px: 4,
                     py: 1.75,
-                    borderRadius: 2,
                     border: `2px solid ${PINK}`,
                     color: PINK,
                     fontWeight: 700,

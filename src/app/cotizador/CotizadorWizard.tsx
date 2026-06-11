@@ -1085,7 +1085,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipoC === 'portable'}
-              onClick={() => update({ tipoC: 'portable', chargerId: 'own' })}
+              onClick={() => update({ tipoC: 'portable', chargerId: null })}
               icon="🔌"
               title="Portátil"
               subtitle="Cable de carga"
@@ -2467,7 +2467,7 @@ export default function CotizadorWizard() {
         )}
 
         {/* ── Charger card — mode 2: own charger OR charger was removed ── */}
-        {(displayResult.isOwn || state.removedChargerId !== null) && (
+        {state.removedChargerId !== null && (
           <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
               <Box>

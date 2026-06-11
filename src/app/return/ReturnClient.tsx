@@ -905,6 +905,18 @@ const ReturnPage = () => {
 
             // Redirigir según el estado y tipo de carrito
             if (resTransaction?.statusRedirect === "PAYMENT_APPROVED") {
+                // ── dataLayer purchase event ──────────────────────────────────
+                if (typeof window !== 'undefined' && Array.isArray((window as Window & { dataLayer?: unknown[] }).dataLayer)) {
+                    (window as Window & { dataLayer: Record<string, unknown>[] }).dataLayer.push({
+                        event: 'purchase_success',
+                        transaction_value: Number(resTransaction?.total ?? 0),
+                        transaction_id: resTransaction?.order ?? '',
+                        payment_type: resTransaction?.typePay ?? '',
+                        cart_type: resTransaction?.typeOfCart ?? '',
+                        currency: 'CLP',
+                    });
+                }
+                // ─────────────────────────────────────────────────────────────
                 if (typeOfCart === "virtualVisit") {
                     console.log("----REDIRECT--- /cotizador/agenda");
                     router.push('/cotizador/agenda');

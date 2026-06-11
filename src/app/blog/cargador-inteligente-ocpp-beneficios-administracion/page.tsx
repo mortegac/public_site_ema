@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
@@ -508,15 +509,7 @@ export default function ArticlePage() {
         </Box>
 
         {/* Author byline */}
-        <Box sx={{ py: 4, background: '#fff', borderTop: '1px solid #E2E8F0' }}>
-          <Container maxWidth="md">
-            <Typography sx={{ fontSize: '0.9rem', color: TEXT_MUTED, lineHeight: 1.7 }}>
-              Escrito por <strong>Felipe Donoso</strong>, Ingeniero Eléctrico con 10+ años de
-              experiencia en electromovilidad. Revisor técnico:{' '}
-              <strong>Gilberto Escalona</strong>.
-            </Typography>
-          </Container>
-        </Box>
+        <AuthorByline />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

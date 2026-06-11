@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Container, Box, Typography, Card, CardContent, CardActionArea, Chip } from "@mui/material";
 import HpHeaderNew from "@/app/components/shared/header/HpHeaderNew";
+import CotizadorBanner from "@/app/components/shared/CotizadorBanner";
 import { createClient } from "@/prismicio";
 import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 
@@ -15,6 +16,10 @@ interface StaticArticle {
 }
 
 const STATIC_ARTICLES: StaticArticle[] = [
+  { uid: "cargador-byd-seal-dolphin-atto-3-chile", title: "Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Cotiza en Minutos", description: "Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal (75,7 kWh), Dolphin (44,9 kWh) y Atto 3 (60,5 kWh). Cotiza online desde $159.000.", date: "2026-06-11", category: "Vehículos" },
+  { uid: "electrolinera-edificio-inversion-cero", title: "Electrolinera para tu Edificio: $0 de Inversión, Pagas Solo lo que Cargas", description: "Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Cero inversión para la comunidad. Pagas solo $330/kWh consumido.", date: "2026-06-11", category: "Edificios" },
+  { uid: "instalar-cargador-ev-departamento-edificio", title: "Cargador EV en tu Departamento: 3 Opciones Reales para Edificios en Chile", description: "Cómo instalar un cargador eléctrico en tu departamento: electrolinera gratis, visita técnica $29.000 o instalación dedicada. Cotiza en línea y recibe presupuesto en 48 horas.", date: "2026-06-11", category: "Edificios" },
+  { uid: "club-tesla-chile-cargador-edificio", title: "Club Tesla Chile: Instala tu Cargador en Edificio con Técnicos SEC", description: "Guía para propietarios de Tesla en edificios: Wall Connector, electrolinera comunitaria $0 o instalación privada certificada. Presupuesto en 48 horas con técnicos SEC.", date: "2026-06-11", category: "Vehículos" },
   { uid: "cargador-volvo-xc40-recharge-instalacion-chile", title: "Cargador Volvo XC40 y C40 Recharge: Guía de Instalación en Chile", description: "Instalación certificada de cargadores para Volvo XC40 y C40 Recharge desde $159.000. Técnicos SEC autorizados. Optimiza la carga AC para tarifa nocturna.", date: "2025-05-01", category: "Instalaciones" },
   { uid: "instalacion-cargador-renault-kwid-e-tech-hogar", title: "Renault Kwid E-Tech: Cómo Instalar tu Cargador en Casa", description: "Guía técnica para instalar el cargador del Renault Kwid E-Tech en Chile. Conectores Tipo 2, normativa SEC. Precio desde $159.000 con certificado TE6.", date: "2025-05-01", category: "Instalaciones" },
   { uid: "presupuesto-instalacion-cargador-electrico-desglose", title: "Presupuesto para Instalar un Cargador Eléctrico: ¿Qué Pagas Realmente?", description: "Desglose transparente del costo de instalación de cargador EV en Chile: desde $159.000 en casas y $369.000 en edificios. Qué incluye: protecciones, tablero, TE6.", date: "2025-05-01", category: "Instalaciones" },
@@ -81,6 +86,7 @@ export default async function BlogPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
+      <CotizadorBanner />
       <Box component="main" sx={{ py: 8 }}>
         <Container maxWidth="lg">
           <Typography variant="h1" component="h1" sx={{ fontSize: { xs: "2rem", md: "2.75rem" }, fontWeight: 700, mb: 1 }}>

@@ -29,33 +29,33 @@ typography:
     fontFamily: Plus Jakarta Sans
     fontSize: 2.25rem
     fontWeight: 700
-    lineHeight: 1.2
+    lineHeight: 2rem
     letterSpacing: -0.01em
   h2:
     fontFamily: Plus Jakarta Sans
     fontSize: 1.875rem
     fontWeight: 700
-    lineHeight: 1.25
+    lineHeight: 2rem
   h3:
     fontFamily: Plus Jakarta Sans
     fontSize: 1.5rem
     fontWeight: 600
-    lineHeight: 1.4
+    lineHeight: 2rem
   h4:
     fontFamily: Plus Jakarta Sans
     fontSize: 1.3125rem
     fontWeight: 600
-    lineHeight: 1.6
+    lineHeight: 2rem
   h5:
     fontFamily: Plus Jakarta Sans
     fontSize: 1.125rem
     fontWeight: 600
-    lineHeight: 1.6
+    lineHeight: 2rem
   h6:
     fontFamily: Plus Jakarta Sans
     fontSize: 1rem
     fontWeight: 600
-    lineHeight: 1.2
+    lineHeight: 2rem
   body-lg:
     fontFamily: Plus Jakarta Sans
     fontSize: 1.05rem

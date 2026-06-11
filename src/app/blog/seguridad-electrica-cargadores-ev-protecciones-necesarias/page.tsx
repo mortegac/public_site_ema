@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import AuthorByline from '@/app/components/shared/AuthorByline'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -561,40 +562,8 @@ export default function ArticlePage() {
           </Container>
         </Box>
 
-        {/* ── Author byline ── */}
-        <Box sx={{ bgcolor: GRAY_BG, py: 5, borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}>
-          <Container maxWidth="md">
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-              <Box
-                sx={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: '50%',
-                  bgcolor: TEAL,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#fff',
-                  fontWeight: 800,
-                  fontSize: '1.2rem',
-                  flexShrink: 0,
-                }}
-              >
-                GE
-              </Box>
-              <Box>
-                <Typography sx={{ fontWeight: 700, color: DARK }}>Gilberto Escalona</Typography>
-                <Typography sx={{ fontSize: '0.9rem', color: TEXT_MUTED, mb: 1 }}>
-                  Gerente Técnico, Enérgica City
-                </Typography>
-                <Typography sx={{ fontSize: '0.9rem', color: '#475569', lineHeight: 1.6 }}>
-                  Escrito por Gilberto Escalona, Gerente Técnico con más de 10 años en proyectos de electromovilidad
-                  industrial. Revisor: Felipe Donoso, Ingeniero Eléctrico.
-                </Typography>
-              </Box>
-            </Box>
-          </Container>
-        </Box>
+        {/* Author byline */}
+        <AuthorByline />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

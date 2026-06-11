@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
+import AuthorByline from '@/app/components/shared/AuthorByline'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -603,26 +604,8 @@ export default function ArticlePage() {
           </Container>
         </Box>
 
-        {/* Author */}
-        <Box sx={{ py: 5, bgcolor: '#fff' }}>
-          <Container maxWidth="md">
-            <Box
-              sx={{
-                p: 3,
-                borderRadius: 2,
-                bgcolor: GRAY_BG,
-                borderLeft: `4px solid ${TEAL}`,
-              }}
-            >
-              <Typography variant="body2" sx={{ color: TEXT_MUTED, lineHeight: 1.7 }}>
-                <strong style={{ color: DARK }}>Escrito por Felipe Donoso</strong>, Ingeniero
-                Eléctrico. Revisor:{' '}
-                <strong style={{ color: DARK }}>Gilberto Escalona</strong>, Gerente Técnico,
-                Enérgica City.
-              </Typography>
-            </Box>
-          </Container>
-        </Box>
+        {/* Author byline */}
+        <AuthorByline />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

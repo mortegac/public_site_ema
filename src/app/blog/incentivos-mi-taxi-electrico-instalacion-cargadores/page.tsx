@@ -136,11 +136,11 @@ export default function ArticlePage() {
       <Box component="main">
         {/* Featured image */}
 
-        <Box sx={{ bgcolor: '#F8FAFC', py: { xs: 3, md: 4 } }}>
+        <Box sx={{ bgcolor: '#4dbfd9', pt: { xs: 3, md: 4 }, pb: 0 }}>
 
           <Container maxWidth="lg">
 
-            <Box sx={{ position: 'relative', height: { xs: 220, md: 400 }, borderRadius: 2, overflow: 'hidden' }}>
+            <Box sx={{ position: 'relative', height: { xs: 220, md: 400 }, borderRadius: '8px 8px 0 0', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.22)' }}>
 
               <Image
 

@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Container, Box, Typography, Card, CardContent, CardActionArea, Chip } from "@mui/material";
 import HpHeaderNew from "@/app/components/shared/header/HpHeaderNew";
-import CotizadorBanner from "@/app/components/shared/CotizadorBanner";
 import { createClient } from "@/prismicio";
 import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 import { BLOG_ARTICLES } from "@/data/blog-articles";
@@ -54,7 +53,6 @@ export default async function BlogPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
-      <CotizadorBanner />
       <Box component="main" sx={{ py: 8 }}>
         <Container maxWidth="lg">
           <Typography variant="h1" component="h1" sx={{ fontSize: { xs: "2rem", md: "2.75rem" }, fontWeight: 700, mb: 1 }}>

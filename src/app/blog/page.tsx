@@ -16,6 +16,7 @@ interface StaticArticle {
 }
 
 const STATIC_ARTICLES: StaticArticle[] = [
+  { uid: "como-usar-cotizador-cargador-electrico", title: "Cómo Usar el Cotizador de Cargadores Eléctricos: Paso a Paso", description: "Guía completa para usar el cotizador online de instalación de cargadores EV de Enérgica City. Casa o edificio, precio exacto en 2 minutos, 3 opciones para edificios incluyendo electrolinera $0.", date: "2026-06-11", category: "Guías" },
   { uid: "cargador-byd-seal-dolphin-atto-3-chile", title: "Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Cotiza en Minutos", description: "Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal (75,7 kWh), Dolphin (44,9 kWh) y Atto 3 (60,5 kWh). Cotiza online desde $159.000.", date: "2026-06-11", category: "Vehículos" },
   { uid: "electrolinera-edificio-inversion-cero", title: "Electrolinera para tu Edificio: $0 de Inversión, Pagas Solo lo que Cargas", description: "Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Cero inversión para la comunidad. Pagas solo $330/kWh consumido.", date: "2026-06-11", category: "Edificios" },
   { uid: "instalar-cargador-ev-departamento-edificio", title: "Cargador EV en tu Departamento: 3 Opciones Reales para Edificios en Chile", description: "Cómo instalar un cargador eléctrico en tu departamento: electrolinera gratis, visita técnica $29.000 o instalación dedicada. Cotiza en línea y recibe presupuesto en 48 horas.", date: "2026-06-11", category: "Edificios" },

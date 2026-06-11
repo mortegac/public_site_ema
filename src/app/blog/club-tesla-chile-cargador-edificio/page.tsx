@@ -350,7 +350,7 @@ export default function ArticlePage() {
                   'Circuito dedicado desde tablero al estacionamiento',
                   'Certificación SEC TE6 incluida',
                   '1 año de garantía técnica',
-                  'Desde $159.000 (distancia estándar) hasta $369.000+ (subterráneos profundos)',
+                  'Rango referencial $1.350.000–$3.110.000 (solo edificios)',
                 ],
               },
             ].map((option) => (

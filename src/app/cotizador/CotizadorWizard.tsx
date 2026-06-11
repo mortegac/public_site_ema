@@ -1094,7 +1094,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipoC === 'wallbox'}
-              onClick={() => update({ tipoC: 'wallbox', chargerId: 'own' })}
+              onClick={() => update({ tipoC: 'wallbox', chargerId: null })}
               icon="⚡"
               title="Wallbox"
               subtitle="Mayor potencia · Fijo en pared"
@@ -2280,7 +2280,7 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontSize: '0.82rem', color: TEAL, fontWeight: 600 }}>acreditable a tu instalación</Typography>
           </Box>
           <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-            Agenda la visita, recibe tu presupuesto definitivo y decide después. Sin compromiso de instalar.
+            Agenda la visita y decide después. Confirmamos distancia y materiales, y hacemos el plan de instalación.
           </Typography>
           {[
             'Profesional certificado SEC en terreno',
@@ -2428,7 +2428,7 @@ export default function CotizadorWizard() {
         </Box>
 
         {/* ── Charger card — mode 1: charger selected and NOT removed ── */}
-        {!displayResult.isOwn && state.removedChargerId === null && (
+        {!displayResult.isOwn && state.removedChargerId === null && state.chargerId !== null && (
           <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
               <Box>

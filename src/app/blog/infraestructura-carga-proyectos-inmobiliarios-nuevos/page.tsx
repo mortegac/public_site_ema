@@ -257,7 +257,7 @@ export default function ArticlePage() {
         {/* ── Section 1: El problema del retrofit ── */}
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
-            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}>
+            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
               Por qué los edificios terminados pagan 5 veces más por la misma infraestructura
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
@@ -325,7 +325,7 @@ export default function ArticlePage() {
         {/* ── Section 2: Ley 21.505 y marco regulatorio ── */}
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
-            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}>
+            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
               Ley 21.505: la obligación legal que ya está vigente
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
@@ -379,7 +379,7 @@ export default function ArticlePage() {
         {/* ── Section 3: Tecnología EVE ── */}
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
-            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}>
+            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
               Tecnología EVE: 100% de estacionamientos sin ampliar el transformador
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
@@ -454,7 +454,7 @@ export default function ArticlePage() {
         {/* ── Section 4: Comparativa costos ── */}
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
-            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}>
+            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
               Comparativa de costos: pre-instalación vs. retrofit
             </Typography>
 
@@ -555,7 +555,7 @@ export default function ArticlePage() {
         {/* ── FAQ Section ── */}
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
-            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, mb: 5, color: DARK }}>
+            <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 5, color: DARK }}>
               Preguntas frecuentes
             </Typography>
             {faqSchema.mainEntity.map((item, i) => (

@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import AuthorByline from '@/app/components/shared/AuthorByline'
-import CotizadorBanner from '@/app/components/shared/CotizadorBanner'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
@@ -288,9 +287,6 @@ export default function ArticlePage() {
           </Container>
         </Box>
 
-        {/* CotizadorBanner */}
-        <CotizadorBanner />
-
         {/* Main content */}
         <Box sx={{ py: { xs: 6, md: 10 }, background: '#fff' }}>
           <Container maxWidth="md">
@@ -298,7 +294,7 @@ export default function ArticlePage() {
             {/* Section 1 — GEO definition block */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', color: DARK, mb: 2 }}
             >
               ¿Es posible cargar un auto eléctrico en un departamento en Chile?
             </Typography>

@@ -269,7 +269,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               ¿Qué Incluye el Precio de Instalación?
             </Typography>
@@ -383,7 +383,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               ¿Qué Factores Pueden Encarecer la Instalación?
             </Typography>
@@ -446,7 +446,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Señales de Alerta: Instaladores Sin Certificación SEC
             </Typography>
@@ -507,7 +507,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Instalación en Edificio: Desglose de $369.000 en Adelante
             </Typography>

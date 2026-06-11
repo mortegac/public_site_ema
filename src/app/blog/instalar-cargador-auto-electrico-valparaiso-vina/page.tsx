@@ -277,7 +277,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Por Qué la V Región Lidera la Adopción EV Fuera de Santiago
             </Typography>
@@ -398,7 +398,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Desafíos Técnicos Específicos del Ambiente Costero
             </Typography>
@@ -466,7 +466,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Proyectos Comerciales en la V Región: Hoteles, Oficinas y Flotas
             </Typography>

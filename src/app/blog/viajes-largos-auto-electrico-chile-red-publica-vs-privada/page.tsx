@@ -292,7 +292,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               El Desafío Geográfico de Chile para los Autos Eléctricos
             </Typography>
@@ -430,7 +430,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Red de Carga Pública en Chile: Estado 2025
             </Typography>
@@ -497,7 +497,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Por Qué el Cargador en Casa Es la Base de Todo
             </Typography>

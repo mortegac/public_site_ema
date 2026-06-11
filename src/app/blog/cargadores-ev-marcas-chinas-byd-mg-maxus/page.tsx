@@ -288,7 +288,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Los Autos Eléctricos Chinos Dominan Chile en 2024
             </Typography>
@@ -432,7 +432,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               BYD Atto 3 y BYD Dolphin: Diferencias Clave para la Instalación
             </Typography>
@@ -487,7 +487,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               MG4 y Maxus Euniq 6: Alta Potencia y Grandes Baterías
             </Typography>
@@ -542,7 +542,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Proceso de Instalación y Normativa SEC en Chile
             </Typography>

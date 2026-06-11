@@ -280,7 +280,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               El Renault Kwid E-Tech: El Primer Eléctrico de Muchos Chilenos
             </Typography>
@@ -400,7 +400,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Cómo Instalar el Cargador: Proceso en Chile
             </Typography>
@@ -478,7 +478,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Kwid E-Tech en Departamento: La Solución Más Demandada
             </Typography>
@@ -508,7 +508,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               variant="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 3, color: DARK }}
+              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
               Cuánto Cuesta Instalar el Cargador del Kwid E-Tech
             </Typography>

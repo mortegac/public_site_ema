@@ -253,7 +253,7 @@ export default function ArticlePage() {
             {/* Section 1 */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', color: DARK, mb: 2 }}
             >
               ¿Qué es OCPP y por qué importa el estándar abierto?
             </Typography>

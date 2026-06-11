@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import AuthorByline from '@/app/components/shared/AuthorByline'
-import CotizadorBanner from '@/app/components/shared/CotizadorBanner'
 import StepsList from '@/app/components/shared/StepsList'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
@@ -264,6 +263,27 @@ export default function ArticlePage() {
               Obtén el precio exacto de tu instalación en menos de 2 minutos. Sin registro, sin
               llamadas. El cotizador cubre casas y edificios en la Región Metropolitana y Valparaíso.
             </Typography>
+            <Box sx={{ mt: 4 }}>
+              <Link href="/cotizador" style={{ textDecoration: 'none' }}>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    px: 4,
+                    py: 1.75,
+                    borderRadius: 2,
+                    background: PINK,
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    '&:hover': { background: '#c01556' },
+                  }}
+                >
+                  Cotizar ahora
+                </Box>
+              </Link>
+            </Box>
           </Container>
         </Box>
 
@@ -291,15 +311,12 @@ export default function ArticlePage() {
           </Container>
         </Box>
 
-        {/* CotizadorBanner right after stats bar */}
-        <CotizadorBanner />
-
         {/* Section 1 — Definition */}
         <Box sx={{ py: { xs: 6, md: 10 }, background: '#fff' }}>
           <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', color: DARK, mb: 2 }}
             >
               ¿Qué es el cotizador de cargadores eléctricos de Enérgica City?
             </Typography>
@@ -324,7 +341,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', color: DARK, mb: 2 }}
             >
               Cómo usar el cotizador: 6 pasos para obtener tu precio exacto
             </Typography>
@@ -347,7 +364,7 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}
+              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', color: DARK, mb: 2 }}
             >
               ¿El cotizador funciona para cualquier marca de auto eléctrico?
             </Typography>

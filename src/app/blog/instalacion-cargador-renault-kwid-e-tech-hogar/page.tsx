@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import AuthorByline from '@/app/components/shared/AuthorByline'
@@ -162,6 +163,35 @@ export default function ArticlePage() {
       />
       <HpHeaderNew />
       <Box component="main">
+        {/* Featured image */}
+
+        <Box sx={{ bgcolor: '#F8FAFC', py: { xs: 3, md: 4 } }}>
+
+          <Container maxWidth="lg">
+
+            <Box sx={{ position: 'relative', height: { xs: 220, md: 400 }, borderRadius: 2, overflow: 'hidden' }}>
+
+              <Image
+
+                src="/images/post/03_1170x400.png"
+
+                alt="Cargador domiciliario para Renault Kwid E-Tech instalado en hogar"
+
+                fill
+
+                style={{ objectFit: 'cover' }}
+
+                sizes="(max-width: 1200px) 100vw, 1200px"
+
+                priority
+
+              />
+
+            </Box>
+
+          </Container>
+
+        </Box>
         {/* Hero */}
         <Box
           sx={{

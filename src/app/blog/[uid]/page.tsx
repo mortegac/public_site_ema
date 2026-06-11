@@ -48,12 +48,11 @@ export async function generateMetadata({
       description: page.data.meta_description ?? "",
       images: [
         {
-          url: (page.data.meta_image.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg"),
+          url: (page.data.meta_image?.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg"),
           width: 1200,
           height: 630,
-          alt: page.data.meta_image.alt ?? "",
+          alt: page.data.meta_image?.alt ?? "",
         }
-        
       ],
     },
   };
@@ -195,12 +194,32 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     ],
   };
 
+  const STATIC_IMAGE_FALLBACKS: Record<string, string> = {
+    'conoce-nuestra-metodologia-propia': '/images/post/01_1170x400.png',
+  };
+  const postImageUrl = page?.data?.image?.url || STATIC_IMAGE_FALLBACKS[uid] || '';
+  const postImageAlt = page?.data?.image?.alt || 'Enérgica City — instalación de cargadores eléctricos';
+
   return <>
     <SchemaMarkup type="BlogPosting" data={blogPostingSchema} />
     <SchemaMarkup type="BreadcrumbList" data={breadcrumbSchema} />
-    {/* <PageContainer title="" description=""> */}
-      {/* <HpHeader />  */}
-      <HpHeaderNew /> 
+      <HpHeaderNew />
+      {postImageUrl && (
+        <Box sx={{ bgcolor: '#F8FAFC', py: { xs: 3, md: 4 } }}>
+          <Container maxWidth="lg">
+            <Box sx={{ position: 'relative', height: { xs: 220, md: 400 }, borderRadius: 2, overflow: 'hidden' }}>
+              <Image
+                src={postImageUrl}
+                alt={postImageAlt}
+                fill
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 1200px) 100vw, 1200px"
+                priority
+              />
+            </Box>
+          </Container>
+        </Box>
+      )}
       <Container
         id="container-page"
         sx={{
@@ -214,59 +233,13 @@ export default async function Page({ params }: { params: Promise<Params> }) {
             paddingLeft: "0 !important",
             paddingRight: "0 !important",
           },
-          "@media (min-width: 600px)": {
-            paddingLeft: "0 !important",
-            paddingRight: "0 !important",
-          },
-          "@media (min-width: 900px)": {
-            paddingLeft: "0 !important",
-            paddingRight: "0 !important",
-          },
-          "@media (min-width: 1200px)": {
-            paddingLeft: "0 !important",
-            paddingRight: "0 !important",
-          },
+          "@media (min-width: 600px)": { paddingLeft: "0 !important", paddingRight: "0 !important" },
+          "@media (min-width: 900px)": { paddingLeft: "0 !important", paddingRight: "0 !important" },
+          "@media (min-width: 1200px)": { paddingLeft: "0 !important", paddingRight: "0 !important" },
         }}
       >
-             <Box
-          id="imageSlice"
-          sx={{
-            marginTop:'26px',
-            width: '100%',
-            maxWidth: '1200px',
-            height: 'auto',
-            position: 'relative',
-            '& img': {
-              width: '100%',
-              height: 'auto',
-            }
-          }}
-        >
-        <Image
-          src={page?.data?.image?.url || ""}
-          alt={page?.data?.image?.alt || ""}
-          width={1200}
-          height={300}
-          priority
-          sizes="(max-width: 600px) 100vw, 50vw"
-          style={{
-            maxWidth: '100%',
-            height: 'auto',
-          }}
-          
-          // src={page?.data?.image?.url}
-          // alt={"Miniswimmer Academy"}
-          // layout="fill"
-          // objectFit="cover"
-          // objectPosition="center"
-          // priority
-        /> 
-                
-              </Box>
-        {/* <pre>{JSON.stringify(page?.data?.slices[1], null, 2 )}</pre> */}
-        <SliceZone slices={page.data.slices} components={components} />;
+        <SliceZone slices={page.data.slices} components={components} />
       </Container>
-    {/* </PageContainer> */}
   </>
 }
 

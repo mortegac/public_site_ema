@@ -1085,7 +1085,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipoC === 'portable'}
-              onClick={() => update({ tipoC: 'portable', chargerId: null })}
+              onClick={() => update({ tipoC: 'portable', chargerId: 'own' })}
               icon="🔌"
               title="Portátil"
               subtitle="Cable de carga"
@@ -1094,7 +1094,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipoC === 'wallbox'}
-              onClick={() => update({ tipoC: 'wallbox', chargerId: null })}
+              onClick={() => update({ tipoC: 'wallbox', chargerId: 'own' })}
               icon="⚡"
               title="Wallbox"
               subtitle="Mayor potencia · Fijo en pared"

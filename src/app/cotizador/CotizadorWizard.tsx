@@ -574,11 +574,35 @@ export default function CotizadorWizard() {
     }).catch(() => null)
   }
 
+  // Maps wizard state to a selectedPaymentOption string for backend tracking
+  function mapToSelectedPaymentOption(
+    selectedReserveOption: string | undefined,
+    typeOfCart: string,
+    tipo: string,
+  ): string | undefined {
+    // Visita técnica edificio
+    if (typeOfCart === 'visit' && tipo === 'edificio') return 'paga-visita-mas-kit-comunidad'
+    // Visita técnica casa
+    if (typeOfCart === 'visit' && tipo === 'casa') return 'visita-tecnica'
+    // Reservas casa
+    if (selectedReserveOption === 'r70') return 'reserva-70-porc'
+    if (selectedReserveOption === 'r30') return 'reserva-30-porc'
+    return undefined
+  }
+
   // Calls /api/payment and immediately submits form to Webpay (no intermediate panel)
   async function payDirect(amount: number, glosa: string, typeOfCart: 'chargerInstallation' | 'visit' = 'chargerInstallation', pendingCart?: { amount: number; glosa: string }) {
     update({ webpayLoading: true, webpayError: '' })
     const displayResult = state.apiResult ?? result
     const vat = Math.round(amount * 0.19 / 1.19)
+
+    // Determinar hasCharger y selectedPaymentOption
+    const hasCharger = !!(state.chargerId && state.chargerId !== 'own' && state.chargerId !== '')
+    const selectedPaymentOption = mapToSelectedPaymentOption(
+      state.selectedReserveOption ?? undefined,
+      typeOfCart,
+      state.tipo ?? '',
+    )
 
     // Save customer non-blocking — links nombre + teléfono before payment
     const email = state.emailPago?.trim().toLowerCase()
@@ -620,6 +644,8 @@ export default function CotizadorWizard() {
           typeOfCart,
           typeOfItem: typeOfCart,
           ...(pendingCart ? { pendingAmount: pendingCart.amount, pendingGlosa: pendingCart.glosa } : {}),
+          ...(hasCharger !== undefined && { hasCharger }),
+          ...(selectedPaymentOption && { selectedPaymentOption }),
         }),
       })
       const data = await res.json()
@@ -1039,7 +1065,7 @@ export default function CotizadorWizard() {
           ¿Dónde instalarás tu cargador?
         </Typography>
         <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3 }}>
-          El tipo de propiedad afecta el costo de instalación.
+          Indícanos si vives en casa o departamento de un edificio
         </Typography>
 
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -2280,11 +2306,11 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontSize: '0.82rem', color: TEAL, fontWeight: 600 }}>acreditable a tu instalación</Typography>
           </Box>
           <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-            Agenda la visita y decide después. Confirmamos distancia y materiales, y hacemos el plan de instalación.
+            Agenda la visita y decide después.
           </Typography>
           {[
             'Profesional certificado SEC en terreno',
-            'Presupuesto definitivo y plan de instalación',
+            'Confirmamos distancia y materiales, y hacemos el plan de instalación',
             'Si avanzas, los $10.000 se descuentan',
           ].map(f => (
             <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
@@ -3228,6 +3254,31 @@ export default function CotizadorWizard() {
               </Box>
             )}
           </Box>
+
+          {/* ── No-install link — steps 0-2 only ───────────────────────── */}
+          {state.step <= 2 && !state.paid && (
+            <Box sx={{ textAlign: 'center', mt: 1.5 }}>
+              <Box
+                component="a"
+                href="/cargadores-vehiculos-electricos-sin-instalacion"
+                sx={{
+                  display: 'inline-block',
+                  bgcolor: '#F1F5F9',
+                  color: '#64748B',
+                  fontSize: '0.8rem',
+                  px: 2.5,
+                  py: 0.75,
+                  borderRadius: 2,
+                  textDecoration: 'none',
+                  border: '1px solid #E2E8F0',
+                  transition: 'all 0.15s',
+                  '&:hover': { bgcolor: '#E2E8F0', color: '#475569' },
+                }}
+              >
+                No quiero instalación, solo comprar un cargador
+              </Box>
+            </Box>
+          )}
 
           {/* ── Trust text — below white card, steps 0-2 only ─────────── */}
           {state.step <= 2 && !state.paid && (

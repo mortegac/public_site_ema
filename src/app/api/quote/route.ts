@@ -37,6 +37,7 @@ const GET_CLIENT_FORM_WITH_ESTIMATES = /* GraphQL */ `
       isWallbox
       isPortable
       distance
+      apartmentFloor
       customerId
       Estimates {
         items {
@@ -53,6 +54,14 @@ const GET_CLIENT_FORM_WITH_ESTIMATES = /* GraphQL */ `
           chargerPotence
           distanceExposed
           createdAt
+        }
+      }
+      ShoppingCarts(filter: {status: {eq: "completed"}}, limit: 1) {
+        items {
+          shoppingCartId
+          total
+          status
+          typeOfCart
         }
       }
     }
@@ -138,15 +147,25 @@ export interface QuoteResponse {
   total: number
   isOwn: boolean
   address: string
+  depto: string
   nextVisitDate: string | null
+  shoppingCartId?: string | null
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
-  const formId = req.nextUrl.searchParams.get('formId')?.trim()
+  const formId = req.nextUrl.searchParams.get('formId')?.trim() || null
+  const shoppingCartId = req.nextUrl.searchParams.get('shoppingCartId')?.trim() || null
+
+  if (!formId && !shoppingCartId) {
+    return NextResponse.json({ error: 'formId query param is required' }, { status: 400 })
+  }
 
   if (!formId) {
-    return NextResponse.json({ error: 'formId query param is required' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'formId is required (shoppingCartId lookup not yet implemented)' },
+      { status: 400 }
+    )
   }
 
   const { url, apiKey } = getAppSyncConfig()
@@ -248,7 +267,9 @@ export async function GET(req: NextRequest) {
     total: Number(estimate.totalInstallationGross ?? 0),
     isOwn: chargerCost === 0,
     address: customer?.address ?? '',
+    depto: form.apartmentFloor ?? '',
     nextVisitDate,
+    shoppingCartId: form.ShoppingCarts?.items?.[0]?.shoppingCartId ?? null,
   }
 
   console.log(`[/api/quote] formId=${formId} fromLambda=${fromLambda} total=${response.total}`)

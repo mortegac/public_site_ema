@@ -83,6 +83,7 @@ async function sendReceiptEmail(params: {
   const isValidEmail = (v: string) => !!v && v !== 'sin-usuario' && v.includes('@')
   let resolvedEmail = isValidEmail(to_email) ? to_email : ''
   let customerName = resolvedEmail || to_email
+  let cartFormId: string | null = null
   try {
     const cart = await fecthShoppingCart({ shoppingCartId })
     if (cart?.customer?.Name) customerName = cart.customer.Name
@@ -91,6 +92,7 @@ async function sendReceiptEmail(params: {
       if (isValidEmail(cartEmail)) resolvedEmail = cartEmail
     }
     if (!customerName || customerName === 'sin-usuario') customerName = resolvedEmail
+    if (cart?.formId) cartFormId = String(cart.formId)
   } catch {}
 
   const total = Number(sessionData.total ?? amount)
@@ -148,6 +150,7 @@ async function sendReceiptEmail(params: {
   </tr>` : '<tr><td style="height:28px;font-size:0;line-height:0;">&nbsp;</td></tr>'
 
   // Generate signed agenda link (JWT) for the CTA button in the receipt email
+  const resolvedFormId = (sessionData.formId as string | undefined) || cartFormId || ''
   let agendaUrl = 'https://www.energica.city/cotizador/agenda'
   if (resolvedEmail) {
     try {
@@ -157,7 +160,7 @@ async function sendReceiptEmail(params: {
         body: JSON.stringify({
           email: resolvedEmail,
           ...(customerName && customerName !== resolvedEmail ? { name: customerName } : {}),
-          ...(sessionData.formId ? { formId: String(sessionData.formId) } : {}),
+          ...(resolvedFormId ? { formId: resolvedFormId } : {}),
         }),
       })
       if (agendaRes.ok) {
@@ -268,6 +271,7 @@ async function sendEdificioVisitReceiptEmail(params: {
   const isValidEmail = (v: string) => !!v && v !== 'sin-usuario' && v.includes('@')
   let resolvedEmail = isValidEmail(to_email) ? to_email : ''
   let customerName = String(sessionData.nombre || resolvedEmail || to_email)
+  let cartFormId: string | null = null
   try {
     const cart = await fecthShoppingCart({ shoppingCartId })
     if (cart?.customer?.Name) customerName = cart.customer.Name
@@ -276,6 +280,7 @@ async function sendEdificioVisitReceiptEmail(params: {
       if (isValidEmail(cartEmail)) resolvedEmail = cartEmail
     }
     if (!customerName || customerName === 'sin-usuario') customerName = resolvedEmail
+    if (cart?.formId) cartFormId = String(cart.formId)
   } catch {}
 
   const total = Number(sessionData.total ?? amount)
@@ -290,6 +295,7 @@ async function sendEdificioVisitReceiptEmail(params: {
     <td align="right" style="padding:11px 16px;font-size:12px;line-height:16px;color:#1A1A2E;font-weight:bold;border-bottom:1px solid #EEF0F3;">${authCode}</td>
   </tr>` : ''
 
+  const resolvedFormId = (sessionData.formId as string | undefined) || cartFormId || ''
   let agendaUrl = 'https://www.energica.city/cotizador/agenda'
   if (resolvedEmail) {
     try {
@@ -299,7 +305,7 @@ async function sendEdificioVisitReceiptEmail(params: {
         body: JSON.stringify({
           email: resolvedEmail,
           ...(customerName && customerName !== resolvedEmail ? { name: customerName } : {}),
-          ...(sessionData.formId ? { formId: String(sessionData.formId) } : {}),
+          ...(resolvedFormId ? { formId: resolvedFormId } : {}),
         }),
       })
       if (agendaRes.ok) {

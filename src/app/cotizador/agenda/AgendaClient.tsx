@@ -128,7 +128,7 @@ function formatVisitDateFull(iso: string): string {
 }
 
 // ─── Active visit card ────────────────────────────────────────────────────────
-function ActiveVisitCard({ visit, email }: { visit: ActiveVisit; email: string }) {
+function ActiveVisitCard({ visit, email, onReschedule, paymentData }: { visit: ActiveVisit; email: string; onReschedule?: () => void; paymentData?: { tipo?: string; chargerName?: string; dist?: number | null; address?: string; depto?: string; total?: number | string } }) {
   const stateInfo = visitStateLabel(visit.state)
   return (
     <Box>
@@ -175,6 +175,29 @@ function ActiveVisitCard({ visit, email }: { visit: ActiveVisit; email: string }
         ))}
       </Box>
 
+      {/* Resumen instalación */}
+      {paymentData && (paymentData.tipo || paymentData.chargerName || paymentData.dist != null) && (
+        <Box sx={{ borderRadius: 2, border: '1px solid #E2E8F0', p: 2, mb: 3 }}>
+          <Typography fontSize="0.8rem" fontWeight={700} color="#2A3547" mb={1}>Resumen de tu instalación</Typography>
+          {([
+            ['Tipo', paymentData.tipo ? (paymentData.tipo.charAt(0).toUpperCase() + paymentData.tipo.slice(1)) : null],
+            ['Cargador', paymentData.chargerName ?? null],
+            ['Distancia est.', paymentData.dist != null ? `${paymentData.dist}m` : null],
+            ['Dirección', paymentData.address ?? null],
+            ['Referencia', paymentData.depto || null],
+            ['Total', paymentData.total ? ('$' + Math.round(Number(paymentData.total)).toLocaleString('es-CL')) : null],
+          ] as [string, string | null][])
+            .filter(([, v]) => v !== null)
+            .map(([label, value], i) => (
+              <Box key={label} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.5, borderTop: i > 0 ? '1px solid #F1F5F9' : 'none' }}>
+                <Typography fontSize="0.75rem" color="#64748B">{label}</Typography>
+                <Typography fontSize="0.75rem" fontWeight={600} color="#2A3547" textAlign="right" sx={{ maxWidth: '55%' }}>{value}</Typography>
+              </Box>
+            ))
+          }
+        </Box>
+      )}
+
       {/* Info box */}
       <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#EBF7F9', border: '1px solid rgba(8,152,185,0.2)', mb: 3 }}>
         <Typography fontSize="0.8rem" fontWeight={700} color="#2A3547" mb={0.75}>¿Qué sigue?</Typography>
@@ -206,8 +229,24 @@ function ActiveVisitCard({ visit, email }: { visit: ActiveVisit; email: string }
         Contáctanos por WhatsApp
       </Button>
 
-      <Typography fontSize="0.75rem" color="#64748B" textAlign="center">
-        ¿Necesitas reagendar? <Box component="span" sx={{ color: '#e81a68', fontWeight: 600 }}>contacto@energica.city</Box>
+      {onReschedule && ['payed', 'payedAndAgended', 'reserved'].includes(visit.state) && (
+        <Box sx={{ textAlign: 'center', mt: 1 }}>
+          <Box
+            component="button"
+            onClick={onReschedule}
+            sx={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontSize: '0.8rem', color: '#0898b9', fontWeight: 600,
+              textDecoration: 'underline', p: 0,
+              '&:hover': { color: '#0777a0' },
+            }}
+          >
+            Modificar fecha
+          </Box>
+        </Box>
+      )}
+      <Typography fontSize="0.75rem" color="#64748B" textAlign="center" mt={1}>
+        ¿Dudas? <Box component="span" sx={{ color: '#e81a68', fontWeight: 600 }}>contacto@energica.city</Box>
       </Typography>
     </Box>
   )
@@ -251,7 +290,61 @@ function AgendaContent() {
   const [bookingError, setBookingError] = useState('')
   const [activeVisit, setActiveVisit] = useState<ActiveVisit | null>(null)
   const [checkingVisit, setCheckingVisit] = useState(true)
+  const [isRescheduling, setIsRescheduling] = useState(false)
+  const [rescheduleError, setRescheduleError] = useState('')
   const hasRead = useRef(false)
+
+  const fetchDates = async () => {
+    setLoadingDates(true)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
+    try {
+      const startDate = new Date()
+      startDate.setDate(startDate.getDate() + 2)
+      startDate.setHours(0, 0, 0, 0)
+
+      const endDate = new Date()
+      endDate.setDate(endDate.getDate() + 16)
+      endDate.setHours(23, 59, 59, 999)
+
+      const res = await fetch(
+        `/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+        { signal: controller.signal }
+      )
+      const { items } = await res.json()
+
+      // Group slots by day
+      const slotsByDay = new Map<string, CalendarSlot[]>()
+      for (const slot of (items ?? []) as CalendarSlot[]) {
+        const key = slot.startDate.slice(0, 10)
+        if (!slotsByDay.has(key)) slotsByDay.set(key, [])
+        slotsByDay.get(key)!.push(slot)
+      }
+
+      // Generate all days in range (skip Sundays)
+      const allDates: DateSlot[] = []
+      const cursor = new Date(startDate)
+      while (cursor <= endDate) {
+        if (cursor.getDay() !== 0) {
+          const key = cursor.toISOString().slice(0, 10)
+          allDates.push({
+            dateKey: key,
+            label: cursor.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }),
+            available: (slotsByDay.get(key)?.length ?? 0) > 0,
+            slots: slotsByDay.get(key) ?? [],
+          })
+        }
+        cursor.setDate(cursor.getDate() + 1)
+      }
+
+      setDates(allDates)
+    } catch {
+      setDates([])
+    } finally {
+      clearTimeout(timeoutId)
+      setLoadingDates(false)
+    }
+  }
 
   useEffect(() => {
     if (hasRead.current) return
@@ -289,6 +382,7 @@ function AgendaContent() {
               chargerName: q.chargerName ?? prev.chargerName,
               dist: q.dist ?? prev.dist,
               address: q.address ?? prev.address,
+              depto: q.depto ?? prev.depto,
               total: q.total ?? prev.total,
               neto: q.neto ?? prev.neto,
               iva: q.iva ?? prev.iva,
@@ -297,6 +391,8 @@ function AgendaContent() {
               inst: q.inst ?? prev.inst,
               sec: q.sec ?? prev.sec,
               isOwn: q.isOwn ?? prev.isOwn,
+              // TODO(FRONT-03): usar shoppingCartId para obtener el monto real pagado
+              shoppingCartId: q.shoppingCartId ?? prev.shoppingCartId,
             }))
           })
           .catch(() => null)
@@ -312,6 +408,35 @@ function AgendaContent() {
             const { visit } = await res.json() as { visit: ActiveVisit | null }
             if (visit) {
               setActiveVisit(visit)
+              // Fetch quote data using formId resolved from JWT or from the active visit
+              const resolvedFormId = jwtPayload?.formid ?? visit.formId ?? paymentData.formId
+              if (resolvedFormId) {
+                fetch(`/api/quote?formId=${encodeURIComponent(resolvedFormId)}`)
+                  .then(r => r.ok ? r.json() : null)
+                  .then(q => {
+                    if (!q) return
+                    setPaymentData(prev => ({
+                      ...prev,
+                      tipo: q.tipo ?? prev.tipo,
+                      chargerName: q.chargerName ?? prev.chargerName,
+                      dist: q.dist ?? prev.dist,
+                      address: q.address ?? prev.address,
+                      depto: q.depto ?? prev.depto,
+                      total: q.total ?? prev.total,
+                      neto: q.neto ?? prev.neto,
+                      iva: q.iva ?? prev.iva,
+                      chargerPrice: q.chargerPrice ?? prev.chargerPrice,
+                      mat: q.mat ?? prev.mat,
+                      inst: q.inst ?? prev.inst,
+                      sec: q.sec ?? prev.sec,
+                      isOwn: q.isOwn ?? prev.isOwn,
+                      formId: resolvedFormId,
+                      // TODO(FRONT-03): usar shoppingCartId para obtener el monto real pagado
+                      shoppingCartId: q.shoppingCartId ?? prev.shoppingCartId,
+                    }))
+                  })
+                  .catch(() => null)
+              }
               setCheckingVisit(false)
               setLoadingDates(false)
               return // Skip fetching available dates — booking already exists
@@ -322,54 +447,7 @@ function AgendaContent() {
       setCheckingVisit(false)
 
       // 2. No active booking — fetch available dates
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000)
-      try {
-        const startDate = new Date()
-        startDate.setDate(startDate.getDate() + 2)
-        startDate.setHours(0, 0, 0, 0)
-
-        const endDate = new Date()
-        endDate.setDate(endDate.getDate() + 16)
-        endDate.setHours(23, 59, 59, 999)
-
-        const res = await fetch(
-          `/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
-          { signal: controller.signal }
-        )
-        const { items } = await res.json()
-
-        // Group slots by day
-        const slotsByDay = new Map<string, CalendarSlot[]>()
-        for (const slot of (items ?? []) as CalendarSlot[]) {
-          const key = slot.startDate.slice(0, 10)
-          if (!slotsByDay.has(key)) slotsByDay.set(key, [])
-          slotsByDay.get(key)!.push(slot)
-        }
-
-        // Generate all days in range (skip Sundays)
-        const allDates: DateSlot[] = []
-        const cursor = new Date(startDate)
-        while (cursor <= endDate) {
-          if (cursor.getDay() !== 0) {
-            const key = cursor.toISOString().slice(0, 10)
-            allDates.push({
-              dateKey: key,
-              label: cursor.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }),
-              available: (slotsByDay.get(key)?.length ?? 0) > 0,
-              slots: slotsByDay.get(key) ?? [],
-            })
-          }
-          cursor.setDate(cursor.getDate() + 1)
-        }
-
-        setDates(allDates)
-      } catch {
-        setDates([])
-      } finally {
-        clearTimeout(timeoutId)
-        setLoadingDates(false)
-      }
+      await fetchDates()
     }
 
     run()
@@ -403,9 +481,123 @@ function AgendaContent() {
                 <Box sx={{ textAlign: 'center', py: 5 }}>
                   <Typography fontSize="0.9rem" color="#64748B">Verificando tu reserva…</Typography>
                 </Box>
-              ) : activeVisit ? (
+              ) : activeVisit && !isRescheduling ? (
                 /* ── Active booking found ── */
-                <ActiveVisitCard visit={activeVisit} email={paymentData.email ?? ''} />
+                <ActiveVisitCard
+                  visit={activeVisit}
+                  email={paymentData.email ?? ''}
+                  paymentData={paymentData}
+                  onReschedule={() => {
+                    setIsRescheduling(true)
+                    setSelectedDate(null)
+                    fetchDates()
+                  }}
+                />
+              ) : activeVisit && isRescheduling ? (
+                /* ── Reschedule date picker ── */
+                <>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+                    <Box
+                      component="button"
+                      onClick={() => setIsRescheduling(false)}
+                      sx={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.8rem', color: '#64748B', p: 0, display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: '#2A3547' } }}
+                    >
+                      ← Volver
+                    </Box>
+                    <Typography fontSize="0.9rem" fontWeight={700} color="#2A3547">Modificar fecha de visita</Typography>
+                  </Box>
+
+                  <Typography fontSize="0.85rem" fontWeight={700} color="#2A3547" mb={0.25}>Elige una nueva fecha</Typography>
+                  <Typography fontSize="0.75rem" color="#64748B" mb={1.5}>Horario se confirma posterior a reservar horario hábil entre 09:00 a 18:00 hrs</Typography>
+
+                  {loadingDates ? (
+                    <Typography fontSize="0.85rem" color="#64748B" sx={{ mb: 3, textAlign: 'center', py: 2 }}>Cargando fechas disponibles...</Typography>
+                  ) : (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 3 }}>
+                      {dates.map((d, i) => (
+                        <Box key={i} onClick={d.available ? () => setSelectedDate(i) : undefined} sx={{
+                          p: '10px 14px', borderRadius: 2,
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          border: `1.5px solid ${selectedDate === i ? '#e81a68' : d.available ? '#E2E8F0' : 'transparent'}`,
+                          bgcolor: selectedDate === i ? '#FEF0F4' : d.available ? '#fff' : '#F8FAFC',
+                          cursor: d.available ? 'pointer' : 'default',
+                          opacity: d.available ? 1 : 0.45,
+                          transition: 'all 0.15s',
+                        }}>
+                          <Typography fontSize="0.85rem" fontWeight={500} color="#2A3547" sx={{ textTransform: 'capitalize' }}>{d.label}</Typography>
+                          {d.available ? (
+                            <Chip label={selectedDate === i ? 'Seleccionado' : 'Disponible'} size="small" sx={{
+                              fontSize: '0.65rem', fontWeight: 600, height: 20,
+                              bgcolor: selectedDate === i ? '#FEF0F4' : '#EBF7F9',
+                              color: selectedDate === i ? '#e81a68' : '#0898b9',
+                            }} />
+                          ) : (
+                            <Typography fontSize="0.7rem" color="#64748B">No disponible</Typography>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+
+                  <Button
+                    variant="contained" fullWidth
+                    disabled={selectedDate === null || loadingDates || bookingLoading}
+                    onClick={async () => {
+                      if (selectedDate === null || !activeVisit) return
+                      const slot = dates[selectedDate]
+                      const newCalendarId = slot.slots?.[0]?.calendarId
+                      if (!newCalendarId) {
+                        setRescheduleError('No hay horario disponible para esta fecha. Selecciona otra.')
+                        return
+                      }
+                      setBookingLoading(true)
+                      setRescheduleError('')
+                      try {
+                        const formId = jwtPayload?.formid ?? paymentData.formId ?? ''
+                        const res = await fetch('/api/reschedule-visit', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            oldCalendarId: activeVisit.calendarId,
+                            newCalendarId,
+                            customerId: paymentData.customerId ?? paymentData.email ?? '',
+                            address: paymentData.address ?? '',
+                            chargerName: paymentData.chargerName ?? 'Instalación cargador EV',
+                            formId,
+                          }),
+                        })
+                        const data = await res.json()
+                        if (data.error) {
+                          setRescheduleError(data.error)
+                        } else {
+                          // Refetch active visit to show updated booking
+                          const params = new URLSearchParams()
+                          if (formId) params.set('formId', formId)
+                          if (paymentData.customerId) params.set('customerId', paymentData.customerId)
+                          const visitRes = await fetch(`/api/active-visit?${params.toString()}`)
+                          if (visitRes.ok) {
+                            const { visit } = await visitRes.json()
+                            if (visit) setActiveVisit(visit)
+                          }
+                          setIsRescheduling(false)
+                          setSelectedDate(null)
+                        }
+                      } catch {
+                        setRescheduleError('No se pudo reagendar la visita. Intenta nuevamente.')
+                      } finally {
+                        setBookingLoading(false)
+                      }
+                    }}
+                    sx={{
+                      py: 1.5, borderRadius: '24px', fontWeight: 700, fontSize: '0.95rem',
+                      bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' },
+                      '&.Mui-disabled': { bgcolor: '#E2E8F0', color: '#94A3B8' },
+                    }}
+                  >
+                    {bookingLoading ? 'Reagendando...' : selectedDate !== null ? `Confirmar nueva fecha · ${dates[selectedDate]?.label}` : 'Confirmar nueva fecha'}
+                  </Button>
+                  {rescheduleError && <Typography fontSize="0.78rem" color="error" textAlign="center" mt={1}>{rescheduleError}</Typography>}
+                </>
               ) : (
               <>
               <Stepper step={step} labels={['Información', 'Agendar visita', 'Confirmación']} />

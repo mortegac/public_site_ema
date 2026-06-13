@@ -57,6 +57,7 @@ const LIST_VISITS_BY_CUSTOMER = /* GraphQL */ `
         location
         state
         customerId
+        formId
       }
     }
   }
@@ -69,6 +70,7 @@ export interface ActiveVisit {
   summary: string | null
   location: string | null
   state: string
+  formId?: string | null
 }
 
 export async function GET(req: NextRequest) {
@@ -99,6 +101,7 @@ export async function GET(req: NextRequest) {
           summary: visit.summary ?? null,
           location: visit.location ?? null,
           state: visit.state,
+          formId: formId,
         }
         console.log(`[/api/active-visit] formId=${formId} → found visit ${visit.calendarId} state=${visit.state}`)
         return NextResponse.json({ visit: result })
@@ -134,6 +137,7 @@ export async function GET(req: NextRequest) {
       summary: visit.summary ?? null,
       location: visit.location ?? null,
       state: visit.state,
+      formId: visit.formId ?? null,
     }
 
     console.log(`[/api/active-visit] customerId=${customerId} → found visit ${visit.calendarId} state=${visit.state}`)

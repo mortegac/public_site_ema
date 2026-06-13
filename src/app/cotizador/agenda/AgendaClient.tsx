@@ -218,7 +218,7 @@ function ActiveVisitCard({ visit, email, onReschedule, paymentData }: { visit: A
           fullWidth
           variant="contained"
           onClick={onReschedule}
-          sx={{ py: 1.5, borderRadius: '24px', fontWeight: 700, bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' }, fontSize: '0.9rem', mb: 1.5 }}
+          sx={{ py: 1.5, borderRadius: '24px', fontWeight: 700, color: '#e81a68', bgcolor: 'white', border: '1px solid #e81a68', '&:hover': { bgcolor: '#fff0f5' }, fontSize: '0.9rem', mb: 1.5 }}
         >
           Modificar fecha
         </Button>

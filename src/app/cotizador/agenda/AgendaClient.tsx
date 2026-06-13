@@ -212,7 +212,19 @@ function ActiveVisitCard({ visit, email, onReschedule, paymentData }: { visit: A
         ))}
       </Box>
 
-      {/* Contact */}
+      {/* Modificar fecha — arriba, estilo botón principal */}
+      {onReschedule && ['payed', 'payedAndAgended', 'reserved'].includes(visit.state) && (
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={onReschedule}
+          sx={{ py: 1.5, borderRadius: '24px', fontWeight: 700, bgcolor: '#e81a68', '&:hover': { bgcolor: '#c01556' }, fontSize: '0.9rem', mb: 1.5 }}
+        >
+          Modificar fecha
+        </Button>
+      )}
+
+      {/* WhatsApp — debajo de Modificar fecha */}
       <Button
         fullWidth
         variant="contained"
@@ -229,24 +241,8 @@ function ActiveVisitCard({ visit, email, onReschedule, paymentData }: { visit: A
         Contáctanos por WhatsApp
       </Button>
 
-      {onReschedule && ['payed', 'payedAndAgended', 'reserved'].includes(visit.state) && (
-        <Box sx={{ textAlign: 'center', mt: 1 }}>
-          <Box
-            component="button"
-            onClick={onReschedule}
-            sx={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: '0.8rem', color: '#0898b9', fontWeight: 600,
-              textDecoration: 'underline', p: 0,
-              '&:hover': { color: '#0777a0' },
-            }}
-          >
-            Modificar fecha
-          </Box>
-        </Box>
-      )}
       <Typography fontSize="0.75rem" color="#64748B" textAlign="center" mt={1}>
-        ¿Dudas? <Box component="span" sx={{ color: '#e81a68', fontWeight: 600 }}>contacto@energica.city</Box>
+        ¿Necesitas asistencia? Escríbenos a <Box component="span" sx={{ color: '#e81a68', fontWeight: 600 }}>contacto@energica.city</Box>
       </Typography>
     </Box>
   )

@@ -96,6 +96,8 @@ interface PaymentBody {
   typeOfItem?: 'chargerInstallation' | 'visit' | 'product' | 'service' | 'input' | 'virtualVisit'
   pendingAmount?: number
   pendingGlosa?: string
+  hasCharger?: boolean
+  selectedPaymentOption?: string
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -117,20 +119,22 @@ export async function POST(req: NextRequest) {
     formId,
     typeOfCart = 'chargerInstallation',
     typeOfItem = 'chargerInstallation',
+    hasCharger,
+    selectedPaymentOption,
   } = body
 
   if (!total || total <= 0) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  const effectiveTotal = Math.round(total)
-  const effectiveVat   = Math.round(vat)
+  const effectiveTotal = total
+  const effectiveVat   = vat
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
   const shoppingCartId = crypto.randomUUID()
 
   console.log(`[payment] Starting payment flow — total=${effectiveTotal}, cartId=${shoppingCartId}`)
-  console.log(`[payment] email=${email ?? 'NOT_PROVIDED'}, typeOfCart=chargerInstallation`)
+  console.log(`[payment] email=${email ?? 'NOT_PROVIDED'}, typeOfCart=chargerInstallation, hasCharger=${hasCharger ?? 'NOT_PROVIDED'}, selectedPaymentOption=${selectedPaymentOption ?? 'NOT_PROVIDED'}`)
 
   // ── Step 1: Create ShoppingCart ──────────────────────────────────────────────
   try {
@@ -169,8 +173,8 @@ export async function POST(req: NextRequest) {
       const pendingCartId = crypto.randomUUID()
       const pendingCartInput: Record<string, unknown> = {
         shoppingCartId: pendingCartId,
-        total: Math.round(body.pendingAmount),
-        vat: Math.round(body.pendingAmount * 0.19 / 1.19),
+        total: body.pendingAmount,
+        vat: 0,
         typeOfCart: typeOfCart,
         paymentMethod: 'transbank',
         status: 'pending',
@@ -184,7 +188,7 @@ export async function POST(req: NextRequest) {
           shoppingCartDetailId: crypto.randomUUID(),
           shoppingCartId: pendingCartId,
           glosa: body.pendingGlosa ?? 'Saldo pendiente',
-          price: Math.round(body.pendingAmount),
+          price: body.pendingAmount,
           typeOfItem: typeOfItem,
         }
       }, 'createPendingShoppingCartDetail')

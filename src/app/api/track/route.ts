@@ -56,6 +56,10 @@ export async function POST(req: Request) {
   if (!event) return NextResponse.json({}, { status: 202 })
 
   const input: Record<string, unknown> = {
+    eventId:
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
     event,
     sessionId: str(body?.sessionId) ?? 'unknown',
     anonymousId: str(body?.anonymousId) ?? 'unknown',

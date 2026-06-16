@@ -1011,6 +1011,7 @@ export default function CotizadorWizard() {
       // Update ClientForm step to QUOTE_SENT
       updateFormStep(state.formId, '2')
 
+      if (state.emailSolo) setTrackerIdentity({ customerId: state.emailSolo.trim().toLowerCase() })
       track('email_sent')
       update({
         emailSent: true,

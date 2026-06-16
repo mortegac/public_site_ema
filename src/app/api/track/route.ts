@@ -71,6 +71,7 @@ export async function POST(req: Request) {
     device: str(body?.device),
     step: intOrNull(body?.step),
     createdAt: str(body?.timestamp) ?? new Date().toISOString(),
+    sourceUrl: str(body?.sourceUrl) ?? 'ENERGICA',
   }
 
   // Fire-and-forget: respond 202 before AppSync call

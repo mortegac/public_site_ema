@@ -15,6 +15,7 @@ export interface TrackPayload {
   device: 'mobile' | 'desktop'
   step?: number | null
   timestamp: string
+  sourceUrl: string
 }
 
 // Un sessionId por carga de módulo (≈ por pestaña/recarga).
@@ -73,6 +74,7 @@ export function track(event: string, props: Record<string, unknown> = {}): void 
     device: getDevice(),
     step: typeof props.step === 'number' ? (props.step as number) : null,
     timestamp: new Date().toISOString(),
+    sourceUrl: 'ENERGICA',
   }
 
   const data = JSON.stringify(payload)

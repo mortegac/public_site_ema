@@ -59,8 +59,9 @@ const CHARGERS = [
 ]
 
 const INSTALL_BASE = {
-  casa:     { mat: 156000, inst: 182000, sec: 25000 },
-  edificio: { mat: 215000, inst: 258000, sec: 35000 },
+  // ponytail: sec desactivado temporalmente — ambos a 0 para alinear con backend (COSTOS-OPERACIONALES disabled)
+  casa:     { mat: 156000, inst: 182000, sec: 0 /* 25000 */ },
+  edificio: { mat: 215000, inst: 258000, sec: 0 /* 35000 */ },
 }
 
 // COSTO-EXTRA-COTIZADOR: factor adicional por tipo de instalación (desactivado temporalmente)

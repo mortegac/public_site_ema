@@ -7,6 +7,7 @@ import Link from 'next/link'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import type { CalendarSlot } from '@/app/api/schedules/route'
 import type { ActiveVisit } from '@/app/api/active-visit/route'
+import { track } from '@/lib/tracker'
 
 interface PaymentData {
   customerId?: string
@@ -636,7 +637,7 @@ function AgendaContent() {
                   ) : (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 3 }}>
                       {dates.map((d, i) => (
-                        <Box key={i} onClick={d.available ? () => setSelectedDate(i) : undefined} sx={{
+                        <Box key={i} onClick={d.available ? () => { track('date_selected', { date: d.dateKey }); setSelectedDate(i) } : undefined} sx={{
                           p: '10px 14px', borderRadius: 2,
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                           border: `1.5px solid ${selectedDate === i ? '#e81a68' : d.available ? '#E2E8F0' : 'transparent'}`,
@@ -691,6 +692,7 @@ function AgendaContent() {
                       if (data.error) {
                         setBookingError(data.error)
                       } else {
+                        track('booking_confirmed', { date: slot.dateKey })
                         setBooked(true)
                       }
                     } catch {

@@ -23,6 +23,7 @@ import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { sendEmail } from '@/store/Estimate/services'
 import emailjs, { init as initEmailjs } from 'emailjs-com'
+import { track, setTrackerIdentity } from '@/lib/tracker'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -444,6 +445,17 @@ export default function CotizadorWizard() {
       .catch(() => {/* keep static fallback */})
   }, [])
 
+  // Track step 0 on mount
+  useEffect(() => { track('step_1_loaded') }, [])
+
+  // Track step_3_abandoned when user leaves while on step 2 and hasn't paid
+  useEffect(() => {
+    if (state.step !== 2 || state.paid) return
+    const onUnload = () => track('step_3_abandoned', { step: 2 })
+    window.addEventListener('beforeunload', onUnload)
+    return () => window.removeEventListener('beforeunload', onUnload)
+  }, [state.step, state.paid])
+
   const result = calcResult(state, chargerList)
 
   // ─── Derived ─────────────────────────────────────────────────────────────
@@ -520,6 +532,8 @@ export default function CotizadorWizard() {
             const apiMat = Number(est.materialsCost ?? 0)
             const apiInst = Number(est.installationCost ?? 0)
             const installGross = Math.round((apiMat + apiInst + secTramite) * 1.19)
+            setTrackerIdentity({ formId })
+            track('step_3_loaded', { formId, total: totalNeto + totalIva })
             update({
               estimateLoading: false,
               step: 2,
@@ -548,11 +562,13 @@ export default function CotizadorWizard() {
       } catch (err) {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
+      track('step_3_loaded', { formId: state.formId, total: result?.total })
       update({ estimateLoading: false, step: 2 })
       return
     }
 
     if (state.step < 2) {
+      track('step_2_loaded')
       update({ step: state.step + 1 })
     }
   }
@@ -676,6 +692,10 @@ export default function CotizadorWizard() {
       console.log('[payDirect] sessionStorage.paymentData written:', sessionStorage.getItem('paymentData'))
       sessionStorage.removeItem('wizardContext')
 
+      track('webpay_initiated', {
+        total: amount,
+        selectedPaymentOption: selectedPaymentOption,
+      })
       const form = document.createElement('form')
       form.method = 'POST'
       form.action = data.url
@@ -991,6 +1011,7 @@ export default function CotizadorWizard() {
       // Update ClientForm step to QUOTE_SENT
       updateFormStep(state.formId, '2')
 
+      track('email_sent')
       update({
         emailSent: true,
         emailSending: false,
@@ -1072,7 +1093,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipo === 'casa'}
-              onClick={() => update({ tipo: 'casa' })}
+              onClick={() => { track('tipo_selected', { tipo: 'casa' }); update({ tipo: 'casa' }) }}
               icon="🏠"
               title="Casa"
               subtitle="Estacionamiento propio"
@@ -1081,7 +1102,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipo === 'edificio'}
-              onClick={() => update({ tipo: 'edificio' })}
+              onClick={() => { track('tipo_selected', { tipo: 'edificio' }); update({ tipo: 'edificio' }) }}
               icon="🏢"
               title="Edificio"
               subtitle="Estacionamiento propio"
@@ -1139,7 +1160,7 @@ export default function CotizadorWizard() {
                 key={c.id}
                 charger={c}
                 selected={state.chargerId === c.id}
-                onClick={() => update({ chargerId: c.id })}
+                onClick={() => { track('charger_selected', { chargerId: c.id }); update({ chargerId: c.id }) }}
               />
             ))}
             <Box
@@ -1173,7 +1194,7 @@ export default function CotizadorWizard() {
               <Select
                 displayEmpty
                 value={state.chargerId ?? ''}
-                onChange={(e: SelectChangeEvent<string>) => update({ chargerId: (e.target.value as string) || null })}
+                onChange={(e: SelectChangeEvent<string>) => { const id = (e.target.value as string) || null; if (id) track('charger_selected', { chargerId: id }); update({ chargerId: id }) }}
                 renderValue={(val: string) => {
                   if (!val) return <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Elige un wallbox...</Typography>
                   if (val === 'own') return 'Ya tengo mi cargador (solo instalación)'
@@ -1827,6 +1848,7 @@ export default function CotizadorWizard() {
                               Recibirás una respuesta de nuestros consultores lo antes posible.
                             </p>`,
                         })
+                        track('electrolinera_submitted')
                         update({ webpayLoading: false, electrolineraSubmitted: true })
                       } catch {
                         update({ webpayLoading: false, webpayError: 'No se pudo enviar. Intenta nuevamente.' })
@@ -2193,12 +2215,16 @@ export default function CotizadorWizard() {
                 fullWidth
                 variant="contained"
                 disabled={state.webpayLoading}
-                onClick={() => update({
+                onClick={() => {
+                const isOpening = !(state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key)
+                if (isOpening) track('cta_reservar_clicked')
+                update({
                   selectedReserveOption: opt.key,
-                  activePanel: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? null : 'visitaPago',
+                  activePanel: isOpening ? 'visitaPago' : null,
                   reservePendingAmount: opt.balance,
                   reservePendingGlosa: opt.key === 'r70' ? `Saldo 30% · Instalación cargador eléctrico` : `Saldo 70% · Instalación cargador eléctrico`,
-                })}
+                })
+              }}
                 sx={{
                   bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? '#94A3B8' : PINK,
                   '&:hover': { bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? '#64748B' : PINK_DARK },
@@ -2768,7 +2794,7 @@ export default function CotizadorWizard() {
             fullWidth
             variant="outlined"
             startIcon={<IconMail size={16} />}
-            onClick={() => update({ activePanel: state.activePanel === 'email' ? null : 'email' })}
+            onClick={() => { if (state.activePanel !== 'email') track('cta_email_clicked'); update({ activePanel: state.activePanel === 'email' ? null : 'email' }) }}
             sx={{
               bgcolor: '#fff',
               borderColor: BORDER,

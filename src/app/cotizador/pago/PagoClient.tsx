@@ -43,7 +43,8 @@ const INSTALL_BASE = {
   edificio: { mat: 215000, inst: 258000, sec: 35000 },
 }
 
-const TIPO_FACTOR = { casa: 1.1, edificio: 1.15 }
+// COSTO-EXTRA-COTIZADOR: factor adicional por tipo de instalación (desactivado temporalmente)
+// const TIPO_FACTOR = { casa: 1.1, edificio: 1.15 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function dFactor(d: number): number {
@@ -179,7 +180,8 @@ interface CalcResult {
 function calcResult(state: WizardState): CalcResult | null {
   if (!state.tipo || !state.tipoC) return null
   const base = INSTALL_BASE[state.tipo]
-  const f = dFactor(state.dist) * TIPO_FACTOR[state.tipo]
+  // COSTO-EXTRA-COTIZADOR: antes se multiplicaba también por TIPO_FACTOR[state.tipo] (1.1 casa / 1.15 edificio)
+  const f = dFactor(state.dist)
   const mat = Math.round(base.mat * f)
   const inst = Math.round(base.inst * f)
   const sec = base.sec

@@ -527,13 +527,14 @@ export default function CotizadorWizard() {
             const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
             const chargerGrossPrice = charger ? charger.precio : 0
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
-            const secTramite = isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec
+            // SEC ya está incluido en installationCost del backend — usar SECCost solo para display en email
+            const secTramite = Number(est.SECCost ?? (isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec))
             const installNeto = Number(est.netPrice ?? 0)
-            const totalNeto = installNeto + chargerPrice + secTramite
+            const totalNeto = installNeto + chargerPrice
             const totalIva = Math.round(totalNeto * 0.19)
             const apiMat = Number(est.materialsCost ?? 0)
             const apiInst = Number(est.installationCost ?? 0)
-            const installGross = Math.round((apiMat + apiInst + secTramite) * 1.19)
+            const installGross = Math.round((apiMat + apiInst) * 1.19)
             setTrackerIdentity({ formId })
             track('step_3_loaded', { formId, total: totalNeto + totalIva })
             update({

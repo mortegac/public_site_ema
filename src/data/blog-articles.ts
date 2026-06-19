@@ -8,6 +8,11 @@ export interface BlogArticle {
 }
 
 export const BLOG_ARTICLES: BlogArticle[] = [
+  { uid: 'comparativa-cargadores-vehiculos-electricos-chile-2026', title: 'Comparativa Cargadores para Autos Eléctricos Chile 2026: Wallbox y Portátiles', description: 'Compara los 9 cargadores EV disponibles en Chile 2026: ZEERO Minibox, EFFITEC, LIVOLTEK, KPN, BESTE, BENY y Workersbee portátil. Precios, potencia y conectividad.', date: '2026-06-19', category: 'Comparativas', image: '/images/post/01_370x246.png' },
+  { uid: 'guia-cargar-auto-electrico-casa-normativa-sec-te6', title: 'Guía para Cargar tu Auto Eléctrico en Casa: Normativa SEC, TE6 y RIC N°15 Chile', description: 'Guía definitiva sobre carga domiciliaria EV en Chile: enchufe vs Wallbox, normativa SEC RIC N°15, certificado TE6 obligatorio, gestión de carga y costos.', date: '2026-06-19', category: 'Normativa', image: '/images/post/02_370x246.png' },
+  { uid: 'instalar-cargador-electrico-casa-wallbox', title: 'Cómo Instalar un Cargador Eléctrico (Wallbox) en Casa: Guía Completa', description: 'Guía completa para instalar un Wallbox en casa en Chile: evaluación técnica, protecciones tipo A, Nivel 1 vs Nivel 2, certificado TE6 y costo desde $159.000.', date: '2026-06-19', category: 'Instalaciones', image: '/images/post/01_370x246.png' },
+  { uid: 'instalacion-cargador-electrico-vivienda', title: 'Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica', description: 'Guía técnica completa: cableado AWG 6, diferencial tipo A, cargadores 16A vs 32A, sistema de alimentación para vehículo eléctrico y certificado TE6 SEC.', date: '2026-06-19', category: 'Instalaciones', image: '/images/post/02_370x246.png' },
+  { uid: 'que-tan-confiable-es-energica-city-cargador-electrico', title: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico?', description: 'Enérgica City: técnicos certificados SEC, alianza con Abastibletec, proyectos Chilexpress y MOP. 4 razones por las que es confiable para instalar tu cargador.', date: '2026-06-19', category: 'Guías', image: '/images/post/03_370x246.png' },
   { uid: 'como-usar-cotizador-cargador-electrico', title: 'Cómo Usar el Cotizador de Cargadores Eléctricos: Paso a Paso', description: 'Guía completa para usar el cotizador online de instalación de cargadores EV de Enérgica City. Casa o edificio, precio exacto en 2 minutos, 3 opciones para edificios incluyendo electrolinera $0.', date: '2026-06-11', category: 'Guías', image: '/images/post/27_370x246.png' },
   { uid: 'cargador-byd-seal-dolphin-atto-3-chile', title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Cotiza en Minutos', description: 'Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal (75,7 kWh), Dolphin (44,9 kWh) y Atto 3 (60,5 kWh). Cotiza online.', date: '2026-06-11', category: 'Vehículos', image: '/images/post/26_370x246.png' },
   { uid: 'electrolinera-edificio-inversion-cero', title: 'Electrolinera para tu Edificio: $0 de Inversión, Pagas Solo lo que Cargas', description: 'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Cero inversión para la comunidad. Pagas solo $330/kWh consumido.', date: '2026-06-11', category: 'Edificios', image: '/images/post/28_370x246.png' },
@@ -35,11 +40,21 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   { uid: 'futuro-electromovilidad-chile-metas-2035-2050', title: 'Chile 2035: El Fin de los Autos a Gasolina y Cómo Prepararse', description: 'La Estrategia Nacional de Electromovilidad de Chile: meta 2035 para vehículos cero emisiones y carbono neutralidad 2050. Cómo prepararse hoy.', date: '2025-05-15', category: 'Beneficios', image: '/images/post/21_370x246.png' },
 ]
 
+const PINNED_UID = 'como-usar-cotizador-cargador-electrico'
+
 export function getRelatedArticles(currentUid: string, count = 3): BlogArticle[] {
   const current = BLOG_ARTICLES.find((a) => a.uid === currentUid)
   const others = BLOG_ARTICLES.filter((a) => a.uid !== currentUid)
   if (!current) return others.slice(0, count)
-  const sameCategory = others.filter((a) => a.category === current.category)
-  const rest = others.filter((a) => a.category !== current.category)
-  return [...sameCategory, ...rest].slice(0, count)
+
+  const pinned = currentUid !== PINNED_UID
+    ? BLOG_ARTICLES.find((a) => a.uid === PINNED_UID)
+    : undefined
+
+  const candidates = others.filter((a) => a.uid !== PINNED_UID)
+  const sameCategory = candidates.filter((a) => a.category === current.category)
+  const rest = candidates.filter((a) => a.category !== current.category)
+  const ranked = [...sameCategory, ...rest].slice(0, pinned ? count - 1 : count)
+
+  return pinned ? [pinned, ...ranked] : ranked
 }

@@ -18,6 +18,7 @@ const STATIC_ROUTES = [
   '/comparador-electrico',
   '/simulador',
   '/auto-electrico-vs-gasolina-chile',
+  '/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador',
 ]
 
 const CITY_ROUTES = [

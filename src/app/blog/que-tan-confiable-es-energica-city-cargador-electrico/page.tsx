@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -181,6 +182,17 @@ export default function ArticlePage() {
       <HpHeaderNew />
       <BlogBreadcrumb title="¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico?" />
       <Box component="main">
+        {/* Featured image */}
+        <Box sx={{ width: '100%', lineHeight: 0 }}>
+          <Image
+            src="/images/post/35_1170x400.png"
+            alt="Qué tan confiable es Enérgica City para instalar un cargador eléctrico"
+            width={1170}
+            height={400}
+            style={{ width: '100%', height: 'auto' }}
+            priority
+          />
+        </Box>
         {/* Hero */}
         <Box
           sx={{

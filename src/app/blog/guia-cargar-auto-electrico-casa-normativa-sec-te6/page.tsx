@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -271,6 +272,17 @@ export default function ArticlePage() {
       <HpHeaderNew />
       <BlogBreadcrumb title="Guía para Cargar tu Auto Eléctrico en Casa: Normativa SEC, TE6 y RIC N°15" />
       <Box component="main">
+        {/* Featured image */}
+        <Box sx={{ width: '100%', lineHeight: 0 }}>
+          <Image
+            src="/images/post/32_1170x400.png"
+            alt="Guía para cargar tu auto eléctrico en casa normativa SEC TE6 Chile"
+            width={1170}
+            height={400}
+            style={{ width: '100%', height: 'auto' }}
+            priority
+          />
+        </Box>
         {/* Hero */}
         <Box
           sx={{

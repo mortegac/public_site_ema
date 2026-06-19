@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -190,6 +191,17 @@ export default function ArticlePage() {
       <HpHeaderNew />
       <BlogBreadcrumb title="Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica" />
       <Box component="main">
+        {/* Featured image */}
+        <Box sx={{ width: '100%', lineHeight: 0 }}>
+          <Image
+            src="/images/post/34_1170x400.png"
+            alt="Instalación de cargadores para vehículos eléctricos en vivienda guía técnica"
+            width={1170}
+            height={400}
+            style={{ width: '100%', height: 'auto' }}
+            priority
+          />
+        </Box>
         {/* Hero */}
         <Box
           sx={{

@@ -14,15 +14,28 @@ const BLOCKED_PATHS = [
   '/slice-simulator',
 ]
 
+const AI_BOTS = [
+  'GPTBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'Claude-Web',
+  'anthropic-ai',
+  'PerplexityBot',
+  'OAI-SearchBot',
+  'Applebot-Extended',
+  'CCBot',
+  'Google-Extended',
+  'FacebookBot',
+  'Amazonbot',
+  'Bytespider',
+  'cohere-ai',
+]
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: 'CCBot',
-        disallow: '/',
-      },
-      {
-        userAgent: ['GPTBot', 'ClaudeBot', 'PerplexityBot', 'OAI-SearchBot'],
+        userAgent: AI_BOTS,
         allow: '/',
         disallow: BLOCKED_PATHS,
       },

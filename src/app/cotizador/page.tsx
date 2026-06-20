@@ -4,7 +4,7 @@ import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 import CotizadorWizard from './CotizadorWizard'
 
 const SLUG = 'cotizador'
-const TITLE = 'Cotizador de Instalación de Cargador EV — Energica City'
+const TITLE = 'Cotizador de Instalación de Cargador EV'
 const DESC = 'Simula el costo de tu instalación de cargador eléctrico en Chile. Elige tu cargador, obtén precio al instante y agenda tu visita técnica. Certificado SEC.'
 
 export const metadata: Metadata = {

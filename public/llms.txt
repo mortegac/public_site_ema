@@ -1,19 +1,19 @@
 # Energica City
 
-> Updated: 2026-03-22
+> Updated: 2026-06-20
 
 > Empresa chilena especializada en instalación certificada SEC de cargadores eléctricos para vehículos eléctricos (EV). Atendemos empresas, edificios residenciales y flotas corporativas en la Región Metropolitana de Chile. Teléfono: +56 9 6766 6652.
 
 ## Sobre Nosotros
-- [Quiénes somos](https://energica.city/que-es-energica-city): Startup chilena dedicada a la instalación, gestión y soporte técnico de infraestructura de carga para vehículos eléctricos. Instaladores habilitados por la SEC con certificaciones TE1 y TE6.
-- [Contacto](https://energica.city/contactanos): Teléfono +56 9 6766 6652. Atención de lunes a viernes 09:00–18:00.
+- [Quiénes somos](https://www.energica.city/que-es-energica-city): Startup chilena dedicada a la instalación, gestión y soporte técnico de infraestructura de carga para vehículos eléctricos. Instaladores habilitados por la SEC con certificaciones TE1 y TE6.
+- [Contacto](https://www.energica.city/contactanos): Teléfono +56 9 6766 6652. Atención de lunes a viernes 09:00–18:00.
 
 ## Servicios
-- [Instalación de Cargadores](https://energica.city/instalacion_cargadores): Instalación certificada SEC de cargadores AC (Nivel 2, monofásico y trifásico hasta 22 kW) y DC (carga rápida hasta 150 kW) para empresas y edificios.
-- [Gestión de Flotas](https://energica.city/asesoria_electrificacion_flotas): Asesoría y diseño de infraestructura de carga para flotas corporativas en minería, transporte y logística.
-- [Electrolineras en Edificios](https://energica.city/cargadores-en-edificios): Soluciones de carga compartida para edificios residenciales y de oficinas, con gestión de energía (OCPP).
-- [Cotizador Online](https://energica.city/cotizador): Estimación referencial del costo de instalación. Cotización vinculante tras visita técnica.
-- [Agenda Visita Técnica](https://energica.city/agenda): Visita técnica con costo previo para evaluación in situ y proyecto definitivo.
+- [Instalación de Cargadores](https://www.energica.city/instalacion_cargadores): Instalación certificada SEC de cargadores AC (Nivel 2, monofásico y trifásico hasta 22 kW) y DC (carga rápida hasta 150 kW) para empresas y edificios.
+- [Gestión de Flotas](https://www.energica.city/asesoria_electrificacion_flotas): Asesoría y diseño de infraestructura de carga para flotas corporativas en minería, transporte y logística.
+- [Electrolineras en Edificios](https://www.energica.city/cargadores-en-edificios): Soluciones de carga compartida para edificios residenciales y de oficinas, con gestión de energía (OCPP).
+- [Cotizador Online](https://www.energica.city/cotizador): Estimación referencial del costo de instalación. Cotización vinculante tras visita técnica.
+- [Agenda Visita Técnica](https://www.energica.city/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador): Visita técnica con costo previo para evaluación in situ y proyecto definitivo.
 
 ## Proceso de Instalación
 1. Cotización gratuita online — respuesta en 24 horas.
@@ -41,19 +41,19 @@
 - Cobertura principal: Región Metropolitana (Santiago, Las Condes, Providencia, Vitacura, Ñuñoa, La Florida y más).
 
 ## Recursos
-- [Preguntas Frecuentes](https://energica.city/faqs): Dudas sobre instalación, normativa SEC, TE6, y cargadores en edificios.
-- [Cómo Funciona](https://energica.city/como-funciona): Proceso completo en 6 pasos desde cotización hasta certificación.
-- [Credenciales SEC](https://energica.city/credenciales): Certificaciones TE1, TE6, NCh Elec. 4/2003, IEC 61851.
-- [Blog de Electromovilidad](https://energica.city/blog): Artículos sobre tendencias, normativa y transporte sostenible en Chile.
+- [Preguntas Frecuentes](https://www.energica.city/faqs): Dudas sobre instalación, normativa SEC, TE6, y cargadores en edificios.
+- [Cómo Funciona](https://www.energica.city/como-funciona): Proceso completo en 6 pasos desde cotización hasta certificación.
+- [Credenciales SEC](https://www.energica.city/credenciales): Certificaciones TE1, TE6, NCh Elec. 4/2003, IEC 61851.
+- [Blog de Electromovilidad](https://www.energica.city/blog): Artículos sobre tendencias, normativa y transporte sostenible en Chile.
 
 ## Área de Servicio
 - Santiago, Las Condes, Providencia, Vitacura, Ñuñoa, La Florida y comunas de la Región Metropolitana.
-- [Cargadores en Santiago](https://energica.city/servicios/santiago)
-- [Cargadores en Las Condes](https://energica.city/servicios/las-condes)
-- [Cargadores en Providencia](https://energica.city/servicios/providencia)
-- [Cargadores en Vitacura](https://energica.city/servicios/vitacura)
-- [Cargadores en Ñuñoa](https://energica.city/servicios/nunoa)
-- [Cargadores en La Florida](https://energica.city/servicios/la-florida)
+- [Cargadores en Santiago](https://www.energica.city/servicios/santiago)
+- [Cargadores en Las Condes](https://www.energica.city/servicios/las-condes)
+- [Cargadores en Providencia](https://www.energica.city/servicios/providencia)
+- [Cargadores en Vitacura](https://www.energica.city/servicios/vitacura)
+- [Cargadores en Ñuñoa](https://www.energica.city/servicios/nunoa)
+- [Cargadores en La Florida](https://www.energica.city/servicios/la-florida)
 
 ## Temas Clave
 - Electromovilidad en Chile

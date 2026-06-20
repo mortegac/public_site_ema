@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '@/prismicio'
 import { BLOG_ARTICLES } from '@/data/blog-articles'
 
-const STATIC_LAST_MODIFIED = new Date('2026-04-10')
+const STATIC_LAST_MODIFIED = new Date('2026-06-20')
 
 const STATIC_ROUTES = [
   '/cotizador',
@@ -57,18 +57,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
+  const HIGH_PRIORITY_ROUTES = new Set(['/cotizador', '/comparador-electrico'])
+  const LOW_PRIORITY_ROUTES = new Set(['/terminos-condiciones'])
+
   const staticEntries = STATIC_ROUTES.map((route) => ({
     url: `https://www.energica.city${route}`,
     lastModified: STATIC_LAST_MODIFIED,
+    changeFrequency: HIGH_PRIORITY_ROUTES.has(route) ? ('weekly' as const) : ('monthly' as const),
+    priority: HIGH_PRIORITY_ROUTES.has(route) ? 0.9 : LOW_PRIORITY_ROUTES.has(route) ? 0.6 : 0.8,
   }))
 
   const cityEntries = CITY_ROUTES.map((city) => ({
     url: `https://www.energica.city/servicios/${city}`,
     lastModified: STATIC_LAST_MODIFIED,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
   }))
 
   return [
-    { url: 'https://www.energica.city', lastModified: STATIC_LAST_MODIFIED },
+    { url: 'https://www.energica.city', lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'weekly' as const, priority: 1.0 },
     ...prismicEntries,
     ...blogEntries,
     ...staticBlogEntries,

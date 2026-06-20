@@ -8,7 +8,7 @@ import BlankCard from '../components/shared/BlankCard';
 import { Box, CardContent, Container } from '@mui/material';
 
 export const metadata: Metadata = {
-  title: "Política de Privacidad | Energica City",
+  title: "Política de Privacidad",
   description: "Conoce cómo Energica City recopila, trata y protege tus datos personales de acuerdo con la Ley N° 19.628 de protección de la vida privada en Chile.",
   alternates: {
     canonical: "https://www.energica.city/privacidad",

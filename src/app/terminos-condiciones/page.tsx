@@ -8,7 +8,7 @@ import BlankCard from '../components/shared/BlankCard';
 import { Box, CardContent, Container } from '@mui/material';
 
 export const metadata: Metadata = {
-  title: "Términos y Condiciones | Energica City",
+  title: "Términos y Condiciones",
   description: "Conoce los términos y condiciones de uso del cotizador y los servicios de instalación de cargadores eléctricos de Energica City en Chile.",
   alternates: {
     canonical: "https://www.energica.city/terminos-condiciones",

@@ -54,9 +54,26 @@ const faqs = [
   },
 ];
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+};
+
 const FaqsPage = () => {
   return (
     <PageContainer title="Preguntas Frecuentes sobre Cargadores EV | Energica City" description="Resuelve tus dudas sobre instalación de cargadores eléctricos para empresas y edificios en Chile.">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <HpHeaderNew />
 
       <Banner

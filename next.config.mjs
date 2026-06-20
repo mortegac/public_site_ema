@@ -102,6 +102,21 @@ const nextConfig = {
     //     },
     //   ];
     // },
+    // Redirects 301 para URLs con underscores → guiones (SEO)
+    async redirects() {
+      return [
+        {
+          source: '/asesoria_electrificacion_flotas',
+          destination: '/asesoria-electrificacion-flotas',
+          permanent: true,
+        },
+        {
+          source: '/instalacion_cargadores',
+          destination: '/instalacion-cargadores',
+          permanent: true,
+        },
+      ];
+    },
 };
 
 export default nextConfig;

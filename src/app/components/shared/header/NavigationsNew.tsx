@@ -30,6 +30,10 @@ export const NavLinks = [
     title: "Sobre Energica",
     href: "/que-es-energica-city",
   },
+  {
+    title: "Blog",
+    href: "/blog",
+  },
   // {
   //   title: "¿Dudas?",
   //   href: "https://www.energica.city/faq-y-tc",

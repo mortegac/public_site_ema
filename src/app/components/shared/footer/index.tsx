@@ -398,7 +398,7 @@ const Footer = () => {
               </Typography>
               </Stack>
             </Link>
-                <Typography variant="body1" fontSize="15px" sx={{ textAlign:'left', paddingTop:'8px', color:'#ffffff'}}>Copyright © 2024</Typography>
+                <Typography variant="body1" fontSize="15px" sx={{ textAlign:'left', paddingTop:'8px', color:'#ffffff'}}>Copyright © {new Date().getFullYear()}</Typography>
             </Box>
             
            

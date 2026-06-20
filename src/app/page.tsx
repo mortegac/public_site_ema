@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 
   return {
-    title: page.data.meta_title,
+    title: "Cargadores Eléctricos para Empresas y Edificios",
     description: page.data.meta_description,
     alternates: {
       canonical: CANONICAL_DOMAIN,
@@ -70,7 +70,35 @@ export default async function Page() {
   const client = createClient();
   const page = await client.getByUID("page", "home").catch(() => notFound());
 
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Enérgica City",
+    "description": "Empresa chilena especializada en instalación de cargadores eléctricos (EV) para casas, edificios y flotas empresariales. Técnicos certificados SEC.",
+    "url": "https://www.energica.city",
+    "telephone": "+56966766652",
+    "email": "contacto@energica.city",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "CL",
+      "addressRegion": "Región Metropolitana",
+      "addressLocality": "Santiago"
+    },
+    "areaServed": ["Santiago", "Región Metropolitana", "Valparaíso", "Chile"],
+    "serviceType": ["Instalación de cargadores eléctricos", "Electrificación de flotas", "Electrolineras comunitarias"],
+    "priceRange": "$$",
+    "hasMap": "https://www.google.com/maps?q=Energica+City+Santiago+Chile",
+    "sameAs": [
+      "https://www.linkedin.com/company/energica-city",
+      "https://abastibletec.cl/electromovilidad/cargadoreselectricos/"
+    ]
+  };
+
   return <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+    />
     {/* <PageContainer title="" description=""> */}
       <HpHeaderNew /> 
       <Container

@@ -10,10 +10,10 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const NavLinks = [
-  {
-    title: "Inicio",
-    href: "/",
-  },
+  // {
+  //   title: "Inicio",
+  //   href: "/",
+  // },
   {
     title: "Electrificación de flotas",
     href: "/asesoria_electrificacion_flotas",

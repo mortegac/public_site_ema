@@ -23,7 +23,7 @@ import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { sendEmail } from '@/store/Estimate/services'
 import emailjs, { init as initEmailjs } from 'emailjs-com'
-import { track, setTrackerIdentity } from '@/lib/tracker'
+import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -449,12 +449,12 @@ export default function CotizadorWizard() {
   }, [])
 
   // Track step 0 on mount
-  useEffect(() => { track('step_1_loaded') }, [])
+  useEffect(() => { trackUnique('step_1_loaded', { step: 1 }) }, [])
 
   // Track step_3_abandoned when user leaves while on step 2 and hasn't paid
   useEffect(() => {
     if (state.step !== 2 || state.paid) return
-    const onUnload = () => track('step_3_abandoned', { step: 2 })
+    const onUnload = () => trackUnique('step_3_abandoned', { step: 2 })
     window.addEventListener('beforeunload', onUnload)
     return () => window.removeEventListener('beforeunload', onUnload)
   }, [state.step, state.paid])
@@ -537,7 +537,7 @@ export default function CotizadorWizard() {
             const apiInst = Number(est.installationCost ?? 0)
             const installGross = Math.round((apiMat + apiInst) * 1.19)
             setTrackerIdentity({ formId })
-            track('step_3_loaded', { formId, total: totalNeto + totalIva })
+            trackUnique('step_3_loaded', { formId, total: totalNeto + totalIva })
             update({
               estimateLoading: false,
               step: 2,
@@ -566,13 +566,13 @@ export default function CotizadorWizard() {
       } catch (err) {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
-      track('step_3_loaded', { formId: state.formId, total: result?.total })
+      trackUnique('step_3_loaded', { formId: state.formId, total: result?.total })
       update({ estimateLoading: false, step: 2 })
       return
     }
 
     if (state.step < 2) {
-      track('step_2_loaded')
+      trackUnique('step_2_loaded', { step: 2 })
       update({ step: state.step + 1 })
     }
   }
@@ -696,7 +696,14 @@ export default function CotizadorWizard() {
       console.log('[payDirect] sessionStorage.paymentData written:', sessionStorage.getItem('paymentData'))
       sessionStorage.removeItem('wizardContext')
 
-      track('webpay_initiated', {
+      trackUnique('payment_option_selected', {
+        step: 3,
+        option: selectedPaymentOption,
+        tipo: state.tipo,
+        hasCharger,
+        total: amount,
+      })
+      trackUnique('webpay_initiated', {
         total: amount,
         selectedPaymentOption: selectedPaymentOption,
       })
@@ -1165,7 +1172,7 @@ export default function CotizadorWizard() {
                 key={c.id}
                 charger={c}
                 selected={state.chargerId === c.id}
-                onClick={() => { track('charger_selected', { chargerId: c.id }); update({ chargerId: c.id }) }}
+                onClick={() => { track('charger_selected', { charger: c.name, type: c.tipo, step: 2 }); update({ chargerId: c.id }) }}
               />
             ))}
             <Box
@@ -1199,7 +1206,7 @@ export default function CotizadorWizard() {
               <Select
                 displayEmpty
                 value={state.chargerId ?? ''}
-                onChange={(e: SelectChangeEvent<string>) => { const id = (e.target.value as string) || null; if (id) track('charger_selected', { chargerId: id }); update({ chargerId: id }) }}
+                onChange={(e: SelectChangeEvent<string>) => { const id = (e.target.value as string) || null; if (id) { const ch = wallboxes.find(c => c.id === id); track('charger_selected', { charger: ch?.name ?? id, type: 'wallbox', step: 2 }) } update({ chargerId: id }) }}
                 renderValue={(val: string) => {
                   if (!val) return <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Elige un wallbox...</Typography>
                   if (val === 'own') return 'Ya tengo mi cargador (solo instalación)'
@@ -1244,7 +1251,8 @@ export default function CotizadorWizard() {
               min={1}
               max={60}
               marks={SLIDER_MARKS}
-              onChange={(_, v) => update({ dist: v as number })}
+              onChange={(_, v) => { update({ dist: v as number }); track('distance_changed', { distance: v as number, step: 2 }) }}
+              onChangeCommitted={(_, v) => track('distance_final', { distance: v as number, step: 2 })}
               sx={{
                 color: PINK,
                 '& .MuiSlider-markLabel': { fontSize: '0.65rem', color: TEXT_MUTED },
@@ -2222,7 +2230,7 @@ export default function CotizadorWizard() {
                 disabled={state.webpayLoading}
                 onClick={() => {
                 const isOpening = !(state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key)
-                if (isOpening) track('cta_reservar_clicked')
+                if (isOpening) trackUnique('cta_reservar_clicked', { step: 3 })
                 update({
                   selectedReserveOption: opt.key,
                   activePanel: isOpening ? 'visitaPago' : null,

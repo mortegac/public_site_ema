@@ -7,7 +7,7 @@ import Link from 'next/link'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import type { CalendarSlot } from '@/app/api/schedules/route'
 import type { ActiveVisit } from '@/app/api/active-visit/route'
-import { track } from '@/lib/tracker'
+import { track, trackUnique } from '@/lib/tracker'
 
 interface PaymentData {
   customerId?: string
@@ -692,7 +692,7 @@ function AgendaContent() {
                       if (data.error) {
                         setBookingError(data.error)
                       } else {
-                        track('booking_confirmed', { date: slot.dateKey })
+                        trackUnique('booking_confirmed', { date: slot.dateKey })
                         setBooked(true)
                       }
                     } catch {

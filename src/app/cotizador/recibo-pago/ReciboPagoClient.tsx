@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import Footer from '@/app/components/shared/footer'
 import type { CalendarSlot } from '@/app/api/schedules/route'
-import { track } from '@/lib/tracker'
+import { trackUnique, setTrackerIdentity } from '@/lib/tracker'
 
 interface PaymentData {
   // Payment confirmation fields (from /return after Webpay)
@@ -103,7 +103,8 @@ export default function ReciboPagoClient() {
       console.log('[recibo-pago] paymentData from sessionStorage:', JSON.stringify(parsed))
       console.log('[recibo-pago] email:', parsed?.email, '| customerId:', parsed?.customerId, '| shoppingCartId:', parsed?.shoppingCartId)
       setPaymentData(parsed)
-      track('payment_confirmed', { total: parsed?.total != null ? Number(parsed.total) : undefined })
+      if (parsed?.email) setTrackerIdentity({ customerId: parsed.email.trim().toLowerCase(), formId: parsed?.formId ?? null })
+      trackUnique('payment_confirmed', { total: parsed?.total != null ? Number(parsed.total) : undefined })
       // Update ClientForm step to PAID_PENDING_SCHEDULE on page load
       if (parsed?.formId) {
         fetch('/api/update-step', {

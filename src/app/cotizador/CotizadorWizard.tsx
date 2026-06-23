@@ -244,8 +244,8 @@ function WizardStepper({ step, paid, booked }: StepperProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                bgcolor: isCompleted ? TEAL : isActive ? PINK : 'transparent',
-                border: isCompleted || isActive ? 'none' : '2px solid rgba(0,0,0,0.3)',
+                bgcolor: isCompleted ? 'transparent' : isActive ? PINK : 'transparent',
+                border: isCompleted ? '1px solid #cccccc' : isActive ? 'none' : '2px solid rgba(0,0,0,0.3)',
                 transition: 'all 0.3s',
               }}>
                 {isCompleted ? (
@@ -399,8 +399,8 @@ export default function CotizadorWizard() {
     addressLng: '',
     editingAddr: true,
     regionWarn: false,
-    tipoC: null,
-    chargerId: null,
+    tipoC: 'wallbox',
+    chargerId: 'own',
     dist: 10,
     activePanel: null,
     visitaTelefono: '',
@@ -1659,7 +1659,7 @@ export default function CotizadorWizard() {
               label="Email para comprobante"
               type="email"
               value={state.emailPago}
-              onChange={e => update({ emailPago: e.target.value })}
+              onChange={e => update({ emailPago: e.target.value.toLowerCase() })}
               helperText="Requerido para proceder al pago"
               sx={{ mb: 2 }}
             />
@@ -1823,7 +1823,7 @@ export default function CotizadorWizard() {
                   <TextField fullWidth size="small" label="Nombre"
                     value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Email" type="email"
-                    value={state.emailPago} onChange={e => update({ emailPago: e.target.value })} sx={{ mb: 2 }} />
+                    value={state.emailPago} onChange={e => update({ emailPago: e.target.value.toLowerCase() })} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Teléfono" type="tel"
                     value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                   {state.webpayError && (
@@ -2104,357 +2104,249 @@ export default function CotizadorWizard() {
 
   // ─── Casa booking options (Image #7) ─────────────────────────────────────────
   function renderBookingOptions(displayResult: NonNullable<ReturnType<typeof calcResult>>) {
-    // Use IVA-inclusive installation price (no charger) for all calculations
     const installBaseGross = displayResult.installGross
-
-    const inst70 = Math.round(installBaseGross * 0.85)
-    const save70 = installBaseGross - inst70
-    const pay70 = Math.round(inst70 * 0.70)
-    const bal70 = inst70 - pay70
-
-    const inst30 = Math.round(installBaseGross * 0.93)
-    const save30 = installBaseGross - inst30
-    const pay30 = Math.round(inst30 * 0.30)
-    const bal30 = inst30 - pay30
-
-    const visitaAmount = 10000
-
-    const opts = [
-      {
-        key: 'r70' as const,
-        title: 'Reserva 70%',
-        badge: { label: 'MEJOR PRECIO', color: '#00C47C' },
-        instDisc: inst70,
-        instOrig: installBaseGross,
-        savings: save70,
-        savingsPct: 15,
-        payToday: pay70,
-        balance: bal70,
-        chargerDeferred: displayResult.chargerPrice,
-        features: ['Prioridad máxima en la agenda de instalación', 'Visita técnica sin costo', 'Puedes desistir tras la visita y te devolvemos lo pagado'],
-        disclaimer: 'Si en la visita técnica detectamos algún impedimento técnico para instalar, te devolvemos el 100% de lo pagado, sin preguntas.',
-        btnLabel: `Reservar con ${fmt(pay70)} →`,
-        payAmount: pay70,
-        glosa: 'Reserva 70% · Instalación cargador eléctrico',
-        highlight: false,
-      },
-      {
-        key: 'r30' as const,
-        title: 'Reserva 30%',
-        badge: { label: '🔥 LA MÁS ELEGIDA', color: PINK },
-        instDisc: inst30,
-        instOrig: installBaseGross,
-        savings: save30,
-        savingsPct: 7,
-        payToday: pay30,
-        balance: bal30,
-        chargerDeferred: displayResult.chargerPrice,
-        features: ['Prioridad en la instalación', 'Visita técnica sin costo', 'Puedes desistir tras la visita y te devolvemos lo pagado'],
-        disclaimer: null,
-        btnLabel: `Reservar con ${fmt(pay30)} →`,
-        payAmount: pay30,
-        glosa: 'Reserva 30% · Instalación cargador eléctrico',
-        highlight: true,
-      },
-    ]
+    const discountedInstall = Math.round(installBaseGross * 0.9)
+    const discountSavings = installBaseGross - discountedInstall
+    const visitaAmount = 9990
+    const features70 = ['Prioridad máxima en la agenda de instalación', 'Visita técnica sin costo', 'Puedes desistir tras la visita y te devolvemos lo pagado']
+    const isAlt2Open = state.activePanel === 'visitaPago' && state.selectedReserveOption === 'r70'
+    const isVisitaOpen = state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita'
 
     return (
       <Box sx={{ mb: 2 }}>
-        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2 }}>
-          Elige cómo reservar tu instalación
-        </Typography>
-
         {state.webpayError && (
           <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
         )}
 
-        {opts.map(opt => (
-          <Box
-            key={opt.key}
-            sx={{
-              bgcolor: '#fff',
-              border: `2px solid ${opt.highlight ? PINK : BORDER}`,
-              borderRadius: 2,
-              overflow: 'hidden',
-              mb: 2,
-            }}
-          >
-            {opt.badge && (
-              <Box sx={{ bgcolor: opt.badge.color, px: 2, py: 0.75, display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>
-                  {opt.badge.label}
+        {/* Social proof + heading */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5 }}>
+          <Box sx={{ display: 'flex' }}>
+            {[
+              { letter: 'H', color: '#FBBF24' },
+              { letter: 'C', color: '#93C5FD' },
+              { letter: 'J', color: '#86EFAC' },
+              { letter: 'R', color: '#FCA5A5' },
+            ].map(({ letter, color }, i) => (
+              <Box key={i} sx={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: color, border: '2px solid #fff', ml: i > 0 ? -0.75 : 0, zIndex: 4 - i }}>
+                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
+              </Box>
+            ))}
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
+            +120 instalaciones completadas en Santiago
+          </Typography>
+        </Box>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2, mt: 0.5 }}>
+          Elige cómo avanzar
+        </Typography>
+
+        {/* ALTERNATIVA 1 — Solo visita técnica */}
+        <Box sx={{ bgcolor: 'rgb(250,251,251)', border: '1.5px solid rgb(223,227,230)', borderRadius: '14px', mt: 2, overflow: 'hidden', mb: 2 }}>
+          <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+              <Box sx={{ bgcolor: TEAL, borderRadius: 10, px: 1.25, py: 0.35, display: 'inline-flex', flexShrink: 0 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>ALTERNATIVA 1</Typography>
+              </Box>
+              <Typography sx={{ fontSize: '0.82rem', fontWeight: 600, color: '#2A3547' }}>— SOLO VISITA TÉCNICA</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.5 }}>
+              <Typography sx={{ fontWeight: 800, fontSize: '1.35rem', color: '#2A3547' }}>{fmt(visitaAmount)}</Typography>
+              <Typography sx={{ fontSize: '0.82rem', color: TEAL, fontWeight: 600 }}>acreditable a tu instalación</Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+              Agenda la visita y decide después.
+            </Typography>
+            {[
+              'Profesional certificado SEC en terreno',
+              'Confirmamos distancia y materiales, y hacemos el plan de instalación',
+              `Si avanzas, los ${fmt(visitaAmount)} se descuentan`,
+            ].map(f => (
+              <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
+                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
+              </Box>
+            ))}
+            <Button
+              fullWidth variant="outlined" disabled={state.webpayLoading}
+              onClick={() => update({
+                selectedReserveOption: 'visita',
+                activePanel: isVisitaOpen ? null : 'visitaPago',
+                reservePendingAmount: null, reservePendingGlosa: '',
+              })}
+              sx={{
+                color: isVisitaOpen ? '#94A3B8' : TEAL,
+                borderColor: isVisitaOpen ? '#94A3B8' : TEAL,
+                '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.05)', color: TEAL },
+                '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
+                fontWeight: 700, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2, mt: 2,
+              }}
+            >
+              {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
+            </Button>
+            {isVisitaOpen && (
+              <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+                  Datos para el comprobante
+                </Typography>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                  Dirección de instalación
+                </Typography>
+                <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                  <AddressInput2
+                    value={state.address}
+                    error={!!state.address && !state.addressValidated}
+                    onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                    onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                    onSelectAddress={(details) => {
+                      if (details) {
+                        const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                        update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
+                      }
+                    }}
+                  />
+                </Box>
+                {state.address && !state.addressValidated && (
+                  <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                    Selecciona una dirección del menú desplegable para continuar
+                  </Typography>
+                )}
+                {state.address && !isRegionMetropolitana(state.address) && (
+                  <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                    <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                      Solo atendemos Región Metropolitana y Valparaíso
+                    </Typography>
+                  </Box>
+                )}
+                <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => update({ emailPago: e.target.value.toLowerCase() })} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
+                <Button fullWidth variant="contained"
+                  disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
+                  onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
+                  sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                >
+                  {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
+                </Button>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                  Pago seguro · Visa, Mastercard, Redcompra, débito
                 </Typography>
               </Box>
             )}
-            <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
-              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.75 }}>{opt.title}</Typography>
+          </Box>
+        </Box>
 
-              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.25 }}>
-                <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mr: 0.5 }}>Instalación</Typography>
-                <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547' }}>{fmt(opt.instDisc)}</Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(opt.instOrig)}</Typography>
+        {/* Próxima visita disponible — below ALTERNATIVA 1 */}
+        {state.nextVisitDate && (
+          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textAlign: 'center', mb: 2, mt: -1 }}>
+            Próxima visita disponible:{' '}
+            <Box component="span" sx={{ color: TEAL, fontWeight: 600 }}>
+              {formatVisitDate(state.nextVisitDate)}
+            </Box>
+          </Typography>
+        )}
+
+        {/* ALTERNATIVA 2 — Descuento si pagas hoy */}
+        <Box sx={{ bgcolor: '#fff', border: '2px solid #00C47C', borderRadius: 2, overflow: 'hidden', mb: 2 }}>
+          <Box sx={{ bgcolor: '#00C47C', px: 2, py: 1.25, borderRadius: 0 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>
+              ALTERNATIVA 2 — DESCUENTO SI PAGAS HOY
+            </Typography>
+          </Box>
+          <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.25 }}>
+              <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mr: 0.5 }}>Instalación</Typography>
+              <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547' }}>{fmt(discountedInstall)}</Typography>
+              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(installBaseGross)}</Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.8rem', color: SUCCESS, fontWeight: 600, mb: 1.5 }}>
+              10% dcto · ahorras {fmt(discountSavings)} en la instalación
+            </Typography>
+            {(result?.isOwn ?? state.chargerId === 'own') ? (
+              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+                Cargador: lo pones tú ($0).
+              </Typography>
+            ) : (result?.chargerGrossPrice ?? 0) > 0 ? (
+              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+                Cargador <strong>{fmt(result?.chargerGrossPrice ?? 0)}</strong>, se paga después de la visita técnica.
+              </Typography>
+            ) : null}
+            {features70.map(f => (
+              <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
+                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', fontWeight: 600 }}>{f}</Typography>
               </Box>
-              <Typography sx={{ fontSize: '0.8rem', color: SUCCESS, fontWeight: 600, mb: 1.5 }}>
-                {opt.savingsPct}% dcto · ahorras {fmt(opt.savings)} en la instalación
-              </Typography>
-
-              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 0.5, lineHeight: 1.6 }}>
-                Pagas hoy <strong>{fmt(opt.payToday)}</strong> ({opt.key === 'r70' ? '70' : '30'}% de la instalación). Saldo <strong>{fmt(opt.balance)}</strong> {opt.key === 'r70' ? 'tras la visita técnica.' : 'cuando confirmemos el precio en la visita técnica.'}
-              </Typography>
-              {/* Use live result (not stale apiResult) to reflect charger toggle */}
-              {(result?.isOwn ?? state.chargerId === 'own') ? (
-                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-                  Cargador: lo pones tú ($0).
-                </Typography>
-              ) : (result?.chargerGrossPrice ?? 0) > 0 ? (
-                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-                  Cargador <strong>{fmt(result?.chargerGrossPrice ?? 0)}</strong>, se paga después de la visita técnica.
-                </Typography>
-              ) : null}
-
-              {opt.features.map(f => (
-                <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
-                  <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-                  <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', fontWeight: 600 }}>{f}</Typography>
-                </Box>
-              ))}
-              {opt.disclaimer && (
-                <Typography sx={{ fontSize: '0.73rem', color: TEXT_MUTED, mt: 1, lineHeight: 1.5, fontStyle: 'italic' }}>
-                  {opt.disclaimer}
-                </Typography>
-              )}
-
-              <Button
-                fullWidth
-                variant="contained"
-                disabled={state.webpayLoading}
-                onClick={() => {
-                const isOpening = !(state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key)
+            ))}
+            <Typography sx={{ fontSize: '0.73rem', color: TEXT_MUTED, mt: 1, lineHeight: 1.5, fontStyle: 'italic' }}>
+              Si en la visita técnica detectamos algún impedimento técnico para instalar, te devolvemos el 100% de lo pagado, sin preguntas.
+            </Typography>
+            <Button
+              fullWidth variant="contained" disabled={state.webpayLoading}
+              onClick={() => {
+                const isOpening = !isAlt2Open
                 if (isOpening) trackUnique('cta_reservar_clicked', { step: 3 })
-                update({
-                  selectedReserveOption: opt.key,
-                  activePanel: isOpening ? 'visitaPago' : null,
-                  reservePendingAmount: opt.balance,
-                  reservePendingGlosa: opt.key === 'r70' ? `Saldo 30% · Instalación cargador eléctrico` : `Saldo 70% · Instalación cargador eléctrico`,
-                })
+                update({ selectedReserveOption: 'r70', activePanel: isOpening ? 'visitaPago' : null, reservePendingAmount: null, reservePendingGlosa: '' })
               }}
-                sx={{
-                  bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? '#94A3B8' : PINK,
-                  '&:hover': { bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key ? '#64748B' : PINK_DARK },
-                  '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                  fontWeight: 700,
-                  py: 1.25,
-                  fontSize: '0.9rem',
-                  boxShadow: 'none',
-                  borderRadius: 2,
-                  mt: 2,
-                }}
-              >
-                {state.webpayLoading ? 'Redirigiendo…' : opt.btnLabel}
-              </Button>
-
-              {state.activePanel === 'visitaPago' && state.selectedReserveOption === opt.key && (
-                <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
-                  <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
-                    Datos para el comprobante
-                  </Typography>
-                  {/* Address */}
-                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-                    Dirección de instalación
-                  </Typography>
-                  <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-                    <AddressInput2
-                      value={state.address}
-                      error={!!state.address && !state.addressValidated}
-                      onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                      onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                      onSelectAddress={(details) => {
-                        if (details) {
-                          const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                          update({
-                            address: full,
-                            addressValidated: true,
-                            addressCity: details.City ?? '',
-                            addressState: details.State ?? '',
-                            addressZipCode: details.ZipCode ?? '',
-                            addressLat: String(details.Latitude ?? ''),
-                            addressLng: String(details.Longitude ?? ''),
-                            regionWarn: false,
-                          })
-                        }
-                      }}
-                    />
-                  </Box>
-                  {state.address && !state.addressValidated && (
-                    <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                      Selecciona una dirección del menú desplegable para continuar
-                    </Typography>
-                  )}
-                  {state.address && !isRegionMetropolitana(state.address) && (
-                    <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                      <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                        Solo atendemos Región Metropolitana y Valparaíso
-                      </Typography>
-                    </Box>
-                  )}
-                  <TextField fullWidth size="small" label="Tu nombre completo (opcional)"
-                    value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                  <TextField fullWidth size="small" required label="Email para comprobante" type="email"
-                    value={state.emailPago}
-                    onChange={e => update({ emailPago: e.target.value })}
-                    helperText="Requerido para proceder al pago"
-                    sx={{ mb: 2 }} />
-                  <TextField fullWidth size="small" label="Teléfono" type="tel"
-                    value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
-                  {state.webpayError && (
-                    <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
-                  )}
-                  <Button fullWidth variant="contained"
-                    disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-                    onClick={() => payDirect(
-                      opt.payAmount,
-                      opt.glosa,
-                      'chargerInstallation',
-                      state.reservePendingAmount ? { amount: state.reservePendingAmount, glosa: state.reservePendingGlosa } : undefined
-                    )}
-                    sx={{
-                      bgcolor: PINK, color: '#fff',
-                      '&:hover': { bgcolor: PINK_DARK },
-                      '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                      fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2,
-                    }}
-                  >
-                    {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(opt.payAmount)} con Webpay →`}
-                  </Button>
-                  <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                    Pago seguro · Visa, Mastercard, Redcompra, débito
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </Box>
-        ))}
-
-        {/* Solo visita técnica */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: { xs: 2, sm: 2.5 }, mb: 2 }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.5 }}>
-            Solo visita técnica
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.5 }}>
-            <Typography sx={{ fontWeight: 800, fontSize: '1.35rem', color: '#2A3547' }}>{fmt(visitaAmount)}</Typography>
-            <Typography sx={{ fontSize: '0.82rem', color: TEAL, fontWeight: 600 }}>acreditable a tu instalación</Typography>
-          </Box>
-          <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-            Agenda la visita y decide después.
-          </Typography>
-          {[
-            'Profesional certificado SEC en terreno',
-            'Confirmamos distancia y materiales, y hacemos el plan de instalación',
-            'Si avanzas, los $10.000 se descuentan',
-          ].map(f => (
-            <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
-              <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-              <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
-            </Box>
-          ))}
-          <Button
-            fullWidth
-            variant="contained"
-            disabled={state.webpayLoading}
-            onClick={() => update({
-              selectedReserveOption: 'visita',
-              activePanel: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? null : 'visitaPago',
-              reservePendingAmount: null,
-              reservePendingGlosa: '',
-            })}
-            sx={{
-              bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#94A3B8' : PINK,
-              '&:hover': { bgcolor: state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' ? '#64748B' : PINK_DARK },
-              '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-              fontWeight: 700,
-              py: 1.25,
-              fontSize: '0.9rem',
-              boxShadow: 'none',
-              borderRadius: 2,
-              mt: 2,
-            }}
-          >
-            {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
-          </Button>
-
-          {state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita' && (
-            <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
-              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
-                Datos para el comprobante
-              </Typography>
-              {/* Address */}
-              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-                Dirección de instalación
-              </Typography>
-              <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-                <AddressInput2
-                  value={state.address}
-                  error={!!state.address && !state.addressValidated}
-                  onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                  onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                  onSelectAddress={(details) => {
-                    if (details) {
-                      const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                      update({
-                        address: full,
-                        addressValidated: true,
-                        addressCity: details.City ?? '',
-                        addressState: details.State ?? '',
-                        addressZipCode: details.ZipCode ?? '',
-                        addressLat: String(details.Latitude ?? ''),
-                        addressLng: String(details.Longitude ?? ''),
-                        regionWarn: false,
-                      })
-                    }
-                  }}
-                />
-              </Box>
-              {state.address && !state.addressValidated && (
-                <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                  Selecciona una dirección del menú desplegable para continuar
+              sx={{
+                bgcolor: isAlt2Open ? '#94A3B8' : PINK,
+                '&:hover': { bgcolor: isAlt2Open ? '#64748B' : PINK_DARK },
+                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                fontWeight: 700, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2, mt: 2,
+              }}
+            >
+              {state.webpayLoading ? 'Redirigiendo…' : `Pagar hoy ${fmt(discountedInstall)} →`}
+            </Button>
+            {isAlt2Open && (
+              <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+                  Datos para el comprobante
                 </Typography>
-              )}
-              {state.address && !isRegionMetropolitana(state.address) && (
-                <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                  <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                    Solo atendemos Región Metropolitana y Valparaíso
-                  </Typography>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                  Dirección de instalación
+                </Typography>
+                <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                  <AddressInput2
+                    value={state.address}
+                    error={!!state.address && !state.addressValidated}
+                    onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                    onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                    onSelectAddress={(details) => {
+                      if (details) {
+                        const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                        update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
+                      }
+                    }}
+                  />
                 </Box>
-              )}
-              <TextField fullWidth size="small" label="Tu nombre completo (opcional)"
-                value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-              <TextField fullWidth size="small" required label="Email para comprobante" type="email"
-                value={state.emailPago}
-                onChange={e => update({ emailPago: e.target.value })}
-                helperText="Requerido para proceder al pago"
-                sx={{ mb: 2 }} />
-              <TextField fullWidth size="small" label="Teléfono" type="tel"
-                value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
-              {state.webpayError && (
-                <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
-              )}
-              <Button fullWidth variant="contained"
-                disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-                onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
-                sx={{
-                  bgcolor: PINK, color: '#fff',
-                  '&:hover': { bgcolor: PINK_DARK },
-                  '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                  fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2,
-                }}
-              >
-                {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
-              </Button>
-              <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                Pago seguro · Visa, Mastercard, Redcompra, débito
-              </Typography>
-            </Box>
-          )}
+                {state.address && !state.addressValidated && (
+                  <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                    Selecciona una dirección del menú desplegable para continuar
+                  </Typography>
+                )}
+                {state.address && !isRegionMetropolitana(state.address) && (
+                  <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                    <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                      Solo atendemos Región Metropolitana y Valparaíso
+                    </Typography>
+                  </Box>
+                )}
+                <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => update({ emailPago: e.target.value.toLowerCase() })} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
+                <Button fullWidth variant="contained"
+                  disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
+                  onClick={() => payDirect(discountedInstall, 'Pago instalación cargador eléctrico', 'chargerInstallation')}
+                  sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                >
+                  {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(discountedInstall)} con Webpay →`}
+                </Button>
+                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                  Pago seguro · Visa, Mastercard, Redcompra, débito
+                </Typography>
+              </Box>
+            )}
+          </Box>
         </Box>
       </Box>
     )
@@ -2484,9 +2376,17 @@ export default function CotizadorWizard() {
           <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mb: 0.5 }}>
             Instalación llave en mano (IVA incl.)
           </Typography>
-          <Typography sx={{ fontSize: '2.4rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
+          <Typography sx={{ fontSize: '1.1rem', color: TEXT_MUTED, textDecoration: 'line-through', mb: 0.25 }}>
             {fmt(displayResult.installGross)}
           </Typography>
+          <Typography sx={{ fontSize: '2.4rem', fontWeight: 900, color: PINK, lineHeight: 1 }}>
+            {fmt(Math.round(displayResult.installGross * 0.9))}
+          </Typography>
+          <Box sx={{ display: 'inline-block', bgcolor: '#DCFCE7', borderRadius: 10, px: 1.5, py: 0.5, mt: 0.75 }}>
+            <Typography sx={{ fontSize: '0.78rem', color: '#16A34A', fontWeight: 600 }}>
+              10% dcto pagando hoy · ahorras {fmt(displayResult.installGross - Math.round(displayResult.installGross * 0.9))}
+            </Typography>
+          </Box>
           <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mt: 0.75, maxWidth: 280, mx: 'auto' }}>
             Materiales, mano de obra, trámite SEC y visita técnica incluidos.
           </Typography>
@@ -2572,33 +2472,6 @@ export default function CotizadorWizard() {
             </Box>
           </Box>
         )}
-
-        {/* Social proof */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5, mb: 1 }}>
-          <Box sx={{ display: 'flex' }}>
-            {[
-              { letter: 'H', color: '#FBBF24' },
-              { letter: 'C', color: '#93C5FD' },
-              { letter: 'J', color: '#86EFAC' },
-              { letter: 'R', color: '#FCA5A5' },
-            ].map(({ letter, color }, i) => (
-              <Box
-                key={i}
-                sx={{
-                  width: 28, height: 28, borderRadius: '50%', position: 'relative',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  bgcolor: color, border: '2px solid #fff',
-                  ml: i > 0 ? -0.75 : 0, zIndex: 4 - i,
-                }}
-              >
-                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
-              </Box>
-            ))}
-          </Box>
-          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
-            +120 instalaciones completadas en Santiago
-          </Typography>
-        </Box>
 
         {/* Booking options — replaces single "Reservar" button */}
         {renderBookingOptions(displayResult)}
@@ -2791,22 +2664,12 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* Próxima visita disponible — between pay and email buttons */}
-        {state.nextVisitDate && (
-          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textAlign: 'center', mb: 2, mt: -1 }}>
-            Próxima visita disponible:{' '}
-            <Box component="span" sx={{ color: TEAL, fontWeight: 600 }}>
-              {formatVisitDate(state.nextVisitDate)}
-            </Box>
-          </Typography>
-        )}
-
         {/* Email button — below pago panel */}
         <Box sx={{ mb: 2 }}>
           <Button
             fullWidth
             variant="outlined"
-            startIcon={<IconMail size={16} />}
+            startIcon={<Box component="img" src="/images/animated/email.gif" alt="" sx={{ width: 46, height: 46 }} />}
             onClick={() => { if (state.activePanel !== 'email') track('cta_email_clicked'); update({ activePanel: state.activePanel === 'email' ? null : 'email' }) }}
             sx={{
               bgcolor: '#fff',
@@ -2874,7 +2737,7 @@ export default function CotizadorWizard() {
                   label="Tu email"
                   type="email"
                   value={state.emailSolo}
-                  onChange={e => update({ emailSolo: e.target.value })}
+                  onChange={e => update({ emailSolo: e.target.value.toLowerCase() })}
                   sx={{ mb: 2.5 }}
                 />
                 {state.emailError && (
@@ -2924,7 +2787,7 @@ export default function CotizadorWizard() {
               <Box sx={{
                 width: 24, height: 24, borderRadius: '50%', flexShrink: 0, mt: 0.1,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                bgcolor: s.active ? PINK : '#E2E8F0',
+                bgcolor: s.active ? '#2A3547' : '#E2E8F0',
               }}>
                 <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: s.active ? '#fff' : '#94A3B8' }}>
                   {i + 1}
@@ -3216,7 +3079,7 @@ export default function CotizadorWizard() {
       )}
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, pt: 0, pb: 0 }}>
+      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, pt: 0, pb: 2 }}>
         <Container maxWidth="sm" sx={{ px: { xs: 1, sm: 3 } }}>
           <Typography
             variant="h1"

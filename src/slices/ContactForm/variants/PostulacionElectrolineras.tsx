@@ -84,9 +84,7 @@ const validationSchema = yup.object({
     .string()
     .min(1, "Debe ingresar la cantidad de usuarios EV")
     .required("Campo obligatorio"),
-  message: yup
-    .string()
-    .optional(),
+
 });
 
 const PageContainer = styled(Box)(({ theme }) => ({
@@ -383,7 +381,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
       address: "",
       visitorparkingstatus: "",
       evusercount: "",
-      message: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -426,7 +423,7 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
             email: values?.email,
             phone: values?.phone,
             whatsapp: values?.phone,
-            message: `Cargo: ${values?.position} | Dirección: ${values?.address} | Estacionamientos de visita: ${values?.visitorparkingstatus} | Usuarios EV: ${values?.evusercount} | Mensaje: ${values?.message}`,
+            message: `Cargo: ${values?.position} | Dirección: ${values?.address} | Estacionamientos de visita: ${values?.visitorparkingstatus} | Usuarios EV: ${values?.evusercount}`,
             subject: "Postulación Cargadores Edificios",
             category: values?.typeofresidence || "",
             companyName: "",
@@ -499,10 +496,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                                   ¿Cantidad de usuarios con auto eléctrico?: <b>${values?.evusercount ? values.evusercount:""}</b>
                                 </p>
                                 
-                                <p >
-                                  Mensaje: <b>${values?.message ? values.message:""}</b>
-                                </p>
-                               
                             </td>
                         </tr>
                     </tbody>
@@ -562,7 +555,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
           to_email: values.email,
           to_name: values.firstname,
           reply_to: values.email,
-          message: values.message,
           contentTitle: CONTENT_TITLE,
           contentWelcomeText: CONTENT_WELCOME,
           contentHTML: CONTENT_HTML,
@@ -1092,50 +1084,6 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                   <FormHelperText>{formik.errors.evusercount}</FormHelperText>
                 )}
               </FormControl>
-            </Box>
-
-            <Box sx={{
-              padding: '0px',
-              margin: '0px',
-            }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                <Typography
-                  component="label"
-                  htmlFor="message"
-                  sx={{ display: "block" }}
-                >
-                  {message && Array.isArray(message) && message.length > 0
-                    ? asText(message as any)
-                    : typeof message === "string"
-                    ? message
-                    : "Mensaje"}
-                </Typography>
-                <Typography component="span" sx={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                  * Opcional
-                </Typography>
-              </Box>
-              <TextField
-                fullWidth
-                id="message"
-                name="message"
-                multiline
-                rows={4}
-                value={formik.values.message}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={
-                  formik.touched.message && Boolean(formik.errors.message)
-                }
-                helperText={formik.touched.message && formik.errors.message}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                  },
-                  "& .MuiInputBase-input": {
-                    border: "none",
-                    boxShadow: "none",
-                  },
-                }}
-              />
             </Box>
 
             <Button type="submit" variant="contained" size="large">

@@ -441,6 +441,9 @@ export default function CotizadorWizard() {
     removedChargerId: null,
   })
 
+  // Derived from state.tipo — passed in tracking event props
+  const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
+
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
@@ -455,7 +458,7 @@ export default function CotizadorWizard() {
   }, [])
 
   // Track step 0 on mount
-  useEffect(() => { trackUnique('step_1_loaded', { step: 1 }) }, [])
+  useEffect(() => { trackUnique('step_1_loaded', { step: 1, typeOfResidence }) }, [])
 
   // Track step_3_abandoned when user leaves while on step 2 and hasn't paid
   useEffect(() => {
@@ -573,7 +576,7 @@ export default function CotizadorWizard() {
             const apiInst = Number(est.installationCost ?? 0)
             const installGross = Math.round((apiMat + apiInst) * 1.19)
             setTrackerIdentity({ formId })
-            trackUnique('step_3_loaded', { formId, total: totalNeto + totalIva })
+            trackUnique('step_3_loaded', { formId, total: totalNeto + totalIva, typeOfResidence })
             update({
               estimateLoading: false,
               step: 2,
@@ -602,13 +605,13 @@ export default function CotizadorWizard() {
       } catch (err) {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
-      trackUnique('step_3_loaded', { formId: state.formId, total: result?.total })
+      trackUnique('step_3_loaded', { formId: state.formId, total: result?.total, typeOfResidence })
       update({ estimateLoading: false, step: 2 })
       return
     }
 
     if (state.step < 2) {
-      trackUnique('step_2_loaded', { step: 2 })
+      trackUnique('step_2_loaded', { step: 2, typeOfResidence })
       update({ step: state.step + 1 })
     }
   }
@@ -1707,7 +1710,7 @@ export default function CotizadorWizard() {
               label="Email para comprobante"
               type="email"
               value={state.emailPago}
-              onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }}
+              onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }}
               helperText="Requerido para proceder al pago"
               sx={{ mb: 2 }}
             />
@@ -1871,7 +1874,7 @@ export default function CotizadorWizard() {
                   <TextField fullWidth size="small" label="Nombre"
                     value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Email" type="email"
-                    value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} sx={{ mb: 2 }} />
+                    value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Teléfono" type="tel"
                     value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                   {/* Cargo/Rol */}
@@ -2309,7 +2312,7 @@ export default function CotizadorWizard() {
                   </Box>
                 )}
                 <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
                 <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                 {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
                 <Button fullWidth variant="contained"
@@ -2422,7 +2425,7 @@ export default function CotizadorWizard() {
                   </Box>
                 )}
                 <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
                 <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                 {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
                 <Button fullWidth variant="contained"
@@ -2829,7 +2832,7 @@ export default function CotizadorWizard() {
                   label="Tu email"
                   type="email"
                   value={state.emailSolo}
-                  onChange={e => { const v = e.target.value.toLowerCase(); update({ emailSolo: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }}
+                  onChange={e => { const v = e.target.value.toLowerCase(); update({ emailSolo: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }}
                   sx={{ mb: 2.5 }}
                 />
                 {state.emailError && (

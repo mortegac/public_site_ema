@@ -13,8 +13,10 @@ import {
   Chip,
   Alert,
   FormControl,
+  FormHelperText,
   Select,
   MenuItem,
+  Tooltip,
   type SelectChangeEvent,
 } from '@mui/material'
 import { IconMail } from "@tabler/icons-react"
@@ -489,6 +491,17 @@ export default function CotizadorWizard() {
       return true
     }
     return true
+  })()
+
+  const canNextTooltip = (() => {
+    if (state.step !== 1 || canNext) return ''
+    if (state.tipo === 'edificio') {
+      const missing = []
+      if (!state.edificioFloor.trim()) missing.push('piso del departamento')
+      if (!state.edificioParkingFloor) missing.push('piso del estacionamiento')
+      return `Completa: ${missing.join(' y ')}`
+    }
+    return 'Selecciona el tipo de cargador para continuar'
   })()
 
   const heroTitle = state.booked
@@ -1305,6 +1318,8 @@ export default function CotizadorWizard() {
               inputProps={{ min: -10, max: 60 }}
               value={state.edificioFloor}
               onChange={e => update({ edificioFloor: e.target.value })}
+              error={state.tipo === 'edificio' && !state.edificioFloor.trim()}
+              helperText={state.tipo === 'edificio' && !state.edificioFloor.trim() ? 'Requerido para cotizar' : ''}
               sx={{
                 mb: 2.5,
                 '& .MuiOutlinedInput-root': {
@@ -1319,7 +1334,7 @@ export default function CotizadorWizard() {
             <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
               ¿En qué piso está tu estacionamiento?
             </Typography>
-            <FormControl fullWidth size="small" sx={{ mb: 2.5 }}>
+            <FormControl fullWidth size="small" sx={{ mb: 2.5 }} error={state.tipo === 'edificio' && !state.edificioParkingFloor}>
               <Select
                 displayEmpty
                 value={state.edificioParkingFloor}
@@ -1344,6 +1359,9 @@ export default function CotizadorWizard() {
                   <MenuItem key={f} value={f} sx={{ fontSize: '0.875rem' }}>{f}</MenuItem>
                 ))}
               </Select>
+              {state.tipo === 'edificio' && !state.edificioParkingFloor && (
+                <FormHelperText>Requerido para cotizar</FormHelperText>
+              )}
             </FormControl>
 
             <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5, color: '#2A3547' }}>
@@ -1426,6 +1444,8 @@ export default function CotizadorWizard() {
           inputProps={{ min: -10, max: 60 }}
           value={state.edificioFloor}
           onChange={e => update({ edificioFloor: e.target.value })}
+          error={state.tipo === 'edificio' && !state.edificioFloor.trim()}
+          helperText={state.tipo === 'edificio' && !state.edificioFloor.trim() ? 'Requerido para cotizar' : ''}
           sx={{
             mb: 3,
             '& .MuiOutlinedInput-root': {
@@ -1440,7 +1460,7 @@ export default function CotizadorWizard() {
         <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
           ¿En qué piso está tu estacionamiento?
         </Typography>
-        <FormControl fullWidth size="small" sx={{ mb: 3 }}>
+        <FormControl fullWidth size="small" sx={{ mb: 3 }} error={state.tipo === 'edificio' && !state.edificioParkingFloor}>
           <Select
             displayEmpty
             value={state.edificioParkingFloor}
@@ -1465,6 +1485,9 @@ export default function CotizadorWizard() {
               <MenuItem key={f} value={f} sx={{ fontSize: '0.875rem' }}>{f}</MenuItem>
             ))}
           </Select>
+          {state.tipo === 'edificio' && !state.edificioParkingFloor && (
+            <FormHelperText>Requerido para cotizar</FormHelperText>
+          )}
         </FormControl>
 
         <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5, color: '#2A3547' }}>
@@ -3155,23 +3178,27 @@ export default function CotizadorWizard() {
                     Atrás
                   </Button>
                 )}
-                <Button
-                  variant="contained"
-                  disabled={!canNext}
-                  onClick={goNext}
-                  data-testid="btn-next"
-                  sx={{
-                    flex: 1,
-                    bgcolor: PINK,
-                    '&:hover': { bgcolor: PINK_DARK },
-                    '&:disabled': { bgcolor: '#f0f0f0', color: '#aaa' },
-                    fontWeight: 700,
-                    py: 1.25,
-                    fontSize: '0.95rem',
-                  }}
-                >
-                  {state.step === 1 ? 'Ver mi cotización' : 'Siguiente →'}
-                </Button>
+                <Tooltip title={canNextTooltip} arrow placement="top">
+                  <span style={{ flex: 1, display: 'flex' }}>
+                    <Button
+                      variant="contained"
+                      disabled={!canNext}
+                      onClick={goNext}
+                      data-testid="btn-next"
+                      sx={{
+                        flex: 1,
+                        bgcolor: PINK,
+                        '&:hover': { bgcolor: PINK_DARK },
+                        '&:disabled': { bgcolor: '#f0f0f0', color: '#aaa' },
+                        fontWeight: 700,
+                        py: 1.25,
+                        fontSize: '0.95rem',
+                      }}
+                    >
+                      {state.step === 1 ? 'Ver mi cotización' : 'Siguiente →'}
+                    </Button>
+                  </span>
+                </Tooltip>
               </Box>
             )}
           </Box>

@@ -171,6 +171,8 @@ interface WizardState {
   edificioFloor: string
   edificioParkingFloor: string
   edificioVisitorParking: boolean | null
+  edificioRol: string
+  edificioUsersEV: string
   edificioOption: 'dedicated' | 'shared' | null
   removedChargerId: string | null  // remembers charger id when user clicks "quitar"
 }
@@ -433,6 +435,8 @@ export default function CotizadorWizard() {
     edificioFloor: '',
     edificioParkingFloor: '',
     edificioVisitorParking: null,
+    edificioRol: '',
+    edificioUsersEV: '',
     edificioOption: null,
     removedChargerId: null,
   })
@@ -1117,6 +1121,8 @@ export default function CotizadorWizard() {
       edificioFloor: '',
       edificioParkingFloor: '',
       edificioVisitorParking: null,
+      edificioRol: '',
+      edificioUsersEV: '',
       edificioOption: null,
       removedChargerId: null,
     })
@@ -1619,7 +1625,7 @@ export default function CotizadorWizard() {
 
           <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
             <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1.5 }}>
-              <Typography sx={{ fontWeight: 900, fontSize: '1.5rem', color: '#2A3547' }}>$29.000</Typography>
+              <Typography sx={{ fontWeight: 900, fontSize: '1.5rem', color: '#2A3547' }}>$9.990</Typography>
               <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>acreditable al presupuesto final</Typography>
             </Box>
             <Button
@@ -1723,7 +1729,7 @@ export default function CotizadorWizard() {
               fullWidth
               variant="contained"
               disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-              onClick={() => payDirect(29000, 'Visita técnica · Instalación dedicada edificio', 'visit')}
+              onClick={() => payDirect(9990, 'Visita técnica · Instalación dedicada edificio', 'visit')}
               sx={{
                 bgcolor: PINK,
                 color: '#fff',
@@ -1735,7 +1741,7 @@ export default function CotizadorWizard() {
                 boxShadow: 'none',
               }}
             >
-              {state.webpayLoading ? 'Redirigiendo…' : 'Pagar $29.000 con Webpay →'}
+              {state.webpayLoading ? 'Redirigiendo…' : 'Pagar $9.990 con Webpay →'}
             </Button>
             <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
               Pago seguro · Visa, Mastercard, Redcompra, débito
@@ -1868,6 +1874,48 @@ export default function CotizadorWizard() {
                     value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Teléfono" type="tel"
                     value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                  {/* Cargo/Rol */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#2A3547', mb: 0.75 }}>
+                      Cargo / Rol
+                    </Typography>
+                    <Select
+                      fullWidth
+                      size="small"
+                      displayEmpty
+                      value={state.edificioRol}
+                      onChange={e => update({ edificioRol: e.target.value })}
+                      sx={{ fontSize: '0.85rem' }}
+                    >
+                      <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Seleccione una opción</em></MenuItem>
+                      <MenuItem value="Administrador(a)">Administrador(a)</MenuItem>
+                      <MenuItem value="Copropietario(a)">Copropietario(a)</MenuItem>
+                      <MenuItem value="Arrendatario(a)">Arrendatario(a)</MenuItem>
+                      <MenuItem value="Miembro del comité de la comunidad">Miembro del comité de la comunidad</MenuItem>
+                      <MenuItem value="Otro">Otro</MenuItem>
+                    </Select>
+                  </Box>
+                  {/* Cantidad usuarios con auto eléctrico */}
+                  <Box sx={{ mb: 2.5 }}>
+                    <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#2A3547', mb: 0.75 }}>
+                      ¿Cantidad de usuarios con auto eléctrico?
+                    </Typography>
+                    <Select
+                      fullWidth
+                      size="small"
+                      displayEmpty
+                      value={state.edificioUsersEV}
+                      onChange={e => update({ edificioUsersEV: e.target.value })}
+                      sx={{ fontSize: '0.85rem' }}
+                    >
+                      <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Seleccione una opción</em></MenuItem>
+                      <MenuItem value="No lo sé">No lo sé</MenuItem>
+                      <MenuItem value="Si hay, pero no sé cuántos">Si hay, pero no sé cuántos</MenuItem>
+                      <MenuItem value="Si hay, 2 o menos">Si hay, 2 o menos</MenuItem>
+                      <MenuItem value="Si hay, más de 2">Si hay, más de 2</MenuItem>
+                      <MenuItem value="No hay">No hay</MenuItem>
+                    </Select>
+                  </Box>
                   {state.webpayError && (
                     <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
                   )}
@@ -1896,6 +1944,8 @@ export default function CotizadorWizard() {
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso departamento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioFloor || '—'}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso estacionamiento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${parkingLabel}</td></tr>
                               <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">¿Tiene estacionamiento visitas?</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${visitasLabel}</td></tr>
+                              ${state.edificioRol ? `<tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Cargo/Rol</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioRol}</td></tr>` : ''}
+                              ${state.edificioUsersEV ? `<tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Usuarios con auto eléctrico</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioUsersEV}</td></tr>` : ''}
                             </table>
                             <p style="font-family:sans-serif;font-size:13px;color:#4B4B5C;line-height:1.6;margin-top:16px;">
                               Nuestro equipo evaluará la factibilidad técnica y la coordinación con la administración o entidad responsable.<br><br>
@@ -2112,7 +2162,7 @@ export default function CotizadorWizard() {
                     fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none',
                   }}
                 >
-                  {state.webpayLoading ? 'Generando orden…' : 'Pagar $29.000 con Webpay →'}
+                  {state.webpayLoading ? 'Generando orden…' : 'Pagar $9.990 con Webpay →'}
                 </Button>
                 <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
                   Pago seguro · Visa, Mastercard, Redcompra, débito

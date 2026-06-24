@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Box,
   Container,
@@ -458,6 +458,25 @@ export default function CotizadorWizard() {
     window.addEventListener('beforeunload', onUnload)
     return () => window.removeEventListener('beforeunload', onUnload)
   }, [state.step, state.paid])
+
+  // Scroll depth tracking — fires once per threshold per session
+  const stepRef = useRef(state.step)
+  useEffect(() => { stepRef.current = state.step }, [state.step])
+  useEffect(() => {
+    const fired = new Set<number>()
+    const onScroll = () => {
+      const el = document.documentElement
+      const pct = Math.round(((el.scrollTop + el.clientHeight) / el.scrollHeight) * 100)
+      for (const t of [25, 50, 75, 100]) {
+        if (pct >= t && !fired.has(t)) {
+          fired.add(t)
+          trackUnique(`scroll_depth_${t}`, { step: stepRef.current + 1, depth: t })
+        }
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const result = calcResult(state, chargerList)
 
@@ -1659,7 +1678,7 @@ export default function CotizadorWizard() {
               label="Email para comprobante"
               type="email"
               value={state.emailPago}
-              onChange={e => update({ emailPago: e.target.value.toLowerCase() })}
+              onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }}
               helperText="Requerido para proceder al pago"
               sx={{ mb: 2 }}
             />
@@ -1823,7 +1842,7 @@ export default function CotizadorWizard() {
                   <TextField fullWidth size="small" label="Nombre"
                     value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Email" type="email"
-                    value={state.emailPago} onChange={e => update({ emailPago: e.target.value.toLowerCase() })} sx={{ mb: 2 }} />
+                    value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} sx={{ mb: 2 }} />
                   <TextField fullWidth size="small" label="Teléfono" type="tel"
                     value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                   {state.webpayError && (
@@ -2083,7 +2102,7 @@ export default function CotizadorWizard() {
         <Box sx={{ textAlign: 'center' }}>
           <Button
             variant="text"
-            onClick={resetAll}
+            onClick={() => { track('nueva_simulacion_clicked', { step: 3, tipoC: state.tipoC }); resetAll() }}
             sx={{ color: TEXT_MUTED, fontSize: '0.82rem', textTransform: 'none', textDecoration: 'underline', '&:hover': { color: '#2A3547', bgcolor: 'transparent' } }}
           >
             ← Nueva simulación
@@ -2168,11 +2187,10 @@ export default function CotizadorWizard() {
             ))}
             <Button
               fullWidth variant="outlined" disabled={state.webpayLoading}
-              onClick={() => update({
-                selectedReserveOption: 'visita',
-                activePanel: isVisitaOpen ? null : 'visitaPago',
-                reservePendingAmount: null, reservePendingGlosa: '',
-              })}
+              onClick={() => {
+                if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })
+                update({ selectedReserveOption: 'visita', activePanel: isVisitaOpen ? null : 'visitaPago', reservePendingAmount: null, reservePendingGlosa: '' })
+              }}
               sx={{
                 color: isVisitaOpen ? '#94A3B8' : TEAL,
                 borderColor: isVisitaOpen ? '#94A3B8' : TEAL,
@@ -2218,7 +2236,7 @@ export default function CotizadorWizard() {
                   </Box>
                 )}
                 <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => update({ emailPago: e.target.value.toLowerCase() })} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
                 <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                 {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
                 <Button fullWidth variant="contained"
@@ -2284,7 +2302,7 @@ export default function CotizadorWizard() {
               fullWidth variant="contained" disabled={state.webpayLoading}
               onClick={() => {
                 const isOpening = !isAlt2Open
-                if (isOpening) trackUnique('cta_reservar_clicked', { step: 3 })
+                if (isOpening) track('pagar_hoy_clicked', { step: 3, amount: discountedInstall, amountGross: installBaseGross, discount: discountSavings, option: 'chargerInstallation', tipoC: state.tipoC, chargerId: state.chargerId })
                 update({ selectedReserveOption: 'r70', activePanel: isOpening ? 'visitaPago' : null, reservePendingAmount: null, reservePendingGlosa: '' })
               }}
               sx={{
@@ -2331,7 +2349,7 @@ export default function CotizadorWizard() {
                   </Box>
                 )}
                 <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => update({ emailPago: e.target.value.toLowerCase() })} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
                 <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
                 {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
                 <Button fullWidth variant="contained"
@@ -2670,7 +2688,7 @@ export default function CotizadorWizard() {
             fullWidth
             variant="outlined"
             startIcon={<Box component="img" src="/images/animated/email.gif" alt="" sx={{ width: 46, height: 46 }} />}
-            onClick={() => { if (state.activePanel !== 'email') track('cta_email_clicked'); update({ activePanel: state.activePanel === 'email' ? null : 'email' }) }}
+            onClick={() => { if (state.activePanel !== 'email') track('enviar_cotizacion_clicked', { step: 3, hasEmail: Boolean(state.emailSolo) }); update({ activePanel: state.activePanel === 'email' ? null : 'email' }) }}
             sx={{
               bgcolor: '#fff',
               borderColor: BORDER,
@@ -2692,6 +2710,7 @@ export default function CotizadorWizard() {
           href={`https://wa.me/56967666652?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => track('whatsapp_clicked', { step: 3, source: 'cotizador_paso3' })}
           sx={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1,
             py: 1.25, mb: 2, textDecoration: 'none', cursor: 'pointer',
@@ -2737,7 +2756,7 @@ export default function CotizadorWizard() {
                   label="Tu email"
                   type="email"
                   value={state.emailSolo}
-                  onChange={e => update({ emailSolo: e.target.value.toLowerCase() })}
+                  onChange={e => { const v = e.target.value.toLowerCase(); update({ emailSolo: v }); if (v.includes('@')) setTrackerIdentity({ customerId: v }) }}
                   sx={{ mb: 2.5 }}
                 />
                 {state.emailError && (
@@ -2858,7 +2877,7 @@ export default function CotizadorWizard() {
         <Box sx={{ textAlign: 'center', mt: 3 }}>
           <Button
             variant="text"
-            onClick={resetAll}
+            onClick={() => { track('nueva_simulacion_clicked', { step: 3, tipoC: state.tipoC }); resetAll() }}
             sx={{
               color: TEXT_MUTED,
               fontSize: '0.82rem',

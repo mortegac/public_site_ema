@@ -74,8 +74,9 @@ export async function POST(req: Request) {
     sourceUrl: str(body?.sourceUrl) ?? 'ENERGICA',
   }
 
-  // Fire-and-forget: respond 202 before AppSync call
-  void sendEvent(input).catch(err => console.error('[/api/track]', err.message))
+  // ponytail: await antes de responder — el runtime de Vercel puede terminar el lambda
+  // con el write de AppSync pendiente si se devuelve antes del await
+  await sendEvent(input).catch(err => console.error('[/api/track]', err.message))
 
   return NextResponse.json({}, { status: 202 })
 }

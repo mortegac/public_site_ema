@@ -98,19 +98,16 @@ export function track(event: string, props: Record<string, unknown> = {}): void 
 
   const data = JSON.stringify(payload)
 
-  try {
-    if (navigator.sendBeacon) {
-      const blob = new Blob([data], { type: 'application/json' })
-      if (navigator.sendBeacon(ENDPOINT, blob)) return
-    }
-  } catch { /* fallback to fetch */ }
-
-  fetch(ENDPOINT, {
+  // ponytail: fetch+keepalive cubre eventos de unload igual que sendBeacon;
+  // retry único a los 2s para sobrevivir cold starts de Vercel sin romper UX
+  const doSend = () => fetch(ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: data,
     keepalive: true,
-  }).catch(() => { /* tracking never breaks UX */ })
+  })
+
+  doSend().catch(() => setTimeout(() => doSend().catch(() => {}), 2000))
 }
 
 // trackUnique: registra el evento solo una vez por sesión (deduplicación de hitos).

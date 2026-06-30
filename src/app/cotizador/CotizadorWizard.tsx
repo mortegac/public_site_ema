@@ -1634,7 +1634,10 @@ export default function CotizadorWizard() {
             <Button
               fullWidth
               variant="contained"
-              onClick={() => update({ activePanel: state.activePanel === 'visitaPago' ? null : 'visitaPago' })}
+              onClick={() => {
+                if (state.activePanel !== 'visitaPago') trackUnique('cta_kit_edificio', { step: 3, typeOfResidence })
+                update({ activePanel: state.activePanel === 'visitaPago' ? null : 'visitaPago' })
+              }}
               sx={{
                 bgcolor: state.activePanel === 'visitaPago' ? '#94A3B8' : PINK,
                 '&:hover': { bgcolor: state.activePanel === 'visitaPago' ? '#64748B' : PINK_DARK },
@@ -1808,7 +1811,10 @@ export default function CotizadorWizard() {
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => update({ activePanel: state.activePanel === 'electrolinera' ? null : 'electrolinera' })}
+                onClick={() => {
+                  if (state.activePanel !== 'electrolinera') trackUnique('cta_form_electrolinera', { step: 3, typeOfResidence })
+                  update({ activePanel: state.activePanel === 'electrolinera' ? null : 'electrolinera' })
+                }}
                 sx={{
                   bgcolor: state.activePanel === 'electrolinera' ? '#94A3B8' : PINK,
                   '&:hover': { bgcolor: state.activePanel === 'electrolinera' ? '#64748B' : PINK_DARK },
@@ -1929,6 +1935,7 @@ export default function CotizadorWizard() {
                     onClick={async () => {
                       if (!state.emailPago.trim() || !state.addressValidated) return
                       update({ webpayLoading: true, webpayError: '' })
+                      trackUnique('cta_envio_form_electrolinera', { step: 3, typeOfResidence })
                       try {
                         initEmailjs('UYcrSeCqLGW8xqT4S')
                         const parkingLabel = state.edificioParkingFloor || 'No indicado'
@@ -2026,6 +2033,7 @@ export default function CotizadorWizard() {
               href={`https://wa.me/56967666652?text=${encodeURIComponent('Hola, quiero información sobre la electrolinera compartida para mi edificio.')}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackUnique('cta_whatsapp', { step: 3, typeOfResidence })}
               sx={{ display: 'block', textDecoration: 'none', mb: 1.5 }}
             >
               <Button
@@ -2178,7 +2186,7 @@ export default function CotizadorWizard() {
         <Box sx={{ textAlign: 'center' }}>
           <Button
             variant="text"
-            onClick={() => { track('nueva_simulacion_clicked', { step: 3, tipoC: state.tipoC }); resetAll() }}
+            onClick={() => { trackUnique('cta_new_simulacion', { step: 3, typeOfResidence }); track('nueva_simulacion_clicked', { step: 3, tipoC: state.tipoC }); resetAll() }}
             sx={{ color: TEXT_MUTED, fontSize: '0.82rem', textTransform: 'none', textDecoration: 'underline', '&:hover': { color: '#2A3547', bgcolor: 'transparent' } }}
           >
             ← Nueva simulación

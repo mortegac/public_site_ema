@@ -742,7 +742,7 @@ export default function PresupuestoCargadorPage() {
               </Typography>
               <Button
                 component={Link}
-                href="/cotizador"
+                href="/contactanos"
                 variant="contained"
                 sx={{
                   mt: 2.5,

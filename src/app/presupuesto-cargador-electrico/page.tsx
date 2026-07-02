@@ -114,13 +114,13 @@ const SCENARIOS = [
   {
     icon: <HomeIcon sx={{ fontSize: 36, color: '#0898b9' }} />,
     tag: 'Casa o propiedad individual',
-    title: 'Wallbox o cargador portátil fijo',
-    price: 'Desde $159.000',
+    title: 'Wallbox',
+    price: 'Desde $512.000',
     features: [
       'Cable calibre 6 AWG incluido',
       'Breaker dedicado',
       'Certificado SEC (TE6)',
-      'Instalación en 1 día',
+      'Agenda tu visita en nuestra plataforma',
     ],
     cta: 'Cotizar para casa',
   },
@@ -142,12 +142,12 @@ const SCENARIOS = [
     icon: <BoltIcon sx={{ fontSize: 36, color: '#0898b9' }} />,
     tag: 'Edificio con estacionamiento privado',
     title: 'Instalación dedicada con kit documentación',
-    price: 'Visita técnica $29.000',
+    price: 'Visita técnica $9.990',
     features: [
       'Ingeniería in situ',
       'Presupuesto definitivo en 48 h',
       'Kit completo para el comité',
-      '$29.000 se descuentan del total',
+      '$9.990 se descuentan del total',
     ],
     cta: 'Ver opciones edificio',
   },
@@ -308,31 +308,54 @@ export default function PresupuestoCargadorPage() {
                     </Typography>
                   </Box>
                   <Box sx={{ bgcolor: '#fff', p: 3 }}>
-                    {[
-                      { label: 'Casa — cargador portátil o Wallbox', price: 'Desde $159.000' },
-                      { label: 'Edificio — electrolinera comunitaria', price: '$0 inversión' },
-                      { label: 'Edificio — visita técnica + kit docs', price: '$29.000' },
-                      { label: 'Edificio — instalación dedicada', price: 'Desde $159.000' },
-                    ].map((row, i) => (
-                      <Box
-                        key={i}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          py: 1.5,
-                          borderBottom: i < 3 ? '1px solid #E2E8F0' : 'none',
-                        }}
-                      >
-                        <Typography sx={{ fontSize: '0.875rem', color: '#2A3547', maxWidth: 200 }}>
-                          {row.label}
+                    {/* Fila 1: Casa */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1.5, borderBottom: '1px solid #E2E8F0' }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: '#2A3547', maxWidth: 180 }}>
+                        Casa — cargador Wallbox 10 mts
+                      </Typography>
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography sx={{ fontWeight: 700, color: '#0898b9', fontSize: '0.95rem', lineHeight: 1.2 }}>
+                          $512.708
                         </Typography>
-                        <Typography sx={{ fontWeight: 700, color: '#0898b9', fontSize: '0.95rem' }}>
-                          {row.price}
+                        <Typography sx={{ fontSize: '0.7rem', color: '#e81a68', fontWeight: 700, mt: 0.3 }}>
+                          10% dcto aplicado
                         </Typography>
                       </Box>
-                    ))}
-                    <Typography sx={{ fontSize: '0.75rem', color: '#64748B', mt: 2 }}>
+                    </Box>
+                    {/* Fila 2: Electrolinera */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1.5, borderBottom: '1px solid #E2E8F0' }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: '#2A3547', maxWidth: 180 }}>
+                        Edificio — electrolinera comunitaria
+                      </Typography>
+                      <Typography sx={{ fontWeight: 700, color: '#0898b9', fontSize: '0.95rem' }}>
+                        $0 inversión
+                      </Typography>
+                    </Box>
+                    {/* Fila 3: Visita técnica */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1.5, borderBottom: '1px solid #E2E8F0' }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: '#2A3547', maxWidth: 180 }}>
+                        Edificio — visita técnica + kit docs
+                      </Typography>
+                      <Typography sx={{ fontWeight: 700, color: '#0898b9', fontSize: '0.95rem' }}>
+                        $9.990
+                      </Typography>
+                    </Box>
+                    {/* Fila 4: Instalación dedicada */}
+                    <Box sx={{ py: 1.5 }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: '#2A3547', mb: 0.5 }}>
+                        Edificio — instalación dedicada
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.78rem', color: '#64748B', mb: 0.5 }}>
+                        Rango referencial de instalación dedicada
+                      </Typography>
+                      <Typography sx={{ fontWeight: 700, color: '#0898b9', fontSize: '0.95rem' }}>
+                        $1.350.000 – $3.110.000
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.72rem', color: '#64748B', mt: 0.5 }}>
+                        El precio definitivo se confirma con visita técnica.
+                      </Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: '0.75rem', color: '#64748B', mt: 1, borderTop: '1px solid #E2E8F0', pt: 1.5 }}>
                       * Precios con IVA incluido. Factor de distancia al tablero puede ajustar el valor.
                     </Typography>
                   </Box>
@@ -614,6 +637,130 @@ export default function PresupuestoCargadorPage() {
           </Container>
         </Box>
 
+        {/* ── COMUNAS COBERTURA (GEO/SEO) ──────────────────────────────────── */}
+        <Box sx={{ bgcolor: '#ffffff', py: { xs: 7, md: 10 } }}>
+          <Container maxWidth="lg">
+            <Typography
+              component="h2"
+              variant="h2"
+              sx={{ fontWeight: 700, textAlign: 'center', mb: 1.5, color: '#2A3547' }}
+            >
+              Instalación de cargadores EV en toda la Región Metropolitana
+            </Typography>
+            <Typography sx={{ textAlign: 'center', color: '#64748B', mb: 6, fontSize: '1rem', maxWidth: 620, mx: 'auto' }}>
+              Enérgica City instala cargadores Wallbox y electrolineras comunitarias en 39 comunas de la RM.
+              El cotizador online valida tu dirección automáticamente.
+            </Typography>
+
+            <Grid container spacing={3}>
+              {[
+                {
+                  zona: 'Centro',
+                  comunas: ['Santiago'],
+                },
+                {
+                  zona: 'Oriente',
+                  comunas: ['Providencia', 'Ñuñoa', 'Las Condes', 'Vitacura', 'Lo Barnechea', 'La Reina'],
+                },
+                {
+                  zona: 'Suroriente',
+                  comunas: ['La Florida', 'Puente Alto', 'Peñalolén', 'San José de Maipo'],
+                },
+                {
+                  zona: 'Sur',
+                  comunas: ['San Miguel', 'La Cisterna', 'San Joaquín', 'La Granja', 'El Bosque', 'La Pintana', 'Pedro Aguirre Cerda', 'Lo Espejo', 'San Ramón'],
+                },
+                {
+                  zona: 'Surponiente',
+                  comunas: ['Maipú', 'Cerrillos', 'Estación Central'],
+                },
+                {
+                  zona: 'Poniente',
+                  comunas: ['Quinta Normal', 'Lo Prado', 'Pudahuel', 'Cerro Navia'],
+                },
+                {
+                  zona: 'Norte',
+                  comunas: ['Recoleta', 'Independencia', 'Conchalí', 'Huechuraba', 'Quilicura', 'Renca', 'Colina', 'Lampa'],
+                },
+              ].map((z, i) => (
+                <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Box
+                    sx={{
+                      borderRadius: 3,
+                      border: '1px solid #E2E8F0',
+                      overflow: 'hidden',
+                      height: '100%',
+                    }}
+                  >
+                    <Box sx={{ bgcolor: '#0898b9', px: 2.5, py: 1.5 }}>
+                      <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em' }}>
+                        ZONA {z.zona.toUpperCase()}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ p: 2.5 }}>
+                      <Box component="ul" sx={{ pl: 0, listStyle: 'none', m: 0, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {z.comunas.map((c) => (
+                          <Box
+                            key={c}
+                            component="li"
+                            sx={{
+                              bgcolor: '#e0f4fa',
+                              color: '#0777a0',
+                              fontWeight: 600,
+                              fontSize: '0.75rem',
+                              px: 1.5,
+                              py: 0.5,
+                              borderRadius: '9999px',
+                            }}
+                          >
+                            {c}
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Box
+              sx={{
+                mt: 5,
+                p: 3,
+                bgcolor: '#F8FAFC',
+                borderRadius: 3,
+                border: '1px solid #E2E8F0',
+                maxWidth: 720,
+                mx: 'auto',
+                textAlign: 'center',
+              }}
+            >
+              <Typography sx={{ color: '#2A3547', fontSize: '0.9rem', lineHeight: 1.7 }}>
+                <strong>¿Vives en otra región de Chile?</strong> El cotizador validará tu dirección automáticamente.
+                Si tu comuna no está cubierta, el sistema te lo indicará de inmediato y podrás contactarnos
+                para evaluar disponibilidad en tu zona.
+              </Typography>
+              <Button
+                component={Link}
+                href="/cotizador"
+                variant="contained"
+                sx={{
+                  mt: 2.5,
+                  bgcolor: '#e81a68',
+                  '&:hover': { bgcolor: '#c01556' },
+                  fontWeight: 700,
+                  px: 4,
+                  py: 1.2,
+                  borderRadius: 2,
+                  textTransform: 'none',
+                }}
+              >
+                Verificar mi dirección →
+              </Button>
+            </Box>
+          </Container>
+        </Box>
+
         {/* ── FAQ ──────────────────────────────────────────────────────────── */}
         <Box sx={{ bgcolor: '#F8FAFC', py: { xs: 7, md: 10 } }}>
           <Container maxWidth="md">
@@ -698,7 +845,7 @@ export default function PresupuestoCargadorPage() {
               </Button>
               <Button
                 component={Link}
-                href="/agenda"
+                href="/cotizador?type-schedule"
                 variant="outlined"
                 size="large"
                 sx={{

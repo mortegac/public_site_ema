@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '@/prismicio'
 import { BLOG_ARTICLES } from '@/data/blog-articles'
 
-const STATIC_LAST_MODIFIED = new Date('2026-06-20')
+const STATIC_LAST_MODIFIED = new Date('2026-07-02')
 
 const STATIC_ROUTES = [
   '/cotizador',
@@ -19,6 +19,8 @@ const STATIC_ROUTES = [
   '/simulador',
   '/auto-electrico-vs-gasolina-chile',
   '/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador',
+  '/cookie-policy',
+  '/presupuesto-cargador-electrico',
 ]
 
 const CITY_ROUTES = [
@@ -57,8 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  const HIGH_PRIORITY_ROUTES = new Set(['/cotizador', '/comparador-electrico'])
-  const LOW_PRIORITY_ROUTES = new Set(['/terminos-condiciones'])
+  const HIGH_PRIORITY_ROUTES = new Set(['/cotizador', '/comparador-electrico', '/presupuesto-cargador-electrico'])
+  const LOW_PRIORITY_ROUTES = new Set(['/terminos-condiciones', '/cookie-policy'])
 
   const staticEntries = STATIC_ROUTES.map((route) => ({
     url: `https://www.energica.city${route}`,

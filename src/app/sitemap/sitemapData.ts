@@ -12,6 +12,8 @@ export const STATIC_ROUTES: Array<{ path: string; label: string }> = [
   { path: '/contactanos', label: 'Contáctanos' },
   { path: '/blog', label: 'Blog' },
   { path: '/terminos-condiciones', label: 'Términos y Condiciones' },
+  { path: '/cookie-policy', label: 'Política de Cookies' },
+  { path: '/presupuesto-cargador-electrico', label: 'Presupuesto Cargador Eléctrico' },
 ]
 
 export const CITY_ROUTES: Array<{ slug: string; label: string }> = [

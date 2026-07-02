@@ -23,8 +23,10 @@ const schemas = [
     '@type': 'WebPage',
     name: 'Presupuesto de Instalación de Cargador Eléctrico Online',
     description:
-      'Obtén el precio exacto de instalación de tu cargador EV en Chile sin registro ni llamadas. Casa desde $159.000, edificio desde $0. Cubre RM y Valparaíso.',
+      'Obtén el precio exacto de instalación de tu cargador EV en Chile sin registro ni llamadas. Casa desde $512.708, edificio desde $0. Cubre RM y Valparaíso.',
     url: `${CANONICAL_DOMAIN}/presupuesto-cargador-electrico`,
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-02',
     publisher: { '@type': 'Organization', name: 'Enérgica City', url: CANONICAL_DOMAIN },
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -54,7 +56,7 @@ const schemas = [
       '@type': 'AggregateOffer',
       priceCurrency: 'CLP',
       lowPrice: 0,
-      highPrice: 369000,
+      highPrice: 3110000,
       offerCount: 4,
     },
   },
@@ -67,7 +69,7 @@ const schemas = [
         name: '¿El precio del cotizador online de cargadores eléctricos es definitivo?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Para instalaciones en casa, el precio mostrado en el cotizador es el precio definitivo para distancias estándar. El valor incluye materiales (ductos, breaker dedicado, cable calibre 6 AWG), mano de obra de instaladores certificados por la SEC y el trámite de declaración TE6 obligatorio en Chile. Para edificios, el precio se confirma tras una visita técnica ($29.000, descontable del total), porque la distancia real de cableado entre el tablero y el estacionamiento varía según la distribución del edificio. El cotizador siempre muestra el desglose completo con IVA incluido.',
+          text: 'Para instalaciones en casa, el precio mostrado en el cotizador es el precio definitivo para distancias estándar. El valor incluye materiales (ductos, breaker dedicado, cable calibre 6 AWG), mano de obra de instaladores certificados por la SEC y el trámite de declaración TE6 obligatorio en Chile. Para edificios, el precio se confirma tras una visita técnica ($9.990, descontable del total), porque la distancia real de cableado entre el tablero y el estacionamiento varía según la distribución del edificio. El cotizador siempre muestra el desglose completo con IVA incluido.',
         },
       },
       {
@@ -75,7 +77,7 @@ const schemas = [
         name: '¿Puedo ver el presupuesto sin pagar en ese momento?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Sí. El cotizador de Enérgica City muestra el precio exacto sin necesidad de pagar ni registrarte. Solo cuando decides confirmar la instalación se realiza el pago en línea mediante Webpay (acepta Visa, Mastercard, Redcompra y débito). Para edificios, la opción de visita técnica con kit de documentos ($29.000) es el único paso que requiere pago inicial; ese monto se descuenta del presupuesto definitivo. La electrolinera comunitaria para edificios no requiere ningún pago de inversión.',
+          text: 'Sí. El cotizador de Enérgica City muestra el precio exacto sin necesidad de pagar ni registrarte. Solo cuando decides confirmar la instalación se realiza el pago en línea mediante Webpay (acepta Visa, Mastercard, Redcompra y débito). Para edificios, la opción de visita técnica con kit de documentos ($9.990) es el único paso que requiere pago inicial; ese monto se descuenta del presupuesto definitivo. La electrolinera comunitaria para edificios no requiere ningún pago de inversión.',
         },
       },
       {
@@ -188,7 +190,7 @@ const FAQS = [
   },
   {
     q: '¿Puedo ver el presupuesto sin compromiso de pago?',
-    a: 'Sí. El cotizador de Enérgica City muestra el precio exacto sin registro ni pago previo. Solo pagas cuando decides confirmar tu instalación, vía Webpay (Visa, Mastercard, Redcompra, débito). Para casas, el pago confirma la instalación directamente. Para edificios, la electrolinera comunitaria es completamente sin inversión. La visita técnica con kit de documentos ($29.000) sí requiere pago inicial, pero ese monto se descuenta del presupuesto definitivo.',
+    a: 'Sí. El cotizador de Enérgica City muestra el precio exacto sin registro ni pago previo. Solo pagas cuando decides confirmar tu instalación, vía Webpay (Visa, Mastercard, Redcompra, débito). Para casas, el pago confirma la instalación directamente. Para edificios, la electrolinera comunitaria es completamente sin inversión. La visita técnica con kit de documentos ($9.990) sí requiere pago inicial, pero ese monto se descuenta del presupuesto definitivo.',
   },
   {
     q: '¿El cotizador cubre mi dirección en Chile?',

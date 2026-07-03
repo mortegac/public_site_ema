@@ -1565,7 +1565,7 @@ export default function CotizadorWizard() {
     const RANGE_HIGH = 3110000
 
     return (
-      <Box>
+      <Box id="COTIZADOR-RESULTADO">
         <Box sx={{ textAlign: 'center', mb: 2 }}>
           <Typography sx={{ fontSize: '0.95rem', fontWeight: 700, color: '#2A3547' }}>
             Tu estimación referencial
@@ -2466,7 +2466,7 @@ export default function CotizadorWizard() {
     const removedCharger = state.removedChargerId ? chargerList.find(c => c.id === state.removedChargerId) ?? null : null
 
     return (
-      <Box>
+      <Box id="COTIZADOR-RESULTADO">
         {/* ── Simplified summary header ── */}
         <Box sx={{ textAlign: 'center', mb: 2.5 }}>
           <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: '#2A3547', mb: 0.25 }}>

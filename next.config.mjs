@@ -30,6 +30,12 @@ const nextConfig = {
         exclude: ['error', 'warn'],
       } : false,
     },
+    async redirects() {
+      return [
+        { source: '/instalacion_cargadores', destination: '/instalacion-cargadores', permanent: true },
+        { source: '/asesoria_electrificacion_flotas', destination: '/asesoria-electrificacion-flotas', permanent: true },
+      ]
+    },
     // Headers de seguridad y performance
     async headers() {
       return [

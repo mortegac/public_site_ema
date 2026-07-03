@@ -26,8 +26,8 @@ const webAppSchema = {
   name: 'Cotizador de Instalación EV — Enérgica City',
   description: DESC,
   url: `${CANONICAL_DOMAIN}/${SLUG}`,
-  applicationCategory: 'UtilityApplication',
-  operatingSystem: 'Web',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'CLP' },
   provider: { '@type': 'Organization', name: 'Enérgica City', url: CANONICAL_DOMAIN },
 }

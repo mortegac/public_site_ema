@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 
   return {
-    title: "Cargadores Eléctricos para Empresas y Edificios",
+    title: "Cargadores EV para Empresas y Edificios",
     description: page.data.meta_description,
     alternates: {
       canonical: CANONICAL_DOMAIN,

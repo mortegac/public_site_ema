@@ -16,20 +16,11 @@ const footerLinks = [
   {
       id: 1,
       children: [
-          // {
-          //     title: true,
-          //     titleText: '',
-          // },
           {
               title: false,
               titleText: 'Inicio',
               link: '/',
           },
-          // {
-          //     title: false,
-          //     titleText: 'Agenda',
-          //     link: '/agenda',
-          // },
           {
               title: false,
               titleText: 'Cotizador',
@@ -38,13 +29,12 @@ const footerLinks = [
           {
               title: false,
               titleText: 'Electrificación de flotas',
-              link: '/asesoria_electrificacion_flotas',
+              link: '/asesoria-electrificacion-flotas',
           },
-          
           {
               title: false,
-              titleText: 'Instalacion de cargadores',
-              link: '/instalacion_cargadores',
+              titleText: 'Instalación de cargadores',
+              link: '/instalacion-cargadores',
           },
           {
               title: false,
@@ -56,7 +46,41 @@ const footerLinks = [
               titleText: 'Sobre Energica',
               link: '/que-es-energica-city',
           },
-          
+      ],
+  },
+  {
+      id: 2,
+      children: [
+          {
+              title: false,
+              titleText: 'Blog',
+              link: '/blog',
+          },
+          {
+              title: false,
+              titleText: 'Preguntas frecuentes',
+              link: '/faqs',
+          },
+          {
+              title: false,
+              titleText: 'Contáctanos',
+              link: '/contactanos',
+          },
+          {
+              title: false,
+              titleText: 'Soporte',
+              link: '/soporte',
+          },
+          {
+              title: false,
+              titleText: 'Casos de éxito',
+              link: '/casos-de-exito',
+          },
+          {
+              title: false,
+              titleText: 'Credenciales',
+              link: '/credenciales',
+          },
       ],
   },
   // {

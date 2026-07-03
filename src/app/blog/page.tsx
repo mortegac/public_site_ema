@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
-import { Container, Box, Typography, Card, CardContent, CardActionArea, Chip } from "@mui/material";
 import HpHeaderNew from "@/app/components/shared/header/HpHeaderNew";
 import { createClient } from "@/prismicio";
 import { CANONICAL_DOMAIN } from "@/utils/seo-config";
 import { BLOG_ARTICLES } from "@/data/blog-articles";
-
-const STATIC_ARTICLES = BLOG_ARTICLES;
+import BlogClientContent from "./BlogClientContent";
 
 export const metadata: Metadata = {
   title: "Blog sobre Electromovilidad en Chile",
@@ -22,13 +18,8 @@ export const metadata: Metadata = {
   },
 };
 
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("es-CL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+const STATIC_THUMB_OVERRIDES: Record<string, string> = {
+  'conoce-nuestra-metodologia-propia': '/images/post/01_370x246.png',
 }
 
 export default async function BlogPage() {
@@ -46,6 +37,18 @@ export default async function BlogPage() {
     ],
   };
 
+  const prismicPosts = posts.map((post) => ({
+    uid: post.uid,
+    title: String(post.data.meta_title ?? post.uid),
+    description: String(post.data.meta_description ?? ''),
+    date: post.first_publication_date ?? '',
+    imageUrl:
+      (post.data.meta_image as { url?: string })?.url ??
+      (post.data.image as { url?: string })?.url ??
+      STATIC_THUMB_OVERRIDES[post.uid] ??
+      '',
+  }));
+
   return (
     <>
       <script
@@ -53,142 +56,7 @@ export default async function BlogPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
-      <Box component="main" sx={{ py: 8 }}>
-        <Container maxWidth="lg">
-          <Typography variant="h1" component="h1" sx={{ fontSize: { xs: "2rem", md: "2.75rem" }, fontWeight: 700, mb: 1 }}>
-            Blog
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 6, fontSize: "1.1rem" }}>
-            Artículos sobre electromovilidad, normativa SEC y cargadores eléctricos en Chile.
-          </Typography>
-
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }, gap: 4 }}>
-
-            {/* Prismic posts */}
-            {posts.map((post) => {
-              const title = post.data.meta_title ?? post.uid;
-              const description = post.data.meta_description ?? "";
-              const STATIC_THUMB_OVERRIDES: Record<string, string> = {
-                'conoce-nuestra-metodologia-propia': '/images/post/01_370x246.png',
-              };
-              const imageUrl = (post.data.meta_image as { url?: string })?.url ?? (post.data.image as { url?: string })?.url ?? STATIC_THUMB_OVERRIDES[post.uid] ?? "";
-              const imageAlt = (post.data.meta_image as { alt?: string })?.alt ?? (post.data.image as { alt?: string })?.alt ?? title ?? "";
-              const date = formatDate(post.first_publication_date);
-
-              return (
-                <Card
-                  key={post.uid}
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    borderRadius: 2,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                    transition: "box-shadow 0.2s",
-                    "&:hover": { boxShadow: "0 4px 20px rgba(0,0,0,0.14)" },
-                  }}
-                >
-                  <CardActionArea
-                    component={Link}
-                    href={`/blog/${post.uid}`}
-                    sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "flex-start" }}
-                  >
-                    {imageUrl && (
-                      <Box sx={{ width: "100%", aspectRatio: "16/9", position: "relative", overflow: "hidden", borderRadius: "8px 8px 0 0" }}>
-                        <Image
-                          src={imageUrl}
-                          alt={imageAlt}
-                          fill
-                          style={{ objectFit: "cover" }}
-                          sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
-                        />
-                      </Box>
-                    )}
-                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                      {date && (
-                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
-                          {date}
-                        </Typography>
-                      )}
-                      <Typography variant="h2" component="h2" sx={{ fontSize: "1.1rem", fontWeight: 700, mb: 1.5, lineHeight: 1.4 }}>
-                        {title}
-                      </Typography>
-                      {description && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-                        >
-                          {description}
-                        </Typography>
-                      )}
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              );
-            })}
-
-            {/* Static articles */}
-            {STATIC_ARTICLES.map((article) => (
-              <Card
-                key={article.uid}
-                sx={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: 2,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                  transition: "box-shadow 0.2s",
-                  "&:hover": { boxShadow: "0 4px 20px rgba(0,0,0,0.14)" },
-                }}
-              >
-                <CardActionArea
-                  component={Link}
-                  href={`/blog/${article.uid}`}
-                  sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "flex-start" }}
-                >
-                  {article.image ? (
-                    <Box sx={{ width: "100%", aspectRatio: "370/246", position: "relative", overflow: "hidden", borderRadius: "8px 8px 0 0" }}>
-                      <Image
-                        src={article.image}
-                        alt={article.title}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
-                      />
-                    </Box>
-                  ) : (
-                    <Box sx={{ width: "100%", height: 4, background: "linear-gradient(90deg, #0898b9 0%, #4dbfd9 100%)", borderRadius: "8px 8px 0 0" }} />
-                  )}
-                  <CardContent sx={{ flexGrow: 1, p: 3, width: "100%" }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
-                      <Typography variant="caption" color="text.secondary">
-                        {formatDate(article.date)}
-                      </Typography>
-                      <Chip
-                        label={article.category}
-                        size="small"
-                        sx={{ height: 20, fontSize: "0.7rem", bgcolor: "#e0f4fa", color: "#0777a0", fontWeight: 600 }}
-                      />
-                    </Box>
-                    <Typography variant="h2" component="h2" sx={{ fontSize: "1.1rem", fontWeight: 700, mb: 1.5, lineHeight: 1.4 }}>
-                      {article.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-                    >
-                      {article.description}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            ))}
-
-          </Box>
-        </Container>
-      </Box>
+      <BlogClientContent prismicPosts={prismicPosts} staticArticles={BLOG_ARTICLES} />
     </>
   );
 }

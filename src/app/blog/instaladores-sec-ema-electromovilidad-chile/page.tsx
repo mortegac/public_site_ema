@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -132,18 +131,6 @@ export default function ArticlePage() {
       <BlogBreadcrumb title="Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile" />
 
       <Box component="main">
-        {/* Featured image */}
-        <Box sx={{ width: '100%', lineHeight: 0 }}>
-          <Image
-            src="/images/post/13_1170x400.png"
-            alt="Instaladores eléctricos certificados SEC red EMA electromovilidad Chile"
-            width={1170}
-            height={400}
-            style={{ width: '100%', height: 'auto' }}
-            priority
-          />
-        </Box>
-
         {/* Hero */}
         <Box
           sx={{
@@ -203,7 +190,7 @@ export default function ArticlePage() {
                     <Typography sx={{ fontSize: { xs: '1.8rem', md: '2.4rem' }, fontWeight: 800 }}>
                       {stat.value}
                     </Typography>
-                    <Typography sx={{ fontSize: '0.9rem', opacity: 0.85 }}>{stat.label}</Typography>
+                    <Typography sx={{ fontSize: '0.9rem', opacity: 0.85, py: '16px' }}>{stat.label}</Typography>
                   </Box>
                 </Grid>
               ))}
@@ -255,7 +242,6 @@ export default function ArticlePage() {
                     display: 'flex',
                     gap: 3,
                     p: 3,
-                    borderRadius: 2,
                     border: '1px solid #E2E8F0',
                     alignItems: 'flex-start',
                   }}
@@ -310,7 +296,6 @@ export default function ArticlePage() {
                   key={i}
                   sx={{
                     p: 3,
-                    borderRadius: 2,
                     bgcolor: '#fff',
                     border: c.isAuthor ? `2px solid ${TEAL}` : '1px solid #E2E8F0',
                     position: 'relative',
@@ -370,7 +355,6 @@ export default function ArticlePage() {
               sx={{
                 mt: 4,
                 p: 3,
-                borderRadius: 2,
                 bgcolor: '#FFF7ED',
                 border: '1px solid #FED7AA',
               }}
@@ -396,7 +380,7 @@ export default function ArticlePage() {
             <Box sx={{ textAlign: 'center', mb: 6 }}>
               <Typography
                 component="h2"
-                sx={{ fontSize: { xs: '1.8rem', md: '2.25rem' }, fontWeight: 800, color: DARK, mb: 2 }}
+                sx={{ fontSize: { xs: '1.8rem', md: '2.25rem' }, fontWeight: 800, color: DARK, mb: 2, lineHeight: '40px' }}
               >
                 ¿Eres instalador certificado o proveedor de infraestructura?
               </Typography>
@@ -413,7 +397,6 @@ export default function ArticlePage() {
                 mx: 'auto',
                 p: { xs: 3, md: 5 },
                 border: '1px solid #E2E8F0',
-                borderRadius: 3,
                 boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
               }}
             >

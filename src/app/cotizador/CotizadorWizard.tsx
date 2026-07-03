@@ -487,6 +487,20 @@ export default function CotizadorWizard() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Auto-calculate dist for edificio: |aptFloor - parkingFloor| × 3m + 25m buffer (avg of 20–30m)
+  useEffect(() => {
+    if (state.tipo !== 'edificio') return
+    const apt = parseInt(state.edificioFloor)
+    if (isNaN(apt) || !state.edificioParkingFloor) return
+    const parkingStr = state.edificioParkingFloor
+    const parking = parkingStr.startsWith('Subterráneo')
+      ? parseInt(parkingStr.replace('Subterráneo ', ''))
+      : parseInt(parkingStr.replace('Piso ', ''))
+    if (isNaN(parking)) return
+    const dist = Math.abs(apt - parking) * 3 + 25
+    update({ dist })
+  }, [state.tipo, state.edificioFloor, state.edificioParkingFloor])
+
   const result = calcResult(state, chargerList)
 
   // ─── Derived ─────────────────────────────────────────────────────────────
@@ -1278,33 +1292,35 @@ export default function CotizadorWizard() {
           </Box>
         )}
 
-        {/* Distance slider */}
-        <Box sx={{ mt: 3 }}>
-          <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', mb: 0.5, color: '#2A3547' }}>
-            Distancia al tablero eléctrico
-          </Typography>
-          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 2 }}>
-            Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
-          </Typography>
-          <Box sx={{ px: 1 }}>
-            <Slider
-              value={state.dist}
-              min={1}
-              max={60}
-              marks={SLIDER_MARKS}
-              onChange={(_, v) => { update({ dist: v as number }); track('distance_changed', { distance: v as number, step: 2 }) }}
-              onChangeCommitted={(_, v) => track('distance_final', { distance: v as number, step: 2 })}
-              sx={{
-                color: PINK,
-                '& .MuiSlider-markLabel': { fontSize: '0.65rem', color: TEXT_MUTED },
-              }}
-            />
+        {/* Distance slider — hidden for edificio (auto-calculated from floor inputs) */}
+        {state.tipo !== 'edificio' && (
+          <Box sx={{ mt: 3 }}>
+            <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', mb: 0.5, color: '#2A3547' }}>
+              Distancia al tablero eléctrico
+            </Typography>
+            <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 2 }}>
+              Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+            </Typography>
+            <Box sx={{ px: 1 }}>
+              <Slider
+                value={state.dist}
+                min={1}
+                max={60}
+                marks={SLIDER_MARKS}
+                onChange={(_, v) => { update({ dist: v as number }); track('distance_changed', { distance: v as number, step: 2 }) }}
+                onChangeCommitted={(_, v) => track('distance_final', { distance: v as number, step: 2 })}
+                sx={{
+                  color: PINK,
+                  '& .MuiSlider-markLabel': { fontSize: '0.65rem', color: TEXT_MUTED },
+                }}
+              />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+              <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>{distLabel(state.dist)}</Typography>
+              <Chip label={`${state.dist} m`} size="small" sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700 }} />
+            </Box>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-            <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>{distLabel(state.dist)}</Typography>
-            <Chip label={`${state.dist} m`} size="small" sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700 }} />
-          </Box>
-        </Box>
+        )}
 
         {/* Edificio extra fields — only shown when tipo === 'edificio' */}
         {state.tipo === 'edificio' && (

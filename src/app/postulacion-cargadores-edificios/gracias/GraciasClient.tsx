@@ -1,8 +1,17 @@
 'use client';
+import { useEffect } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 
 export default function GraciasElectrolinerasPage() {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && Array.isArray((window as Window & { dataLayer?: unknown[] }).dataLayer)) {
+      (window as Window & { dataLayer: Record<string, unknown>[] }).dataLayer.push({
+        event: 'postulacion_edificio_success',
+      });
+    }
+  }, []);
+
   return (
     <Box
       id="FORMULARIO-ELECTROLINERA"

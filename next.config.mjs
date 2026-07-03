@@ -75,7 +75,7 @@ const nextConfig = {
                 // Media
                 "media-src 'self' https://*.prismic.io https://energica-public-site.cdn.prismic.io",
                 // Connections: GA4 endpoints, GTM, DoubleClick, AWS, Prismic, EmailJS
-                "connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://analytics.google.com https://region1.analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.googleadservices.com https://ad.doubleclick.net https://cognito-identity.us-east-2.amazonaws.com https://*.amazonaws.com https://*.appsync-api.us-east-2.amazonaws.com https://api.emailjs.com",
+                "connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://analytics.google.com https://region1.analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://www.googleadservices.com https://ad.doubleclick.net https://cognito-identity.us-east-2.amazonaws.com https://*.amazonaws.com https://*.appsync-api.us-east-2.amazonaws.com https://api.emailjs.com",
                 // Frames: GTM noscript, DoubleClick, Prismic preview
                 "frame-src https://www.googletagmanager.com https://googleads.g.doubleclick.net https://td.doubleclick.net https://energica-public-site.prismic.io",
               ].join('; '),

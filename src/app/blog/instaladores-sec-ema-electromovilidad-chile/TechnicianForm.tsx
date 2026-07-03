@@ -72,23 +72,32 @@ export default function TechnicianForm() {
     onSubmit: async (values) => {
       try {
         init('UYcrSeCqLGW8xqT4S')
-        await emailjs.send('service_dbrrm6b', 'template_ey97i29', {
-          from_name: values.name,
-          to_email: values.email,
-          to_name: values.name,
-          reply_to: values.email,
-          contentTitle: 'Postulación Instalador EMA',
+        const CONTENT_HTML = `
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;margin-bottom:16px;">
+            <thead>
+              <tr style="background-color:#f8fafc;">
+                <th style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:600;color:#37373c;text-align:left;padding:10px 14px;border-bottom:1px solid #e8e8e8;">Campo</th>
+                <th style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:600;color:#37373c;text-align:left;padding:10px 14px;border-bottom:1px solid #e8e8e8;">Dato</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">Nombre completo</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">${values.name}</td></tr>
+              <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">Correo electrónico</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">${values.email}</td></tr>
+              <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">Teléfono</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">${values.phone}</td></tr>
+              <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">Región</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">${values.region}</td></tr>
+              <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">Credencial SEC</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">${values.secCredential || 'No indicada'}</td></tr>
+              <tr><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">Años de experiencia</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;border-bottom:1px solid #f0f0f0;">${values.experience}</td></tr>
+              <tr style="background-color:#f8fafc;"><td style="font-family:proxima-nova,sans-serif;font-size:13px;color:#37373c;padding:10px 14px;">Tipo de proyectos</td><td style="font-family:proxima-nova,sans-serif;font-size:13px;font-weight:700;color:#37373c;padding:10px 14px;">${values.projectTypes}</td></tr>
+            </tbody>
+          </table>
+        `
+        await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+          to_email: 'manuel@energica.city',
+          name: values.name,
+          subject: 'Postulación Instalador EMA',
           contentWelcomeText:
-            'Gracias por tu interés en unirte a la red EMA de Enérgica City. Revisaremos tu perfil y nos contactaremos en las próximas 48 horas con los detalles del proceso de incorporación.',
-          contentHTML: `
-            <p>Nombre: <b>${values.name}</b></p>
-            <p>Email: <b>${values.email}</b></p>
-            <p>Teléfono: <b>${values.phone}</b></p>
-            <p>Región: <b>${values.region}</b></p>
-            <p>Credencial SEC: <b>${values.secCredential || 'No indicada'}</b></p>
-            <p>Años de experiencia: <b>${values.experience}</b></p>
-            <p>Tipo de proyectos: <b>${values.projectTypes}</b></p>
-          `,
+            'Gracias por tu interés en unirte a la red EMA de Enérgica City. Revisaremos tu perfil y nos contactaremos a la brevedad con los detalles del proceso de incorporación.',
+          CONTENT_HTML,
         })
         setSubmitted('success')
       } catch {

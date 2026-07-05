@@ -430,7 +430,12 @@ export default function ArticlePage() {
         </Box>
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline
+          name="Manuel Ortega"
+          bio="Ingeniero en desarrollo de software con 8+ años de experiencia en temas asociados a la electromovilidad."
+          imageSrc="/images/profile/manuel-ortega.jpg"
+          imageAlt="Manuel Ortega, Enérgica City"
+        />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

@@ -1,7 +1,19 @@
 import Image from 'next/image'
 import { Box, Container, Typography } from '@mui/material'
 
-export default function AuthorByline() {
+interface AuthorBylineProps {
+  name?: string
+  bio?: string
+  imageSrc?: string
+  imageAlt?: string
+}
+
+export default function AuthorByline({
+  name = 'Felipe Donoso',
+  bio = 'Ingeniero Eléctrico con 10+ años de experiencia en electromovilidad.',
+  imageSrc = '/images/felipe-donoso.jpeg',
+  imageAlt,
+}: AuthorBylineProps) {
   return (
     <Box sx={{ py: 4, background: '#fff', borderTop: '1px solid #E2E8F0' }}>
       <Container maxWidth="md">
@@ -19,16 +31,15 @@ export default function AuthorByline() {
             }}
           >
             <Image
-              src="/images/felipe-donoso.jpeg"
-              alt="Felipe Donoso, Ingeniero Eléctrico Enérgica City"
+              src={imageSrc}
+              alt={imageAlt ?? `${name}, Enérgica City`}
               fill
               style={{ objectFit: 'cover' }}
               sizes="64px"
             />
           </Box>
           <Typography sx={{ fontSize: '0.9rem', color: '#64748B', lineHeight: 1.7 }}>
-            Escrito por <strong>Felipe Donoso</strong>, Ingeniero Eléctrico con 10+ años de
-            experiencia en electromovilidad.
+            Escrito por <strong>{name}</strong>, {bio}
           </Typography>
         </Box>
       </Container>

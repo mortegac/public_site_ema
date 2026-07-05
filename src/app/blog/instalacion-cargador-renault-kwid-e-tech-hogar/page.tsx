@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'instalacion-cargador-renault-kwid-e-tech-hogar'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Todo sobre la instalación domiciliaria del cargador para el Renault Kwid E-Tech en Chile. Proceso, costos, normativa SEC y tiempos de carga reales.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Instalación de cargador para Renault Kwid E-Tech en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/03_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Instalación cargador Renault Kwid E-Tech hogar Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Renault Kwid E-Tech: Cómo instalar tu cargador en casa',
     description:
       'Instala tu cargador para Renault Kwid E-Tech desde $159.000 con técnicos SEC en Chile.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/03_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/03_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Renault Kwid E-Tech: Cómo Instalar tu Cargador en Casa',
   description:
     'Guía técnica completa para instalar un cargador domiciliario para el Renault Kwid E-Tech en Chile: especificaciones, proceso, costos y normativa SEC.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-01',
   dateModified: '2025-05-01',

@@ -30,9 +30,9 @@ export const metadata: Metadata = {
       'Todo lo que necesitas saber para instalar un punto de carga de vehículo eléctrico en tu hogar: materiales, protecciones, normativa SEC y diferencias entre 16A y 32A.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
+        url: `${CANONICAL_DOMAIN}/images/post/34_1170x400.png`,
+        width: 1170,
+        height: 400,
         alt: 'Instalación cargador vehículo eléctrico vivienda Chile',
       },
     ],
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Instalación Cargador EV en Casa: Guía Técnica Chile',
     description:
       'Cableado AWG 6, diferencial tipo A, cargadores 16A vs 32A y certificado TE6 SEC. Todo sobre instalación de cargadores EV en vivienda.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/34_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/34_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica Completa',
   description:
     'Guía técnica para instalar un sistema de alimentación de vehículo eléctrico en vivienda: evaluación del empalme, cableado dedicado, protecciones tipo A y certificación SEC.',
@@ -60,11 +66,13 @@ const blogPostingSchema = {
   reviewer: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-19',
   dateModified: '2026-06-19',

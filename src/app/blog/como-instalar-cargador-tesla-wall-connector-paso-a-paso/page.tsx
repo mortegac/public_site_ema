@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Instala el Tesla Wall Connector Gen 3 en Chile. Compatibilidad con red monofásica y trifásica. Profesionales SEC certificados. Precio desde $279.000.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Tesla Wall Connector instalado en garage domiciliario en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/07_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Tesla Wall Connector Gen 3 instalación Chile paso a paso',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Tesla Wall Connector Gen 3: Instalación en Chile',
     description:
       'Todo lo que necesitas saber para instalar el Tesla Wall Connector Gen 3 en tu casa o departamento en Chile.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/07_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/07_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Tesla Wall Connector Gen 3: Instalación Paso a Paso en Chile',
   description:
     'Guía completa para instalar el Tesla Wall Connector Gen 3 en Chile: requisitos eléctricos, certificación TE6, compatibilidad con modelos Tesla y precios actualizados.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-01',
   dateModified: '2025-05-01',

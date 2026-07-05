@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 export const metadata: Metadata = {
   title: 'Cargador Monofásico vs. Trifásico: ¿Cuál necesita tu auto?',
@@ -28,10 +28,10 @@ export const metadata: Metadata = {
       'Diferencias entre cargador monofásico (7kW) y trifásico (22kW) para autos eléctricos en Chile. Elige según tu empalme y la capacidad de tu vehículo.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Comparativa cargador monofásico vs trifásico para autos eléctricos en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/12_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cargador monofásico versus trifásico auto eléctrico Chile',
       },
     ],
   },
@@ -39,18 +39,34 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Cargador Monofásico vs. Trifásico: ¿Cuál necesita tu auto?',
     description: 'Diferencias entre 7kW y 22kW para autos eléctricos en Chile. Elige según tu empalme.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/12_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/12_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cargador Monofásico vs. Trifásico: ¿Cuál Necesita tu Auto Eléctrico?',
   description:
     'Diferencias entre cargador monofásico (7kW) y trifásico (22kW) para autos eléctricos en Chile. Elige según tu empalme y la capacidad de tu vehículo.',
-  author: { '@type': 'Person', name: 'Gilberto Escalona', jobTitle: 'Gerente Técnico, Enérgica City' },
-  publisher: { '@type': 'Organization', name: 'Enérgica City', url: CANONICAL_DOMAIN },
+  author: {
+    '@type': 'Person',
+    name: 'Gilberto Escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Enérgica City',
+    url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
+  },
   datePublished: '2025-05-15',
   dateModified: '2025-05-15',
   url: `${CANONICAL_DOMAIN}/blog/cargador-auto-electrico-monofasico-vs-trifasico`,

@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'viajes-largos-auto-electrico-chile-red-publica-vs-privada'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Guía práctica para planificar viajes interurbanos en EV por Chile: red pública Copec Voltex, Enel X, Zunder, Tesla Supercharger. Corredores Santiago-Valparaíso, Concepción y La Serena.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Planificación de viajes largos en auto eléctrico por Chile 2025',
+        url: `${CANONICAL_DOMAIN}/images/post/19_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Viajes largos auto eléctrico Chile red carga pública 2025',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Viajes largos en auto eléctrico por Chile: Planificación 2025',
     description:
       'Red de carga pública en Chile, corredores clave y estrategia de carga en casa para viajes interurbanos en EV.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/19_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/19_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Viajes Largos en Auto Eléctrico por Chile: Planificación 2025',
   description:
     'Guía completa para planificar viajes interurbanos en vehículo eléctrico en Chile. Análisis de los corredores clave, red de carga pública, gestión de la ansiedad de rango y estrategia de carga domiciliaria.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-05',
   dateModified: '2025-05-05',

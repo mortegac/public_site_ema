@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'cargador-volvo-xc40-recharge-instalacion-chile'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Todo lo que necesitas saber para instalar un cargador Wallbox para tu Volvo XC40 o C40 Recharge en Chile. Proceso, costos y normativa SEC.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Instalación de cargador Wallbox para Volvo XC40 Recharge en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/02_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cargador Volvo XC40 C40 Recharge instalación Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Cargador Volvo XC40 y C40: Guía de Instalación en Chile',
     description:
       'Instala tu cargador para Volvo XC40 o C40 Recharge desde $159.000 con técnicos SEC en Chile.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/02_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/02_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cargador Volvo XC40 y C40 Recharge: Guía de Instalación en Chile',
   description:
     'Guía completa para instalar un cargador domiciliario para Volvo XC40 y C40 Recharge en Chile: especificaciones técnicas, proceso, costos y normativa SEC.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-01',
   dateModified: '2025-05-01',

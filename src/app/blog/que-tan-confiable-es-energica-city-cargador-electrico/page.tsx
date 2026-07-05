@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Enérgica City es una empresa chilena con técnicos certificados SEC, alianza con Abastibletec y proyectos para Chilexpress y el MOP. Conoce sus credenciales.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Enérgica City empresa confiable instalación cargador eléctrico Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/35_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Enérgica City instalación cargador eléctrico confiable',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador?',
     description:
       'Técnicos SEC, alianza con Abastibletec, proyectos corporativos: 4 razones por las que Enérgica City es confiable.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/35_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/35_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico en Chile?',
   description:
     'Análisis de las credenciales de Enérgica City: certificación SEC, alianzas estratégicas, proyectos corporativos y soluciones para edificios.',
@@ -60,11 +66,13 @@ const blogPostingSchema = {
   reviewer: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-19',
   dateModified: '2026-06-19',

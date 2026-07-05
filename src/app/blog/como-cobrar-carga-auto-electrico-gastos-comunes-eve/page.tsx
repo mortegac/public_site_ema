@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'como-cobrar-carga-auto-electrico-gastos-comunes-eve'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'La plataforma EVE de Enérgica City resuelve el problema de la medición y cobro del consumo eléctrico por carga de autos en edificios. Sin medidores individuales, sin facturas separadas.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Plataforma EVE de Enérgica City para gestión de carga EV en edificios',
+        url: `${CANONICAL_DOMAIN}/images/post/18_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cobro carga EV gastos comunes plataforma EVE Enérgica City',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Cómo cobrar la carga EV a través de los gastos comunes',
     description:
       'EVE by Enérgica City: cobro automático del consumo EV vía gastos comunes. Desplegado en 15+ edificios en Santiago.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/18_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/18_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cómo Cobrar la Carga EV a Través de los Gastos Comunes',
   description:
     'La plataforma EVE de Enérgica City permite a los edificios gestionar el consumo eléctrico por carga de autos eléctricos y cobrarlo automáticamente vía gastos comunes, sin medidores individuales.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-05',
   dateModified: '2025-05-05',

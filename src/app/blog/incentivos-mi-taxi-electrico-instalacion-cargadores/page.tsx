@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Cómo acceder al subsidio del programa Mi Taxi Eléctrico para instalar cargadores en casa. Requisitos, montos y plazos para taxistas y colectiveros en Chile.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Taxista con vehículo eléctrico cargando en casa con instalador SEC certificado Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/11_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Programa Mi Taxi Eléctrico cargadores domiciliarios Chile',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Mi Taxi Eléctrico: Subsidio para cargadores en casa — Chile 2025',
     description:
       'Programa Mi Taxi Eléctrico del Ministerio de Energía: cómo instalar tu cargador domiciliario con subsidio y con instalador SEC autorizado.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/11_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/11_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Programa Mi Taxi Eléctrico: Carga Domiciliaria para Conductores',
   description:
     'Guía completa sobre el programa Mi Taxi Eléctrico del Ministerio de Energía de Chile para 2025: subsidios para instalación de cargadores domiciliarios, requisitos de postulación y participación de Enérgica City como instalador autorizado.',
@@ -55,11 +61,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-15',
   dateModified: '2025-05-15',

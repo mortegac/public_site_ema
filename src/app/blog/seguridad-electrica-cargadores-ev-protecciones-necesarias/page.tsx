@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 export const metadata: Metadata = {
   title: 'Seguridad eléctrica: Protecciones críticas para tu cargador EV',
@@ -28,10 +28,10 @@ export const metadata: Metadata = {
       'Protecciones obligatorias para instalar un cargador EV seguro en Chile. Diferencial tipo A, interruptor automático. NCh Elec. 4/2003.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Protecciones eléctricas para cargadores EV en Chile NCh Elec 4/2003',
+        url: `${CANONICAL_DOMAIN}/images/post/13_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Seguridad eléctrica cargadores EV protecciones diferencial',
       },
     ],
   },
@@ -39,18 +39,34 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Seguridad eléctrica: Protecciones críticas para cargadores EV',
     description: 'Diferencial tipo A, interruptor automático y más. Normativa NCh Elec. 4/2003 Chile.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/13_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/13_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Seguridad Eléctrica: Protecciones Críticas para tu Cargador EV',
   description:
     'Protecciones obligatorias para instalar un cargador EV seguro en Chile. Diferencial tipo A, interruptor automático, GFCI. Normativa NCh Elec. 4/2003.',
-  author: { '@type': 'Person', name: 'Gilberto Escalona', jobTitle: 'Gerente Técnico, Enérgica City' },
-  publisher: { '@type': 'Organization', name: 'Enérgica City', url: CANONICAL_DOMAIN },
+  author: {
+    '@type': 'Person',
+    name: 'Gilberto Escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Enérgica City',
+    url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
+  },
   datePublished: '2025-05-22',
   dateModified: '2025-05-22',
   url: `${CANONICAL_DOMAIN}/blog/seguridad-electrica-cargadores-ev-protecciones-necesarias`,

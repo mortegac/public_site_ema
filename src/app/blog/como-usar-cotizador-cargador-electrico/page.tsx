@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Guía paso a paso para usar el cotizador online de cargadores eléctricos de Enérgica City. Casa o edificio, portátil o Wallbox, electrolinera comunitaria $0. Presupuesto exacto en 2 minutos.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Cotizador online de cargadores eléctricos de Enérgica City',
+        url: `${CANONICAL_DOMAIN}/images/post/27_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cotizador online cargadores eléctricos Enérgica City',
       },
     ],
   },
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: 'Cómo Usar el Cotizador de Cargadores Eléctricos: Paso a Paso',
     description:
       'Obtén el precio exacto de tu instalación en menos de 2 minutos. Sin registro, sin llamadas. Casa o edificio en RM y Valparaíso.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/27_1170x400.png`],
   },
 }
 
@@ -51,15 +51,23 @@ const blogPostingSchema = {
   headline: 'Cómo Usar el Cotizador de Cargadores Eléctricos de Enérgica City: Paso a Paso',
   description:
     'Guía paso a paso para usar el cotizador online de cargadores eléctricos de Enérgica City. Casa o edificio, portátil o Wallbox, electrolinera comunitaria $0. Presupuesto exacto en 2 minutos.',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/27_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-11',
   dateModified: '2026-06-11',

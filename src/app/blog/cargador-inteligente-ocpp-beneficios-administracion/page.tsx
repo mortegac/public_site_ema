@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Protocolo OCPP para cargadores EV en Chile: gestión remota, carga nocturna programada y reducción de costos. Compatible con la plataforma EVE de Enérgica City.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Cargador inteligente con protocolo OCPP gestionado remotamente en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/10_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cargador inteligente OCPP gestión remota electromovilidad',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'OCPP: Cómo hacer inteligente tu cargador EV en Chile',
     description:
       'Todo sobre el protocolo OCPP para cargadores EV: gestión remota, cobro por uso y ahorro en la tarifa eléctrica nocturna.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/10_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/10_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'OCPP: El Protocolo que Hace Inteligente a tu Cargador EV',
   description:
     'Explicación completa del protocolo OCPP para cargadores de vehículos eléctricos: versiones 1.6 y 2.0.1, funcionalidades de gestión remota, carga programada y beneficios para hogares, edificios y flotas en Chile.',
@@ -55,11 +61,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-12',
   dateModified: '2025-05-12',

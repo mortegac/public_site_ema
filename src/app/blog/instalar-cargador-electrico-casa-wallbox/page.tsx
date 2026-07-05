@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Todo el proceso para instalar un Wallbox en tu hogar: qué evalúa el técnico, qué protecciones son obligatorias, cuánto cuesta y cómo obtener el certificado TE6 de la SEC.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Instalación cargador Wallbox en casa Chile guía completa',
+        url: `${CANONICAL_DOMAIN}/images/post/33_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Instalar cargador eléctrico Wallbox en casa Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Cómo instalar un Wallbox en casa en Chile',
     description:
       'Guía completa: evaluación técnica, cableado dedicado, protecciones tipo A, certificado TE6 y costo desde $159.000.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/33_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/33_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cómo Instalar un Cargador Eléctrico (Wallbox) en Casa: Guía Completa para Chile',
   description:
     'Proceso completo para instalar un cargador Wallbox en vivienda en Chile: evaluación técnica del empalme, cableado dedicado, protecciones obligatorias y certificado TE6 ante la SEC.',
@@ -60,11 +66,13 @@ const blogPostingSchema = {
   reviewer: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-19',
   dateModified: '2026-06-19',

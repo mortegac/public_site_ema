@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 export const metadata: Metadata = {
   title: 'Electromovilidad Inmobiliaria: El 1% que cambia tu proyecto',
@@ -28,10 +28,10 @@ export const metadata: Metadata = {
       'Pre-instalación EV en proyectos nuevos. Costo inferior al 1% del presupuesto eléctrico. Ley 21.505 obliga a edificios comerciales nuevos.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Infraestructura de carga EV en proyectos inmobiliarios Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/15_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Infraestructura carga EV proyectos inmobiliarios edificios EV Ready',
       },
     ],
   },
@@ -39,18 +39,34 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Electromovilidad Inmobiliaria: El 1% que cambia tu proyecto',
     description: 'Pre-instalación EV en proyectos nuevos. Ley 21.505. 5-10x más barato que el retrofit.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/15_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/15_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Electromovilidad Inmobiliaria: El 1% que Cambia tu Proyecto',
   description:
     'Cómo habilitar el 100% de estacionamientos EV en proyectos inmobiliarios nuevos. El costo no supera el 1% del presupuesto eléctrico.',
-  author: { '@type': 'Person', name: 'Gilberto Escalona', jobTitle: 'Gerente Técnico, Enérgica City' },
-  publisher: { '@type': 'Organization', name: 'Enérgica City', url: CANONICAL_DOMAIN },
+  author: {
+    '@type': 'Person',
+    name: 'Gilberto Escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Enérgica City',
+    url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
+  },
   datePublished: '2025-06-15',
   dateModified: '2025-06-15',
   url: `${CANONICAL_DOMAIN}/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos`,

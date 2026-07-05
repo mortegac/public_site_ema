@@ -37,6 +37,20 @@ export default async function BlogPage() {
     ],
   };
 
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Blog Enérgica City — Electromovilidad y Cargadores EV en Chile",
+    url: `${CANONICAL_DOMAIN}/blog`,
+    numberOfItems: BLOG_ARTICLES.length,
+    itemListElement: BLOG_ARTICLES.map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${CANONICAL_DOMAIN}/blog/${a.uid}`,
+      name: a.title,
+    })),
+  };
+
   const prismicPosts = posts.map((post) => ({
     uid: post.uid,
     title: String(post.data.meta_title ?? post.uid),
@@ -54,6 +68,10 @@ export default async function BlogPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
       <HpHeaderNew />
       <BlogClientContent prismicPosts={prismicPosts} staticArticles={BLOG_ARTICLES} />

@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Guía para miembros del Club Tesla Chile que viven en edificios: Wall Connector en departamento, electrolinera comunitaria $0 o instalación privada certificada SEC. Cotiza en minutos.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Tesla Wall Connector instalado en estacionamiento de edificio en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/30_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Club Tesla Chile cargador Wall Connector edificio',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Club Tesla Chile: Cargador en Edificio — Opciones y Precios 2026',
     description:
       'Guía para miembros del Club Tesla Chile que viven en edificios: Wall Connector en departamento, electrolinera comunitaria $0 o instalación privada certificada SEC.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/30_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/30_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Club Tesla Chile: Instala tu Cargador en Edificio con Técnicos SEC Certificados',
   description:
     'Guía para miembros del Club Tesla Chile que viven en edificios: Wall Connector en departamento, electrolinera comunitaria $0 o instalación privada certificada SEC. Cotiza en minutos.',
@@ -59,11 +65,13 @@ const blogPostingSchema = {
   reviewedBy: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-11',
   dateModified: '2026-06-11',

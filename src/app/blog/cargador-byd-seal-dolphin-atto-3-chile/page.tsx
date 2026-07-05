@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal (75,7 kWh), Dolphin (44,9 kWh) y Atto 3 (60,5 kWh). Precio desde $159.000. Cotiza en minutos.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Cargador Wallbox Tipo 2 instalado para BYD en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/26_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cargador Wallbox para BYD Seal Dolphin Atto 3 en Chile',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile',
     description:
       'Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal, Dolphin y Atto 3. Desde $159.000.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/26_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/26_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Instala en Casa o Edificio',
   description:
     'Guía completa para instalar un cargador Wallbox Tipo 2 para BYD en Chile: compatibilidad por modelo, tiempos de carga, opciones para edificios y precios actualizados.',
@@ -55,11 +61,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-11',
   dateModified: '2026-06-11',

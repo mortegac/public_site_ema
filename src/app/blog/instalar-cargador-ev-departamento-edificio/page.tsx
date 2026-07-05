@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       '¿Tienes auto eléctrico y vives en departamento? Estas son las 3 opciones reales para instalar o acceder a un cargador en tu edificio en Chile: electrolinera $0, kit técnico $29.000 o instalación privada.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Cargador EV instalado en edificio de departamentos en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/29_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cargador EV departamento edificio opciones Chile',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Cargador EV en tu Departamento: 3 Opciones para Edificios en Chile 2026',
     description:
       '¿Tienes auto eléctrico y vives en departamento? Estas son las 3 opciones reales para instalar o acceder a un cargador en tu edificio en Chile.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/29_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/29_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cargador EV en tu Departamento: 3 Opciones Reales para Edificios en Chile',
   description:
     '¿Tienes auto eléctrico y vives en departamento? Estas son las 3 opciones reales para instalar o acceder a un cargador en tu edificio en Chile: electrolinera $0, kit técnico $29.000 o instalación privada.',
@@ -59,11 +65,13 @@ const blogPostingSchema = {
   reviewer: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-11',
   dateModified: '2026-06-11',

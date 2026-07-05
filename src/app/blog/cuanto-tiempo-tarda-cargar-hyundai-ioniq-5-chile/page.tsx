@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 export const metadata: Metadata = {
   title: 'Hyundai Ioniq 5 y 6: Tiempos de carga y cargadores ideales',
@@ -28,10 +28,10 @@ export const metadata: Metadata = {
       'Cuánto tarda cargar el Hyundai Ioniq 5 e Ioniq 6 en Chile. Tecnología 800V, cargadores AC y DC. Instalación desde $159.000.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Tiempos de carga Hyundai Ioniq 5 e Ioniq 6 en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/14_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Hyundai Ioniq 5 6 tiempos carga cargadores Chile',
       },
     ],
   },
@@ -39,18 +39,34 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Hyundai Ioniq 5 y 6: Tiempos de carga en Chile',
     description: 'Tecnología 800V, cargadores AC 11kW y DC 350kW. Costo de carga en casa vs gasolina.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/14_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/14_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Hyundai Ioniq 5 y 6: Tiempos de Carga y Cargadores Ideales',
   description:
     'Cuánto tarda cargar el Hyundai Ioniq 5 e Ioniq 6 en Chile. Tecnología 800V, cargadores AC y DC. Instalación certificada desde $159.000.',
-  author: { '@type': 'Person', name: 'Gilberto Escalona', jobTitle: 'Gerente Técnico, Enérgica City' },
-  publisher: { '@type': 'Organization', name: 'Enérgica City', url: CANONICAL_DOMAIN },
+  author: {
+    '@type': 'Person',
+    name: 'Gilberto Escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Enérgica City',
+    url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
+  },
   datePublished: '2025-06-01',
   dateModified: '2025-06-01',
   url: `${CANONICAL_DOMAIN}/blog/cuanto-tiempo-tarda-cargar-hyundai-ioniq-5-chile`,

@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Todo sobre el certificado TE6 de la SEC para cargadores eléctricos en Chile: quién puede tramitarlo, plazos y consecuencias de no tenerlo.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Formulario TE6 SEC certificación instalación eléctrica cargador EV Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/08_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Trámite TE6 SEC cargador eléctrico plazos requisitos Chile',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Trámite TE6 SEC: Plazos y requisitos para cargadores EV',
     description:
       'El TE6 es obligatorio para instalar cargadores eléctricos en Chile. Conoce los plazos, requisitos y quién puede tramitarlo.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/08_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/08_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Trámite TE6 ante la SEC: Plazos y Requisitos para tu Cargador',
   description:
     'Guía completa sobre la declaración TE6 ante la SEC para instalaciones de cargadores de vehículos eléctricos en Chile: requisitos, plazos, costos y consecuencias legales.',
@@ -55,11 +61,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-05',
   dateModified: '2025-05-05',

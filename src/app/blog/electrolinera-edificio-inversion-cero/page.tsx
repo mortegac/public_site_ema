@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Inversión $0 para la comunidad. Pagas solo $330/kWh consumido. Sin obra en tu estacionamiento privado.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Electrolinera comunitaria instalada en estacionamiento de edificio residencial en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/28_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Electrolinera cero inversión edificio cargador eléctrico',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Electrolinera para Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
     description:
       'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Sin inversión para la comunidad.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/28_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/28_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Electrolinera para tu Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
   description:
     'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Inversión $0 para la comunidad. Pagas solo $330/kWh consumido. Sin obra en tu estacionamiento privado.',
@@ -55,11 +61,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-11',
   dateModified: '2026-06-11',

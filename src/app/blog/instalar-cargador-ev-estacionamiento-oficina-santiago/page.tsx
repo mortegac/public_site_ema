@@ -29,10 +29,10 @@ export const metadata: Metadata = {
       'Instala cargadores EV en el estacionamiento de tu empresa. ROI en 6-18 meses, beneficios tributarios y gestión OCPP para cobro por empleado.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Cargadores eléctricos en estacionamiento corporativo Santiago Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/09_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Puntos carga EV estacionamiento oficina empresa Santiago',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     title: 'Puntos de carga EV en oficinas corporativas — Santiago',
     description:
       'Guía completa para instalar cargadores EV en edificios de oficinas en Santiago: costos, beneficios tributarios y ROI.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/09_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/09_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Puntos de Carga en Oficinas: Guía para Empresas en Santiago',
   description:
     'Guía completa para empresas en Santiago que quieren instalar puntos de carga para vehículos eléctricos en sus estacionamientos. Incluye análisis de ROI, beneficios tributarios y gestión OCPP.',
@@ -55,11 +61,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-08',
   dateModified: '2025-05-08',

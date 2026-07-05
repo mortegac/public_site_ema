@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'presupuesto-instalacion-cargador-electrico-desglose'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Desglose completo de costos de instalación de cargador EV en Chile. Lo que incluye, lo que puede encarecer el precio y cómo evitar sorpresas.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Presupuesto instalación cargador eléctrico Chile desglose de costos',
+        url: `${CANONICAL_DOMAIN}/images/post/04_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Presupuesto instalación cargador eléctrico desglose Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Presupuesto para instalar cargador eléctrico: ¿Qué pagas realmente?',
     description:
       'Desglose transparente de costos. Instalación cargador EV desde $159.000 en casas con TE6 incluido.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/04_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/04_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Presupuesto para Instalar un Cargador Eléctrico: ¿Qué Pagas Realmente?',
   description:
     'Desglose detallado y transparente del presupuesto para instalar un cargador EV en Chile: materiales, mano de obra, protecciones y certificado TE6.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-01',
   dateModified: '2025-05-01',

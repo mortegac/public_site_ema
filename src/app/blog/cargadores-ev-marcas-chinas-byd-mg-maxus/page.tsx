@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'cargadores-ev-marcas-chinas-byd-mg-maxus'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Guía completa de carga para BYD Atto 3, BYD Dolphin, MG4 y Maxus Euniq 6. Estándares CCS2, Type 2 y GBT. Instalación SEC desde $159.000.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Cargadores para autos eléctricos chinos BYD, MG y Maxus en Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/17_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Cargadores EV BYD MG Maxus marcas chinas CCS2 GBT Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Cargadores para autos chinos: BYD, MG y Maxus en Chile',
     description:
       'BYD, MG y Maxus dominan el mercado EV chileno. Guía completa de instalación de Wallbox compatible desde $159.000.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/17_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/17_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Cargadores para Autos Chinos: BYD, MG y Maxus en Chile',
   description:
     'Guía técnica de instalación de cargadores domiciliarios para BYD Atto 3, BYD Dolphin, MG4 y Maxus Euniq 6 en Chile. Estándares CCS2, Type 2 y GBT, normativa SEC y costos.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-05',
   dateModified: '2025-05-05',

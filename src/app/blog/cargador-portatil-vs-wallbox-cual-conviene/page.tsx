@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'cargador-portatil-vs-wallbox-cual-conviene'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Análisis técnico completo: cargador portátil vs Wallbox para EV en Chile. Diferencias en potencia, seguridad, costo y vida útil de la batería.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Comparación cargador portátil versus Wallbox para autos eléctricos Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/06_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Comparación cargador portátil versus Wallbox auto eléctrico',
       },
     ],
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: 'Cargador Portátil vs. Wallbox: ¿Cuál es mejor para tu casa?',
     description:
       'Cargador portátil o Wallbox fijo: análisis técnico para EV en Chile. Qué conviene para el uso diario.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/06_1170x400.png`],
   },
 }
 
@@ -52,15 +52,23 @@ const blogPostingSchema = {
   headline: 'Cargador Portátil vs. Wallbox: ¿Cuál es Mejor para tu Casa?',
   description:
     'Comparativa técnica detallada entre cargadores portátiles y Wallbox fijos para vehículos eléctricos en Chile. Potencia, seguridad, costos y recomendaciones.',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/06_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-01',
   dateModified: '2025-05-01',

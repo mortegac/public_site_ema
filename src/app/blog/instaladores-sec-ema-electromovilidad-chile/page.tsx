@@ -27,10 +27,10 @@ export const metadata: Metadata = {
       'Enérgica City escala EMA, su red de instaladores certificados SEC. Proyectos validados, gestión operativa y foco residencial. Postula como partner.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Instaladores SEC certificados red EMA Enérgica City electromovilidad Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/13_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Instaladores SEC certificados red EMA Enérgica City',
       },
     ],
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: 'Instaladores SEC: Únete a la Red EMA',
     description:
       'Proyectos ya validados, gestión operativa con EVE y foco en el segmento residencial. Postula como partner de la red EMA de Enérgica City.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/13_1170x400.png`],
   },
 }
 
@@ -49,15 +49,23 @@ const blogPostingSchema = {
   headline: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile',
   description:
     'El verdadero freno de la electromovilidad en Chile es la fricción de instalación: procesos lentos, caros y sin trazabilidad. EMA resuelve esto conectando instaladores certificados SEC con proyectos ya validados.',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/13_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso Vergara',
     jobTitle: 'Founder, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-07-03',
   dateModified: '2026-07-03',
@@ -162,17 +170,36 @@ export default function ArticlePage() {
             </Box>
             <Typography
               component="h1"
-              sx={{ fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 800, lineHeight: 1.15, mb: 3, maxWidth: 820 }}
+              sx={{ fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 800, lineHeight: 1.15, mb: 2, maxWidth: 820 }}
             >
-              El problema de la electromovilidad en Chile no es la falta de autos, es la falta de manos certificadas
+              Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile
             </Typography>
             <Typography
-              sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, color: 'rgba(255,255,255,0.75)', maxWidth: 640, lineHeight: 1.7 }}
+              sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, color: 'rgba(255,255,255,0.75)', maxWidth: 640, lineHeight: 1.7, mb: 4 }}
             >
+              El problema de la electromovilidad no es la falta de autos, es la falta de manos certificadas.
               Por Felipe Donoso Vergara, Founder en Enérgica City — cómo EMA (Electricians Marketplace)
-              está escalando la red de instaladores certificados SEC para resolver la "fricción de instalación"
-              que frena la electromovilidad residencial en Chile.
+              escala la red de instaladores SEC para resolver la fricción de instalación residencial.
             </Typography>
+            <Link href="#postula" style={{ textDecoration: 'none' }}>
+              <Box
+                component="span"
+                sx={{
+                  display: 'inline-block',
+                  bgcolor: PINK,
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 2,
+                  transition: 'background 0.2s',
+                  '&:hover': { bgcolor: '#c01556' },
+                }}
+              >
+                Postula como partner →
+              </Box>
+            </Link>
           </Container>
         </Box>
 
@@ -375,7 +402,7 @@ export default function ArticlePage() {
         </Box>
 
         {/* Registration form */}
-        <Box sx={{ py: { xs: 6, md: 10 }, background: '#fff' }}>
+        <Box id="postula" sx={{ py: { xs: 6, md: 10 }, background: '#fff' }}>
           <Container maxWidth="md">
             <Box sx={{ textAlign: 'center', mb: 6 }}>
               <Typography

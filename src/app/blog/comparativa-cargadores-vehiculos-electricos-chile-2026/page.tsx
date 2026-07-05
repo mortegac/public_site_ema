@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Precios actualizados, potencia, conectividad y cuándo elegir cada uno. Compara todos los cargadores EV disponibles en Chile con instalación certificada SEC.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Comparativa cargadores vehículos eléctricos Chile 2026',
+        url: `${CANONICAL_DOMAIN}/images/post/31_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Comparativa cargadores EV Chile 2026 Wallbox portátil',
       },
     ],
   },
@@ -41,13 +41,19 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Comparativa Wallbox Chile 2026: ZEERO, EFFITEC, KPN, BESTE y más',
     description: 'Precios, potencia y conectividad de los 8 mejores cargadores EV disponibles en Chile con certificación SEC.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/31_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/31_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Comparativa de Cargadores para Vehículos Eléctricos en Chile 2026: Wallbox y Portátiles',
   description:
     'Comparativa completa de los 8 cargadores EV disponibles en Chile 2026: ZEERO Minibox, EFFITEC, LIVOLTEK, KPN KBox App, KPN KBox OCPP, BESTE TS-EVC07, BESTE Smart Mini, BENY y Workersbee portátil.',
@@ -59,11 +65,13 @@ const blogPostingSchema = {
   reviewer: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-19',
   dateModified: '2026-06-19',

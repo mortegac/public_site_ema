@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
+import { CANONICAL_DOMAIN } from '@/utils/seo-config'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -14,7 +15,6 @@ const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
 const GRAY_BG = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
-const CANONICAL_DOMAIN = 'https://www.energica.city'
 
 const SLUG = 'depreciacion-acelerada-vehiculos-electricos-empresas-chile'
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Guía tributaria completa para empresas chilenas que electrifican su flota. Ley 21.505, depreciación instantánea, IVA recuperable, permiso de circulación e impuesto verde.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Beneficios tributarios para flotas eléctricas en Chile — Ley 21.505',
+        url: `${CANONICAL_DOMAIN}/images/post/20_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Depreciación acelerada vehículos eléctricos empresas Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Beneficios tributarios: depreciación acelerada para flotas EV',
     description:
       'Ley 21.505: 100% de depreciación de infraestructura EV en año 1. Caso real: $68,9M de ahorro tributario para flota de 10 BYD Atto 3.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/20_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/20_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Beneficios Tributarios: Depreciación Acelerada para Flotas EV en Chile',
   description:
     'Análisis completo de los beneficios tributarios para empresas chilenas que electrifican sus flotas: Ley 21.505, depreciación acelerada, IVA recuperable, permiso de circulación e impuesto verde. Caso de cálculo con 10 vehículos BYD Atto 3.',
@@ -56,11 +62,13 @@ const blogPostingSchema = {
     '@type': 'Person',
     name: 'Felipe Donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2025-05-05',
   dateModified: '2025-05-05',

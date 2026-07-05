@@ -30,10 +30,10 @@ export const metadata: Metadata = {
       'Todo sobre carga domiciliaria EV en Chile: Wallbox vs enchufe, certificado TE6, RIC N°15, gestión dinámica de carga y costos de instalación.',
     images: [
       {
-        url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Guía carga auto eléctrico casa normativa SEC Chile',
+        url: `${CANONICAL_DOMAIN}/images/post/32_1170x400.png`,
+        width: 1170,
+        height: 400,
+        alt: 'Guía carga auto eléctrico en casa normativa SEC TE6 Chile',
       },
     ],
   },
@@ -42,13 +42,19 @@ export const metadata: Metadata = {
     title: 'Cargar tu Auto Eléctrico en Casa: Normativa SEC y TE6',
     description:
       'Wallbox vs enchufe, certificado TE6, RIC N°15 y gestión de carga. La guía definitiva para Chile.',
-    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
+    images: [`${CANONICAL_DOMAIN}/images/post/32_1170x400.png`],
   },
 }
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  image: {
+    '@type': 'ImageObject',
+    url: `${CANONICAL_DOMAIN}/images/post/32_1170x400.png`,
+    width: 1170,
+    height: 400,
+  },
   headline: 'Guía para Cargar tu Auto Eléctrico en Casa en Chile: Normativa SEC, TE6 y RIC N°15',
   description:
     'Guía completa sobre carga domiciliaria de vehículos eléctricos en Chile: opciones de carga, normativa SEC RIC N°15, certificado TE6, gestión dinámica de carga y situaciones habitacionales.',
@@ -60,11 +66,13 @@ const blogPostingSchema = {
   reviewer: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
     url: CANONICAL_DOMAIN,
+    logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   datePublished: '2026-06-19',
   dateModified: '2026-06-19',

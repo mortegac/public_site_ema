@@ -70,6 +70,8 @@ const blogPostingSchema = {
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
+  inLanguage: 'es-CL',
+  articleSection: 'Instalaciones',
   datePublished: '2025-05-01',
   dateModified: '2025-05-01',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,

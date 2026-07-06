@@ -59,9 +59,6 @@ const components: any = (theme: Theme) => {
         ".MuiCardHeader-action": {
           alignSelf: "center !important",
         },
-        ".emoji-picker-react .emoji-scroll-wrapper": {
-          overflowX: "hidden",
-        },
         ".scrollbar-container": {
           borderRight: "0 !important",
         },
@@ -88,10 +85,6 @@ const components: any = (theme: Theme) => {
             backgroundPosition: " 0% 50%",
           },
         },
-        ".rounded-bars .apexcharts-bar-series.apexcharts-plot-series .apexcharts-series path":
-          {
-            clipPath: "inset(0 0 5% 0 round 20px)",
-          },
       },
     },
     MuiButtonGroup: {

@@ -67,6 +67,8 @@ const blogPostingSchema = {
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
+  inLanguage: 'es-CL',
+  articleSection: 'Normativa',
   datePublished: '2025-05-22',
   dateModified: '2025-05-22',
   url: `${CANONICAL_DOMAIN}/blog/seguridad-electrica-cargadores-ev-protecciones-necesarias`,

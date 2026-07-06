@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '@/prismicio'
 import { BLOG_ARTICLES } from '@/data/blog-articles'
 
-const STATIC_LAST_MODIFIED = new Date('2026-07-02')
+const STATIC_LAST_MODIFIED = new Date('2026-07-06')
 
 const STATIC_ROUTES = [
   '/cotizador',

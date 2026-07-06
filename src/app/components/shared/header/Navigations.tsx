@@ -20,7 +20,7 @@ export const NavLinks = [
   },
   {
     title: "Servicios",
-    href: "https://www.energica.city/instalacion_cargadores",
+    href: "https://www.energica.city/instalacion-cargadores",
   },
   {
     title: "¿Dudas?",

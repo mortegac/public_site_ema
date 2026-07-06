@@ -67,6 +67,8 @@ const blogPostingSchema = {
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
+  inLanguage: 'es-CL',
+  articleSection: 'Vehículos',
   datePublished: '2025-06-01',
   dateModified: '2025-06-01',
   url: `${CANONICAL_DOMAIN}/blog/cuanto-tiempo-tarda-cargar-hyundai-ioniq-5-chile`,

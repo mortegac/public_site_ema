@@ -69,6 +69,8 @@ const blogPostingSchema = {
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
+  inLanguage: 'es-CL',
+  articleSection: 'Beneficios',
   datePublished: '2025-05-15',
   dateModified: '2025-05-15',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,

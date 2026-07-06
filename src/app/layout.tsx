@@ -91,7 +91,7 @@ export default function RootLayout({
                 "availableLanguage": "Spanish"
               },
               "sameAs": [
-                "https://www.linkedin.com/company/energica-city",
+                "https://www.linkedin.com/company/energicacity",
                 "https://www.instagram.com/energicacity/"
               ]
             })

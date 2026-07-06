@@ -67,6 +67,8 @@ const blogPostingSchema = {
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
+  inLanguage: 'es-CL',
+  articleSection: 'Empresas',
   datePublished: '2025-06-15',
   dateModified: '2025-06-15',
   url: `${CANONICAL_DOMAIN}/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos`,

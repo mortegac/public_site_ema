@@ -92,8 +92,7 @@ export default async function CityPage({ params }: Props) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
-      { "@type": "ListItem", "position": 2, "name": "Servicios", "item": "https://www.energica.city/servicios" },
-      { "@type": "ListItem", "position": 3, "name": cityData.name, "item": `https://www.energica.city/servicios/${city}` }
+      { "@type": "ListItem", "position": 2, "name": cityData.name, "item": `https://www.energica.city/servicios/${city}` }
     ]
   }
 

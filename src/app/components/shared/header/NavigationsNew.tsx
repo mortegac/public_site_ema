@@ -16,11 +16,11 @@ export const NavLinks = [
   // },
   {
     title: "Electrificación de flotas",
-    href: "/asesoria_electrificacion_flotas",
+    href: "/asesoria-electrificacion-flotas",
   },
   {
     title: "Instalación de cargadores",
-    href: "/instalacion_cargadores",
+    href: "/instalacion-cargadores",
   },
   {
     title: "Electrolineras en edificios",

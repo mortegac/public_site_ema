@@ -2,16 +2,12 @@
 
 // components/BookingCalendar.tsx
 import React, { useState, useEffect, useId, useMemo } from 'react';
-import { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
-import 'dayjs/locale/es'; // Importa el idioma español
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import updateLocale from 'dayjs/plugin/updateLocale';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Link from "next/link";
-
+import { format, parseISO, startOfWeek, endOfWeek, addDays, addWeeks, subWeeks, isSameDay, isBefore, startOfDay, isSameWeek } from 'date-fns';
+import { formatChileTime, toChileLocalDate, utcDateStr } from '@/utils/chile-tz';
+import es from 'date-fns/locale/es';
 
 type props = {
     date: string;
@@ -20,41 +16,8 @@ type props = {
 
 import { Box, Grid, Typography, Button, Paper, IconButton } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDateFns as AdapterDateFnsV2 } from '@mui/x-date-pickers/AdapterDateFnsV2';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-
-// Configura dayjs con los plugins necesarios
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(updateLocale);
-dayjs.locale('es'); // Establece el idioma español
-dayjs.tz.setDefault('America/Santiago'); // Establece la zona horaria de Santiago
-
-// Configura la semana para que comience en lunes y personaliza el idioma español
-dayjs.updateLocale('es', {
-  weekStart: 1,
-  months: [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ],
-  monthsShort: [
-    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
-  ],
-  weekdays: [
-    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
-  ],
-  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-  weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-  longDateFormat: {
-    LT: 'HH:mm',
-    LTS: 'HH:mm:ss',
-    L: 'DD/MM/YYYY',
-    LL: 'D [de] MMMM [de] YYYY',
-    LLL: 'D [de] MMMM [de] YYYY HH:mm',
-    LLLL: 'dddd, D [de] MMMM [de] YYYY HH:mm'
-  }
-});
 
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
 
@@ -101,9 +64,9 @@ interface InstallerWithCalendar {
 
 
 export const toChileTime = (props: props) => {
-    const { date, format = "HH:mm" } = props;
+    const { date, format: fmt = 'HH:mm' } = props;
     const dateUTC = new Date(date);
-    return dayjs(dateUTC).tz('America/Santiago').format(format);
+    return formatChileTime(dateUTC, fmt);
 };
 
 
@@ -111,8 +74,10 @@ const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || 'DEV';
     
       
 export default function BookingCalendar() {
-  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().tz('America/Santiago').startOf('week'));
-  const [weekDays, setWeekDays] = useState<Dayjs[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date>(() =>
+    startOfWeek(toChileLocalDate(new Date()), { weekStartsOn: 1 })
+  );
+  const [weekDays, setWeekDays] = useState<Date[]>([]);
   const [weekAvailableTimes, setWeekAvailableTimes] = useState<{ [key: string]: TimeSlot[] }>({});
   const [initialLoad, setInitialLoad] = useState(true);
   const [selectedInstaller, setSelectedInstaller] = useState<string>("");
@@ -131,11 +96,11 @@ export default function BookingCalendar() {
 
   // Memoizamos las fechas de inicio y fin de semana
   const weekDates = useMemo(() => {
-    const startOfWeek = selectedDate.startOf('week');
-    const endOfWeek = selectedDate.endOf('week');
+    const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(selectedDate, { weekStartsOn: 1 });
     return {
-      startDate: startOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]'),
-      endDate: endOfWeek.utc().format('YYYY-MM-DD[T]00:00:00.000[Z]')
+      startDate: `${utcDateStr(weekStart)}T00:00:00.000Z`,
+      endDate: `${utcDateStr(weekEnd)}T00:00:00.000Z`
     };
   }, [selectedDate]);
 
@@ -173,11 +138,11 @@ export default function BookingCalendar() {
         handleInstaller(firstInstaller.userId);
         trackEvent('seleccion_instalador', 'firstInstaller.userId', firstInstaller.userId);
         // Luego cambiar la fecha
-        const installerDate = dayjs(firstInstaller.startDate);
-        const weekStart = installerDate.startOf('week');
-        
+        const installerDate = parseISO(firstInstaller.startDate);
+        const weekStart = startOfWeek(installerDate, { weekStartsOn: 1 });
+
         // Solo cambiar la fecha si es diferente a la actual
-        if (!selectedDate.isSame(weekStart, 'week')) {
+        if (!isSameWeek(selectedDate, weekStart, { weekStartsOn: 1 })) {
           handleDateChange(installerDate);
         }
       }
@@ -187,20 +152,20 @@ export default function BookingCalendar() {
   // Efecto para actualizar la vista semanal
   useEffect(() => {
     // Calcular los 7 días de la semana a partir de selectedDate
-    const startOfWeek = selectedDate.startOf('week');
-    const daysInWeek: Dayjs[] = [];
+    const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
+    const daysInWeek: Date[] = [];
     for (let i = 0; i < 5; i++) {
-      daysInWeek.push(startOfWeek.add(i, 'day'));
+      daysInWeek.push(addDays(weekStart, i));
     }
     setWeekDays(daysInWeek);
 
     // Obtener las horas disponibles para cada día de la semana
     const newWeekAvailableTimes: { [key: string]: TimeSlot[] } = {};
-    
+
     daysInWeek.forEach(day => {
-      const formattedDate = day.format('YYYY-MM-DD');
+      const formattedDate = format(day, 'yyyy-MM-dd');
       const visitsForDay = (calendarVisits as unknown as CalendarVisitsResponse)?.data?.filter((visit: CalendarVisit) => {
-        const visitDate = dayjs(visit.startDate).format('YYYY-MM-DD');
+        const visitDate = format(parseISO(visit.startDate), 'yyyy-MM-dd');
         return visitDate === formattedDate;
       }) || [];
 
@@ -222,16 +187,16 @@ export default function BookingCalendar() {
     await dispatch(setInstaller(installerId));
   };
 
-  const handleDateChange = (date: Dayjs | null) => {
+  const handleDateChange = (date: Date | null) => {
     if (date) {
-      trackEvent('seleccion_fecha', 'AGENDA_EMA', date.format('YYYY-MM-DD'));
-      const newDate = date.tz('America/Santiago').locale('es').startOf('week');
+      trackEvent('seleccion_fecha', 'AGENDA_EMA', format(date, 'yyyy-MM-dd'));
+      const newDate = startOfWeek(toChileLocalDate(date), { weekStartsOn: 1 });
       setSelectedDate(newDate);
     }
   };
 
-  const handleTimeSlotClick = async (date: Dayjs, timeSlot: TimeSlot) => {
-    trackEvent('seleccion_fecha_hora', 'AGENDA_EMA', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
+  const handleTimeSlotClick = async (date: Date, timeSlot: TimeSlot) => {
+    trackEvent('seleccion_fecha_hora', 'AGENDA_EMA', `${format(date, 'yyyy-MM-dd')}_${timeSlot.time}`);
     
     if (timeSlot.available) {
       Promise.all([
@@ -241,7 +206,7 @@ export default function BookingCalendar() {
         dispatch(setStep(1))
       ])
     } else {
-      trackEvent('no_disponible_fecha_hora_seleccionada', 'AGENDA_EMA', `${date.format('YYYY-MM-DD')}_${timeSlot.time}`);
+      trackEvent('no_disponible_fecha_hora_seleccionada', 'AGENDA_EMA', `${format(date, 'yyyy-MM-dd')}_${timeSlot.time}`);
       alert(`La hora ${timeSlot.time} no está disponible.`);
     }
   };
@@ -250,24 +215,24 @@ export default function BookingCalendar() {
     // Funciones para cambiar de mes
   const handlePrevMonth = () => {
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'previous_month');
-      setSelectedDate(prev => prev.subtract(1, 'week'));
+      setSelectedDate(prev => subWeeks(prev, 1));
     };
     const handleNextMonth = () => {
       trackEvent('cambio_semana_calendario', 'AGENDA_EMA', 'next_month');
-      setSelectedDate(prev => prev.add(1, 'week'));
+      setSelectedDate(prev => addWeeks(prev, 1));
     };
     
   // Calcula el primer y último día de la semana seleccionada
-  const startOfWeek = selectedDate.startOf('week');
-  const endOfWeek = selectedDate.endOf('week');
+  const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(selectedDate, { weekStartsOn: 1 });
 
   // Si el mes y año son iguales, muestra solo uno
-  let weekLabel = startOfWeek.format('MMMM YYYY');
-  if (
-    startOfWeek.format('MMMM YYYY') !== endOfWeek.format('MMMM YYYY')
-  ) {
+  const weekStartLabel = format(weekStart, 'MMMM yyyy', { locale: es });
+  const weekEndLabel = format(weekEnd, 'MMMM yyyy', { locale: es });
+  let weekLabel = weekStartLabel;
+  if (weekStartLabel !== weekEndLabel) {
     // Si el mes o año cambian, muestra ambos
-    weekLabel = `${startOfWeek.format('MMMM YYYY')} - ${endOfWeek.format('MMMM YYYY')}`;
+    weekLabel = `${weekStartLabel} - ${weekEndLabel}`;
   }
 
   const handleInstallerDateClick = (installer: InstallerWithCalendar) => {
@@ -275,7 +240,7 @@ export default function BookingCalendar() {
     
     trackEvent('seleccion_proxima_fecha_instalador', 'AGENDA_EMA', `${installer.userId}_${installer.startDate}`);
     
-    const day = dayjs(installer.startDate);
+    const day = parseISO(installer.startDate);
     const slot: TimeSlot = {
       time: toChileTime({ date: installer.startDate }),
       available: true,
@@ -309,14 +274,14 @@ export default function BookingCalendar() {
         {/* Calendario mensual */}
         <Box sx={{ width: { xs: '100%', md: '30%' }, height: { xs: 'auto', md: 'auto' }, display: { xs: 'none', md: 'block' } }}>
           <Paper elevation={3} sx={{ p: 2, pb:10,  height: { xs: 'auto', md: 'auto' } }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+            <LocalizationProvider dateAdapter={AdapterDateFnsV2} adapterLocale={es}>
               <DateCalendar
                 value={selectedDate}
-                onChange={handleDateChange}
+                onChange={(date) => handleDateChange(date as Date | null)}
                 views={['month', 'day']}
                 disablePast={true}
                 shouldDisableDate={(date) => {
-                  return date.isSame(dayjs(), 'day');
+                  return isSameDay(date as Date, new Date());
                 }}
                 sx={{
                   width: '100%',
@@ -447,7 +412,7 @@ export default function BookingCalendar() {
                     }}
                     onClick={() => handleInstallerDateClick(installer)}
                   >
-                    Reserve aquí <b> <br/>{dayjs(installer?.startDate).format('D [de] MMMM')} - {toChileTime({date:installer?.startDate})}</b>
+                    Reserve aquí <b> <br/>{installer?.startDate ? format(parseISO(installer.startDate), "d 'de' MMMM", { locale: es }) : ''} - {toChileTime({date:installer?.startDate})}</b>
                   </Typography>
                 </Box>
               ))}
@@ -502,9 +467,9 @@ export default function BookingCalendar() {
                 <Box sx={{position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', width: '100%', overflowX: 'auto', paddingLeft:2 }}>
               
                 {weekDays.map((day, i) => {
-                  const formattedDay = day.format('YYYY-MM-DD');
+                  const formattedDay = format(day, 'yyyy-MM-dd');
                   const timesForDay = weekAvailableTimes[formattedDay] || [];
-                  const isToday = day.isSame(dayjs(), 'day');
+                  const isToday = isSameDay(day, new Date());
 
                   return (
                     <Box 
@@ -529,10 +494,10 @@ export default function BookingCalendar() {
                           textTransform: 'capitalize',
                         }}
                       >
-                        {day.format('dddd').slice(0, 3).toUpperCase()}
+                        {format(day, 'EEEE', { locale: es }).slice(0, 3).toUpperCase()}
                         <br />
                         <Typography variant="h6" component="span">
-                          {day.format('D')}
+                          {format(day, 'd')}
                         </Typography>
                       </Typography>
                       <Box sx={{ 
@@ -561,7 +526,7 @@ export default function BookingCalendar() {
                             <Button
                               key={`${formattedDay}-${slot.time}-${index}`}
                               variant={slot.available ? 'outlined' : 'text'}
-                              disabled={!slot.available || day.isBefore(dayjs(), 'day')}
+                              disabled={!slot.available || isBefore(day, startOfDay(new Date()))}
                               onClick={() => handleTimeSlotClick(day, slot)}
                               sx={{
                                 minWidth: 'auto',

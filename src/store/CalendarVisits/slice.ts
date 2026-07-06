@@ -5,7 +5,7 @@ import { fetchCalendarVisitsByState, fetchLastScheduleInstallers, fetchLastSched
 import { getShoppingCart } from '../ShoppingCart/slice';
 import { getWebpayStart } from '../Webpay/slice';
 // import { AnyARecord } from 'node:dns';
-import dayjs from 'dayjs';
+import { parseISO, differenceInMilliseconds } from 'date-fns';
 
 interface CalendarVisitsSliceState {
   currentStep: number,
@@ -69,11 +69,11 @@ export const getLastScheduleInstallers = createAsyncThunk(
         if (Array.isArray(scheduleData) && scheduleData.length > 0) {
           
           
-          const now = dayjs();
+          const now = new Date();
           const closestDate = scheduleData.reduce((closest: any, current: any) => {
-            const currentDate = dayjs(current.startDate);
-            const closestDate = dayjs(closest.startDate);
-            return currentDate.diff(now) < closestDate.diff(now) ? current : closest;
+            const currentDate = parseISO(current.startDate);
+            const closestDateObj = parseISO(closest.startDate);
+            return differenceInMilliseconds(currentDate, now) < differenceInMilliseconds(closestDateObj, now) ? current : closest;
           }, scheduleData[0]);
 
           return {
@@ -111,12 +111,12 @@ export const getScheduleInstaller = createAsyncThunk(
     try {
       const response = await fetchLastScheduleOneInstaller(userId);
       
-      const now = dayjs();
+      const now = new Date();
       const closestDate = response.reduce((closest: any, current: any) => {
-        const currentDate = dayjs(current.startDate);
-        const closestDate = dayjs(closest.startDate);
-        
-        return currentDate.diff(now) < closestDate.diff(now) ? current : closest;
+        const currentDate = parseISO(current.startDate);
+        const closestDateObj = parseISO(closest.startDate);
+
+        return differenceInMilliseconds(currentDate, now) < differenceInMilliseconds(closestDateObj, now) ? current : closest;
       }, response[0]);
       
       // console.log(">>> getScheduleInstaller - closest date >>", closestDate);

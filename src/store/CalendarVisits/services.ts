@@ -2,8 +2,8 @@ import { generateClient, SelectionSet } from "aws-amplify/api";
 import * as MAIN from "../../../amplify/data/main.schema";
 import { calendarVisitInput } from './type';
 import { GraphQLResult } from '@aws-amplify/api';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import { addDays } from 'date-fns';
+import { utcDateStr } from '@/utils/chile-tz';
 
 import { Amplify } from "aws-amplify";
 import outputs from "../../../amplify_outputs.json";
@@ -65,8 +65,9 @@ interface ScheduleOneInstallerResponse {
 export const fetchLastScheduleOneInstaller = async (userId: string) => {
   try {
     
-    const startDate = dayjs().utc().startOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
-    const endDate = dayjs().utc().add(60, 'days').endOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
+    const now = new Date();
+    const startDate = `${utcDateStr(now)}T00:00:00.000Z`;
+    const endDate = `${utcDateStr(addDays(now, 60))}T00:00:00.000Z`;
 
     
     const response = await client.graphql<ScheduleOneInstallerResponse>({
@@ -160,8 +161,9 @@ export const fetchCalendarVisitsByState = async (objFilter: calendarVisitInput) 
 
 export const fetchLastScheduleInstallers = async () => {
   try {
-    const startDate = dayjs().utc().startOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
-    const endDate = dayjs().utc().add(30, 'days').endOf('day').format('YYYY-MM-DD[T]00:00:00.000[Z]');
+    const now = new Date();
+    const startDate = `${utcDateStr(now)}T00:00:00.000Z`;
+    const endDate = `${utcDateStr(addDays(now, 30))}T00:00:00.000Z`;
 
     const response = await client.graphql<ListUsersResponse>({
       query: `

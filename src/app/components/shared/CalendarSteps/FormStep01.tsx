@@ -14,15 +14,9 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import dayjs from "dayjs";
-import "dayjs/locale/es"; // Importa el idioma español
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-
-// Configurar los plugins de dayjs
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.locale("es"); // Configurar el idioma español
+import { format, parseISO } from 'date-fns';
+import { formatChileTime } from '@/utils/chile-tz';
+import es from 'date-fns/locale/es';
 
 
 import { useFormik } from 'formik';
@@ -123,9 +117,9 @@ export const FormStep01 = (props:any) => {
   const { trackEvent } = useAnalytics();
 
   const toChileTime = (dateSchedule: any) => {
-    const { date, format = "HH:mm" } = dateSchedule;
+    const { date, format: fmt = 'HH:mm' } = dateSchedule;
     const dateUTC = new Date(date);
-    return dayjs(dateUTC).tz("America/Santiago").format(format);
+    return formatChileTime(dateUTC, fmt);
   };
   
   const formik = useFormik({
@@ -200,7 +194,7 @@ export const FormStep01 = (props:any) => {
         setTimeout(() => {
           const paymentData = {
             email: values?.email,
-            date: dayjs(selectedCalendar.startDate).format("D [de] MMMM"),
+            date: format(parseISO(selectedCalendar.startDate), "d 'de' MMMM", { locale: es }),
             hour: toChileTime({ date: selectedCalendar.startDate }),
             address:
               `${values?.address || ""}, ${customer?.city || ""}`.trim() || "",

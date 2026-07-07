@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Box, Typography, Button, Collapse } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -91,7 +92,7 @@ function EVCard({ ev, isSelected, isRecommended, index, onSelect }: EVCardProps)
     >
       {ev.img && (
         <Box sx={{ width: '100%', height: 72, mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '8px', background: '#F8FAFC' }}>
-          <img src={`/images/vehicles/ev/${ev.img}`} alt={`${ev.marca} ${ev.modelo}`} style={{ maxHeight: 72, maxWidth: '100%', objectFit: 'contain' }} />
+          <Image src={`/images/vehicles/ev/${ev.img}`} alt={`${ev.marca} ${ev.modelo}`} width={120} height={72} style={{ maxHeight: 72, maxWidth: '100%', objectFit: 'contain' }} />
         </Box>
       )}
       <Box sx={{ display: 'flex', gap: '5px', flexWrap: 'wrap', mb: 1 }}>
@@ -161,7 +162,7 @@ function GasCard({ car, combustible, kmMensuales, precioCombustibleCLP }: GasCar
     }}>
       {car.img && (
         <Box sx={{ width: '100%', height: 72, mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '8px', background: '#F8FAFC' }}>
-          <img src={`/images/vehicles/gas/${car.img}`} alt={`${marcaDisplay} ${modeloDisplay}`} style={{ maxHeight: 72, maxWidth: '100%', objectFit: 'contain' }} />
+          <Image src={`/images/vehicles/gas/${car.img}`} alt={`${marcaDisplay} ${modeloDisplay}`} width={120} height={72} style={{ maxHeight: 72, maxWidth: '100%', objectFit: 'contain' }} />
         </Box>
       )}
       <Box sx={{ display: 'flex', gap: '5px', flexWrap: 'wrap', mb: 1 }}>

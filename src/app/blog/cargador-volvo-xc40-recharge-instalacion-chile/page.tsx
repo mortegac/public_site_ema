@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2025-05-01',
-  dateModified: '2025-05-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -232,6 +235,16 @@ export default function ArticlePage() {
             >
               Cargador Volvo XC40 y C40 Recharge: Guía de Instalación en Chile
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -299,7 +312,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Especificaciones de Carga del Volvo XC40 y C40 Recharge
+              ¿Cuánta potencia de carga acepta el Volvo XC40 y C40 Recharge?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El Volvo XC40 Recharge y el C40 Recharge comparten la misma arquitectura eléctrica.
@@ -366,7 +379,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Tabla Comparativa: Modos de Carga para el Volvo XC40 Recharge
+              ¿Qué modos de carga tiene el Volvo XC40 Recharge?
             </Typography>
             <Typography
               variant="body2"
@@ -435,12 +448,12 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Proceso de Instalación en Chile: Paso a Paso
+              ¿Cómo se instala el cargador del Volvo XC40 Recharge en Chile?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Instalar un Wallbox para el Volvo XC40 Recharge en Chile requiere cumplir con la
               normativa eléctrica NCh Elec. 4/2003 y obtener el certificado TE6 emitido por un
-              instalador autorizado por la Superintendencia de Electricidad y Combustibles (SEC). Este
+              instalador autorizado por la <a href="https://www.sec.cl/" target="_blank" rel="noopener noreferrer">Superintendencia de Electricidad y Combustibles (SEC)</a>. Este
               documento es obligatorio y protege legalmente al propietario.
             </Typography>
 
@@ -496,7 +509,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Tarifa Nocturna y Carga Programada: Ahorra hasta un 40%
+              ¿Cómo ahorrar hasta un 40% con tarifa nocturna y carga programada?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Chile tiene tarifas eléctricas residenciales con banda horaria (BT1 con medidor
@@ -537,7 +550,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Instalación en Edificios y Condominios
+              ¿Cómo instalar el cargador del Volvo XC40 Recharge en un edificio?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Si el Volvo XC40 Recharge se estaciona en un edificio de departamentos, el proceso es
@@ -603,7 +616,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

@@ -61,23 +61,29 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewer: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Normativa',
   datePublished: '2026-06-19',
-  dateModified: '2026-06-19',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -289,6 +295,7 @@ export default function ArticlePage() {
             alt="Guía para cargar tu auto eléctrico en casa normativa SEC TE6 Chile"
             width={1170}
             height={400}
+            sizes="(max-width: 768px) 100vw, 1170px"
             style={{ width: '100%', height: 'auto' }}
             priority
           />
@@ -328,6 +335,16 @@ export default function ArticlePage() {
             >
               Guía Definitiva para Cargar tu Auto Eléctrico en Casa: Normativa SEC, TE6 y RIC N°15
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-19"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            19 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{ fontSize: { xs: '1rem', md: '1.15rem' }, color: 'rgba(255,255,255,0.75)', maxWidth: 640, lineHeight: 1.7, mb: 5 }}
             >
@@ -411,8 +428,9 @@ export default function ArticlePage() {
               Cargar un auto eléctrico en casa en Chile se hace de dos formas: conectándolo a un
               enchufe convencional de 230 V (Nivel 1, ~2,3 kW, muy lento) o instalando un Wallbox
               de Nivel 2 con circuito dedicado (7,4 kW en la mayoría de los hogares chilenos).
-              Toda instalación de Wallbox está regulada por el Pliego Técnico RIC N°15 de la SEC y
-              debe certificarse mediante el trámite TE6, emitido únicamente por instaladores con
+              Toda instalación de Wallbox está regulada por el Pliego Técnico RIC N°15 de{' '}
+              <a href="https://www.sec.cl/" target="_blank" rel="noopener noreferrer">la SEC</a>{' '}
+              y debe certificarse mediante el trámite TE6, emitido únicamente por instaladores con
               credencial SEC vigente. El costo de instalación parte desde $159.000 en casas y desde
               $369.000 en edificios. Puedes obtener un{' '}
               <Link href="/cotizador" style={{ color: TEAL, fontWeight: 600 }}>
@@ -422,8 +440,8 @@ export default function ArticlePage() {
             </Typography>
 
             {/* Options comparison */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}>
-              Las dos opciones de carga domiciliaria
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}>
+              ¿Enchufe o Wallbox? Las dos opciones para cargar tu auto en casa
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 6 }}>
               {chargingOptions.map((opt) => (
@@ -486,7 +504,7 @@ export default function ArticlePage() {
             </Box>
 
             {/* Housing cases */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
               ¿Puedo instalar un cargador según mi tipo de vivienda?
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 6 }}>
@@ -506,7 +524,7 @@ export default function ArticlePage() {
             </Box>
 
             {/* Factor costo */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2, mt: 2 }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2, mt: 2 }}>
               ¿Cuánto cuesta instalar un cargador en casa?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
@@ -556,8 +574,8 @@ export default function ArticlePage() {
         {/* Normativa SEC — RIC N°15 */}
         <Box sx={{ py: { xs: 6, md: 10 }, background: GRAY_BG }}>
           <Container maxWidth="md">
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}>
-              Normativa SEC: RIC N°15 y Certificado TE6
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2 }}>
+              ¿Qué exige la SEC para instalar un cargador EV en casa?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 2 }}>
               En Chile, instalar un punto de carga domiciliario no equivale a "poner un enchufe más
@@ -633,7 +651,7 @@ export default function ArticlePage() {
         {/* Topic cluster links */}
         <Box sx={{ py: { xs: 6, md: 8 }, background: '#fff' }}>
           <Container maxWidth="md">
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3 }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3 }}>
               Profundiza en el cluster temático
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -689,7 +707,7 @@ export default function ArticlePage() {
         {/* FAQ */}
         <Box sx={{ py: { xs: 6, md: 8 }, background: GRAY_BG }}>
           <Container maxWidth="md">
-            <Typography component="h2" sx={{ fontSize: { xs: '1.5rem', md: '1.9rem' }, fontWeight: 700, color: DARK, mb: 5, textAlign: 'center' }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.5rem', md: '1.9rem' }, fontWeight: 700, color: DARK, mb: 5, textAlign: 'center' }}>
               Preguntas frecuentes sobre carga domiciliaria y normativa SEC
             </Typography>
             {faqSchema.mainEntity.map((item) => (
@@ -707,7 +725,7 @@ export default function ArticlePage() {
         </Box>
 
         <BlogRelatedArticles currentUid={SLUG} />
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

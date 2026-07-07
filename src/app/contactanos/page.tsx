@@ -21,6 +21,15 @@ export const metadata: Metadata = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
+    { "@type": "ListItem", "position": 2, "name": "Contáctanos", "item": "https://www.energica.city/contactanos" }
+  ]
+}
+
 const contactSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
@@ -39,6 +48,7 @@ const HomePage = () => {
   return (
     <PageContainer title="Contáctanos | Energica City" description="Contáctanos para saber más sobre instalación de cargadores eléctricos en Chile. Escríbenos un mensaje y te responderemos lo antes posible.">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
 
       <Banner

@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Beneficios',
   datePublished: '2025-05-05',
-  dateModified: '2025-05-05',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -230,6 +233,16 @@ export default function ArticlePage() {
             >
               Chile 2035: El Fin de los Autos a Gasolina y Cómo Prepararse
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-05"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            5 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -297,10 +310,11 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              La Estrategia Nacional de Electromovilidad de Chile: El Mapa Completo
+              ¿Cuál es la Estrategia Nacional de Electromovilidad de Chile?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
-              El Ministerio de Energía de Chile publicó su Estrategia Nacional de Electromovilidad
+              El Ministerio de Energía de Chile publicó su{' '}
+              <a href="https://energia.gob.cl/vehiculos-electricos/electromovilidad" target="_blank" rel="noopener noreferrer">Estrategia Nacional de Electromovilidad</a>{' '}
               en 2017 y la actualizó en 2021 y 2023. El documento establece metas escalonadas de
               descarbonización del transporte: 100% de vehículos livianos nuevos cero emisiones
               al 2035, 100% de buses nuevos al 2040, 100% de camiones nuevos al 2045, y carbono
@@ -366,7 +380,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Hoja de Ruta: Chile Eléctrico 2024–2050
+              ¿Qué contempla la hoja de ruta Chile Eléctrico 2024–2050?
             </Typography>
             <Typography
               variant="body2"
@@ -423,7 +437,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Las Ventajas Estructurales de Chile para la Electromovilidad
+              ¿Por qué Chile tiene ventajas estructurales para la electromovilidad?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Chile no está adoptando la electromovilidad solo por presión climática global:
@@ -439,7 +453,8 @@ export default function ArticlePage() {
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El Salar de Atacama contiene las mayores reservas de litio del mundo: se estima
-              que Chile posee el 40% del litio total recuperable del planeta. El litio es el
+              que Chile posee el 40% del litio total recuperable del planeta, según{' '}
+              <a href="https://www.cochilco.cl/mercado-de-metales/litio.aspx" target="_blank" rel="noopener noreferrer">COCHILCO</a>. El litio es el
               elemento central de las baterías de iones de litio que alimentan todos los
               vehículos eléctricos modernos. SQM (Sociedad Química y Minera de Chile) y Codelco
               son los dos principales productores mundiales de litio. En 2023, el presidente
@@ -460,7 +475,8 @@ export default function ArticlePage() {
               1.200–1.500 kWh/m² típicos de Europa Central. Esto se traduce en el costo de
               generación solar más bajo del planeta: en algunas licitaciones eléctricas
               chilenas, el precio de la energía solar ha llegado a $17 USD/MWh, el registro
-              más bajo de la historia en cualquier tecnología de generación. Para los
+              más bajo de la historia en cualquier tecnología de generación, según{' '}
+              <a href="https://www.cne.cl/tarificacion/electricidad/licitaciones/" target="_blank" rel="noopener noreferrer">datos de licitaciones de la CNE</a>. Para los
               vehículos eléctricos, esta energía ultra barata significa que cargar un auto
               en Chile puede costar literalmente menos que en cualquier otro país del mundo
               en términos de costo de generación.
@@ -475,7 +491,8 @@ export default function ArticlePage() {
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 0, lineHeight: 1.8 }}>
               Más del 50% de la electricidad generada en Chile en 2024 proviene de fuentes
               renovables: hidráulica (principalmente en el sur del país), solar (norte y
-              región de Atacama) y eólica. Esta proporción sigue creciendo con nuevos
+              región de Atacama) y eólica, de acuerdo con el{' '}
+              <a href="https://www.coordinador.cl/datos-del-sistema/generacion/" target="_blank" rel="noopener noreferrer">Coordinador Eléctrico Nacional</a>. Esta proporción sigue creciendo con nuevos
               proyectos de energía solar y eólica que entran en operación cada año. Un
               vehículo eléctrico cargado en Chile tiene una huella de carbono de ciclo de
               vida entre 3 y 5 veces menor que un vehículo a gasolina equivalente, y esta
@@ -491,7 +508,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              La Minería Lidera: Codelco, BHP y Antofagasta Minerals
+              ¿Cómo lidera la minería chilena la electrificación con Codelco y BHP?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El sector minero chileno —el más intensivo en energía y emisiones del país— está
@@ -549,7 +566,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Cómo Prepararse para 2035: Guía Práctica para Hogares y Empresas
+              ¿Cómo prepararse para la electromovilidad obligatoria en Chile a 2035?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               La meta 2035 parece lejana, pero la preparación técnica y financiera debe
@@ -651,7 +668,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

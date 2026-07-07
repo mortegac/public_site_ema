@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
   datePublished: '2025-05-05',
-  dateModified: '2025-05-05',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -230,6 +233,16 @@ export default function ArticlePage() {
             >
               Beneficios Tributarios: Depreciación Acelerada para Flotas EV
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-05"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            5 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -240,7 +253,7 @@ export default function ArticlePage() {
                 mx: 'auto',
               }}
             >
-              La Ley 21.505 permite deducir el 100% de la infraestructura de carga en el año 1.
+              La{' '}<a href="https://www.bcn.cl/leychile/navegar?idNorma=1183174" target="_blank" rel="noopener noreferrer">Ley 21.505</a>{' '}permite deducir el 100% de la infraestructura de carga en el año 1.
               Más IVA recuperable, cero impuesto verde y exención del permiso de circulación.
               El ROI financiero de electrificar tu flota es extraordinario.
             </Typography>
@@ -297,7 +310,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              El Marco Tributario para la Electromovilidad Empresarial en Chile
+              ¿Qué beneficios tributarios tienen los vehículos eléctricos empresariales en Chile?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El Estado de Chile ha diseñado un conjunto de incentivos tributarios para acelerar
@@ -339,7 +352,8 @@ export default function ArticlePage() {
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 0, lineHeight: 1.8 }}>
               Los vehículos eléctricos también se benefician de la depreciación acelerada
-              general del Servicio de Impuestos Internos (SII). Para los vehículos eléctricos,
+              general del{' '}
+              <a href="https://www.sii.cl/contribuyentes/empresas_personas/depreciacion_acelerada/index.html" target="_blank" rel="noopener noreferrer">Servicio de Impuestos Internos (SII)</a>. Para los vehículos eléctricos,
               la vida útil tributaria es de 3 años (en lugar de los 7–9 años habituales para
               vehículos a combustión). Esto significa que una empresa puede deducir 1/3 del
               valor del vehículo cada año durante 3 años, en lugar de depreciarlo durante
@@ -428,7 +442,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Caso Real: Empresa que Electrifica 10 Vehículos con BYD Atto 3
+              ¿Cuánto ahorra una empresa al electrificar 10 vehículos con BYD Atto 3?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Para ilustrar el impacto financiero concreto, analicemos el caso de una empresa
@@ -498,7 +512,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              IVA, Permiso de Circulación e Impuesto Verde: Los Beneficios que Pasan Desapercibidos
+              ¿Qué beneficios de IVA, permiso y impuesto verde tienen los EV empresariales?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Además de la depreciación acelerada, hay tres beneficios adicionales que muchas
@@ -558,7 +572,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Cómo Enérgica City Apoya la Electrificación de Flotas
+              ¿Cómo apoya Enérgica City la electrificación de flotas empresariales?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Enérgica City tiene experiencia especializada en la instalación de infraestructura
@@ -636,7 +650,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

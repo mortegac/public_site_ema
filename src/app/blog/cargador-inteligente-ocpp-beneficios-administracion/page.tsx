@@ -60,19 +60,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Tecnología',
   datePublished: '2025-05-12',
-  dateModified: '2025-05-12',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -90,7 +93,7 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text:
-          'OCPP 1.6 es el estándar más ampliamente adoptado hoy. Soporta funciones básicas: inicio y parada remota de carga, autenticación con tarjetas RFID, registro de transacciones y diagnósticos. OCPP 2.0.1 (publicado en 2020) añade funcionalidades avanzadas como Device Management, soporte para V2G (Vehicle to Grid), perfiles de carga inteligente con curvas dinámicas y mayor seguridad mediante certificados TLS bidireccionales. La plataforma EVE de Enérgica City es compatible con ambas versiones, y la mayoría de los cargadores residenciales y comerciales disponibles en Chile usan OCPP 1.6.',
+          'OCPP 1.6 es el estándar más ampliamente adoptado hoy. Soporta funciones básicas: inicio y parada remota de carga, autenticación con tarjetas RFID, registro de transacciones y diagnósticos. OCPP 2.0.1 (publicado en 2020) añade funcionalidades avanzadas como Device Management, soporte para V2G (Vehicle to Grid), perfiles de carga inteligente con curvas dinámicas y mayor seguridad mediante certificados TLS bidireccionales. ¿Qué es la plataforma EVE de Enérgica City para gestión de carga? es compatible con ambas versiones, y la mayoría de los cargadores residenciales y comerciales disponibles en Chile usan OCPP 1.6.',
       },
     },
     {
@@ -219,6 +222,16 @@ export default function ArticlePage() {
             >
               OCPP: El Protocolo que Hace Inteligente a tu Cargador EV
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-12"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            12 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -273,7 +286,8 @@ export default function ArticlePage() {
               OCPP son las siglas de <strong>Open Charge Point Protocol</strong>, el protocolo de
               comunicación estandarizado que define cómo un punto de carga (cargador EV) se
               comunica con un sistema de gestión central (llamado CSMS, Charge Station Management
-              System). Fue desarrollado por la Open Charge Alliance (OCA), un consorcio internacional
+              System). Fue desarrollado por la{' '}
+              <a href="https://www.openchargealliance.org" target="_blank" rel="noopener noreferrer">Open Charge Alliance (OCA)</a>, un consorcio internacional
               de empresas del sector de electromovilidad, y su primera versión significativa (OCPP
               1.5) data de 2012. La versión más extendida hoy es OCPP 1.6, aunque OCPP 2.0.1 está
               ganando adopción rápidamente en proyectos nuevos.
@@ -352,9 +366,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Funcionalidades OCPP para distintos tipos de usuarios
+              ¿Qué funcionalidades OCPP ofrece un cargador inteligente según el tipo de usuario?
             </Typography>
 
             <Typography
@@ -423,6 +438,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               La plataforma EVE de Enérgica City
@@ -485,6 +501,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Cómo verificar si tu cargador es compatible con OCPP?
@@ -527,6 +544,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre OCPP y cargadores inteligentes
@@ -555,7 +573,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

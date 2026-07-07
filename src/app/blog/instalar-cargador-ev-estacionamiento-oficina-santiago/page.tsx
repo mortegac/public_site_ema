@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
@@ -60,19 +59,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
   datePublished: '2025-05-08',
-  dateModified: '2025-05-08',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -147,35 +149,6 @@ export default function ArticlePage() {
       <HpHeaderNew />
       <BlogBreadcrumb title="Puntos de carga en oficinas: Guía para empresas en Santiago" />
       <Box component="main">
-        {/* Featured image */}
-
-        <Box sx={{ bgcolor: '#4dbfd9', pt: { xs: 3, md: 4 }, pb: 0 }}>
-
-          <Container maxWidth="lg">
-
-            <Box sx={{ position: 'relative', height: { xs: 220, md: 400 }, borderRadius: '8px 8px 0 0', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.22)' }}>
-
-              <Image
-
-                src="/images/post/09_1170x400.png"
-
-                alt="Punto de carga EV en estacionamiento de oficina en Santiago"
-
-                fill
-
-                style={{ objectFit: 'cover' }}
-
-                sizes="(max-width: 1200px) 100vw, 1200px"
-
-                priority
-
-              />
-
-            </Box>
-
-          </Container>
-
-        </Box>
         {/* Hero */}
         <Box
           sx={{
@@ -217,6 +190,16 @@ export default function ArticlePage() {
             >
               Puntos de Carga en Oficinas: Guía para Empresas en Santiago
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-08"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            8 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -291,7 +274,7 @@ export default function ArticlePage() {
               Beneficio tributario: depreciación instantánea
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
-              La Ley 21.210 de Modernización Tributaria (2020) introdujo la depreciación instantánea
+              La{' '}<a href="https://www.bcn.cl/leychile/navegar?idNorma=1140341" target="_blank" rel="noopener noreferrer">Ley 21.210 de Modernización Tributaria</a>{' '}(2020) introdujo la depreciación instantánea
               para bienes del activo fijo nuevos, permitiendo que el 100 % del costo de adquisición
               e instalación se descuente como gasto en el ejercicio tributario correspondiente. Los
               cargadores de vehículos eléctricos y la infraestructura de alimentación eléctrica
@@ -315,9 +298,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Caso de estudio: 20 puertos en edificio de oficinas en Las Condes
+              ¿Cómo instalar 20 puntos de carga EV en un edificio de oficinas?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               En 2024, Enérgica City completó la instalación de 20 puntos de carga de 7,4 kW con
@@ -403,9 +387,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Requisitos para instalar en edificios corporativos
+              ¿Qué se requiere para instalar cargadores EV en un edificio corporativo?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               A diferencia de las instalaciones residenciales, los proyectos en edificios
@@ -462,9 +447,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Cálculo de ROI para proyectos corporativos
+              ¿Cuál es el ROI de instalar cargadores EV en un edificio corporativo?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               El retorno sobre la inversión (ROI) de un proyecto de cargadores corporativos
@@ -496,6 +482,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes — Cargadores EV para empresas
@@ -524,7 +511,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

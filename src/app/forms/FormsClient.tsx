@@ -1,5 +1,6 @@
 "use client";
 import {useEffect} from "react"
+import dynamic from 'next/dynamic'
 import {
   Box,
   Stack,
@@ -11,10 +12,9 @@ import {
 
 
 import PageContainer from '@/app/components/container/PageContainer';
-import Banner from '@/app/components/shared/banner/Banner';
 import HeaderENV from '@/app/components/shared/header/HeaderENV';
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
-import CalendarSteps from '@/app/components/shared/CalendarSteps';
+const CalendarSteps = dynamic(() => import('@/app/components/shared/CalendarSteps'), { ssr: false });
 import Steps from '@/app/components/AgendaWizard/Steps';
 import C2a from '@/app/components/shared/c2a';
 import Footer from '@/app/components/shared/footer';

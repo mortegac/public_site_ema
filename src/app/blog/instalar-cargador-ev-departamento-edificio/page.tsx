@@ -60,23 +60,29 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewer: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Edificios',
   datePublished: '2026-06-11',
-  dateModified: '2026-06-11',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -260,6 +266,16 @@ export default function ArticlePage() {
             >
               Cargador EV en tu Departamento: 3 Opciones Reales para Edificios en Chile
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-11"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            11 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -333,9 +349,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 4,
                 mt: 2,
+                lineHeight: '3rem',
               }}
             >
-              Las 3 opciones para cargar tu EV en un edificio
+              ¿Qué opciones hay para cargar un auto eléctrico en un edificio?
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 6 }}>
               {optionCards.map((card) => (
@@ -401,13 +418,14 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 2,
+                lineHeight: '3rem',
               }}
             >
               ¿Cómo conseguir la aprobación de tu edificio?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
-              La clave está en entender que existen dos niveles de aprobación según la Ley de
-              Copropiedad 21.442. El primer nivel corresponde a los espacios de uso común —como el
+              La clave está en entender que existen dos niveles de aprobación según la{' '}
+              <a href="https://www.bcn.cl/leychile/navegar?idNorma=1170459" target="_blank" rel="noopener noreferrer">Ley de Copropiedad 21.442</a>. El primer nivel corresponde a los espacios de uso común —como el
               estacionamiento de visitas—: aquí basta el permiso del administrador del edificio, sin
               necesidad de convocar una asamblea extraordinaria. Es el camino que habilita la
               electrolinera comunitaria de Enérgica. El segundo nivel aplica cuando la instalación
@@ -460,9 +478,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 3,
                 mt: 2,
+                lineHeight: '3rem',
               }}
             >
-              Comparativa: cuál opción elegir según tu situación
+              ¿Qué opción de carga EV elegir según tu situación en el edificio?
             </Typography>
             <Box
               sx={{
@@ -523,6 +542,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre cargadores EV en edificios de departamentos
@@ -551,7 +571,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

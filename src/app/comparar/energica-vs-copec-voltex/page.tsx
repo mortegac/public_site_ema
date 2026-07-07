@@ -172,14 +172,30 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://www.energica.city' },
-    { '@type': 'ListItem', position: 2, name: 'Comparar', item: 'https://www.energica.city/comparar' },
     {
       '@type': 'ListItem',
-      position: 3,
+      position: 2,
       name: 'Energica City vs Copec Voltex',
       item: 'https://www.energica.city/comparar/energica-vs-copec-voltex',
     },
   ],
+}
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Energica City vs Copec Voltex: ¿Cuál instala mejor cargadores EV en Chile?',
+  url: 'https://www.energica.city/comparar/energica-vs-copec-voltex',
+  datePublished: '2026-04-01',
+  dateModified: '2026-07-06',
+  inLanguage: 'es-CL',
+  author: { '@type': 'Organization', name: 'Energica City', url: 'https://www.energica.city' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Energica City',
+    url: 'https://www.energica.city',
+    logo: { '@type': 'ImageObject', url: 'https://www.energica.city/images/logos/logo.png', width: 259, height: 42 },
+  },
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -193,6 +209,7 @@ export default async function EnergicaVsCopecVoltexPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <HpHeaderNew />
 
       <Box component="main">

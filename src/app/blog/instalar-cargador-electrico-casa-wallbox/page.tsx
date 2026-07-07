@@ -61,24 +61,30 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewer: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   keywords: 'instalar cargador eléctrico casa Chile, Wallbox instalación domiciliaria, circuito dedicado cargador EV, certificado TE6 SEC, cargador Nivel 2 Chile, precio instalación Wallbox, técnico SEC cargador',
   datePublished: '2026-06-19',
-  dateModified: '2026-06-19',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -216,6 +222,7 @@ export default function ArticlePage() {
             alt="Cómo instalar un cargador eléctrico Wallbox en casa guía completa Chile"
             width={1170}
             height={400}
+            sizes="(max-width: 768px) 100vw, 1170px"
             style={{ width: '100%', height: 'auto' }}
             priority
           />
@@ -261,6 +268,16 @@ export default function ArticlePage() {
             >
               Cómo Instalar un Cargador Eléctrico (Wallbox) en Casa: Guía Completa
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-19"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            19 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -312,7 +329,7 @@ export default function ArticlePage() {
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 4 }}>
               Instalar un cargador Wallbox en casa requiere una visita técnica previa para evaluar la
-              capacidad eléctrica del empalme y un instalador con credencial SEC vigente. El proyecto
+              capacidad eléctrica del empalme y un instalador con <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">credencial SEC vigente</a>. El proyecto
               incluye adecuar el tablero eléctrico con protecciones dedicadas —interruptor diferencial
               tipo A y termomagnético—, tender un cableado exclusivo de cobre calibrado al amperaje
               del cargador y configurar el equipo. Al finalizar, el técnico emite el certificado TE6
@@ -330,9 +347,9 @@ export default function ArticlePage() {
             {/* Process steps */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}
             >
-              El proceso completo: 5 pasos clave
+              ¿Cuáles son los pasos para instalar un Wallbox en casa?
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 6 }}>
               {processSteps.map((step) => (
@@ -378,9 +395,9 @@ export default function ArticlePage() {
             {/* Level comparison table */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
             >
-              Cargador Nivel 1 vs Nivel 2 (Wallbox)
+              ¿Qué diferencia hay entre un cargador Nivel 1 y un Wallbox Nivel 2?
             </Typography>
             <Box sx={{ overflowX: 'auto', mb: 6 }}>
               <Box
@@ -429,9 +446,9 @@ export default function ArticlePage() {
             {/* Providers section */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2, mt: 2 }}
             >
-              Gestores y proveedores de instalación en Chile
+              ¿Quiénes son los instaladores de Wallbox certificados SEC en Chile?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               En Chile existen varios proveedores que ofrecen instalación llave en mano para
@@ -508,7 +525,7 @@ export default function ArticlePage() {
             {/* Topic cluster internal links */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
             >
               Profundiza en el cluster temático
             </Typography>
@@ -573,6 +590,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre instalación de Wallbox en casa
@@ -601,7 +619,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>
@@ -647,7 +665,7 @@ export default function ArticlePage() {
                   Cotizar ahora (2 min)
                 </Box>
               </Link>
-              <Link href="/agenda" style={{ textDecoration: 'none' }}>
+              <Link href="/forms" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
                     px: 4,

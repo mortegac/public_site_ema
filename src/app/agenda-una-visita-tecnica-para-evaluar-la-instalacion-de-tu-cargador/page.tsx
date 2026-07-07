@@ -16,7 +16,7 @@ const TEXT_MUTED = '#64748B'
 const PAGE_URL = `${CANONICAL_DOMAIN}/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador`
 
 export const metadata: Metadata = {
-  title: 'Agenda una Visita Técnica para Evaluar la Instalación de tu Cargador — Enérgica City',
+  title: 'Agenda una Visita Técnica para Evaluar la Instalación de tu Cargador',
   description:
     'Agenda una visita técnica con un instalador certificado SEC para evaluar la instalación de tu cargador eléctrico. Partner oficial de Abastibletec. Presupuesto definitivo en 48 horas.',
   alternates: { canonical: PAGE_URL },
@@ -234,7 +234,7 @@ export default function AgendaVisitaTecnicaPage() {
               </Box>
               <Box
                 component={Link}
-                href="/agenda"
+                href="/forms"
                 sx={{
                   display: 'inline-block',
                   bgcolor: 'rgba(0,0,0,0.12)',

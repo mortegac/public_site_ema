@@ -57,20 +57,31 @@ const blogPostingSchema = {
     'Qué hacer si tu cargador eléctrico deja de funcionar. Diagnóstico de fallas comunes, mantenimiento preventivo y servicio técnico especializado en Chile.',
   author: {
     '@type': 'Person',
+    name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
+    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
+  },
+  contributor: {
+    '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
     jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2025-07-01',
-  dateModified: '2025-07-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/mantenimiento-correctivo-cargadores-fallas-comunes`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -316,6 +327,16 @@ export default function ArticlePage() {
             >
               Fallas Comunes en Cargadores EV: Guía de Mantenimiento
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-07-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de julio, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.15rem' },
@@ -375,7 +396,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Las 5 fallas más comunes en cargadores EV y cómo diagnosticarlas
+              ¿Cuáles son las fallas más comunes en cargadores EV y cómo diagnosticarlas?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 4 }}>
               Basándonos en las llamadas de soporte técnico recibidas por Enérgica City entre 2023 y 2025, estas son
@@ -415,7 +436,7 @@ export default function ArticlePage() {
                       bgcolor: fault.color + '20',
                       px: 1.5,
                       py: 0.25,
-                      borderRadius: 1,
+                      borderRadius: 0,
                       whiteSpace: 'nowrap',
                     }}
                   >
@@ -431,7 +452,7 @@ export default function ArticlePage() {
                       color: fault.color,
                       px: 1.5,
                       py: 0.25,
-                      borderRadius: 1,
+                      borderRadius: 0,
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       whiteSpace: 'nowrap',
@@ -513,7 +534,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Mantención preventiva: qué incluye una revisión anual
+              ¿Qué incluye la mantención preventiva anual de un cargador EV?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 4 }}>
               La mantención preventiva es la forma más efectiva de evitar fallas inesperadas y de prolongar la vida
@@ -603,7 +624,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Cuándo definitivamente debes llamar a un técnico
+              ¿Cuándo debes llamar a un técnico para tu cargador EV?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 4 }}>
               Algunos problemas son sencillos de diagnosticar y resolver sin experiencia técnica. Otros involucran
@@ -662,7 +683,7 @@ export default function ArticlePage() {
                       color: alert.color,
                       px: 1.5,
                       py: 0.25,
-                      borderRadius: 1,
+                      borderRadius: 0,
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       whiteSpace: 'nowrap',
@@ -706,7 +727,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="mantenimiento-correctivo-cargadores-fallas-comunes" />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

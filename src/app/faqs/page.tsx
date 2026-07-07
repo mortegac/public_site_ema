@@ -54,9 +54,21 @@ const faqs = [
   },
 ];
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.energica.city" },
+    { "@type": "ListItem", "position": 2, "name": "Preguntas Frecuentes", "item": "https://www.energica.city/faqs" }
+  ]
+}
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "name": "Preguntas Frecuentes sobre Cargadores EV",
+  "description": "Resuelve tus dudas sobre instalación de cargadores eléctricos para empresas y edificios en Chile.",
+  "url": "https://www.energica.city/faqs",
   "mainEntity": faqs.map((faq) => ({
     "@type": "Question",
     "name": faq.question,
@@ -73,6 +85,10 @@ const FaqsPage = () => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
 

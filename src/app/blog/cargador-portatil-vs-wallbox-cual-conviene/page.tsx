@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2025-05-01',
-  dateModified: '2025-05-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -250,6 +253,16 @@ export default function ArticlePage() {
             >
               Cargador Portátil vs. Wallbox: ¿Cuál es Mejor para tu Casa?
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -317,7 +330,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              El Cargador Portátil: Conveniente Pero Limitado
+              ¿Por qué el cargador portátil no es suficiente para uso diario?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               La mayoría de los autos eléctricos vendidos en Chile incluyen un cargador portátil
@@ -373,7 +386,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Comparación Completa: Cargador Portátil vs. Wallbox
+              ¿Cuál es la diferencia técnica entre un cargador portátil y un Wallbox?
             </Typography>
             <Box sx={{ overflowX: 'auto' }}>
               <Box
@@ -430,7 +443,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              El Wallbox: Por Qué es la Solución Correcta para Uso Diario
+              ¿Por qué el Wallbox es la mejor opción para cargar tu auto eléctrico en casa?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Un Wallbox es un cargador de pared de modo 3 (IEC 61851-1) instalado en el
@@ -480,7 +493,8 @@ export default function ArticlePage() {
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 0, lineHeight: 1.8 }}>
               El costo total de un Wallbox instalado en una casa chilena es de aproximadamente
-              $280.000–$380.000 CLP (equipo + instalación básica con TE6). Considerando el ahorro
+              $280.000–$380.000 CLP (equipo + instalación básica con{' '}
+              <a href="https://www.sec.cl/tramites/declaracion-instalacion-electrica-te6/" target="_blank" rel="noopener noreferrer">TE6</a>). Considerando el ahorro
               por tarifa nocturna versus carga diurna (estimado en $12.000–$25.000 CLP al mes según
               el vehículo y frecuencia de carga), y eliminando el riesgo de daño al tomacorriente
               que podría costar $80.000–$150.000 en reparación eléctrica, el Wallbox se recupera
@@ -534,7 +548,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Análisis Costo-Beneficio: Portátil vs. Wallbox en 3 Años
+              ¿Cuánto ahorra un Wallbox vs el cargador portátil en 3 años?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Para un conductor que recorre 1.200 km mensuales y carga su EV de 60 kWh
@@ -637,7 +651,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

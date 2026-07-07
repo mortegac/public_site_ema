@@ -1,17 +1,14 @@
-'use client'
-
 import {
   Box, Container, Typography, Grid, Button, Chip,
-  Accordion, AccordionSummary, AccordionDetails,
 } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import PageContainer from '@/app/components/container/PageContainer'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import BoltIcon from '@mui/icons-material/Bolt'
 import HomeIcon from '@mui/icons-material/Home'
 import ApartmentIcon from '@mui/icons-material/Apartment'
 import Link from 'next/link'
+import PresupuestoFAQ from './PresupuestoFAQ'
 
 const CANONICAL_DOMAIN = 'https://www.energica.city'
 
@@ -66,26 +63,34 @@ const schemas = [
     mainEntity: [
       {
         '@type': 'Question',
-        name: '¿El precio del cotizador online de cargadores eléctricos es definitivo?',
+        name: '¿El precio del cotizador es definitivo o puede cambiar?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Para instalaciones en casa, el precio mostrado en el cotizador es el precio definitivo para distancias estándar. El valor incluye materiales (ductos, breaker dedicado, cable calibre 6 AWG), mano de obra de instaladores certificados por la SEC y el trámite de declaración TE6 obligatorio en Chile. Para edificios, el precio se confirma tras una visita técnica ($9.990, descontable del total), porque la distancia real de cableado entre el tablero y el estacionamiento varía según la distribución del edificio. El cotizador siempre muestra el desglose completo con IVA incluido.',
+          text: 'Para instalaciones en casa, el precio del cotizador es el precio final para distancias estándar. Incluye materiales (ductos, breaker dedicado, cable calibre 6 AWG), mano de obra de instaladores certificados SEC y el trámite de declaración TE6 obligatorio en Chile — todo con IVA. El cotizador incorpora un factor de distancia al tablero: si el recorrido supera los 10 metros, el precio se ajusta automáticamente con un multiplicador entre 1,18× y 1,55×. Para edificios, el precio definitivo se entrega tras la visita técnica ($9.990, descontable), ya que la distancia de cableado varía según el diseño del edificio.',
         },
       },
       {
         '@type': 'Question',
-        name: '¿Puedo ver el presupuesto sin pagar en ese momento?',
+        name: '¿Puedo ver el presupuesto sin compromiso de pago?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Sí. El cotizador de Enérgica City muestra el precio exacto sin necesidad de pagar ni registrarte. Solo cuando decides confirmar la instalación se realiza el pago en línea mediante Webpay (acepta Visa, Mastercard, Redcompra y débito). Para edificios, la opción de visita técnica con kit de documentos ($9.990) es el único paso que requiere pago inicial; ese monto se descuenta del presupuesto definitivo. La electrolinera comunitaria para edificios no requiere ningún pago de inversión.',
+          text: 'Sí. El cotizador de Enérgica City muestra el precio exacto sin registro ni pago previo. Solo pagas cuando decides confirmar tu instalación, vía Webpay (Visa, Mastercard, Redcompra, débito). Para casas, el pago confirma la instalación directamente. Para edificios, la electrolinera comunitaria es completamente sin inversión. La visita técnica con kit de documentos ($9.990) sí requiere pago inicial, pero ese monto se descuenta del presupuesto definitivo.',
         },
       },
       {
         '@type': 'Question',
-        name: '¿El presupuesto de instalación cubre mi zona en Chile?',
+        name: '¿El cotizador cubre mi dirección en Chile?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'El servicio de instalación de Enérgica City cubre la Región Metropolitana completa (39 comunas, incluyendo Santiago, Las Condes, Providencia, Maipú, Pudahuel, La Florida y todas las demás) y la Región de Valparaíso. El cotizador valida la dirección automáticamente: si ingresas una dirección fuera de estas regiones, el sistema te lo indica al instante. Si tu propiedad está en otra región de Chile, puedes contactar a Enérgica directamente para evaluar disponibilidad.',
+          text: 'El servicio de Enérgica City cubre la Región Metropolitana completa (39 comunas: Santiago, Las Condes, Providencia, Maipú, Pudahuel, La Florida, Ñuñoa, Vitacura, Lo Barnechea, Peñalolén, Macul, San Miguel, La Reina, Las Condes y más) y la Región de Valparaíso. El cotizador valida tu dirección automáticamente al ingresarla. Si tu propiedad está fuera de estas regiones, el sistema lo indica de inmediato y puedes contactar a Enérgica para evaluar disponibilidad.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Qué autos eléctricos son compatibles con la instalación?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Todas las instalaciones de Enérgica City son compatibles con los autos eléctricos que usan el conector Tipo 2 (IEC 62196), estándar vigente en Chile. Esto incluye BYD Seal, Dolphin y Atto 3; Tesla Model 3 y Model Y (con adaptador homologado MTT); Hyundai Ioniq 5 e Ioniq 6; Kia EV6; Volvo XC40 Recharge; Renault Kwid E-Tech; MG ZS EV; y Maxus EUNIQ 5 y 6. La declaración TE6 emitida es válida independiente del vehículo.',
         },
       },
     ],
@@ -186,7 +191,7 @@ const INCLUDED = [
 const FAQS = [
   {
     q: '¿El precio del cotizador es definitivo o puede cambiar?',
-    a: 'Para instalaciones en casa, el precio del cotizador es el precio final para distancias estándar. Incluye materiales (ductos, breaker dedicado, cable calibre 6 AWG), mano de obra de instaladores certificados SEC y el trámite de declaración TE6 obligatorio en Chile — todo con IVA. El cotizador incorpora un factor de distancia al tablero: si el recorrido supera los 10 metros, el precio se ajusta automáticamente con un multiplicador entre 1,18× y 1,55×. Para edificios, el precio definitivo se entrega tras la visita técnica ($29.000, descontable), ya que la distancia de cableado varía según el diseño del edificio.',
+    a: 'Para instalaciones en casa, el precio del cotizador es el precio final para distancias estándar. Incluye materiales (ductos, breaker dedicado, cable calibre 6 AWG), mano de obra de instaladores certificados SEC y el trámite de declaración TE6 obligatorio en Chile — todo con IVA. El cotizador incorpora un factor de distancia al tablero: si el recorrido supera los 10 metros, el precio se ajusta automáticamente con un multiplicador entre 1,18× y 1,55×. Para edificios, el precio definitivo se entrega tras la visita técnica ($9.990, descontable), ya que la distancia de cableado varía según el diseño del edificio.',
   },
   {
     q: '¿Puedo ver el presupuesto sin compromiso de pago?',
@@ -208,10 +213,9 @@ export default function PresupuestoCargadorPage() {
   return (
     <>
       {/* Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
-      />
+      {schemas.map((schema, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      ))}
 
       <PageContainer
         title="Presupuesto Instalación Cargador Eléctrico Online Chile | Enérgica City"
@@ -773,27 +777,7 @@ export default function PresupuestoCargadorPage() {
             >
               Preguntas frecuentes sobre el presupuesto
             </Typography>
-            {FAQS.map((faq, i) => (
-              <Accordion
-                key={i}
-                disableGutters
-                elevation={0}
-                sx={{
-                  mb: 2,
-                  border: '1px solid #E2E8F0',
-                  borderRadius: '12px !important',
-                  '&:before': { display: 'none' },
-                  bgcolor: '#fff',
-                }}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#0898b9' }} />} sx={{ px: 3, py: 1 }}>
-                  <Typography sx={{ fontWeight: 600, color: '#2A3547', fontSize: '0.95rem' }}>{faq.q}</Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ px: 3, pt: 0, pb: 2.5 }}>
-                  <Typography sx={{ color: '#64748B', lineHeight: 1.75, fontSize: '0.9rem' }}>{faq.a}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
+            <PresupuestoFAQ faqs={FAQS} />
             <Typography sx={{ textAlign: 'center', mt: 4, color: '#64748B', fontSize: '0.875rem' }}>
               ¿Necesitas más información?{' '}
               <Box component={Link} href="/contactanos" sx={{ color: '#0898b9', textDecoration: 'underline' }}>

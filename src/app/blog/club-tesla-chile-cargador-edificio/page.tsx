@@ -60,23 +60,29 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewedBy: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
   datePublished: '2026-06-11',
-  dateModified: '2026-06-11',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -189,6 +195,16 @@ export default function ArticlePage() {
             >
               Club Tesla Chile: Instala tu Cargador en Edificio con Técnicos SEC Certificados
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-11"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            11 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -262,9 +278,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Tesla Wall Connector en edificio: requisitos técnicos
+              ¿Qué requiere instalar un Tesla Wall Connector en un edificio?
             </Typography>
 
             <Typography
@@ -311,9 +328,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 4,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Las 3 opciones de Enérgica para propietarios de Tesla en edificios
+              ¿Qué opciones tiene un propietario de Tesla para cargar en su edificio?
             </Typography>
 
             {/* Option cards */}
@@ -424,9 +442,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Tiempos de carga Tesla con Wallbox 7 kW en edificio
+              ¿Cuánto tarda cargar un Tesla con Wallbox de 7 kW en un edificio?
             </Typography>
 
             <Box
@@ -499,6 +518,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Por qué el Club Tesla Chile recomienda instalación certificada?
@@ -510,7 +530,7 @@ export default function ArticlePage() {
               sin certificación puede anular la cobertura del seguro de hogar para incidentes
               eléctricos; (2) garantía del cargador y la batería: el servicio de garantía de Tesla
               exige una instalación eléctrica correcta y documentada. Las instalaciones de Enérgica
-              City incluyen certificación SEC completa (TE6) y cumplen con la NCh Elec. 4/2003.
+              City incluyen{' '}<a href="https://www.sec.cl/sitioweb/tramites/" target="_blank" rel="noopener noreferrer">certificación SEC completa (TE6)</a>{' '}y cumplen con la NCh Elec. 4/2003.
               Numerosos miembros del Club Tesla Chile en Santiago han utilizado Enérgica para
               instalaciones en condominios de Providencia, Las Condes y Vitacura.
             </Typography>
@@ -528,6 +548,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes — Club Tesla Chile en edificios
@@ -556,7 +577,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

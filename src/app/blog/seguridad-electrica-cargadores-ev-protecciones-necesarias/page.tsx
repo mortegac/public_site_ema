@@ -57,20 +57,31 @@ const blogPostingSchema = {
     'Protecciones obligatorias para instalar un cargador EV seguro en Chile. Diferencial tipo A, interruptor automático, GFCI. Normativa NCh Elec. 4/2003.',
   author: {
     '@type': 'Person',
+    name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
+    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
+  },
+  contributor: {
+    '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
     jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Normativa',
   datePublished: '2025-05-22',
-  dateModified: '2025-05-22',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/seguridad-electrica-cargadores-ev-protecciones-necesarias`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -269,6 +280,16 @@ export default function ArticlePage() {
             >
               Seguridad Eléctrica: Protecciones Críticas para tu Cargador EV
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-22"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            22 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.15rem' },
@@ -328,7 +349,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Por qué la carga EV exige protecciones diferentes a los enchufes comunes
+              ¿Por qué los cargadores EV necesitan protecciones diferentes a los enchufes comunes?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               Cargar un auto eléctrico con un Wallbox de 7 kW implica mantener una corriente de 32 amperios de forma
@@ -357,7 +378,7 @@ export default function ArticlePage() {
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               La norma chilena NCh Elec. 4/2003 (Instalaciones de Consumidores en Baja Tensión) es el marco técnico
-              exigido por la Superintendencia de Electricidad y Combustibles (SEC) para todo trabajo eléctrico
+              exigido por la{' '}<a href="https://www.sec.cl/" target="_blank" rel="noopener noreferrer">Superintendencia de Electricidad y Combustibles (SEC)</a>{' '}para todo trabajo eléctrico
               residencial y comercial en el país. Si tu instalación no cumple esta norma, el instalador eléctrico
               autorizado no puede firmar el formulario TE6, que es el documento requerido para la aprobación legal
               de la instalación ante la SEC.
@@ -375,7 +396,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 2, color: DARK }}>
-              Las 6 protecciones que debe tener toda instalación EV en Chile
+              ¿Cuáles son las 6 protecciones obligatorias en una instalación EV en Chile?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 5 }}>
               Las primeras cuatro son críticas: sin ellas, la instalación no puede ser aprobada por la SEC. Las dos
@@ -414,7 +435,7 @@ export default function ArticlePage() {
                         color: '#DC2626',
                         px: 1.5,
                         py: 0.25,
-                        borderRadius: 1,
+                        borderRadius: 0,
                         fontSize: '0.75rem',
                         fontWeight: 700,
                         whiteSpace: 'nowrap',
@@ -439,7 +460,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Modos de carga: por qué el Modo 1 es peligroso y el Modo 3 es el estándar
+              ¿Por qué el Modo 1 es peligroso y el Modo 3 es el estándar para cargadores EV?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               La norma IEC 61851 define cuatro modos de carga AC. En Chile, los más comunes en entornos domésticos
@@ -542,7 +563,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Checklist de seguridad: qué verificar antes de firmar la recepción
+              ¿Qué debes verificar antes de aceptar la instalación de tu cargador EV?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 4 }}>
               Si contratas la instalación con cualquier empresa, verifica estos puntos antes de aceptar el trabajo
@@ -616,7 +637,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="seguridad-electrica-cargadores-ev-protecciones-necesarias" />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

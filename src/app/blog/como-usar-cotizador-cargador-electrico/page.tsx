@@ -60,19 +60,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Guías',
   datePublished: '2026-06-11',
-  dateModified: '2026-06-11',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -180,8 +183,8 @@ const COTIZADOR_STEPS = [
     body: 'En la primera pantalla del cotizador verás dos opciones: Casa o Edificio. Si vives en casa unifamiliar o en una propiedad individual, selecciona Casa. Si vives en un departamento dentro de un edificio con estacionamiento, selecciona Edificio. Esta elección activa flujos distintos: para casas el precio parte desde $159.000; para edificios aparecerán tres opciones de instalación, incluyendo la electrolinera comunitaria sin costo.',
   },
   {
-    title: 'Selecciona tu cargador eléctrico',
-    body: 'El cotizador muestra el catálogo actual de cargadores con stock en tiempo real. Puedes elegir entre cargadores portátiles (2,2–7 kW), ideales si necesitas flexibilidad, o Wallbox fijos (7–7,3 kW), la opción más segura y rápida para uso diario. También puedes indicar que ya tienes tu cargador. Debajo del catálogo encontrarás un slider para ajustar la distancia estimada entre tu tablero eléctrico y el punto de instalación: este factor afecta el precio entre un 0,85× (descuento a menos de 5 metros) y un 1,55× (más de 40 metros).',
+    title: 'Selecciona tu cargador eléctrico (optativo)',
+    body: 'El cotizador muestra el catálogo actual de cargadores con stock en tiempo real. Puedes elegir entre cargadores portátiles (2,2–7 kW), ideales si necesitas flexibilidad, o Wallbox fijos (7–7,3 kW), la opción más segura y rápida para uso diario. También puedes indicar que ya tienes tu cargador y continuar solo con la instalación. Debajo del catálogo encontrarás un slider para ajustar la distancia estimada entre tu tablero eléctrico y el punto de instalación: este factor afecta el precio entre un 0,85× (descuento a menos de 5 metros) y un 1,55× (más de 40 metros).',
   },
   {
     title: 'Revisa tu cotización detallada',
@@ -193,11 +196,15 @@ const COTIZADOR_STEPS = [
   },
   {
     title: 'Ingresa tu dirección y datos de contacto',
-    body: 'El paso final solicita tu dirección completa. El cotizador valida que la dirección esté dentro de la cobertura del servicio: Región Metropolitana (39 comunas) y Región de Valparaíso. Si ingresas una dirección fuera del área, el sistema lo indica de inmediato. Luego completas nombre, correo electrónico y teléfono para recibir el presupuesto formal por email.',
+    body: 'El paso siguiente solicita tu dirección completa. El cotizador valida que la dirección esté dentro de la cobertura del servicio: Región Metropolitana (39 comunas) y Región de Valparaíso. Si ingresas una dirección fuera del área, el sistema lo indica de inmediato. Luego completas nombre, correo electrónico y teléfono para recibir el presupuesto formal por email.',
   },
   {
     title: 'Paga en línea y recibe confirmación',
-    body: 'Seleccionas el método de pago (Webpay acepta Visa, Mastercard, Redcompra y tarjeta de débito) y pagas en línea de forma segura a través de Transbank. Inmediatamente después recibes un correo de confirmación con el detalle completo de tu instalación y el link para coordinar la visita técnica con un profesional certificado SEC.',
+    body: 'Seleccionas el método de pago (Webpay acepta Visa, Mastercard, Redcompra y tarjeta de débito) y pagas en línea de forma segura a través de Transbank. Inmediatamente después recibes un correo de confirmación con el detalle completo de tu instalación y el link para agendar la visita técnica con un profesional certificado SEC.',
+  },
+  {
+    title: 'Agenda tu Visita técnica para confirmar distancia y tipo de canalización',
+    body: 'Con el pago confirmado, agendas la visita técnica directamente desde el enlace que recibes por email. Durante la visita, un instalador certificado SEC evalúa in situ la distancia exacta entre el tablero eléctrico y el punto de carga, y el tipo de canalización necesaria (ducto superficial, empotrado o bajo piso). Si la distancia o las condiciones del lugar difieren de lo estimado en el cotizador, el técnico ajusta el presupuesto antes de iniciar el trabajo.',
   },
 ]
 
@@ -264,6 +271,16 @@ export default function ArticlePage() {
             >
               Cómo Usar el Cotizador de Cargadores Eléctricos de Enérgica City: Paso a Paso
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-11"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            11 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -338,7 +355,7 @@ export default function ArticlePage() {
               departamento en Chile, sin necesidad de registro ni llamada telefónica. El proceso toma
               menos de 2 minutos y cubre todos los costos reales: materiales (ductos, breaker, cable
               calibre 6 AWG), mano de obra de instaladores certificados SEC, trámite de declaración
-              TE6 ante la Superintendencia de Electricidad y Combustibles, y el precio del cargador
+              TE6 ante la <a href="https://www.sec.cl/" target="_blank" rel="noopener noreferrer">Superintendencia de Electricidad y Combustibles</a>, y el precio del cargador
               seleccionado. El cotizador diferencia entre instalaciones en casas (desde $159.000) y
               edificios (tres opciones desde $0 con la electrolinera comunitaria hasta $369.000 con
               instalación dedicada en subterráneos). También incluye un factor de distancia dinámica
@@ -355,7 +372,7 @@ export default function ArticlePage() {
               component="h2"
               sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', color: DARK, mb: 2 }}
             >
-              Cómo usar el cotizador: 6 pasos para obtener tu precio exacto
+              ¿Cómo usar el cotizador de cargadores para obtener tu precio exacto?
             </Typography>
             <Typography sx={{ color: TEXT_MUTED, lineHeight: 1.8 }}>
               El cotizador de Enérgica City guía al usuario a través de un flujo simple en pantallas
@@ -407,6 +424,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre el cotizador de cargadores eléctricos

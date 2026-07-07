@@ -37,7 +37,7 @@ export default function BlogClientContent({
 }) {
   const [activeCategory, setActiveCategory] = useState('Todos')
 
-  const FEATURED_UID = 'como-usar-cotizador-cargador-electrico'
+  const FEATURED_UID = 'electrolinera-edificio-inversion-cero'
   const featuredArticle = staticArticles.find((a) => a.uid === FEATURED_UID) ?? staticArticles[0]
   const restStatic: PostCard[] = staticArticles.filter((a) => a.uid !== featuredArticle.uid)
 

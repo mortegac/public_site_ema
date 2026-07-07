@@ -18,9 +18,10 @@ const certifications = [
 export default function CredencialesPage() {
   const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "ElectricalContractor"],
+    "@type": "ElectricalContractor",
     "name": "Energica City",
     "url": "https://www.energica.city",
+    "image": "https://www.energica.city/images/logos/logo.png",
     "description": "Instalación certificada SEC de cargadores eléctricos para empresas y edificios en Chile.",
     "address": {
       "@type": "PostalAddress",
@@ -31,9 +32,9 @@ export default function CredencialesPage() {
     "areaServed": { "@type": "Country", "name": "Chile" },
     "telephone": "+56967666652",
     "openingHours": "Mo-Fr 09:00-18:00",
-    "hasCredential": [
-      { "@type": "EducationalOccupationalCredential", "name": "Certificación TE1 SEC Chile" },
-      { "@type": "EducationalOccupationalCredential", "name": "Certificación TE6 SEC Chile" }
+    "award": [
+      "Certificación TE1 — Superintendencia de Electricidad y Combustibles (SEC) Chile",
+      "Certificación TE6 — Superintendencia de Electricidad y Combustibles (SEC) Chile"
     ]
   }
 

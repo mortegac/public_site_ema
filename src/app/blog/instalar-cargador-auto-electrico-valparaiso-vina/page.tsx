@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2025-05-01',
-  dateModified: '2025-05-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -224,6 +227,16 @@ export default function ArticlePage() {
             >
               Instalación de Cargadores EV en Valparaíso y Viña del Mar
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -291,7 +304,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Por Qué la V Región Lidera la Adopción EV Fuera de Santiago
+              ¿Por qué la Región de Valparaíso lidera la adopción de autos eléctricos fuera de Santiago?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Valparaíso y Viña del Mar concentran el segundo mayor mercado de vehículos eléctricos
@@ -334,7 +347,7 @@ export default function ArticlePage() {
               La normativa que regula las instalaciones eléctricas domiciliarias en Chile es nacional:
               la NCh Elec. 4/2003 aplica en Arica tanto como en Punta Arenas. El certificado TE6 se
               emite ante la distribuidora eléctrica local, que en la V Región es principalmente CGE
-              (Compañía General de Electricidad). Los instaladores deben tener credencial SEC vigente
+              (Compañía General de Electricidad). Los instaladores deben tener <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">credencial SEC vigente</a>
               para la región donde trabajan. Enérgica City cuenta con técnicos habilitados para
               trabajar en la V Región y conoce los procedimientos específicos de CGE.
             </Typography>
@@ -354,7 +367,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Instalación por Zona en el Gran Valparaíso
+              ¿Cómo varía la instalación de cargadores por zona en el Gran Valparaíso?
             </Typography>
             <Box sx={{ overflowX: 'auto' }}>
               <Box
@@ -412,7 +425,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Desafíos Técnicos Específicos del Ambiente Costero
+              ¿Qué desafíos técnicos presenta el ambiente costero para los cargadores EV?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Instalar un cargador EV en Viña del Mar, Valparaíso o Concón exige considerar
@@ -480,7 +493,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Proyectos Comerciales en la V Región: Hoteles, Oficinas y Flotas
+              ¿Qué proyectos de carga EV hay en Valparaíso para hoteles, oficinas y flotas?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El turismo en Valparaíso y Viña del Mar es un motor creciente para la instalación de
@@ -557,7 +570,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

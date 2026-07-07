@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Container, Box, Typography, Grid } from '@mui/material'
+import { Container, Box, Typography, Grid, Button } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
-import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
+import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import ClientsCarousel from './ClientsCarousel'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -57,20 +57,23 @@ const blogPostingSchema = {
     'Cómo habilitar el 100% de estacionamientos EV en proyectos inmobiliarios nuevos. El costo no supera el 1% del presupuesto eléctrico.',
   author: {
     '@type': 'Person',
-    name: 'Gilberto Escalona',
-    jobTitle: 'Gerente Técnico, Enérgica City',
+    name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
+    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
   datePublished: '2025-06-15',
-  dateModified: '2025-06-15',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -131,80 +134,16 @@ export default function ArticlePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
-      <BlogBreadcrumb title="Electromovilidad Inmobiliaria: El 1% que cambia tu proyecto" />
-
+      <BlogBreadcrumb title="Electromovilidad Inmobiliaria: El 1% que Cambia tu Proyecto" />
       <Box component="main">
-        {/* Featured image */}
-
-        <Box sx={{ bgcolor: '#4dbfd9', pt: { xs: 3, md: 4 }, pb: 0 }}>
-
-          <Container maxWidth="lg">
-
-            <Box sx={{ position: 'relative', height: { xs: 220, md: 400 }, borderRadius: '8px 8px 0 0', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.22)' }}>
-
-              <Image
-
-                src="/images/post/15_1170x400.png"
-
-                alt="Infraestructura de carga EV en proyectos inmobiliarios nuevos"
-
-                fill
-
-                style={{ objectFit: 'cover' }}
-
-                sizes="(max-width: 1200px) 100vw, 1200px"
-
-                priority
-
-              />
-
-            </Box>
-
-          </Container>
-
-        </Box>
         {/* ── Hero ── */}
         <Box
           sx={{
             background: 'linear-gradient(358deg, #0898b9 0%, #4dbfd9 100%)',
             py: { xs: 8, md: 12 },
-            textAlign: 'center',
           }}
         >
           <Container maxWidth="md">
-            {/* Breadcrumb */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 4, flexWrap: 'wrap' }}>
-              {[
-                { label: 'Inicio', href: '/' },
-                { label: 'Blog', href: '/blog' },
-                { label: 'Electromovilidad Inmobiliaria', href: null },
-              ].map((item, i) => (
-                <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  {i > 0 && (
-                    <Typography sx={{ color: 'rgba(0,0,0,0.4)', fontSize: '0.8rem' }}>›</Typography>
-                  )}
-                  {item.href ? (
-                    <Box
-                      component={Link}
-                      href={item.href}
-                      sx={{
-                        color: 'rgba(0,0,0,0.6)',
-                        fontSize: '0.8rem',
-                        textDecoration: 'none',
-                        '&:hover': { textDecoration: 'underline' },
-                      }}
-                    >
-                      {item.label}
-                    </Box>
-                  ) : (
-                    <Typography sx={{ color: '#000', fontSize: '0.8rem', fontWeight: 600 }}>
-                      {item.label}
-                    </Typography>
-                  )}
-                </Box>
-              ))}
-            </Box>
-
             <Typography
               variant="h1"
               component="h1"
@@ -218,13 +157,22 @@ export default function ArticlePage() {
             >
               Electromovilidad Inmobiliaria: El 1% que Cambia tu Proyecto
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-06-15"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            15 de junio, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.15rem' },
                 color: '#000',
                 mb: 5,
                 maxWidth: 620,
-                mx: 'auto',
                 lineHeight: 1.7,
               }}
             >
@@ -278,7 +226,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Por qué los edificios terminados pagan 5 veces más por la misma infraestructura
+              ¿Por qué los edificios terminados pagan 5 veces más por la infraestructura de carga?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               Cuando un condominio o edificio de oficinas ya está construido y entregado, instalar cargadores EV en
@@ -346,10 +294,10 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Ley 21.505: la obligación legal que ya está vigente
+              ¿Qué obliga la Ley 21.505 en materia de carga para vehículos eléctricos?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
-              En Chile, la Ley 21.505 de 2022 estableció por primera vez obligaciones concretas de infraestructura
+              En Chile, la{' '}<a href="https://www.bcn.cl/leychile/navegar?idNorma=1183174" target="_blank" rel="noopener noreferrer">Ley 21.505</a>{' '}de 2022 estableció por primera vez obligaciones concretas de infraestructura
               de carga eléctrica para vehículos en nuevas edificaciones. La ley modifica la Ley General de Urbanismo
               y Construcciones e instruyó al Ministerio de Vivienda y Urbanismo a actualizar la Ordenanza General de
               Urbanismo y Construcciones (OGUC) para incluir estándares mínimos de pre-habilitación EV.
@@ -389,18 +337,20 @@ export default function ArticlePage() {
               estacionamiento con una tramitación simple ante el comité de administración, sin necesidad de hacer
               obras de infraestructura. Este atributo se está convirtiendo en un factor de decisión de compra
               equivalente a la conectividad de fibra óptica o a la disponibilidad de cargadores USB en las áreas
-              comunes. En encuestas del sector inmobiliario chileno (2024), más del 35% de los compradores menores de
-              45 años calificaron la disponibilidad de carga EV como "importante" o "muy importante" al comparar
-              proyectos similares.
+              comunes. Una proporción creciente de compradores de vivienda prioriza la disponibilidad de
+              infraestructura de carga al comparar proyectos similares.
             </Typography>
           </Container>
         </Box>
+
+        {/* ── Clientes ── */}
+        <ClientsCarousel />
 
         {/* ── Section 3: Tecnología EVE ── */}
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Tecnología EVE: 100% de estacionamientos sin ampliar el transformador
+              ¿Cómo permite EVE instalar carga EV en todos los estacionamientos sin ampliar el transformador?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               La objeción más frecuente que escuchamos de los ingenieros eléctricos de proyectos inmobiliarios es:
@@ -475,7 +425,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Comparativa de costos: pre-instalación vs. retrofit
+              ¿Cuánto más barata es la pre-instalación vs el retrofit eléctrico?
             </Typography>
 
             <Box sx={{ overflowX: 'auto' }}>
@@ -601,7 +551,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="infraestructura-carga-proyectos-inmobiliarios-nuevos" />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>
@@ -652,6 +602,24 @@ export default function ArticlePage() {
               >
                 Hablar con un ingeniero
               </Box>
+              <Button
+                component={Link}
+                href="https://www.energica.city/contacto"
+                variant="contained"
+                sx={{
+                  bgcolor: '#e81a68',
+                  color: '#fff',
+                  fontWeight: 700,
+                  px: 4,
+                  py: 1.75,
+                  fontSize: '1rem',
+                  borderRadius: 0,
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: '#c01556' },
+                }}
+              >
+                Escríbenos para evaluar tu proyecto
+              </Button>
             </Box>
           </Container>
         </Box>

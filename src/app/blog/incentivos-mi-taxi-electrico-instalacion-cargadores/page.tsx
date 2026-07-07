@@ -60,19 +60,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Beneficios',
   datePublished: '2025-05-15',
-  dateModified: '2025-05-15',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -219,6 +222,16 @@ export default function ArticlePage() {
             >
               Programa Mi Taxi Eléctrico: Carga Domiciliaria para Conductores
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-15"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            15 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -270,8 +283,9 @@ export default function ArticlePage() {
               ¿Qué es el programa Mi Taxi Eléctrico?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
-              Mi Taxi Eléctrico es un programa impulsado por el Ministerio de Energía de Chile en
-              el marco de la Estrategia Nacional de Electromovilidad, cuyo objetivo es acelerar el
+              Mi Taxi Eléctrico es un programa impulsado por el{' '}
+              <a href="https://energia.gob.cl/vehiculos-electricos/mi-taxi-electrico" target="_blank" rel="noopener noreferrer">Ministerio de Energía de Chile</a>{' '}
+              en el marco de la Estrategia Nacional de Electromovilidad, cuyo objetivo es acelerar el
               recambio del parque de taxis y colectivos a tracción eléctrica. Chile tiene más de
               27.000 taxis básicos y más de 30.000 colectivos registrados en el MTT, los cuales
               representan una oportunidad significativa de reducción de emisiones urbanas dado que
@@ -316,9 +330,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Otros incentivos para el taxi eléctrico en Chile 2025
+              ¿Qué otros incentivos tiene el taxi eléctrico en Chile 2025?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               Más allá del subsidio a la carga domiciliaria, los taxistas y colectiveros que
@@ -337,7 +352,7 @@ export default function ArticlePage() {
                 icon: '🌿',
                 title: 'Sin impuesto verde',
                 desc:
-                  'Los vehículos eléctricos no están afectos al impuesto verde (Ley 20.936), que grava a los automóviles con emisiones superiores a 110 g CO2/km con tasas de hasta el 4,1 % del valor CIF. Este impuesto encarece los vehículos convencionales entre $500.000 y $2.000.000 en promedio.',
+                  'Los vehículos eléctricos no están afectos al impuesto verde (Ley 20.780), que grava a los automóviles con emisiones superiores a 110 g CO2/km con tasas de hasta el 4,1 % del valor CIF. Este impuesto encarece los vehículos convencionales entre $500.000 y $2.000.000 en promedio.',
               },
               {
                 icon: '📊',
@@ -383,6 +398,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Cómo postular al subsidio para el cargador domiciliario?
@@ -472,9 +488,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Comparativa: taxi eléctrico vs. taxi gasolina en Chile (2025)
+              ¿Conviene más el taxi eléctrico que el gasolina en Chile en 2025?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               Para un conductor que recorre 250 km diarios durante 300 días al año (75.000 km/año),
@@ -555,6 +572,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes — Programa Mi Taxi Eléctrico
@@ -583,7 +601,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

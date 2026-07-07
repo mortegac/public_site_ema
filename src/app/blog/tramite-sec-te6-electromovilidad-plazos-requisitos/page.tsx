@@ -60,19 +60,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Normativa',
   datePublished: '2025-05-05',
-  dateModified: '2025-05-05',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -217,6 +220,16 @@ export default function ArticlePage() {
             >
               Trámite TE6 ante la SEC: Plazos y Requisitos para tu Cargador
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-05"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            5 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -280,7 +293,10 @@ export default function ArticlePage() {
               eléctrico (nuevo breaker dedicado) y la instalación de un circuito nuevo, por lo que
               obliga a presentar el TE6 independientemente de la potencia del cargador. Esto aplica
               tanto para cargadores monofásicos de 7,4 kW como para unidades trifásicas de 22 kW,
-              y tanto para viviendas como para oficinas, edificios y parkings comerciales.
+              y tanto para viviendas como para oficinas, edificios y parkings comerciales.{' '}
+              El marco legal se completa con{' '}
+              <a href="https://www.bcn.cl/leychile/navegar?idNorma=1184572" target="_blank" rel="noopener noreferrer">la Ley 21.505</a>
+              {' '}(Ley de Electromovilidad), que establece estándares obligatorios para toda infraestructura de carga en el país.
             </Typography>
 
             <Typography
@@ -344,12 +360,14 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Quién puede tramitar el TE6?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
-              Solo los instaladores eléctricos con licencia vigente registrados en la SEC pueden
+              Solo los instaladores eléctricos con licencia vigente{' '}
+              <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">registrados en la SEC</a> pueden
               presentar el formulario TE6. La ley chilena prohíbe expresamente que un propietario
               o un técnico sin licencia SEC realice instalaciones eléctricas en baja tensión o
               presente este tipo de declaraciones.
@@ -432,13 +450,14 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Documentos necesarios para el TE6
+              ¿Qué documentos se necesitan para tramitar el certificado TE6?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               El instalador eléctrico debe reunir y adjuntar los siguientes documentos al formulario
-              TE6 en el portal SEC Online. El proceso es digital desde 2022 y no requiere
+              TE6 en el{' '}<a href="https://www.sec.cl/sitioweb/tramites/" target="_blank" rel="noopener noreferrer">portal SEC Online</a>. El proceso es digital desde 2022 y no requiere
               presentación física salvo casos excepcionales.
             </Typography>
 
@@ -515,9 +534,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Requisitos específicos de la NCh Elec. 4/2003 para cargadores EV
+              ¿Qué exige la NCh Elec. 4/2003 para la instalación de cargadores EV?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               La norma NCh Elec. 4/2003 —la norma eléctrica residencial chilena— fue actualizada
@@ -560,6 +580,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre el TE6 y la SEC
@@ -588,7 +609,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

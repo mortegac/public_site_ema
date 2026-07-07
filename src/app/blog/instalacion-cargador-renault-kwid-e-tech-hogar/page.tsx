@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2025-05-01',
-  dateModified: '2025-05-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -228,6 +231,16 @@ export default function ArticlePage() {
             >
               Renault Kwid E-Tech: Cómo Instalar tu Cargador en Casa
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -294,7 +307,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              El Renault Kwid E-Tech: El Primer Eléctrico de Muchos Chilenos
+              ¿Por qué el Renault Kwid E-Tech es el primer eléctrico de muchos chilenos?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El Renault Kwid E-Tech llegó a Chile como el vehículo eléctrico más económico del
@@ -353,7 +366,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Opciones de Carga para el Renault Kwid E-Tech
+              ¿Qué opciones de carga tiene el Renault Kwid E-Tech?
             </Typography>
             <Box sx={{ overflowX: 'auto' }}>
               <Box
@@ -414,11 +427,11 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Cómo Instalar el Cargador: Proceso en Chile
+              ¿Cómo instalar el cargador del Renault Kwid E-Tech en Chile?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               La instalación de un Wallbox para el Kwid E-Tech en Chile sigue el mismo proceso
-              regulado por la Superintendencia de Electricidad y Combustibles (SEC). Todo el trabajo
+              regulado por la <a href="https://www.sec.cl/" target="_blank" rel="noopener noreferrer">Superintendencia de Electricidad y Combustibles (SEC)</a>. Todo el trabajo
               debe ejecutarlo un instalador con credencial SEC vigente, y el resultado debe quedar
               documentado en el certificado TE6, que acredita que la instalación cumple la normativa
               NCh Elec. 4/2003.
@@ -492,7 +505,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Kwid E-Tech en Departamento: La Solución Más Demandada
+              ¿Cómo cargar el Renault Kwid E-Tech viviendo en un departamento?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Por ser el EV más accesible del mercado, el Renault Kwid E-Tech es popular entre
@@ -522,7 +535,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Cuánto Cuesta Instalar el Cargador del Kwid E-Tech
+              ¿Cuánto cuesta instalar el cargador del Renault Kwid E-Tech?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               En Enérgica City la instalación base para casa parte desde <strong>$159.000 CLP</strong>{' '}
@@ -589,7 +602,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

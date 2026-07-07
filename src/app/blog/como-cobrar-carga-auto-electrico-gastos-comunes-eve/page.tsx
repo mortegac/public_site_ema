@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Tecnología',
   datePublished: '2025-05-05',
-  dateModified: '2025-05-05',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -225,6 +228,16 @@ export default function ArticlePage() {
             >
               Cómo Cobrar la Carga EV a Través de los Gastos Comunes
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-05"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            5 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -292,7 +305,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              El Problema Real: ¿Quién Paga la Electricidad del Cargador?
+              ¿Quién paga la electricidad del cargador EV en el edificio?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               En Chile, los edificios de departamentos enfrentan un problema estructural cuando
@@ -322,8 +335,9 @@ export default function ArticlePage() {
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               La plataforma EVE de Enérgica City elimina la necesidad de medidores eléctricos
-              individuales. Cada cargador compatible con el protocolo OCPP (Open Charge Point
-              Protocol) —el estándar internacional abierto para cargadores inteligentes— tiene
+              individuales. Cada cargador compatible con el{' '}
+              <a href="https://www.openchargealliance.org/protocols/ocpp-16/" target="_blank" rel="noopener noreferrer">protocolo OCPP (Open Charge Point Protocol)</a>
+              {' '}—el estándar internacional abierto para cargadores inteligentes— tiene
               integrado un medidor de energía que registra el consumo exacto en kWh por sesión de
               carga. Este dato se transmite a la plataforma EVE en la nube y se asocia al perfil
               del residente que inició la sesión.
@@ -351,7 +365,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Cómo Funciona EVE: Paso a Paso
+              ¿Cómo funciona el sistema EVE de cobro de carga en edificios?
             </Typography>
             <Typography
               variant="body2"
@@ -405,7 +419,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Balanceo Dinámico de Carga: Protegiendo el Transformador del Edificio
+              ¿Qué es el balanceo dinámico de carga y cómo protege el transformador del edificio?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Uno de los mayores temores de los administradores de edificios ante la instalación
@@ -464,7 +478,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Modelo de Negocio: Cero Costo para el Edificio
+              ¿Por qué el sistema EVE no tiene costo para el edificio?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Enérgica City financia íntegramente la instalación de los cargadores y la activación
@@ -508,7 +522,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Cómo Proponer EVE en tu Edificio: Guía para Residentes
+              ¿Cómo proponer el sistema EVE en tu edificio?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Si eres residente de un edificio y tienes o planeas comprar un auto eléctrico, puedes
@@ -582,7 +596,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

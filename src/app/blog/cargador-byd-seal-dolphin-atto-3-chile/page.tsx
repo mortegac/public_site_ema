@@ -60,19 +60,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
   datePublished: '2026-06-11',
-  dateModified: '2026-06-11',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -185,6 +188,16 @@ export default function ArticlePage() {
             >
               Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Instala en Casa o Edificio
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-11"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            11 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -323,6 +336,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Wallbox o cargador portátil para tu BYD?
@@ -372,6 +386,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Tienes tu BYD en un edificio? Tres soluciones según tu situación
@@ -443,13 +458,14 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              BYD y el programa Mi Taxi Eléctrico
+              ¿Cómo accede un taxista con BYD al programa Mi Taxi Eléctrico?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               El BYD Dolphin es uno de los modelos más populares dentro del programa{' '}
-              <em>Mi Taxi Eléctrico</em> del Ministerio de Energía de Chile, que otorga subsidios
+              <em>Mi Taxi Eléctrico</em> del <a href="https://energia.gob.cl/" target="_blank" rel="noopener noreferrer">Ministerio de Energía de Chile</a>, que otorga subsidios
               para la adquisición de vehículos eléctricos de uso comercial. El programa contempla
               también un subsidio para la instalación del cargador domiciliario. Enérgica City está
               autorizada para procesar este subsidio directamente: el propietario aporta solo la
@@ -471,6 +487,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre cargadores para BYD en Chile
@@ -499,7 +516,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, pt: { xs: 8, md: 10 }, pb: { xs: 6, md: 8 }, mb: -5 }}>

@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2025-05-01',
-  dateModified: '2025-05-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -217,6 +220,16 @@ export default function ArticlePage() {
             >
               Presupuesto para Instalar un Cargador Eléctrico: ¿Qué Pagas Realmente?
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -335,7 +348,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Desglose de Costos: Instalación en Casa (Base)
+              ¿Cuánto cuesta instalar un cargador EV en casa? Desglose completo
             </Typography>
             <Typography
               variant="body2"
@@ -460,12 +473,12 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Señales de Alerta: Instaladores Sin Certificación SEC
+              ¿Cómo identificar instaladores de cargadores EV sin certificación SEC?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El mercado chileno de instalación de cargadores EV incluye operadores que ofrecen
               precios muy bajos —a veces menores de $80.000— pero que no emiten el certificado TE6 o
-              que usan instaladores sin credencial SEC vigente. Contratar estos servicios tiene
+              que usan instaladores sin <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">credencial SEC vigente</a>. Contratar estos servicios tiene
               consecuencias concretas:
             </Typography>
 
@@ -521,7 +534,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Instalación en Edificio: Desglose de $369.000 en Adelante
+              ¿Cuánto cuesta instalar un cargador EV en un edificio?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El precio base de $369.000 para edificios cubre el escenario típico de un
@@ -589,7 +602,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

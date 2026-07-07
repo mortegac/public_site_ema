@@ -57,20 +57,23 @@ const blogPostingSchema = {
   },
   author: {
     '@type': 'Person',
-    name: 'Felipe Donoso Vergara',
-    jobTitle: 'Founder, Enérgica City',
+    name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
+    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Servicios Energica',
+  articleSection: 'Servicios',
   datePublished: '2026-07-03',
-  dateModified: '2026-07-03',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: { '@type': 'WebPage', '@id': `${CANONICAL_DOMAIN}/blog/${SLUG}` },
 }
@@ -86,6 +89,61 @@ const breadcrumbSchema = {
       position: 3,
       name: 'Instaladores SEC: Únete a la Red EMA',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
+    },
+  ],
+}
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '¿Por qué es obligatoria la certificación SEC para instalar cargadores de vehículos eléctricos en Chile?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'La certificación SEC es obligatoria porque sin ella el instalador no puede emitir el certificado TE6, que la Superintendencia de Electricidad y Combustibles exige para que la instalación sea legal. Además, sin TE6 el seguro de hogar queda inválido. Un error frecuente de instaladores no certificados es usar interruptores diferenciales tipo AC en lugar del tipo A obligatorio para cargadores EV, dejando la instalación sin protección real ante fallas eléctricas.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Qué es el certificado TE6 y cuándo se necesita?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'El TE6 es el certificado oficial de instalación eléctrica emitido por un instalador con credencial SEC vigente. Es requerido por la Superintendencia de Electricidad y Combustibles para acreditar que la instalación de un cargador de vehículo eléctrico cumple las normas técnicas chilenas. Sin TE6, la instalación no es legal y el seguro de hogar puede quedar sin cobertura.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Qué es EMA (Electricians Marketplace) y cómo funciona?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'EMA (Electricians Marketplace) es la red de instaladores certificados SEC de Enérgica City. Conecta técnicos eléctricos con proyectos residenciales ya validados mediante un simulador de viabilidad técnica y económica, evitando visitas técnicas perdidas. La plataforma EVE gestiona el flujo de energía y pagos, eliminando la carga administrativa para los instaladores.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Por qué el segmento residencial concentrará el 80% de la carga EV en Chile?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'La mayoría de los conductores de vehículos eléctricos carga su auto en casa durante la noche, cuando el vehículo permanece estacionado por más horas. Esto convierte el punto de carga residencial en el más utilizado estadísticamente. A medida que crece el parque de vehículos eléctricos en Chile, la demanda de instalaciones en casas y departamentos supera ampliamente a la de carga pública o comercial.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cuáles son los beneficios de unirse a la red EMA como instalador SEC?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Los instaladores que se suman a EMA reciben proyectos ya validados (sin visitas técnicas perdidas), acceso a la plataforma EVE para gestión de energía y pagos, y participación en el segmento residencial que concentrará el 80% de la carga EV. EMA busca socios estratégicos, no intermediarios, que quieran crecer con la infraestructura de carga más inteligente del país.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cómo puede un instalador certificado SEC postular para unirse a la red EMA?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Los instaladores certificados SEC y proveedores de infraestructura pueden completar el formulario de postulación disponible en la página del blog. El equipo de Enérgica City revisará la postulación y se contactará con los requisitos y el proceso de incorporación. También es posible consultar directamente por WhatsApp al +56 9 6766 6652.',
+      },
     },
   ],
 }
@@ -119,7 +177,7 @@ const comments = [
     isAuthor: false,
   },
   {
-    author: 'Felipe Donoso Vergara',
+    author: 'Felipe Donoso',
     role: 'Founder en Enérgica City',
     text: 'Lamentablemente es así, incluso hubo una noticia en que un ingeniero informático, no certificado por la SEC, realizó la instalación de un cargador. 👌⚡',
     isAuthor: true,
@@ -136,6 +194,10 @@ export default function ArticlePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <HpHeaderNew />
       <BlogBreadcrumb title="Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile" />
@@ -176,6 +238,16 @@ export default function ArticlePage() {
             >
               Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-07-03"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            3 de julio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, color: 'rgba(255,255,255,0.75)', maxWidth: 640, lineHeight: 1.7, mb: 4 }}
             >
@@ -232,9 +304,9 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3 }}
             >
-              La fricción de instalación: el obstáculo real
+              ¿Por qué la instalación certificada es el principal obstáculo en la electromovilidad?
             </Typography>
             <Typography sx={{ fontSize: '1.1rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               Muchos creen que vender un cargador es el final del proceso. En Enérgica City sabemos que
@@ -258,7 +330,7 @@ export default function ArticlePage() {
 
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.4rem', md: '1.75rem' }, fontWeight: 700, color: DARK, mt: 6, mb: 4 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.4rem', md: '1.75rem' }, fontWeight: 700, color: DARK, mt: 6, mb: 4 }}
             >
               ¿Por qué ser partner de EMA?
             </Typography>
@@ -311,9 +383,9 @@ export default function ArticlePage() {
           <Container maxWidth="md">
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.4rem', md: '1.75rem' }, fontWeight: 700, color: DARK, mb: 1 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.4rem', md: '1.75rem' }, fontWeight: 700, color: DARK, mb: 1 }}
             >
-              La industria habla: por qué la certificación importa
+              ¿Por qué la certificación SEC importa para instalar cargadores EV?
             </Typography>
             <Typography sx={{ color: '#64748B', mb: 4 }}>
               Conversación real de LinkedIn sobre los riesgos de instaladores no certificados
@@ -392,7 +464,7 @@ export default function ArticlePage() {
                 ⚠️ Por qué la certificación SEC no es opcional
               </Typography>
               <Typography sx={{ color: '#7C2D12', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                Un instalador sin credencial SEC vigente no puede emitir el certificado TE6, que es
+                Un instalador sin{' '}<a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">credencial SEC vigente</a>{' '}no puede emitir el certificado TE6, que es
                 <strong> obligatorio</strong> para mantener válido el seguro de hogar y para que la
                 instalación sea legal ante la Superintendencia de Electricidad y Combustibles. Además,
                 errores como usar un interruptor diferencial tipo AC (en lugar del tipo A obligatorio
@@ -448,7 +520,7 @@ export default function ArticlePage() {
           <Container maxWidth="md" sx={{ textAlign: 'center' }}>
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 800, color: '#fff', mb: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 800, color: '#fff', mb: 2 }}
             >
               ¿Tienes un vehículo eléctrico y necesitas instalación?
             </Typography>
@@ -478,7 +550,7 @@ export default function ArticlePage() {
           </Container>
         </Box>
 
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
         <BlogRelatedArticles currentUid={SLUG} />
       </Box>
     </>

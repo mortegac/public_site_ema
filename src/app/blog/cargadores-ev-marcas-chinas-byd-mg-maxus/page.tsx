@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
   datePublished: '2025-05-05',
-  dateModified: '2025-05-05',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -236,6 +239,16 @@ export default function ArticlePage() {
             >
               Cargadores para Autos Chinos: BYD, MG y Maxus en Chile
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-05"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            5 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -302,7 +315,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Los Autos Eléctricos Chinos Dominan Chile en 2024
+              ¿Por qué los autos eléctricos chinos dominan el mercado chileno?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El mercado chileno de vehículos eléctricos experimentó una transformación estructural entre
@@ -375,7 +388,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Comparativa: Especificaciones de Carga de Autos Chinos en Chile
+              ¿Cuáles son las especificaciones de carga de los autos chinos en Chile?
             </Typography>
             <Typography
               variant="body2"
@@ -446,7 +459,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              BYD Atto 3 y BYD Dolphin: Diferencias Clave para la Instalación
+              ¿Qué diferencia de instalación hay entre el BYD Atto 3 y el BYD Dolphin?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El BYD Atto 3 y el BYD Dolphin son los modelos más vendidos de BYD en Chile. Aunque
@@ -501,7 +514,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              MG4 y Maxus Euniq 6: Alta Potencia y Grandes Baterías
+              ¿Qué cargador necesitan el MG4 y el Maxus Euniq 6?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El MG4 Electric y el Maxus Euniq 6 representan el extremo superior del segmento de
@@ -556,12 +569,12 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Proceso de Instalación y Normativa SEC en Chile
+              ¿Qué exige la SEC para instalar un cargador de BYD, MG o Maxus?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               La instalación de un cargador para autos eléctricos en Chile, independientemente de
               la marca del vehículo, debe ser realizada por un instalador eléctrico autorizado por
-              la Superintendencia de Electricidad y Combustibles (SEC). Al finalizar, el instalador
+              la <a href="https://www.sec.cl/" target="_blank" rel="noopener noreferrer">Superintendencia de Electricidad y Combustibles (SEC)</a>. Al finalizar, el instalador
               emite el certificado TE6, que es el documento legal que acredita que la instalación
               cumple con la norma eléctrica chilena NCh Elec. 4/2003. Este certificado es
               obligatorio y te protege legalmente ante cualquier siniestro eléctrico relacionado
@@ -643,7 +656,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

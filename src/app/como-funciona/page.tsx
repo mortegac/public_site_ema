@@ -18,11 +18,21 @@ const steps = [
   { number: '06', title: 'Soporte continuo', description: 'Ofrecemos mantenimiento preventivo, monitoreo remoto y soporte técnico para asegurar el máximo rendimiento de tus cargadores.' },
 ]
 
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Cómo Funciona la Instalación de Cargadores EV",
+  "description": "Conoce el proceso paso a paso para instalar cargadores eléctricos en tu empresa o edificio en Chile: cotización, visita técnica, instalación y certificación TE6.",
+  "url": "https://www.energica.city/como-funciona",
+  "isPartOf": { "@type": "WebSite", "url": "https://www.energica.city" },
+}
+
 export default function ComoFuncionaPage() {
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Instalación de Cargadores EV para Empresas",
+    "url": "https://www.energica.city/como-funciona",
     "provider": {
       "@type": "Organization",
       "name": "Energica City",
@@ -44,6 +54,7 @@ export default function ComoFuncionaPage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
@@ -52,9 +63,12 @@ export default function ComoFuncionaPage() {
           <Typography variant="h1" component="h1" sx={{ fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 700, mb: 2 }}>
             Cómo Funciona
           </Typography>
-          <Typography variant="h2" component="h2" sx={{ fontSize: '1.25rem', color: 'text.secondary', mb: 6, maxWidth: 700 }}>
+          <Typography variant="h2" component="h2" sx={{ fontSize: '1.25rem', color: 'text.secondary', mb: 3, maxWidth: 700 }}>
             Instalamos cargadores eléctricos para empresas en Chile con un proceso simple, certificado y sin complicaciones.
           </Typography>
+          <Box component="a" href="/cotizador" sx={{ display: 'inline-block', bgcolor: '#e81a68', color: '#fff', px: 4, py: 1.5, borderRadius: 1, fontWeight: 600, textDecoration: 'none', mb: 6, '&:hover': { bgcolor: '#c01556' } }}>
+            Cotizar gratis →
+          </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {steps.map((step) => (
               <Box key={step.number} sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>

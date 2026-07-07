@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb';
+import AuthorByline from '@/app/components/shared/AuthorByline';
 
 import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { asText } from "@prismicio/client";
@@ -43,10 +44,13 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      type: "website",
+      type: "article",
       url: DOMAIN_PAGE,
       title: page.data.meta_title ?? undefined,
       description: page.data.meta_description ?? "",
+      publishedTime: page.first_publication_date ?? undefined,
+      modifiedTime: page.last_publication_date ?? undefined,
+      authors: ["Felipe Donoso"],
       images: [
         {
           url: (page.data.meta_image?.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg"),
@@ -152,13 +156,18 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     "url": DOMAIN_PAGE,
     "datePublished": page.first_publication_date ?? "",
     "dateModified": page.last_publication_date ?? "",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": DOMAIN_PAGE },
     "author": {
-      "@type": "Organization",
-      "name": "Energica City",
-      "url": CANONICAL_DOMAIN,
+      "@type": "Person",
+      "name": "Felipe Donoso",
+      "@id": "https://www.energica.city/#author-felipe-donoso",
+      "jobTitle": "Ingeniero Eléctrico, Enérgica City",
+      "url": `${CANONICAL_DOMAIN}/que-es-energica-city`,
+      "sameAs": "https://www.linkedin.com/in/felipedonosovergara/",
     },
     "publisher": {
       "@type": "Organization",
+      "@id": "https://www.energica.city/#organization",
       "name": "Energica City",
       "url": CANONICAL_DOMAIN,
       "logo": {
@@ -243,6 +252,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
       >
         <SliceZone slices={page.data.slices} components={components} />
       </Container>
+      <AuthorByline dateModified="2026-07-07" />
   </>
 }
 

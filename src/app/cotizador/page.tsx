@@ -44,6 +44,8 @@ const breadcrumbSchema = {
 export default function Cotizador2Page() {
   return (
     <>
+      <link rel="preconnect" href="https://maps.googleapis.com" crossOrigin="anonymous" />
+      <link rel="dns-prefetch" href="https://maps.googleapis.com" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {/* <HpHeaderNew /> */}

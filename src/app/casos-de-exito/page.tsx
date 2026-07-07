@@ -51,6 +51,12 @@ export default function CasosDeExitoPage() {
     "@type": "LocalBusiness",
     "name": "Energica City",
     "url": "https://www.energica.city",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Santiago",
+      "addressRegion": "Región Metropolitana",
+      "addressCountry": "CL"
+    },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5",
@@ -63,7 +69,7 @@ export default function CasosDeExitoPage() {
       "author": { "@type": "Person", "name": r.author },
       "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
       "reviewBody": r.text,
-      "datePublished": "2025"
+      "datePublished": "2025-01-01"
     }))
   }
 
@@ -116,9 +122,12 @@ export default function CasosDeExitoPage() {
           <Typography variant="h1" component="h1" sx={{ fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 700, mb: 2 }}>
             Casos de Éxito
           </Typography>
-          <Typography variant="body1" sx={{ fontSize: '1.25rem', color: 'text.secondary', mb: 6, maxWidth: 700 }}>
+          <Typography variant="body1" sx={{ fontSize: '1.25rem', color: 'text.secondary', mb: 3, maxWidth: 700 }}>
             Empresas líderes en Chile confían en Energica City para electrificar sus flotas con infraestructura de carga profesional y certificada.
           </Typography>
+          <Box component="a" href="/cotizador" sx={{ display: 'inline-block', bgcolor: '#e81a68', color: '#fff', px: 4, py: 1.5, borderRadius: 1, fontWeight: 600, textDecoration: 'none', mb: 6, '&:hover': { bgcolor: '#c01556' } }}>
+            Cotizar cargadores →
+          </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
             {cases.map((c) => (
               <Box key={c.company} sx={{ p: 4, border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>

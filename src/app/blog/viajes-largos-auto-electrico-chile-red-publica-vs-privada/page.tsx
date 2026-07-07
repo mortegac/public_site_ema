@@ -61,19 +61,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Beneficios',
   datePublished: '2025-05-05',
-  dateModified: '2025-05-05',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -240,6 +243,16 @@ export default function ArticlePage() {
             >
               Viajes Largos en Auto Eléctrico por Chile: Planificación 2025
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-05"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            5 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               variant="body1"
               sx={{
@@ -306,7 +319,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              El Desafío Geográfico de Chile para los Autos Eléctricos
+              ¿Qué desafíos geográficos enfrenta Chile para los viajes en auto eléctrico?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Chile tiene una geografía única en el mundo: más de 4.200 km de longitud de norte a
@@ -375,7 +388,7 @@ export default function ArticlePage() {
                 textAlign: 'center',
               }}
             >
-              Corredores Clave: Planificación por Ruta
+              ¿Cuáles son los corredores de carga para viajes largos en Chile?
             </Typography>
             <Typography
               variant="body2"
@@ -444,7 +457,7 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Red de Carga Pública en Chile: Estado 2025
+              ¿Cuál es el estado de la red de carga pública en Chile en 2025?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Chile tiene la red de carga pública más desarrollada de Latinoamérica en 2025.
@@ -511,13 +524,13 @@ export default function ArticlePage() {
               variant="h2"
               sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}
             >
-              Por Qué el Cargador en Casa Es la Base de Todo
+              ¿Por qué el cargador domiciliario es la base para viajes en auto eléctrico?
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El 80–90% de la carga de un auto eléctrico ocurre en casa, según datos consistentes
               de todos los mercados EV maduros (Noruega, Países Bajos, California). Chile no
               es la excepción. Tener un Wallbox instalado en casa —con certificado TE6 emitido
-              por instalador SEC autorizado— transforma la experiencia del auto eléctrico:
+              por <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">instalador SEC</a> autorizado— transforma la experiencia del auto eléctrico:
               el conductor nunca busca una gasolinera, nunca piensa en la autonomía en el
               contexto de su vida cotidiana. El auto amanece siempre cargado.
             </Typography>
@@ -591,7 +604,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

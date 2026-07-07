@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -60,23 +59,29 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewer: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Comparativas',
   datePublished: '2026-06-19',
-  dateModified: '2026-06-19',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -312,17 +317,6 @@ export default function ArticlePage() {
       <HpHeaderNew />
       <BlogBreadcrumb title="Comparativa Cargadores para Autos Eléctricos Chile 2026" />
       <Box component="main">
-        {/* Featured image */}
-        <Box sx={{ width: '100%', lineHeight: 0 }}>
-          <Image
-            src="/images/post/31_1170x400.png"
-            alt="Comparativa de cargadores para autos eléctricos Chile 2026"
-            width={1170}
-            height={400}
-            style={{ width: '100%', height: 'auto' }}
-            priority
-          />
-        </Box>
         {/* Hero */}
         <Box
           sx={{
@@ -349,9 +343,19 @@ export default function ArticlePage() {
             <Typography component="h1" sx={{ fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 800, lineHeight: 1.15, mb: 3, color: '#000000' }}>
               Comparativa de Cargadores para Autos Eléctricos en Chile 2026
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-19"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            19 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography sx={{ fontSize: { xs: '1rem', md: '1.15rem' }, color: '#000000', maxWidth: 600, lineHeight: 1.7, mx: 'auto', mb: 5 }}>
               8 modelos comparados: precios reales, potencia, conectividad y para quién es cada uno.
-              Todos disponibles en Chile con instalación certificada SEC.
+              Todos disponibles en Chile con instalación{' '}<a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">certificada SEC</a>.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Box component={Link} href="/cargadores-vehiculos-electricos-sin-instalacion"
@@ -412,8 +416,8 @@ export default function ArticlePage() {
             </Typography>
 
             {/* Quick comparison table */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
-              Comparativa rápida: todos los modelos
+            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }} lineHeight={1.4}>
+              ¿Cómo se comparan todos los cargadores EV disponibles en Chile?
             </Typography>
             <Box sx={{ overflowX: 'auto', mb: 6 }}>
               <Box component="table" sx={{
@@ -453,8 +457,8 @@ export default function ArticlePage() {
             </Box>
 
             {/* Detailed cards — Wallbox */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}>
-              Análisis detallado: Wallbox fijos
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}>
+              ¿Qué Wallbox fijos con certificación SEC se venden en Chile?
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 6 }}>
               {wallboxes.map((c) => (
@@ -496,7 +500,7 @@ export default function ArticlePage() {
                       ))}
                     </Box>
                   </Box>
-                  <Box sx={{ p: 1.5, background: '#fff', borderRadius: 1, border: '1px solid #E2E8F0' }}>
+                  <Box sx={{ p: 1.5, background: '#fff', borderRadius: 0, border: '1px solid #E2E8F0' }}>
                     <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: DARK, display: 'inline' }}>Ideal para: </Typography>
                     <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, display: 'inline' }}>{c.ideal}</Typography>
                   </Box>
@@ -505,7 +509,7 @@ export default function ArticlePage() {
             </Box>
 
             {/* Portable section */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
               Cargador portátil: Workersbee
             </Typography>
             {portables.map((c) => (
@@ -539,7 +543,7 @@ export default function ArticlePage() {
             ))}
 
             {/* Decision guide */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
               ¿Cuál cargador elegir según tu caso?
             </Typography>
             <Box sx={{ border: '1px solid #E2E8F0', borderRadius: 2, overflow: 'hidden', mb: 6 }}>
@@ -567,7 +571,7 @@ export default function ArticlePage() {
             </Box>
 
             {/* Cluster links */}
-            <Typography component="h2" sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}>
               Antes de comprar: guías relacionadas
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 4 }}>
@@ -607,7 +611,7 @@ export default function ArticlePage() {
         {/* FAQ */}
         <Box sx={{ py: { xs: 6, md: 8 }, background: GRAY_BG }}>
           <Container maxWidth="md">
-            <Typography component="h2" sx={{ fontSize: { xs: '1.5rem', md: '1.9rem' }, fontWeight: 700, color: DARK, mb: 5, textAlign: 'center' }}>
+            <Typography component="h2" sx={{ lineHeight: 1.4, fontSize: { xs: '1.5rem', md: '1.9rem' }, fontWeight: 700, color: DARK, mb: 5, textAlign: 'center' }}>
               Preguntas frecuentes sobre cargadores EV en Chile
             </Typography>
             {faqSchema.mainEntity.map((item) => (
@@ -620,7 +624,7 @@ export default function ArticlePage() {
         </Box>
 
         <BlogRelatedArticles currentUid={SLUG} />
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

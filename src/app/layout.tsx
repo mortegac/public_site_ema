@@ -16,6 +16,7 @@ import GoogleTagManagerNoScript from "@/components/analytics/GoogleTagManagerNoS
 
 
 import { Inter } from "next/font/google";
+import { plus } from "@/utils/theme/Typography";
 // import { asText } from "@prismicio/client";
 // import { PrismicText } from "@prismicio/react";
 import { PrismicNextLink, PrismicPreview } from "@prismicio/next";
@@ -62,20 +63,28 @@ export default function RootLayout({
     <html lang="es-CL" suppressHydrationWarning className={inter.variable}>
       <head>
         <meta name="facebook-domain-verification" content="op025mmhdhmr82aut2bbskxt84jcqf" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://images.prismic.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.prismic.io" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
-      <body className="overflow-x-hidden antialiased">
+      <body className={`overflow-x-hidden antialiased ${plus.className}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
+              "@id": "https://www.energica.city/#organization",
               "name": "Energica City",
               "url": "https://www.energica.city",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Santiago",
+                "addressRegion": "Región Metropolitana",
+                "addressCountry": "CL"
+              },
               "logo": {
                 "@type": "ImageObject",
                 "url": "https://www.energica.city/logo.png",
@@ -103,8 +112,10 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
+              "@id": "https://www.energica.city/#website",
               "name": "Energica City",
-              "url": "https://www.energica.city"
+              "url": "https://www.energica.city",
+              "publisher": { "@id": "https://www.energica.city/#organization" }
             })
           }}
         />

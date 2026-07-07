@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Container, Box, Typography, Grid } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
@@ -61,23 +60,29 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewer: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
-  articleSection: 'Instalaciones',
+  articleSection: 'Instalación',
   datePublished: '2026-06-19',
-  dateModified: '2026-06-19',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -201,17 +206,6 @@ export default function ArticlePage() {
       <HpHeaderNew />
       <BlogBreadcrumb title="Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica" />
       <Box component="main">
-        {/* Featured image */}
-        <Box sx={{ width: '100%', lineHeight: 0 }}>
-          <Image
-            src="/images/post/34_1170x400.png"
-            alt="Instalación de cargadores para vehículos eléctricos en vivienda guía técnica"
-            width={1170}
-            height={400}
-            style={{ width: '100%', height: 'auto' }}
-            priority
-          />
-        </Box>
         {/* Hero */}
         <Box
           sx={{
@@ -254,6 +248,16 @@ export default function ArticlePage() {
             >
               Instalación de Cargadores para Vehículos Eléctricos en Casa
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-19"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            19 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -335,9 +339,9 @@ export default function ArticlePage() {
 
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}
             >
-              Los 5 pasos de una instalación correcta
+              ¿Cuáles son los pasos de una instalación correcta de cargador EV?
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 6 }}>
               {steps.map((step) => (
@@ -377,7 +381,7 @@ export default function ArticlePage() {
             {/* Charger comparison table */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
             >
               Cargadores 16A vs 32A: ¿cuál necesita tu auto?
             </Typography>
@@ -428,7 +432,7 @@ export default function ArticlePage() {
             {/* Safety section */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 2, mt: 2 }}
             >
               Precauciones de seguridad críticas
             </Typography>
@@ -450,7 +454,7 @@ export default function ArticlePage() {
                   href: null,
                 },
                 {
-                  title: 'Técnico con credencial SEC vigente',
+                  title: 'Técnico con <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">credencial SEC vigente</a>',
                   body: 'Verificar la credencial SEC del instalador antes de contratar. Un trabajo sin TE6 invalida el seguro de hogar y puede generar problemas en la venta de la propiedad.',
                   href: '/blog/tramite-sec-te6-electromovilidad-plazos-requisitos',
                 },
@@ -486,7 +490,7 @@ export default function ArticlePage() {
             {/* Topic cluster internal links */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
             >
               Guías relacionadas en el mismo cluster temático
             </Typography>
@@ -546,6 +550,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre instalación de cargadores EV en vivienda
@@ -574,7 +579,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>
@@ -618,7 +623,7 @@ export default function ArticlePage() {
                   Cotizar ahora →
                 </Box>
               </Link>
-              <Link href="/agenda" style={{ textDecoration: 'none' }}>
+              <Link href="/forms" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
                     px: 4,

@@ -19,12 +19,8 @@ import {
   Tooltip,
   type SelectChangeEvent,
 } from '@mui/material'
-import { IconMail } from "@tabler/icons-react"
 import AddressInput2 from '@/app/components/AddressInput2'
-import Footer from '@/app/components/shared/footer'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
-import { sendEmail } from '@/store/Estimate/services'
-import emailjs, { init as initEmailjs } from 'emailjs-com'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
@@ -1050,8 +1046,9 @@ export default function CotizadorWizard() {
                         </tr>`
 
       // Send email with HTML quote content
-      initEmailjs('UYcrSeCqLGW8xqT4S')
-      await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+      const { default: _emailjs, init: _initEmailjs } = await import('emailjs-com')
+      _initEmailjs('UYcrSeCqLGW8xqT4S')
+      await _emailjs.send('service_dbrrm6b', 'template_eysyecb', {
         to_email: state.emailSolo,
         name: state.nombreEmail,
         subject: 'Resultado de su cotización',
@@ -1937,10 +1934,11 @@ export default function CotizadorWizard() {
                       update({ webpayLoading: true, webpayError: '' })
                       trackUnique('cta_envio_form_electrolinera', { step: 3, typeOfResidence })
                       try {
-                        initEmailjs('UYcrSeCqLGW8xqT4S')
+                        const { default: _emailjs2, init: _initEmailjs2 } = await import('emailjs-com')
+                        _initEmailjs2('UYcrSeCqLGW8xqT4S')
                         const parkingLabel = state.edificioParkingFloor || 'No indicado'
                         const visitasLabel = state.edificioVisitorParking === true ? 'Sí' : state.edificioVisitorParking === false ? 'No' : 'No indicado'
-                        await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+                        await _emailjs2.send('service_dbrrm6b', 'template_eysyecb', {
                           to_email: state.emailPago,
                           name: state.nombreEmail || state.emailPago,
                           subject: `Nueva postulación electrolinera — ${state.nombreEmail || state.emailPago}`,

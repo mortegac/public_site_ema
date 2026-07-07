@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Container, Box, Typography, Grid } from '@mui/material'
+import { Container, Box, Typography, Grid, Button } from '@mui/material'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
@@ -60,19 +60,22 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Edificios',
   datePublished: '2026-06-11',
-  dateModified: '2026-06-11',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -185,6 +188,16 @@ export default function ArticlePage() {
             >
               Electrolinera para tu Edificio: $0 de Inversión, Pagas Solo lo que Cargas
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-11"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            11 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -197,6 +210,26 @@ export default function ArticlePage() {
               de tu edificio. Tu comunidad no pone ni un peso. Cada residente paga solo la energía
               que consume: $330 por kWh.
             </Typography>
+            <Box sx={{ mt: 4 }}>
+              <Button
+                component={Link}
+                href="/postulacion-cargadores-edificios"
+                variant="contained"
+                sx={{
+                  bgcolor: PINK,
+                  color: '#fff',
+                  fontWeight: 700,
+                  px: 4,
+                  py: 1.75,
+                  fontSize: '1rem',
+                  borderRadius: 0,
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: PINK_DARK },
+                }}
+              >
+                Postula a una electrolinera comunitaria
+              </Button>
+            </Box>
           </Container>
         </Box>
 
@@ -258,6 +291,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Cómo funciona el programa de electrolinera de Enérgica City?
@@ -336,6 +370,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
               ¿Necesito autorización de la asamblea de propietarios?
@@ -344,7 +379,7 @@ export default function ArticlePage() {
               Esta es la pregunta más frecuente de los comités de administración. La respuesta es
               no, si el cargador se instala en el estacionamiento de visitas u otro espacio de uso
               común, no en estacionamientos privados asignados. Bajo la Ley de Copropiedad
-              Inmobiliaria (Ley 21.442), la administración del edificio puede autorizar el uso de
+              Inmobiliaria (<a href="https://www.bcn.cl/leychile/navegar?idNorma=1153767" target="_blank" rel="noopener noreferrer">Ley 21.442</a>), la administración del edificio puede autorizar el uso de
               espacios comunes sin necesidad de convocar a asamblea extraordinaria, siempre que el
               uso no altere el destino del bien común ni afecte a los demás copropietarios. La
               electrolinera de Enérgica cumple ambas condiciones: no modifica infraestructura privada
@@ -360,9 +395,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Documentos que Enérgica entrega para presentar a tu comité
+              ¿Qué documentos entrega Enérgica para presentar al comité del edificio?
             </Typography>
             <Box sx={{ mb: 4 }}>
               {[
@@ -403,9 +439,10 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 2,
                 mt: 6,
+                lineHeight: '3rem',
               }}
             >
-              Electrolinera comunitaria vs. instalación privada: comparativa
+              ¿Qué conviene más en un edificio: electrolinera comunitaria o instalación privada?
             </Typography>
 
             <Box
@@ -474,6 +511,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre la electrolinera comunitaria para edificios
@@ -502,7 +540,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>
@@ -525,6 +563,24 @@ export default function ArticlePage() {
               obra en tu estacionamiento.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button
+                component={Link}
+                href="/postulacion-cargadores-edificios"
+                variant="contained"
+                sx={{
+                  bgcolor: PINK,
+                  color: '#fff',
+                  fontWeight: 700,
+                  px: 4,
+                  py: 1.75,
+                  fontSize: '1rem',
+                  borderRadius: 0,
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: PINK_DARK },
+                }}
+              >
+                Postula a una electrolinera comunitaria
+              </Button>
               <Link href="/cotizador" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
@@ -538,23 +594,7 @@ export default function ArticlePage() {
                     cursor: 'pointer',
                   }}
                 >
-                  Postular a electrolinera
-                </Box>
-              </Link>
-              <Link href="/cotizador" style={{ textDecoration: 'none' }}>
-                <Box
-                  sx={{
-                    px: 4,
-                    py: 1.75,
-                    border: `2px solid ${PINK}`,
-                    color: PINK,
-                    fontWeight: 700,
-                    fontSize: '1rem',
-                    '&:hover': { background: PINK, color: '#fff' },
-                    cursor: 'pointer',
-                  }}
-                >
-                  Ver todas las opciones
+                  Cotiza tu instalación aquí
                 </Box>
               </Link>
             </Box>

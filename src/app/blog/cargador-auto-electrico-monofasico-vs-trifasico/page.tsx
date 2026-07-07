@@ -57,20 +57,31 @@ const blogPostingSchema = {
     'Diferencias entre cargador monofásico (7kW) y trifásico (22kW) para autos eléctricos en Chile. Elige según tu empalme y la capacidad de tu vehículo.',
   author: {
     '@type': 'Person',
+    name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
+    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
+  },
+  contributor: {
+    '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
     jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Tecnología',
   datePublished: '2025-05-15',
-  dateModified: '2025-05-15',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/cargador-auto-electrico-monofasico-vs-trifasico`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -228,6 +239,16 @@ export default function ArticlePage() {
             >
               Cargador Monofásico vs. Trifásico: ¿Cuál Necesita tu Auto Eléctrico?
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-05-15"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            15 de mayo, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.15rem' },
@@ -314,7 +335,7 @@ export default function ArticlePage() {
                 Suficiente para BYD Atto 3, BYD Dolphin, MG MG4 y la mayoría de los EVs populares en el mercado
                 chileno.
               </li>
-              <li>Tramitación TE6 ante la SEC idéntica al trifásico.</li>
+              <li>Tramitación TE6 ante{' '}<a href="https://www.sec.cl/sitioweb/tramites/" target="_blank" rel="noopener noreferrer">la SEC</a>{' '}idéntica al trifásico.</li>
               <li>Menor impacto sobre el interruptor diferencial del tablero general.</li>
             </Box>
 
@@ -339,7 +360,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Cargador trifásico: 22 kW para quien realmente los puede usar
+              ¿Cuándo conviene instalar un cargador trifásico de 22 kW?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               Un cargador trifásico opera con las tres fases de la red eléctrica (400 V entre fases en Chile). Su
@@ -387,7 +408,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              La pregunta clave: ¿cuánto acepta el OBC de tu vehículo?
+              ¿Cuánta potencia AC acepta el OBC (cargador a bordo) de tu vehículo eléctrico?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               El cargador de a bordo (OBC, Onboard Charger) es el componente electrónico dentro del vehículo que
@@ -458,7 +479,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: GRAY_BG, py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Cómo elegir el tipo correcto: checklist paso a paso
+              ¿Cómo elegir entre cargador monofásico y trifásico para tu auto eléctrico?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 4 }}>
               Antes de cotizar cualquier instalación, responde estas tres preguntas en orden. Cada respuesta puede
@@ -555,7 +576,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="cargador-auto-electrico-monofasico-vs-trifasico" />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

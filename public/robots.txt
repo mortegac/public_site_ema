@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# AI crawlers — all allowed for search indexing and citation
+# Note: robots.txt cannot distinguish training from indexing for GPTBot.
+# Blocking GPTBot blocks ChatGPT search citations, not just training.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Sitemap
+Sitemap: https://www.energica.city/sitemap.xml
+
+# llms.txt
+# llms.txt: https://www.energica.city/llms.txt

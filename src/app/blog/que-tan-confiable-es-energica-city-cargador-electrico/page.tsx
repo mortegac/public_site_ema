@@ -61,23 +61,29 @@ const blogPostingSchema = {
   author: {
     '@type': 'Person',
     name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
     jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
   },
-  reviewer: {
+  contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
+    jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Guías',
   datePublished: '2026-06-19',
-  dateModified: '2026-06-19',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -199,6 +205,7 @@ export default function ArticlePage() {
             alt="Qué tan confiable es Enérgica City para instalar un cargador eléctrico"
             width={1170}
             height={400}
+            sizes="(max-width: 768px) 100vw, 1170px"
             style={{ width: '100%', height: 'auto' }}
             priority
           />
@@ -244,6 +251,16 @@ export default function ArticlePage() {
             >
               ¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico?
             </Typography>
+          <Box
+            component="time"
+            dateTime="2026-06-19"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            19 de junio, 2026
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.2rem' },
@@ -299,7 +316,7 @@ export default function ArticlePage() {
               local como una de las startups líderes en electromovilidad, y su nivel de respaldo
               técnico, comercial y normativo la diferencia de un servicio técnico informal. Sus
               cuatro pilares de confiabilidad son: alianzas estratégicas con grandes empresas del
-              sector energético, técnicos con credencial SEC vigente que emiten el certificado TE6
+              sector energético, técnicos con <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">credencial SEC vigente</a> que emiten el certificado TE6
               obligatorio, experiencia en proyectos corporativos de alta complejidad y soluciones
               empaquetadas para propietarios en edificios. Si deseas evaluar el costo antes de
               comprometerte, puedes{' '}
@@ -312,9 +329,9 @@ export default function ArticlePage() {
             {/* Credential cards */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 4, mt: 2 }}
             >
-              4 razones que respaldan la confiabilidad de Enérgica City
+              ¿Por qué confiar en Enérgica City para instalar tu cargador eléctrico?
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 6 }}>
               {credentialCards.map((card) => (
@@ -360,9 +377,9 @@ export default function ArticlePage() {
             {/* Guarantee table */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
             >
-              Resumen de garantías y condiciones
+              ¿Qué garantías incluye la instalación con Enérgica City?
             </Typography>
             <Box
               sx={{ border: '1px solid #E2E8F0', borderRadius: 2, overflow: 'hidden', mb: 6 }}
@@ -408,9 +425,9 @@ export default function ArticlePage() {
             {/* Topic cluster internal links */}
             <Typography
               component="h2"
-              sx={{ fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
+              sx={{ lineHeight: 1.4, fontSize: { xs: '1.6rem', md: '2rem' }, fontWeight: 700, color: DARK, mb: 3, mt: 2 }}
             >
-              Antes de contratar: lo que debes saber
+              ¿Qué debes saber antes de contratar la instalación de tu cargador EV?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               Saber que la empresa es confiable es el primer paso. El segundo es entender qué
@@ -473,6 +490,7 @@ export default function ArticlePage() {
                 color: DARK,
                 mb: 5,
                 textAlign: 'center',
+                lineHeight: '3rem',
               }}
             >
               Preguntas frecuentes sobre Enérgica City
@@ -501,7 +519,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>
@@ -545,7 +563,7 @@ export default function ArticlePage() {
                   Cotizar ahora (2 min)
                 </Box>
               </Link>
-              <Link href="/agenda" style={{ textDecoration: 'none' }}>
+              <Link href="/forms" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
                     px: 4,

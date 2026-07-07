@@ -57,20 +57,31 @@ const blogPostingSchema = {
     'Cuánto tarda cargar el Hyundai Ioniq 5 e Ioniq 6 en Chile. Tecnología 800V, cargadores AC y DC. Instalación certificada desde $159.000.',
   author: {
     '@type': 'Person',
+    name: 'Felipe Donoso',
+    '@id': 'https://www.energica.city/#author-felipe-donoso',
+    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
+    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
+  },
+  contributor: {
+    '@type': 'Person',
     name: 'Gilberto Escalona',
+    '@id': 'https://www.energica.city/#author-gilberto-escalona',
     jobTitle: 'Gerente Técnico, Enérgica City',
     url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
+    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
+    '@id': 'https://www.energica.city/#organization',
     url: CANONICAL_DOMAIN,
     logo: { '@type': 'ImageObject', url: `${CANONICAL_DOMAIN}/images/logos/logo.png`, width: 259, height: 42 },
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
   datePublished: '2025-06-01',
-  dateModified: '2025-06-01',
+  dateModified: '2026-07-07',
   url: `${CANONICAL_DOMAIN}/blog/cuanto-tiempo-tarda-cargar-hyundai-ioniq-5-chile`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -269,6 +280,16 @@ export default function ArticlePage() {
             >
               Hyundai Ioniq 5 y 6: Tiempos de Carga y Cargadores Ideales
             </Typography>
+          <Box
+            component="time"
+            dateTime="2025-06-01"
+            sx={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', mt: 1.5, letterSpacing: '0.02em' }}
+          >
+            1 de junio, 2025
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
+            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+          </Typography>
             <Typography
               sx={{
                 fontSize: { xs: '1rem', md: '1.15rem' },
@@ -328,7 +349,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Especificaciones de carga: Ioniq 5 e Ioniq 6 en detalle
+              ¿Cuál es la velocidad de carga del Hyundai Ioniq 5 e Ioniq 6?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               El Hyundai Ioniq 5 y el Ioniq 6 comparten la plataforma E-GMP (Electric-Global Modular Platform) de
@@ -471,7 +492,7 @@ export default function ArticlePage() {
                               color: '#16A34A',
                               px: 1.5,
                               py: 0.25,
-                              borderRadius: 1,
+                              borderRadius: 0,
                               fontSize: '0.75rem',
                               fontWeight: 700,
                             }}
@@ -498,7 +519,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 3, color: DARK }}>
-              Costo de carga en casa vs gasolina: el ahorro real en Chile
+              ¿Cuánto se ahorra al cargar el Ioniq 5 en casa vs gasolina en Chile?
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', mb: 3 }}>
               El argumento económico para el Ioniq 5 en Chile es contundente. Partiendo de datos reales de 2025:
@@ -555,7 +576,8 @@ export default function ArticlePage() {
               Tip: aprovecha la tarifa nocturna de Enel para cargar más barato
             </Typography>
             <Typography sx={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155' }}>
-              Enel distribución ofrece la tarifa BT1 con discriminación horaria (Horo-estacional), donde el kWh
+              Enel distribución ofrece la{' '}
+              <a href="https://www.cne.cl/tarificacion/electricidad/tarifas-electricidad/" target="_blank" rel="noopener noreferrer">tarifa BT1 con discriminación horaria (Horo-estacional)</a>, donde el kWh
               nocturno (22:00–07:00) puede costar hasta un 30% menos que la tarifa plana. Conectar el Ioniq 5 a
               las 22:00 con un timer en el Wallbox o directamente desde la app del vehículo reduce el costo de
               carga a aproximadamente $8.750 CLP por carga completa, maximizando el ahorro.
@@ -660,7 +682,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="cuanto-tiempo-tarda-cargar-hyundai-ioniq-5-chile" />
 
         {/* Author byline */}
-        <AuthorByline />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

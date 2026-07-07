@@ -2,8 +2,9 @@
 
 // components/OrderConfirmation.tsx
 import React, { useEffect, useState } from "react";
-import dayjs from "dayjs";
-import "dayjs/locale/es"; // Importa el idioma español
+import { format, parseISO } from 'date-fns';
+import { formatChileTime } from '@/utils/chile-tz';
+import es from 'date-fns/locale/es';
 
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -85,11 +86,9 @@ export default function FormResumeVirtual() {
   const PRODUCT_NAME = "Visita Técnica ";
 
   const toChileTime = (dateSchedule: any) => {
-    const { date, format = "HH:mm" } = dateSchedule;
+    const { date, format: fmt = 'HH:mm' } = dateSchedule;
     const dateUTC = new Date(date);
-    return dayjs(dateUTC)
-      .tz("America/Santiago")
-      .format(format);
+    return formatChileTime(dateUTC, fmt);
   };
 
   useEffect(() => {
@@ -254,9 +253,7 @@ export default function FormResumeVirtual() {
                             }}
                           >
                             {/* {calendarData?.startDate} */}
-                            {dayjs(calendarData?.startDate).format(
-                              "D [de] MMMM"
-                            )}
+                            {calendarData?.startDate ? format(parseISO(calendarData.startDate), "d 'de' MMMM", { locale: es }) : ''}
                           </Typography>
                         </Box>
                       </Box>

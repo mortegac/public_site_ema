@@ -2,16 +2,6 @@
 
 // components/OrderConfirmation.tsx
 import React, { useEffect, useState } from "react";
-import dayjs from "dayjs";
-import "dayjs/locale/es"; // Importa el idioma español
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-
-// Configurar los plugins de dayjs
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.locale("es"); // Configurar el idioma español
-
 import PageContainer from "@/app/components/container/PageContainer";
 
 

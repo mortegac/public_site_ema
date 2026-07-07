@@ -46,15 +46,7 @@ import {
   Divider,
   Chip,
 } from "@mui/material";
-import dayjs from "dayjs";
-import "dayjs/locale/es"; // Importa el idioma español
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-
-// Configurar los plugins de dayjs
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.locale("es"); // Configurar el idioma español
+import { formatChileTime } from '@/utils/chile-tz';
 
 
 import { useFormik } from 'formik';
@@ -160,9 +152,9 @@ export const Step02 = (props:any) => {
   const { trackEvent } = useAnalytics();
 
   const toChileTime = (dateSchedule: any) => {
-    const { date, format = "HH:mm" } = dateSchedule;
+    const { date, format: fmt = 'HH:mm' } = dateSchedule;
     const dateUTC = new Date(date);
-    return dayjs(dateUTC).tz("America/Santiago").format(format);
+    return formatChileTime(dateUTC, fmt);
   };
 
   const formik = useFormik({

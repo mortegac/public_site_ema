@@ -7,7 +7,8 @@ import MyApp from "./[uid]/app";
 // import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
-import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget';
+import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget'
+import CookieBanner from '@/app/components/shared/CookieBanner';
 
 
 import { configureAmplify } from "@/utils/amplify-config";
@@ -130,6 +131,7 @@ export default function RootLayout({
             </MyApp>
             
             <ConditionalFloatingVisitWidget />
+            <CookieBanner />
           <PrismicPreview repositoryName={repositoryName} />
         </Providers>
       </body>

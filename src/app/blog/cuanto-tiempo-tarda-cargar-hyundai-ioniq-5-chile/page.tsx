@@ -80,8 +80,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
+  keywords: 'Hyundai Ioniq 5 carga Chile, tiempo de carga Ioniq 5, Wallbox Ioniq 5, cargador Hyundai Ioniq 6, tecnología 800V carga rápida, costo carga eléctrica Chile, instalación cargador Hyundai',
   datePublished: '2025-06-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/cuanto-tiempo-tarda-cargar-hyundai-ioniq-5-chile`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -683,6 +684,16 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        <Box sx={{ py: 3, px: { xs: 2, md: 0 }, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Tienes Hyundai IONIQ 5 y quieres instalar un cargador en casa?{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9', fontWeight: 600 }}>
+              Obtén tu presupuesto online en 2 minutos
+            </Link>
+            .
+          </Typography>
+        </Box>
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

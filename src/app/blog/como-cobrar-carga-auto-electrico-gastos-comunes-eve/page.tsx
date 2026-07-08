@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Tecnología',
+  keywords: 'cobro carga EV edificio, gastos comunes auto eléctrico, plataforma EVE, cargadores edificio departamentos, OCPP edificio, gestión carga EV, balanceo de carga, electromovilidad edificio chile',
   datePublished: '2025-05-05',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -597,6 +598,19 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Internal cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            Para gestionar la carga en edificios, conoce el sistema de{' '}
+            <Link href="/blog/cargador-inteligente-ocpp-beneficios-administracion" style={{ color: '#0898b9' }}>
+              cargadores inteligentes OCPP
+            </Link>{' '}o el modelo de{' '}
+            <Link href="/blog/electrolinera-edificio-inversion-cero" style={{ color: '#0898b9' }}>
+              electrolinera con inversión cero
+            </Link>.
+          </Typography>
+        </Box>
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

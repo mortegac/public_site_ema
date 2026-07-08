@@ -74,13 +74,29 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Normativa',
+  keywords: 'certificado te6 sec chile, trámite te6 cargador eléctrico, declaración instalación eléctrica sec, nte6 electromovilidad requisitos, instalador eléctrico sec cargador ev, normativa cargador vehículo eléctrico chile, plazo certificado sec instalación',
   datePublished: '2025-05-05',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
     '@id': `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   },
+}
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  'name': 'Cómo tramitar el certificado TE6 ante la SEC en Chile',
+  'description': 'Proceso de 5 pasos para obtener la declaración TE6 de la Superintendencia de Electricidad y Combustibles (SEC) para instalaciones de cargadores EV en Chile.',
+  'totalTime': 'P7D',
+  'step': [
+    { '@type': 'HowToStep', 'position': 1, 'name': 'Contratar un instalador certificado SEC', 'text': 'Solo instaladores con licencia vigente categoría A, B o C pueden presentar el TE6. La categoría mínima para instalaciones domiciliarias de cargadores EV es la categoría B.' },
+    { '@type': 'HowToStep', 'position': 2, 'name': 'Realizar la instalación eléctrica', 'text': 'El instalador ejecuta la instalación conforme a la NCh Elec. 4/2003: circuito dedicado, calibre de cable adecuado, protección diferencial tipo A y conexión a tierra.' },
+    { '@type': 'HowToStep', 'position': 3, 'name': 'Reunir los documentos requeridos', 'text': 'Se deben preparar: plano unifilar, memoria de cálculo eléctrico, lista de materiales certificados, informe de mediciones y datos del instalador responsable.' },
+    { '@type': 'HowToStep', 'position': 4, 'name': 'Presentar la declaración en el portal SEC Online', 'text': 'El instalador sube todos los documentos al portal SEC Online. El proceso es totalmente digital desde 2022. No se requiere presentación física salvo casos excepcionales.' },
+    { '@type': 'HowToStep', 'position': 5, 'name': 'Obtener la aprobación SEC', 'text': 'El plazo estándar es de 5 a 7 días hábiles. Una vez aprobado, el número de declaración queda registrado en el sistema de la SEC y es verificable por aseguradoras.' },
+  ],
 }
 
 const faqSchema = {
@@ -138,6 +154,10 @@ export default function ArticlePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
       />
       <script
         type="application/ld+json"
@@ -366,7 +386,8 @@ export default function ArticlePage() {
               ¿Quién puede tramitar el TE6?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
-              Solo los instaladores eléctricos con licencia vigente{' '}
+              Solo los <Link href="/blog/instaladores-sec-ema-electromovilidad-chile" style={{ color: TEAL }}>instaladores SEC certificados de Enérgica City</Link>{' '}
+              con licencia vigente{' '}
               <a href="https://www.sec.cl/sitioweb/instaladores-electricos/" target="_blank" rel="noopener noreferrer">registrados en la SEC</a> pueden
               presentar el formulario TE6. La ley chilena prohíbe expresamente que un propietario
               o un técnico sin licencia SEC realice instalaciones eléctricas en baja tensión o

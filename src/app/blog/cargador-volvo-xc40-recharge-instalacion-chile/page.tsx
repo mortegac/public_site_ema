@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
+  keywords: 'cargador Volvo XC40 Recharge, instalación wallbox Volvo chile, cargador C40 Recharge, Volvo eléctrico carga domiciliaria, wallbox 11kW trifásico, instalación SEC cargador EV, tarifa nocturna vehículo eléctrico',
   datePublished: '2025-05-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -566,8 +567,9 @@ export default function ArticlePage() {
               y notificar a la administración, pero no necesita su aprobación para proceder.
             </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 0, lineHeight: 1.8 }}>
-              En Enérgica City hemos realizado más de 200 instalaciones en edificios de Santiago y
-              otras regiones. Nuestro equipo maneja la coordinación completa con la administración,
+              En Enérgica City hemos realizado más de 200 instalaciones en edificios de{' '}
+              <Link href="/servicios/santiago" style={{ color: '#0898b9' }}>Santiago</Link>{' '}
+              y otras regiones. Nuestro equipo maneja la coordinación completa con la administración,
               el diseño eléctrico que no interfiere con los sistemas del edificio, y la emisión del
               certificado TE6 al finalizar.
             </Typography>
@@ -617,6 +619,16 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        <Box sx={{ py: 3, px: { xs: 2, md: 0 }, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Tienes Volvo XC40 Recharge y quieres instalar un cargador en casa?{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9', fontWeight: 600 }}>
+              Obtén tu presupuesto online en 2 minutos
+            </Link>
+            .
+          </Typography>
+        </Box>
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

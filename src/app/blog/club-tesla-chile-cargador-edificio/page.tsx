@@ -18,13 +18,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'club-tesla-chile-cargador-edificio'
 
 export const metadata: Metadata = {
-  title: 'Club Tesla Chile: Cargador en Edificio — Opciones y Precios 2026',
+  title: 'Club Tesla Chile: Cargador en Edificio — Precios 2026',
   description:
     'Guía para miembros del Club Tesla Chile que viven en edificios: Wall Connector en departamento, electrolinera comunitaria $0 o instalación privada certificada SEC. Cotiza en minutos.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Club Tesla Chile: Cargador en Edificio — Opciones y Precios 2026',
+    title: 'Club Tesla Chile: Cargador en Edificio — Precios 2026',
     description:
       'Guía para miembros del Club Tesla Chile que viven en edificios: Wall Connector en departamento, electrolinera comunitaria $0 o instalación privada certificada SEC. Cotiza en minutos.',
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Club Tesla Chile: Cargador en Edificio — Opciones y Precios 2026',
+    title: 'Club Tesla Chile: Cargador en Edificio — Precios 2026',
     description:
       'Guía para miembros del Club Tesla Chile que viven en edificios: Wall Connector en departamento, electrolinera comunitaria $0 o instalación privada certificada SEC.',
     images: [`${CANONICAL_DOMAIN}/images/post/30_1170x400.png`],
@@ -81,8 +81,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
+  keywords: 'club tesla chile, cargador edificio auto eléctrico, tesla wall connector departamento, electrolinera comunitaria edificio, instalación cargador tesla sec, wallbox edificio santiago, cargador eléctrico edificio sin inversión',
   datePublished: '2026-06-11',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -130,7 +131,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Club Tesla Chile: Cargador en Edificio — Opciones y Precios 2026',
+      name: 'Club Tesla Chile: Cargador en Edificio — Precios 2026',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],
@@ -578,6 +579,19 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Cross-link */}
+        <Box sx={{ py: 3, px: 2 }}>
+          <Container maxWidth="md">
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Tu edificio necesita infraestructura de carga?{' '}
+              <Link href="/blog/electrolinera-edificio-inversion-cero" style={{ color: '#0898b9' }}>
+                Modelo de electrolinera con inversión cero
+              </Link>
+              .
+            </Typography>
+          </Container>
+        </Box>
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

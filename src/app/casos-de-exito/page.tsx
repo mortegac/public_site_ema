@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   title: 'Casos de Éxito en Cargadores EV para Empresas',
   description: 'Conoce cómo Chilexpress, CMP y CMPC confiaron en Energica City para instalar cargadores eléctricos para sus flotas en Chile.',
   alternates: { canonical: 'https://www.energica.city/casos-de-exito' },
+  openGraph: {
+    url: 'https://www.energica.city/casos-de-exito',
+    title: 'Casos de Éxito — Cargadores Eléctricos Instalados por Enérgica City',
+    description: 'Proyectos reales de instalación de cargadores EV en hogares, empresas y edificios. Más de 500 instalaciones en Chile.',
+    images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: 'Casos de éxito instalación cargadores eléctricos Chile' }],
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'Casos de Éxito — Enérgica City',
+    description: 'Proyectos reales de instalación de cargadores EV en Chile. Hogares, empresas y edificios.',
+    images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+  },
 }
 
 const reviews = [
@@ -69,7 +81,7 @@ export default function CasosDeExitoPage() {
       "author": { "@type": "Person", "name": r.author },
       "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
       "reviewBody": r.text,
-      "datePublished": "2025-01-01"
+      "datePublished": "2026-06-01"
     }))
   }
 
@@ -111,8 +123,19 @@ export default function CasosDeExitoPage() {
     ]
   }
 
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Casos de Éxito — Enérgica City",
+    "description": "Proyectos reales de instalación de cargadores eléctricos en hogares, empresas y edificios en Chile.",
+    "url": "https://www.energica.city/casos-de-exito",
+    "inLanguage": "es-CL",
+    "publisher": { "@type": "Organization", "name": "Energica City", "url": "https://www.energica.city" },
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />

@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
+  keywords: 'instalación cargador eléctrico valparaíso, cargador vehículo eléctrico viña del mar, wallbox v región chile, instalador sec valparaíso, cargador ev zona costera, electromovilidad gran valparaíso, cargador edificio viña del mar',
   datePublished: '2025-05-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',

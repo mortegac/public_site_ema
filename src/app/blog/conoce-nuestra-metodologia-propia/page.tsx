@@ -73,8 +73,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
+  keywords: 'metodología electrificación flotas, software GRETA Enérgica, descarbonización flotas chile, análisis técnico económico flotas eléctricas, optimización flota transporte, electromovilidad empresas chile, transición energética flotas',
   datePublished: '2026-07-07',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',

@@ -80,8 +80,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Normativa',
+  keywords: 'seguridad eléctrica cargador ev, diferencial tipo a cargador eléctrico, protecciones wallbox obligatorias chile, circuito dedicado cargador ev, normativa nch elec cargadores, interruptor termomagnético wallbox, instalación segura cargador auto eléctrico',
   datePublished: '2025-05-22',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/seguridad-electrica-cargadores-ev-protecciones-necesarias`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -638,6 +639,16 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Internal cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Quieres instalar tu cargador con todas las protecciones correctas?{' '}
+            <Link href="/blog/tramite-sec-te6-electromovilidad-plazos-requisitos" style={{ color: '#0898b9' }}>
+              Conoce el trámite TE6 y sus requisitos SEC
+            </Link>.
+          </Typography>
+        </Box>
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

@@ -18,13 +18,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'instalar-cargador-ev-departamento-edificio'
 
 export const metadata: Metadata = {
-  title: 'Cargador EV en tu Departamento: 3 Opciones para Edificios en Chile 2026',
+  title: 'Cargador EV en Departamento: 3 Opciones para Edificios en Chile',
   description:
     '¿Tienes auto eléctrico y vives en departamento? Estas son las 3 opciones reales para instalar o acceder a un cargador en tu edificio en Chile: electrolinera $0, kit técnico $29.000 o instalación privada.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Cargador EV en tu Departamento: 3 Opciones para Edificios en Chile 2026',
+    title: 'Cargador EV en Departamento: 3 Opciones para Edificios en Chile',
     description:
       '¿Tienes auto eléctrico y vives en departamento? Estas son las 3 opciones reales para instalar o acceder a un cargador en tu edificio en Chile: electrolinera $0, kit técnico $29.000 o instalación privada.',
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cargador EV en tu Departamento: 3 Opciones para Edificios en Chile 2026',
+    title: 'Cargador EV en Departamento: 3 Opciones para Edificios en Chile',
     description:
       '¿Tienes auto eléctrico y vives en departamento? Estas son las 3 opciones reales para instalar o acceder a un cargador en tu edificio en Chile.',
     images: [`${CANONICAL_DOMAIN}/images/post/29_1170x400.png`],
@@ -81,8 +81,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Edificios',
+  keywords: 'cargador EV departamento Chile, instalar cargador edificio, electrolinera comunitaria edificio, Wallbox estacionamiento privado, Ley Copropiedad vehículo eléctrico, cargador auto eléctrico condominio, instalación cargador SEC edificio',
   datePublished: '2026-06-11',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -130,7 +131,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Cargador EV en tu Departamento: 3 Opciones para Edificios en Chile 2026',
+      name: 'Cargador EV en Departamento: 3 Opciones para Edificios en Chile',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],
@@ -288,6 +289,27 @@ export default function ArticlePage() {
               tres soluciones adaptadas al tipo de aprobación que necesita tu edificio, tu
               presupuesto y tu estacionamiento.
             </Typography>
+            <Box sx={{ mt: 4 }}>
+              <Link href="/postulacion-cargadores-edificios" style={{ textDecoration: 'none' }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-block',
+                    bgcolor: PINK,
+                    color: '#fff',
+                    px: 4,
+                    py: 1.75,
+                    borderRadius: 1,
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    '&:hover': { bgcolor: PINK_DARK },
+                  }}
+                >
+                  Postula gratis a una electrolinera comunitaria
+                </Box>
+              </Link>
+            </Box>
           </Container>
         </Box>
 
@@ -564,6 +586,18 @@ export default function ArticlePage() {
                 </Typography>
               </Box>
             ))}
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              Para edificios con muchos vehículos eléctricos, conoce el modelo de{' '}
+              <Link href="/blog/electrolinera-edificio-inversion-cero" style={{ color: '#0898b9' }}>
+                electrolinera con inversión cero
+              </Link>
+              .{' '}
+              Si estás en un proyecto nuevo, lee sobre{' '}
+              <Link href="/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos" style={{ color: '#0898b9' }}>
+                infraestructura EV en proyectos inmobiliarios
+              </Link>
+              .
+            </Typography>
           </Container>
         </Box>
 
@@ -615,7 +649,7 @@ export default function ArticlePage() {
                   Cotizar ahora (2 min)
                 </Box>
               </Link>
-              <Link href="/cotizador" style={{ textDecoration: 'none' }}>
+              <Link href="/cargadores-en-edificios" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
                     px: 4,
@@ -628,7 +662,7 @@ export default function ArticlePage() {
                     cursor: 'pointer',
                   }}
                 >
-                  Ver opciones edificio
+                  Postula a una electrolinera comunitaria gratis
                 </Box>
               </Link>
             </Box>

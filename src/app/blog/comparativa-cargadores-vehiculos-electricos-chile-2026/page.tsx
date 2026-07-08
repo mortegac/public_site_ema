@@ -18,7 +18,7 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'comparativa-cargadores-vehiculos-electricos-chile-2026'
 
 export const metadata: Metadata = {
-  title: 'Comparativa Cargadores para Autos Eléctricos Chile 2026: Wallbox y Portátiles',
+  title: 'Comparativa Cargadores EV Chile 2026: Wallbox vs Portátil',
   description:
     'Compara los 8 mejores Wallbox para autos eléctricos disponibles en Chile 2026: ZEERO Minibox, EFFITEC, LIVOLTEK, KPN, BESTE, BENY y Workersbee portátil. Precios y especificaciones.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
@@ -81,7 +81,7 @@ const blogPostingSchema = {
   inLanguage: 'es-CL',
   articleSection: 'Comparativas',
   datePublished: '2026-06-19',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -625,6 +625,16 @@ export default function ArticlePage() {
 
         <BlogRelatedArticles currentUid={SLUG} />
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Ya elegiste tu cargador?{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+              Obtén tu presupuesto de instalación en línea
+            </Link>{' '}con instaladores SEC certificados.
+          </Typography>
+        </Box>
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

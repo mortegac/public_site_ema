@@ -18,13 +18,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'como-usar-cotizador-cargador-electrico'
 
 export const metadata: Metadata = {
-  title: 'Cómo Usar el Cotizador de Cargadores Eléctricos: Paso a Paso — Enérgica City',
+  title: 'Cómo Usar el Cotizador de Cargadores EV — Guía Paso a Paso',
   description:
     'Guía paso a paso para usar el cotizador online de cargadores eléctricos de Enérgica City. Casa o edificio, portátil o Wallbox, electrolinera comunitaria $0. Presupuesto exacto en 2 minutos.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Cómo Usar el Cotizador de Cargadores Eléctricos: Paso a Paso — Enérgica City',
+    title: 'Cómo Usar el Cotizador de Cargadores EV — Guía Paso a Paso',
     description:
       'Guía paso a paso para usar el cotizador online de cargadores eléctricos de Enérgica City. Casa o edificio, portátil o Wallbox, electrolinera comunitaria $0. Presupuesto exacto en 2 minutos.',
     images: [
@@ -74,8 +74,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Guías',
+  keywords: 'cotizador cargador eléctrico, presupuesto instalación cargador EV, cargador Wallbox precio Chile, cotizar instalación cargador Chile, cargador portátil vehículo eléctrico precio, instalación cargador casa departamento, cotizador online electromovilidad',
   datePublished: '2026-06-11',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -456,6 +457,16 @@ export default function ArticlePage() {
           imageSrc="/images/profile/manuel-ortega.jpg"
           imageAlt="Manuel Ortega, Enérgica City"
         />
+
+        {/* Cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Ya cotizaste? El siguiente paso es{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+              solicitar tu presupuesto definitivo de instalación
+            </Link>.
+          </Typography>
+        </Box>
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

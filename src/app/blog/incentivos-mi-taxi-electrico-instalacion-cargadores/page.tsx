@@ -20,7 +20,7 @@ const SLUG = 'incentivos-mi-taxi-electrico-instalacion-cargadores'
 export const metadata: Metadata = {
   title: 'Programa Mi Taxi Eléctrico: Carga domiciliaria para conductores',
   description:
-    'Apoya del programa Mi Taxi Eléctrico para instalar cargadores en casa. Subsidio del Ministerio de Energía para taxistas y colectiveros en Chile 2025.',
+    'Apoya del programa Mi Taxi Eléctrico para instalar cargadores en casa. Subsidio del Ministerio de Energía para taxistas y colectiveros en Chile 2026.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mi Taxi Eléctrico: Subsidio para cargadores en casa — Chile 2025',
+    title: 'Mi Taxi Eléctrico: Subsidio para cargadores en casa — Chile 2026',
     description:
       'Programa Mi Taxi Eléctrico del Ministerio de Energía: cómo instalar tu cargador domiciliario con subsidio y con instalador SEC autorizado.',
     images: [`${CANONICAL_DOMAIN}/images/post/11_1170x400.png`],
@@ -74,8 +74,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Beneficios',
+  keywords: 'Mi Taxi Eléctrico subsidio cargador, programa Mi Taxi Eléctrico Ministerio Energía, cargador domiciliario taxistas Chile, subsidio instalación cargador Chile, carga domiciliaria taxi eléctrico, instalador autorizado Mi Taxi Eléctrico, electromovilidad transporte público Chile',
   datePublished: '2025-05-15',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -333,7 +334,7 @@ export default function ArticlePage() {
                 lineHeight: '3rem',
               }}
             >
-              ¿Qué otros incentivos tiene el taxi eléctrico en Chile 2025?
+              ¿Qué otros incentivos tiene el taxi eléctrico en Chile 2026?
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 3 }}>
               Más allá del subsidio a la carga domiciliaria, los taxistas y colectiveros que
@@ -602,6 +603,19 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Cross-link */}
+        <Box sx={{ py: 3, px: 2 }}>
+          <Container maxWidth="md">
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Tienes dudas sobre el trámite SEC para tu cargador?{' '}
+              <Link href="/blog/tramite-sec-te6-electromovilidad-plazos-requisitos" style={{ color: '#0898b9' }}>
+                Trámite TE6: plazos y requisitos
+              </Link>
+              .
+            </Typography>
+          </Container>
+        </Box>
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

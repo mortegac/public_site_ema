@@ -19,7 +19,7 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'guia-cargar-auto-electrico-casa-normativa-sec-te6'
 
 export const metadata: Metadata = {
-  title: 'Guía para Cargar tu Auto Eléctrico en Casa: Normativa SEC, TE6 y RIC N°15 Chile',
+  title: 'Guía: Cargar Auto Eléctrico en Casa — Normativa SEC y TE6',
   description:
     'Guía definitiva sobre carga domiciliaria de autos eléctricos en Chile: enchufe vs Wallbox, normativa SEC RIC N°15, certificado TE6 obligatorio, gestión de carga y costos. Cotiza en 2 minutos.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
@@ -83,7 +83,7 @@ const blogPostingSchema = {
   inLanguage: 'es-CL',
   articleSection: 'Normativa',
   datePublished: '2026-06-19',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -175,6 +175,14 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Sí, pero el proceso es más complejo que en una casa. Si el estacionamiento es de uso común, en muchos casos basta con el permiso del administrador del edificio para instalar una electrolinera comunitaria (Enérgica City la financia con inversión $0 para la comunidad). Si quieres un cargador privado en tu estacionamiento, necesitarás la autorización de la asamblea de propietarios según la Ley de Copropiedad 21.442. Enérgica City ofrece un kit de documentos por $29.000 (acreditable al presupuesto) con memoria técnica y carta tipo para presentar a la administración.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Quién puede emitir el certificado TE6 para un cargador de vehículo eléctrico?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Solo un instalador eléctrico con credencial SEC vigente puede emitir el TE6 para un cargador EV. La credencial debe estar habilitada para instalaciones en inmuebles (Clase A, B o C según la complejidad del proyecto). Puedes verificar la vigencia de la credencial ingresando el RUT del instalador en el Registro de Instaladores de sec.cl. Enérgica City asigna únicamente instaladores con credencial vigente y pone el número de credencial a disposición del cliente antes de iniciar el trabajo.',
       },
     },
   ],
@@ -583,6 +591,9 @@ export default function ArticlePage() {
               por el <strong>Pliego Técnico RIC N°15</strong> de la SEC y debe certificarse mediante
               el <strong>trámite TE6</strong> (declaración electrónica de energización). Ningún
               cargador eléctrico puede energizarse legalmente en Chile sin este registro formal.
+              Específicamente, el instalador debe registrar los datos técnicos en la plataforma{' '}
+              <strong>e-Declarador de la SEC</strong> — sin completar este paso, el cargador no
+              puede energizarse legalmente aunque la instalación física esté terminada.
             </Typography>
             <Typography sx={{ color: '#334155', lineHeight: 1.8, mb: 5 }}>
               El TE6 garantiza que el trabajo fue ejecutado por un instalador con credencial SEC

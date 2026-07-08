@@ -72,8 +72,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
+  keywords: 'infraestructura carga EV edificio nuevo, pre-instalación cargador eléctrico, EV Ready inmobiliaria chile, ley 21505 electromovilidad, cargadores edificio proyecto inmobiliario, preinstalación EV construcción, electromovilidad inmobiliaria chile',
   datePublished: '2025-06-15',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -526,7 +527,7 @@ export default function ArticlePage() {
         <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
           <Container maxWidth="md">
             <Typography variant="h2" sx={{ fontSize: { xs: '1.4rem', md: '2rem' }, fontWeight: 700, lineHeight: '3rem', mb: 5, color: DARK }}>
-              Preguntas frecuentes
+              Preguntas frecuentes sobre infraestructura EV en proyectos inmobiliarios
             </Typography>
             {faqSchema.mainEntity.map((item, i) => (
               <Box
@@ -544,6 +545,12 @@ export default function ArticlePage() {
                 </Typography>
               </Box>
             ))}
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Tienes un edificio existente sin infraestructura? Conoce el modelo de{' '}
+              <Link href="/blog/electrolinera-edificio-inversion-cero" style={{ color: '#0898b9' }}>
+                electrolinera para edificios con inversión cero
+              </Link>.
+            </Typography>
           </Container>
         </Box>
 
@@ -551,7 +558,13 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="infraestructura-carga-proyectos-inmobiliarios-nuevos" />
 
         {/* Author byline */}
-        <AuthorByline dateModified="2026-07-07" />
+        <AuthorByline
+          name="Felipe Donoso"
+          bio="Ingeniero Eléctrico especializado en infraestructura de carga EV para proyectos inmobiliarios y edificios en Chile."
+          imageSrc="/images/felipe-donoso.jpeg"
+          url="https://www.linkedin.com/in/felipedonoso-energica/"
+          dateModified="2026-07-07"
+        />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>
@@ -586,7 +599,7 @@ export default function ArticlePage() {
               </Box>
               <Box
                 component={Link}
-                href="/cotizador"
+                href="/contactanos"
                 sx={{
                   display: 'inline-block',
                   bgcolor: 'transparent',

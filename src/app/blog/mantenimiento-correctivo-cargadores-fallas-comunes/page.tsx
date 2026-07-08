@@ -80,8 +80,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
+  keywords: 'fallas cargador vehículo eléctrico, mantenimiento cargador ev chile, diagnóstico wallbox, cargador ev no funciona, mantenimiento preventivo cargador eléctrico, servicio técnico cargador ev, avería cargador auto eléctrico',
   datePublished: '2025-07-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/mantenimiento-correctivo-cargadores-fallas-comunes`,
   mainEntityOfPage: {
     '@type': 'WebPage',

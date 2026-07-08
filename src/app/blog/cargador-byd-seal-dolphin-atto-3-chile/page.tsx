@@ -18,13 +18,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'cargador-byd-seal-dolphin-atto-3-chile'
 
 export const metadata: Metadata = {
-  title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Instala en Casa o Edificio',
+  title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile',
   description:
     'Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal (75,7 kWh), Dolphin (44,9 kWh) y Atto 3 (60,5 kWh). Precio desde $159.000. Cotiza en minutos.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Instala en Casa o Edificio',
+    title: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile',
     description:
       'Instala un cargador certificado SEC para tu BYD en casa o edificio. Compatible con BYD Seal (75,7 kWh), Dolphin (44,9 kWh) y Atto 3 (60,5 kWh). Precio desde $159.000. Cotiza en minutos.',
     images: [
@@ -54,7 +54,7 @@ const blogPostingSchema = {
     width: 1170,
     height: 400,
   },
-  headline: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile: Instala en Casa o Edificio',
+  headline: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile',
   description:
     'Guía completa para instalar un cargador Wallbox Tipo 2 para BYD en Chile: compatibilidad por modelo, tiempos de carga, opciones para edificios y precios actualizados.',
   author: {
@@ -74,8 +74,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
+  keywords: 'cargador BYD Seal Chile, cargador BYD Dolphin, cargador BYD Atto 3, Wallbox Tipo 2 BYD, instalación cargador BYD edificio, cargador domiciliario BYD SEC, tiempo de carga BYD Chile',
   datePublished: '2026-06-11',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -517,6 +518,18 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Presupuesto cross-link */}
+        <Box sx={{ py: { xs: 4, md: 5 }, background: '#fff' }}>
+          <Container maxWidth="md">
+            <Typography sx={{ mt: 2, fontSize: '0.9rem', color: '#475569' }}>
+              ¿Quieres saber exactamente cuánto costará la instalación?{' '}
+              <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+                Obtén tu presupuesto online en 2 minutos
+              </Link>.
+            </Typography>
+          </Container>
+        </Box>
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, pt: { xs: 8, md: 10 }, pb: { xs: 6, md: 8 }, mb: -5 }}>

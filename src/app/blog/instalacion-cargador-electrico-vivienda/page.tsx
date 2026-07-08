@@ -18,13 +18,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'instalacion-cargador-electrico-vivienda'
 
 export const metadata: Metadata = {
-  title: 'Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica',
+  title: 'Instalación de Cargador EV en Casa: Guía Técnica 2026',
   description:
     'Guía técnica completa para instalar un cargador EV en vivienda: cableado AWG 6, diferencial tipo A, cargadores 16A vs 32A y certificado TE6 ante la SEC en Chile.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica',
+    title: 'Instalación de Cargador EV en Casa: Guía Técnica 2026',
     description:
       'Todo lo que necesitas saber para instalar un punto de carga de vehículo eléctrico en tu hogar: materiales, protecciones, normativa SEC y diferencias entre 16A y 32A.',
     images: [
@@ -82,7 +82,7 @@ const blogPostingSchema = {
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
   datePublished: '2026-06-19',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -140,7 +140,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Instalación de Cargadores para Vehículos Eléctricos en Casa: Guía Técnica',
+      name: 'Instalación de Cargador EV en Casa: Guía Técnica 2026',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],

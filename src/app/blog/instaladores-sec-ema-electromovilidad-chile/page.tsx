@@ -16,13 +16,13 @@ const GRAY_BG = '#F8FAFC'
 const SLUG = 'instaladores-sec-ema-electromovilidad-chile'
 
 export const metadata: Metadata = {
-  title: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile',
+  title: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad',
   description:
-    'El problema de la electromovilidad en Chile no es la falta de autos, es la falta de manos certificadas. Únete a EMA (Electricians Marketplace) y accede a proyectos ya validados, gestión operativa y el segmento residencial que concentrará el 80% de la carga.',
+    'El problema de la electromovilidad en Chile no es la falta de autos, es la falta de manos certificadas. Únete a EMA (Electricians Marketplace) y accede a proyectos ya validados, gestión operativa y el segmento residencial que concentra más del 70% de la carga en Chile, según proyecciones del Ministerio de Energía.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile',
+    title: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad',
     description:
       'Enérgica City escala EMA, su red de instaladores certificados SEC. Proyectos validados, gestión operativa y foco residencial. Postula como partner.',
     images: [
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
-  headline: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad en Chile',
+  headline: 'Instaladores SEC: Únete a la Red EMA de Electromovilidad',
   description:
     'El verdadero freno de la electromovilidad en Chile es la fricción de instalación: procesos lentos, caros y sin trazabilidad. EMA resuelve esto conectando instaladores certificados SEC con proyectos ya validados.',
   image: {
@@ -72,8 +72,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Servicios',
+  keywords: 'instaladores SEC electromovilidad, red EMA instaladores certificados, certificado TE6 cargadores eléctricos, instalación cargador vehículo eléctrico Chile, electricistas marketplace, electromovilidad Chile 2026, instaladores certificados SEC Chile',
   datePublished: '2026-07-03',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: { '@type': 'WebPage', '@id': `${CANONICAL_DOMAIN}/blog/${SLUG}` },
 }
@@ -123,10 +124,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: '¿Por qué el segmento residencial concentrará el 80% de la carga EV en Chile?',
+      name: '¿Por qué el segmento residencial concentra la mayoría de la carga EV en Chile?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'La mayoría de los conductores de vehículos eléctricos carga su auto en casa durante la noche, cuando el vehículo permanece estacionado por más horas. Esto convierte el punto de carga residencial en el más utilizado estadísticamente. A medida que crece el parque de vehículos eléctricos en Chile, la demanda de instalaciones en casas y departamentos supera ampliamente a la de carga pública o comercial.',
+        text: 'El segmento residencial concentra más del 70% de la carga en Chile, según proyecciones del Ministerio de Energía. La mayoría de los conductores de vehículos eléctricos carga su auto en casa durante la noche, cuando el vehículo permanece estacionado por más horas. Esto convierte el punto de carga residencial en el más utilizado estadísticamente. A medida que crece el parque de vehículos eléctricos en Chile, la demanda de instalaciones en casas y departamentos supera ampliamente a la de carga pública o comercial.',
       },
     },
     {
@@ -134,7 +135,7 @@ const faqSchema = {
       name: '¿Cuáles son los beneficios de unirse a la red EMA como instalador SEC?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Los instaladores que se suman a EMA reciben proyectos ya validados (sin visitas técnicas perdidas), acceso a la plataforma EVE para gestión de energía y pagos, y participación en el segmento residencial que concentrará el 80% de la carga EV. EMA busca socios estratégicos, no intermediarios, que quieran crecer con la infraestructura de carga más inteligente del país.',
+        text: 'Los instaladores que se suman a EMA reciben proyectos ya validados (sin visitas técnicas perdidas), acceso a la plataforma EVE para gestión de energía y pagos, y participación en el segmento residencial que concentra más del 70% de la carga en Chile, según proyecciones del Ministerio de Energía. EMA busca socios estratégicos, no intermediarios, que quieran crecer con la infraestructura de carga más inteligente del país.',
       },
     },
     {
@@ -164,7 +165,7 @@ const benefits = [
   {
     icon: '🏠',
     title: 'Foco residencial',
-    body: 'Entra al segmento que concentrará el 80% de la carga en los próximos años. El mercado más grande está en las casas y departamentos de Chile.',
+    body: 'Entra al segmento residencial que concentra más del 70% de la carga en Chile (Min. Energía). El mercado más grande está en las casas y departamentos del país.',
     color: PINK,
   },
 ]
@@ -282,7 +283,7 @@ export default function ArticlePage() {
           <Container maxWidth="lg">
             <Grid container spacing={2} justifyContent="center">
               {[
-                { value: '80%', label: 'de la carga EV será residencial en los próximos años' },
+                { value: '70%+', label: 'de la carga EV es residencial en Chile (Min. Energía)' },
                 { value: 'SEC', label: 'Certificación obligatoria para instalar cargadores en Chile' },
                 { value: 'EVE', label: 'Plataforma de gestión de energía y pagos de Enérgica City' },
               ].map((stat) => (
@@ -486,7 +487,8 @@ export default function ArticlePage() {
                 ¿Eres instalador certificado o proveedor de infraestructura?
               </Typography>
               <Typography sx={{ fontSize: '1.1rem', color: '#475569', lineHeight: 1.7, maxWidth: 580, mx: 'auto' }}>
-                Postula para unirte a los proyectos que estamos desplegando en la Región Metropolitana
+                Postula para unirte a los proyectos que estamos desplegando en la{' '}
+                <Link href="/servicios/santiago" style={{ color: '#0898b9' }}>Región Metropolitana</Link>{' '}
                 y regiones. Completa el formulario y te contactaremos con los requisitos y el proceso
                 de incorporación.
               </Typography>

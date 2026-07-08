@@ -19,13 +19,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'instalar-cargador-electrico-casa-wallbox'
 
 export const metadata: Metadata = {
-  title: 'Cómo Instalar un Cargador Eléctrico (Wallbox) en Casa: Guía Completa Chile',
+  title: 'Cómo Instalar un Wallbox en Casa: Guía Completa Chile',
   description:
     'Guía completa para instalar un cargador Wallbox en casa en Chile: evaluación técnica, protecciones eléctricas, Nivel 1 vs Nivel 2, certificado TE6 y costo desde $159.000.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Cómo Instalar un Cargador Eléctrico (Wallbox) en Casa: Guía Completa Chile',
+    title: 'Cómo Instalar un Wallbox en Casa: Guía Completa Chile',
     description:
       'Todo el proceso para instalar un Wallbox en tu hogar: qué evalúa el técnico, qué protecciones son obligatorias, cuánto cuesta y cómo obtener el certificado TE6 de la SEC.',
     images: [
@@ -84,7 +84,7 @@ const blogPostingSchema = {
   articleSection: 'Instalación',
   keywords: 'instalar cargador eléctrico casa Chile, Wallbox instalación domiciliaria, circuito dedicado cargador EV, certificado TE6 SEC, cargador Nivel 2 Chile, precio instalación Wallbox, técnico SEC cargador',
   datePublished: '2026-06-19',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -148,7 +148,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Cómo Instalar un Cargador Eléctrico (Wallbox) en Casa: Guía Completa Chile',
+      name: 'Cómo Instalar un Wallbox en Casa: Guía Completa Chile',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],

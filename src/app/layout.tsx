@@ -2,9 +2,6 @@
 import React from "react";
 import { Providers } from "@/store/providers";
 import MyApp from "./[uid]/app";
-// import PageContainer from '@/app/components/container/PageContainer';
-// import Banner from '@/app/components/shared/banner/Banner';
-// import HeaderAlert from '@/app/components/shared/header/HeaderAlert';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import ConditionalFloatingVisitWidget from '@/app/components/shared/floating-visit-widget/ConditionalFloatingVisitWidget'
@@ -18,8 +15,6 @@ import GoogleTagManagerNoScript from "@/components/analytics/GoogleTagManagerNoS
 
 import { Inter } from "next/font/google";
 import { plus } from "@/utils/theme/Typography";
-// import { asText } from "@prismicio/client";
-// import { PrismicText } from "@prismicio/react";
 import { PrismicNextLink, PrismicPreview } from "@prismicio/next";
 
 import { createClient, repositoryName } from "@/prismicio";
@@ -88,9 +83,9 @@ export default function RootLayout({
               },
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://www.energica.city/logo.png",
-                "width": 200,
-                "height": 60
+                "url": "https://www.energica.city/images/logos/logo.png",
+                "width": 259,
+                "height": 42
               },
               "telephone": "+56967666652",
               "contactPoint": {

@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Beneficios',
+  keywords: 'electromovilidad chile 2035, estrategia nacional electromovilidad, carbono neutralidad chile 2050, autos eléctricos chile futuro, litio atacama, meta vehículos eléctricos chile, fin autos gasolina chile, ley electromovilidad chile',
   datePublished: '2025-05-05',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -669,6 +670,16 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Internal cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            Ya puedes instalar tu cargador hoy.{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+              Obtén un presupuesto online en 2 minutos
+            </Link>.
+          </Typography>
+        </Box>
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

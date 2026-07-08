@@ -74,8 +74,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Tecnología',
+  keywords: 'cargador inteligente OCPP, protocolo OCPP cargadores EV, gestión remota cargador vehículo eléctrico, carga programada tarifa nocturna Chile, plataforma EVE Enérgica City, OCPP 1.6 edificios Chile, administración cargadores RFID',
   datePublished: '2025-05-12',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -566,6 +567,17 @@ export default function ArticlePage() {
                 </Typography>
               </Box>
             ))}
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Necesitas instalar cargadores OCPP en tu edificio?{' '}
+              <Link href="/blog/electrolinera-edificio-inversion-cero" style={{ color: '#0898b9' }}>
+                Conoce el modelo de electrolinera con inversión cero
+              </Link>
+              {' '}o{' '}
+              <Link href="/blog/instalar-cargador-ev-departamento-edificio" style={{ color: '#0898b9' }}>
+                cómo instalar cargadores en departamentos
+              </Link>
+              .
+            </Typography>
           </Container>
         </Box>
 

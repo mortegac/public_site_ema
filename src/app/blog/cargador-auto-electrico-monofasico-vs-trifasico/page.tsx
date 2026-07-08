@@ -80,8 +80,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Tecnología',
+  keywords: 'cargador monofásico auto eléctrico, cargador trifásico EV, wallbox 7kW, wallbox 22kW, empalme monofásico chile, cargador a bordo OBC, instalación cargador EV chile, potencia carga vehículo eléctrico',
   datePublished: '2025-05-15',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/cargador-auto-electrico-monofasico-vs-trifasico`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -577,6 +578,19 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Internal cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Ya decidiste tu cargador? Lee la{' '}
+            <Link href="/blog/comparativa-cargadores-vehiculos-electricos-chile-2026" style={{ color: '#0898b9' }}>
+              comparativa de cargadores EV en Chile 2026
+            </Link>{' '}o{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+              solicita tu presupuesto de instalación
+            </Link>.
+          </Typography>
+        </Box>
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

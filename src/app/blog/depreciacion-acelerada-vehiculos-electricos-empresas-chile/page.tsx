@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
+  keywords: 'depreciación acelerada vehículos eléctricos Chile, Ley 21.505 electromovilidad, beneficios tributarios flota EV, impuesto verde vehículos eléctricos, IVA recuperable cargadores empresa, depreciación instantánea infraestructura carga, electrificar flota empresarial Chile',
   datePublished: '2025-05-05',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -651,6 +652,19 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Cross-link */}
+        <Box sx={{ py: 3, px: 2 }}>
+          <Container maxWidth="md">
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Tu empresa necesita instalar cargadores para su flota?{' '}
+              <Link href="/blog/instalar-cargador-ev-estacionamiento-oficina-santiago" style={{ color: '#0898b9' }}>
+                Instalar cargadores EV en estacionamientos de oficina
+              </Link>
+              .
+            </Typography>
+          </Container>
+        </Box>
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

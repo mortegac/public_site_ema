@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
+  keywords: 'Tesla Wall Connector Chile, instalación cargador Tesla, Wall Connector Gen 3, cargador domiciliario Tesla, certificación TE6 SEC, instalación eléctrica vehículo eléctrico, cargador Tesla monofásico trifásico',
   datePublished: '2025-05-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -626,6 +627,18 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Presupuesto cross-link */}
+        <Box sx={{ py: { xs: 4, md: 5 }, background: '#fff' }}>
+          <Container maxWidth="md">
+            <Typography sx={{ mt: 2, fontSize: '0.9rem', color: '#475569' }}>
+              ¿Quieres saber exactamente cuánto costará la instalación?{' '}
+              <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+                Obtén tu presupuesto online en 2 minutos
+              </Link>.
+            </Typography>
+          </Container>
+        </Box>
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

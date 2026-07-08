@@ -4,8 +4,20 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 
 export const metadata: Metadata = {
   title: 'Cómo Funciona la Instalación de Cargadores EV',
-  description: 'Conoce el proceso paso a paso para instalar cargadores eléctricos en tu empresa o edificio en Chile: cotización, visita técnica, instalación y certificación TE6.',
+  description: 'Proceso paso a paso para instalar cargadores eléctricos en empresa o edificio en Chile: cotización, visita técnica, instalación y certificación TE6.',
   alternates: { canonical: 'https://www.energica.city/como-funciona' },
+  openGraph: {
+    url: 'https://www.energica.city/como-funciona',
+    title: 'Cómo Funciona — Instalación de Cargadores EV en Chile',
+    description: 'Proceso de 4 pasos para instalar tu cargador eléctrico: visita técnica, propuesta, instalación y certificado TE6. En menos de 7 días hábiles.',
+    images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: 'Cómo funciona la instalación de cargadores EV' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cómo Funciona — Enérgica City',
+    description: 'Instalación de tu cargador EV en 4 pasos. Visita técnica, instalación y TE6 en menos de 7 días.',
+    images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+  },
 }
 
 // Steps data
@@ -17,6 +29,20 @@ const steps = [
   { number: '05', title: 'Certificación TE6', description: 'Gestionamos la documentación y certificación TE6 ante la SEC, garantizando que tu instalación cumple toda la normativa vigente en Chile.' },
   { number: '06', title: 'Soporte continuo', description: 'Ofrecemos mantenimiento preventivo, monitoreo remoto y soporte técnico para asegurar el máximo rendimiento de tus cargadores.' },
 ]
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cómo instalar cargadores eléctricos para empresas en Chile",
+  "description": "Proceso de 6 pasos para instalar cargadores EV en empresa o edificio: cotización, visita técnica, propuesta, instalación, certificación TE6 y soporte.",
+  "totalTime": "P7D",
+  "step": steps.map((s, i) => ({
+    "@type": "HowToStep",
+    "position": i + 1,
+    "name": s.title,
+    "text": s.description,
+  })),
+}
 
 const webPageSchema = {
   "@context": "https://schema.org",
@@ -54,6 +80,7 @@ export default function ComoFuncionaPage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />

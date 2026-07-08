@@ -18,13 +18,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'electrolinera-edificio-inversion-cero'
 
 export const metadata: Metadata = {
-  title: 'Electrolinera para Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
+  title: 'Electrolinera en Edificio: Inversión $0 — Pagas Solo lo que Cargas',
   description:
     'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Inversión $0 para la comunidad. Pagas solo $330/kWh consumido. Sin obra en tu estacionamiento privado.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Electrolinera para Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
+    title: 'Electrolinera en Edificio: Inversión $0 — Pagas Solo lo que Cargas',
     description:
       'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Inversión $0 para la comunidad. Pagas solo $330/kWh consumido. Sin obra en tu estacionamiento privado.',
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Electrolinera para Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
+    title: 'Electrolinera en Edificio: Inversión $0 — Pagas Solo lo que Cargas',
     description:
       'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Sin inversión para la comunidad.',
     images: [`${CANONICAL_DOMAIN}/images/post/28_1170x400.png`],
@@ -74,8 +74,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Edificios',
+  keywords: 'electrolinera edificio sin inversión, cargador eléctrico edificio gratis, cargador comunitario departamento, electromovilidad edificio residencial, cargador ev estacionamiento visitas, instalar cargador edificio chile, cargador auto eléctrico condominio',
   datePublished: '2026-06-11',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -123,7 +124,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Electrolinera para Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
+      name: 'Electrolinera en Edificio: Inversión $0 — Pagas Solo lo que Cargas',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],
@@ -533,6 +534,12 @@ export default function ArticlePage() {
                 </Typography>
               </Box>
             ))}
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Estás desarrollando un proyecto inmobiliario nuevo? Lee también:{' '}
+              <Link href="/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos" style={{ color: '#0898b9' }}>
+                Infraestructura de carga EV en proyectos inmobiliarios nuevos
+              </Link>.
+            </Typography>
           </Container>
         </Box>
 
@@ -540,7 +547,13 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline dateModified="2026-07-07" />
+        <AuthorByline
+          name="Felipe Donoso"
+          bio="Ingeniero Eléctrico especializado en instalaciones de carga para edificios residenciales y proyectos de electromovilidad en Chile."
+          imageSrc="/images/felipe-donoso.jpeg"
+          url="https://www.linkedin.com/in/felipedonoso-energica/"
+          dateModified="2026-07-07"
+        />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

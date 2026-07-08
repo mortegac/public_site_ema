@@ -19,13 +19,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'presupuesto-instalacion-cargador-electrico-desglose'
 
 export const metadata: Metadata = {
-  title: 'Presupuesto para instalar cargador eléctrico: ¿Qué pagas realmente?',
+  title: 'Presupuesto para Instalar tu Cargador EV: ¿Qué Pagas?',
   description:
     'Desglose transparente del costo de instalación de cargador EV en Chile: desde $159.000 en casas y $369.000 en edificios. Qué incluye: protecciones, tablero, TE6.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Presupuesto para Instalar Cargador Eléctrico: ¿Qué Pagas Realmente?',
+    title: 'Presupuesto para Instalar tu Cargador EV: ¿Qué Pagas?',
     description:
       'Desglose completo de costos de instalación de cargador EV en Chile. Lo que incluye, lo que puede encarecer el precio y cómo evitar sorpresas.',
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Presupuesto para instalar cargador eléctrico: ¿Qué pagas realmente?',
+    title: 'Presupuesto para Instalar tu Cargador EV: ¿Qué Pagas?',
     description:
       'Desglose transparente de costos. Instalación cargador EV desde $159.000 en casas con TE6 incluido.',
     images: [`${CANONICAL_DOMAIN}/images/post/04_1170x400.png`],
@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
+  keywords: 'presupuesto instalación cargador eléctrico chile, costo wallbox casa edificio, precio cargador ev chileno, desglose instalación cargador auto eléctrico, cuánto cuesta cargador ev, instalación cargador ev precio 2025, cotización wallbox con te6',
   datePublished: '2025-05-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -139,6 +140,15 @@ const houseCostItems = [
   { item: 'Mano de obra instalación', costo: '$60.000–$90.000', nota: 'Instalador SEC certificado' },
   { item: 'Certificado TE6 + trámite SEC', costo: '$25.000–$35.000', nota: 'Obligatorio por ley' },
   { item: 'Wallbox básico (incluible)', costo: 'Desde $120.000', nota: 'Modelo según presupuesto' },
+]
+
+const buildingCostItems = [
+  { item: 'Punto de carga monofásico 7 kW', costo: '$165.000 – $190.000', nota: 'Wallbox + montaje en estacionamiento' },
+  { item: 'Canalización en área común (por metro)', costo: '$8.500 – $12.000', nota: 'Conduit + mano de obra en ductos comunes' },
+  { item: 'Gabinete protecciones por punto', costo: '$35.000 – $55.000', nota: 'Diferencial tipo A + termomagnético' },
+  { item: 'Medidor subcontaje por punto', costo: '$45.000 – $65.000', nota: 'Facturación individual por propietario' },
+  { item: 'Gestión condominio + certificado TE6', costo: '$45.000', nota: 'Coordinación con administración + SEC' },
+  { item: 'Total por punto (estándar, <30 m)', costo: '$369.000 – $520.000', nota: 'Precio con IVA, Región Metropolitana' },
 ]
 
 const pricingFactors = [
@@ -298,6 +308,9 @@ export default function ArticlePage() {
             >
               ¿Qué Incluye el Precio de Instalación?
             </Typography>
+            <Typography sx={{ fontWeight: 600, color: '#0F172A', mb: 2, fontSize: { xs: '1.05rem', md: '1.1rem' } }}>
+              Instalar un Wallbox en Chile cuesta entre $159.000 y $215.000 en casas y $369.000 o más en edificios, con certificado TE6 incluido.
+            </Typography>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               Cuando alguien cotiza la instalación de un cargador EV en Chile, la respuesta más
               honesta parte por desglosar cada componente. Muchas empresas ofrecen precios bajos que
@@ -399,6 +412,24 @@ export default function ArticlePage() {
                   ))}
                 </tbody>
               </Box>
+            <Typography variant="body1" sx={{ color: '#334155', lineHeight: 1.7, mt: 3 }}>
+              En total, el costo de instalación de un Wallbox en casa —incluyendo circuito dedicado,
+              protecciones, canalización y certificado TE6— oscila entre $159.000 y $215.000 para
+              el escenario estándar (hasta 20 metros al tablero). Este es el precio con IVA, sin
+              letra chica, publicado por Enérgica City para instalaciones en la{' '}
+              <Link href="/servicios/santiago" style={{ color: '#0898b9' }}>Región Metropolitana</Link>.
+            </Typography>
+            <Box sx={{ border: '1px solid #e2e8f0', borderRadius: 2, p: 3, mt: 3, bgcolor: '#F8FAFC' }}>
+              <Typography sx={{ fontWeight: 600, color: '#0F172A', mb: 1 }}>
+                ¿Tienes cargador portátil (ICCB)?
+              </Typography>
+              <Typography sx={{ fontSize: '0.95rem', color: '#475569', lineHeight: 1.7 }}>
+                Si tu vehículo incluye cable ICCB de fábrica y tienes un enchufe estándar (Schuko o NEMA) cerca del estacionamiento,
+                no necesitas una instalación completa. Sin embargo, la carga será lenta (3–5 km de autonomía por hora) y deberás
+                verificar que el circuito soporte la carga continua. Para carga rápida y segura, el Wallbox con circuito dedicado
+                sigue siendo la opción recomendada.
+              </Typography>
+            </Box>
             </Box>
           </Container>
         </Box>
@@ -543,6 +574,50 @@ export default function ArticlePage() {
               aproximadamente 15 a 30 metros de trazado vertical y horizontal, con paso por ductos
               comunes del edificio.
             </Typography>
+            <Box sx={{ overflowX: 'auto', mb: 3 }}>
+              <Box
+                component="table"
+                sx={{
+                  width: '100%',
+                  borderCollapse: 'collapse',
+                  '& th': {
+                    bgcolor: DARK,
+                    color: '#fff',
+                    px: 2,
+                    py: 1.5,
+                    textAlign: 'left',
+                    fontSize: '0.85rem',
+                    fontWeight: 700,
+                  },
+                  '& td': {
+                    px: 2,
+                    py: 1.5,
+                    borderBottom: '1px solid #E2E8F0',
+                    fontSize: '0.875rem',
+                    color: DARK,
+                  },
+                  '& tr:nth-of-type(even) td': { bgcolor: '#F1F5F9' },
+                  '& tr:hover td': { bgcolor: '#E0F2FE' },
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th>Ítem</th>
+                    <th>Precio referencial</th>
+                    <th>Nota</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {buildingCostItems.map((row) => (
+                    <tr key={row.item}>
+                      <td style={{ fontWeight: 600 }}>{row.item}</td>
+                      <td style={{ color: TEAL, fontWeight: 700 }}>{row.costo}</td>
+                      <td style={{ color: TEXT_MUTED }}>{row.nota}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Box>
+            </Box>
             <Typography variant="body1" sx={{ color: TEXT_MUTED, mb: 3, lineHeight: 1.8 }}>
               El costo aumenta cuando el estacionamiento está en subterráneo 2 o 3 (mayor metraje),
               cuando los ductos verticales están llenos y se requiere una solución alternativa, o
@@ -613,11 +688,14 @@ export default function ArticlePage() {
             >
               Obtén tu Presupuesto Exacto en 5 Minutos
             </Typography>
-            <Typography variant="body1" sx={{ color: '#94A3B8', mb: 4, maxWidth: 480, mx: 'auto' }}>
+            <Typography variant="body1" sx={{ color: '#94A3B8', mb: 2, maxWidth: 480, mx: 'auto' }}>
               Rango referencial de instalación dedicada:{' '}
               <strong style={{ color: '#fff' }}>$1.350.000 – $3.110.000</strong>. El precio
               definitivo se confirma con visita técnica. Para casas, cotiza en{' '}
               <a href="/cotizador" style={{ color: '#4dbfd9' }}>energica.city/cotizador</a>.
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#64748B', mb: 4, maxWidth: 480, mx: 'auto', fontStyle: 'italic' }}>
+              *Incluye cargador solar integrado + instalación eléctrica completa — solo para proyectos combinados
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Box

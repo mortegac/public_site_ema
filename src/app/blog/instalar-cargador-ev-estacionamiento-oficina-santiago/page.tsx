@@ -73,8 +73,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Empresas',
+  keywords: 'instalar cargador EV oficina Santiago, puntos de carga estacionamiento empresa, cargadores eléctricos corporativos Chile, protocolo OCPP gestión flota, depreciación tributaria cargadores empresa, carga EV Providencia Las Condes, infraestructura carga edificio corporativo',
   datePublished: '2025-05-08',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -504,6 +505,17 @@ export default function ArticlePage() {
                 </Typography>
               </Box>
             ))}
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              ¿Tu empresa tiene vehículos eléctricos?{' '}
+              <Link href="/blog/depreciacion-acelerada-vehiculos-electricos-empresas-chile" style={{ color: '#0898b9' }}>
+                Conoce los beneficios tributarios para empresas
+              </Link>
+              {' '}o{' '}
+              <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+                solicita un presupuesto para tu estacionamiento
+              </Link>
+              .
+            </Typography>
           </Container>
         </Box>
 

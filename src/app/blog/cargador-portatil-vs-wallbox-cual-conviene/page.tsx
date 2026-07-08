@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Instalación',
+  keywords: 'cargador portátil auto eléctrico, wallbox chile, comparativa cargador ev, instalación wallbox casa, cargador modo 2, cargador modo 3, IEC 61851, carga auto eléctrico doméstico',
   datePublished: '2025-05-01',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',

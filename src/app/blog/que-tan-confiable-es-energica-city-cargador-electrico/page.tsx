@@ -19,13 +19,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'que-tan-confiable-es-energica-city-cargador-electrico'
 
 export const metadata: Metadata = {
-  title: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico?',
+  title: '¿Es Confiable Enérgica City? Proyectos y Credenciales',
   description:
     'Enérgica City es una empresa chilena con técnicos certificados SEC, alianza con Abastibletec y proyectos para Chilexpress y el MOP. Conoce por qué es confiable para instalar tu Wallbox.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico?',
+    title: '¿Es Confiable Enérgica City? Proyectos y Credenciales',
     description:
       'Enérgica City es una empresa chilena con técnicos certificados SEC, alianza con Abastibletec y proyectos para Chilexpress y el MOP. Conoce sus credenciales.',
     images: [
@@ -82,8 +82,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Guías',
+  keywords: 'Enérgica City confiable, empresa instalación cargador eléctrico Chile, técnicos certificados SEC cargador, instalación Wallbox garantía Chile, certificado TE6 cargador eléctrico, empresa electromovilidad Chile, instalador SEC autorizado cargador',
   datePublished: '2026-06-19',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -139,7 +140,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico?',
+      name: '¿Es Confiable Enérgica City? Proyectos y Credenciales',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],
@@ -521,6 +522,16 @@ export default function ArticlePage() {
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
 
+        {/* Cross-link */}
+        <Box sx={{ py: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Listo para instalar tu cargador?{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9' }}>
+              Obtén tu presupuesto de instalación en línea
+            </Link>.
+          </Typography>
+        </Box>
+
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>
           <Container maxWidth="md">
@@ -544,7 +555,8 @@ export default function ArticlePage() {
               }}
             >
               Responde 3 preguntas y recibe precio referencial en menos de 2 minutos. Sin
-              compromiso. Técnicos SEC a domicilio en Santiago y regiones.
+              compromiso. Técnicos SEC a domicilio en{' '}
+              <Link href="/servicios/santiago" style={{ color: '#0898b9' }}>Santiago</Link> y regiones.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/cotizador" style={{ textDecoration: 'none' }}>

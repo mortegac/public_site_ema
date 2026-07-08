@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Vehículos',
+  keywords: 'cargadores autos chinos Chile, cargador BYD MG Maxus, Wallbox CCS2 Chile, instalación cargador auto eléctrico chino, conector Tipo 2 BYD, MG4 cargador trifásico, Maxus Euniq 6 Wallbox',
   datePublished: '2025-05-05',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -657,6 +658,16 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        <Box sx={{ py: 3, px: { xs: 2, md: 0 }, textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.95rem', color: '#475569' }}>
+            ¿Tienes un BYD, MG o Maxus y quieres instalar un cargador en casa?{' '}
+            <Link href="/presupuesto-cargador-electrico" style={{ color: '#0898b9', fontWeight: 600 }}>
+              Obtén tu presupuesto online en 2 minutos
+            </Link>
+            .
+          </Typography>
+        </Box>
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

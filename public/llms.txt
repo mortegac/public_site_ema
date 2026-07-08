@@ -1,6 +1,6 @@
 # Energica City
 
-> Updated: 2026-07-07
+> Updated: 2026-07-08 (v3)
 
 > Enérgica City es una empresa chilena especializada en la instalación profesional y certificada de cargadores eléctricos para vehículos eléctricos (EV). Atendemos empresas, edificios residenciales y flotas corporativas en la Región Metropolitana de Santiago (39 comunas) y la Región de Valparaíso. Nuestros instaladores están habilitados por la Superintendencia de Electricidad y Combustibles (SEC) con certificaciones TE1 y TE6, obligatorias para instalaciones eléctricas en Chile. Ofrecemos soluciones para casas (Wallbox desde $512.708 IVA incluido), departamentos en edificios (electrolinera comunitaria desde $0 de inversión) y flotas corporativas con infraestructura de carga inteligente bajo protocolo OCPP. Hemos instalado más de 1.300 puntos de carga y gestionamos flotas para empresas como Chilexpress (100 furgones), CMP (45 buses DC) y CMPC (130 vehículos). Teléfono: +56 9 6766 6652.
 
@@ -15,6 +15,12 @@
 - [Cotizador Online](https://www.energica.city/cotizador): Estimación referencial del costo de instalación. Cotización vinculante tras visita técnica.
 - [Presupuesto Cargador Eléctrico](https://www.energica.city/presupuesto-cargador-electrico): Página de precios y opciones de instalación de cargadores EV. Casa con Wallbox desde $512.708 (10% dcto incluido). Edificio: electrolinera comunitaria $0 inversión, visita técnica $9.990 (acreditable), instalación dedicada $1.350.000–$3.110.000. Cobertura: 39 comunas RM + Valparaíso.
 - [Agenda Visita Técnica](https://www.energica.city/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador): Visita técnica con costo previo para evaluación in situ y proyecto definitivo.
+- [Servicios por Ciudad](https://www.energica.city/servicios): Directorio de ciudades con cobertura de instalación de cargadores EV. Incluye Santiago, Las Condes, Providencia, Valparaíso y 16 comunas más.
+- [Simulador de Ahorro EV](https://www.energica.city/simulador): Calcula el ahorro anual estimado al cambiar a vehículo eléctrico según tu consumo y tarifa eléctrica en Chile.
+- [Comparador de Cargadores EV](https://www.energica.city/comparador-electrico): Compara cargadores eléctricos disponibles en Chile por potencia, precio y compatibilidad con tu vehículo.
+- [Auto Eléctrico vs Gasolina Chile](https://www.energica.city/auto-electrico-vs-gasolina-chile): Análisis TCO entre EV y gasolina en Chile. Ahorro en combustible, mantención y depreciación a 5 años.
+- [Casos de Éxito](https://www.energica.city/casos-de-exito): Proyectos corporativos: Chilexpress (100 furgones, 120 cargadores), CMP (45 buses DC) y CMPC (130 vehículos, mayor flota eléctrica corporativa de Chile).
+- [Comparar Enérgica vs Copec Voltex](https://www.energica.city/comparar/energica-vs-copec-voltex): Comparativa técnica y comercial entre Enérgica City y Copec Voltex para instalación de cargadores en Chile.
 
 ## Proceso de Instalación
 1. Cotización gratuita online — respuesta en 24 horas.
@@ -74,7 +80,7 @@
 - [electrolinera-edificio-inversion-cero](https://www.energica.city/blog/electrolinera-edificio-inversion-cero): Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Inversión $0 para la comunidad. Pagas solo $330/kWh consumido. Sin obra en tu estacionamiento privado
 - [futuro-electromovilidad-chile-metas-2035-2050](https://www.energica.city/blog/futuro-electromovilidad-chile-metas-2035-2050): La Estrategia Nacional de Electromovilidad de Chile: meta 2035 para vehículos cero emisiones, carbono neutralidad 2050. Cómo prepararse hoy con Enérgica City.
 - [guia-cargar-auto-electrico-casa-normativa-sec-te6](https://www.energica.city/blog/guia-cargar-auto-electrico-casa-normativa-sec-te6): Guía definitiva sobre carga domiciliaria de autos eléctricos en Chile: enchufe vs Wallbox, normativa SEC RIC N°15, certificado TE6 obligatorio, gestión de carga y costos. Cotiza en 2 minutos.
-- [incentivos-mi-taxi-electrico-instalacion-cargadores](https://www.energica.city/blog/incentivos-mi-taxi-electrico-instalacion-cargadores): Apoya del programa Mi Taxi Eléctrico para instalar cargadores en casa. Subsidio del Ministerio de Energía para taxistas y colectiveros en Chile 2025.
+- [incentivos-mi-taxi-electrico-instalacion-cargadores](https://www.energica.city/blog/incentivos-mi-taxi-electrico-instalacion-cargadores): Apoya del programa Mi Taxi Eléctrico para instalar cargadores en casa. Subsidio del Ministerio de Energía para taxistas y colectiveros en Chile 2026.
 - [infraestructura-carga-proyectos-inmobiliarios-nuevos](https://www.energica.city/blog/infraestructura-carga-proyectos-inmobiliarios-nuevos): Cómo habilitar el 100% de estacionamientos EV en proyectos inmobiliarios nuevos. El costo no supera el 1% del presupuesto eléctrico. Atrae compradores con edificios EV Ready.
 - [instalacion-cargador-electrico-vivienda](https://www.energica.city/blog/instalacion-cargador-electrico-vivienda): Guía técnica completa para instalar un cargador EV en vivienda: cableado AWG 6, diferencial tipo A, cargadores 16A vs 32A y certificado TE6 ante la SEC en Chile.
 - [instalacion-cargador-renault-kwid-e-tech-hogar](https://www.energica.city/blog/instalacion-cargador-renault-kwid-e-tech-hogar): Guía técnica para instalar el cargador del Renault Kwid E-Tech en Chile. Conectores Tipo 2, normativa SEC. Precio desde $159.000 con certificado TE6.
@@ -88,7 +94,8 @@
 - [que-tan-confiable-es-energica-city-cargador-electrico](https://www.energica.city/blog/que-tan-confiable-es-energica-city-cargador-electrico): Enérgica City es una empresa chilena con técnicos certificados SEC, alianza con Abastibletec y proyectos para Chilexpress y el MOP. Conoce por qué es confiable para instalar tu Wallbox.
 - [seguridad-electrica-cargadores-ev-protecciones-necesarias](https://www.energica.city/blog/seguridad-electrica-cargadores-ev-protecciones-necesarias): Protecciones obligatorias para instalar un cargador EV seguro en Chile. Diferencial tipo A, interruptor automático, GFCI. Normativa NCh Elec. 4/2003.
 - [tramite-sec-te6-electromovilidad-plazos-requisitos](https://www.energica.city/blog/tramite-sec-te6-electromovilidad-plazos-requisitos): Cómo obtener el certificado TE6 de la SEC para tu cargador eléctrico en Chile. Plazos, requisitos, costos y por qué es obligatorio para seguros de hogar.
-- [viajes-largos-auto-electrico-chile-red-publica-vs-privada](https://www.energica.city/blog/viajes-largos-auto-electrico-chile-red-publica-vs-privada): Cómo planificar viajes interurbanos en auto eléctrico en Chile 2025. Red de carga pública, app de rutas, ansiedad de rango y por qué la carga en casa es la base.
+- [viajes-largos-auto-electrico-chile-red-publica-vs-privada](https://www.energica.city/blog/viajes-largos-auto-electrico-chile-red-publica-vs-privada): Cómo planificar viajes interurbanos en auto eléctrico en Chile 2026. Red de carga pública, app de rutas, ansiedad de rango y por qué la carga en casa es la base.
+- [conoce-nuestra-metodologia-propia](https://www.energica.city/blog/conoce-nuestra-metodologia-propia): Metodología propia de Enérgica City para proyectos de electromovilidad: evaluación técnica, diseño, instalación certificada SEC y soporte continuo.
 
 ## Optional
 - [Documentación completa](https://www.energica.city/llms-full.txt): Contenido extendido con todos los artículos del blog, páginas de servicio y casos de éxito detallados.

@@ -19,13 +19,13 @@ const TEXT_MUTED = '#64748B'
 const SLUG = 'viajes-largos-auto-electrico-chile-red-publica-vs-privada'
 
 export const metadata: Metadata = {
-  title: 'Viajes largos en auto eléctrico por Chile: Planificación 2025',
+  title: 'Viajes largos en auto eléctrico por Chile: Planificación 2026',
   description:
     'Cómo planificar viajes interurbanos en auto eléctrico en Chile 2025. Red de carga pública, app de rutas, ansiedad de rango y por qué la carga en casa es la base.',
   alternates: { canonical: `${CANONICAL_DOMAIN}/blog/${SLUG}` },
   openGraph: {
     url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
-    title: 'Viajes largos en auto eléctrico por Chile: Planificación 2025',
+    title: 'Viajes largos en auto eléctrico por Chile: Planificación 2026',
     description:
       'Guía práctica para planificar viajes interurbanos en EV por Chile: red pública Copec Voltex, Enel X, Zunder, Tesla Supercharger. Corredores Santiago-Valparaíso, Concepción y La Serena.',
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Viajes largos en auto eléctrico por Chile: Planificación 2025',
+    title: 'Viajes largos en auto eléctrico por Chile: Planificación 2026',
     description:
       'Red de carga pública en Chile, corredores clave y estrategia de carga en casa para viajes interurbanos en EV.',
     images: [`${CANONICAL_DOMAIN}/images/post/19_1170x400.png`],
@@ -55,7 +55,7 @@ const blogPostingSchema = {
     width: 1170,
     height: 400,
   },
-  headline: 'Viajes Largos en Auto Eléctrico por Chile: Planificación 2025',
+  headline: 'Viajes Largos en Auto Eléctrico por Chile: Planificación 2026',
   description:
     'Guía completa para planificar viajes interurbanos en vehículo eléctrico en Chile. Análisis de los corredores clave, red de carga pública, gestión de la ansiedad de rango y estrategia de carga domiciliaria.',
   author: {
@@ -75,8 +75,9 @@ const blogPostingSchema = {
   },
   inLanguage: 'es-CL',
   articleSection: 'Beneficios',
+  keywords: 'viajes largos auto eléctrico Chile, red carga pública Chile, Copec Voltex cargadores ruta 5, ansiedad de rango vehículo eléctrico, planificación viaje EV Chile, cargador domiciliario viaje, red privada vs pública carga eléctrica',
   datePublished: '2025-05-05',
-  dateModified: '2026-07-07',
+  dateModified: '2026-07-08',
   url: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -124,7 +125,7 @@ const breadcrumbSchema = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Viajes Largos en Auto Eléctrico por Chile: Planificación 2025',
+      name: 'Viajes Largos en Auto Eléctrico por Chile: Planificación 2026',
       item: `${CANONICAL_DOMAIN}/blog/${SLUG}`,
     },
   ],
@@ -189,7 +190,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <HpHeaderNew />
-      <BlogBreadcrumb title="Viajes largos en auto eléctrico por Chile: Planificación 2025" />
+      <BlogBreadcrumb title="Viajes largos en auto eléctrico por Chile: Planificación 2026" />
       <Box component="main">
         {/* Featured image */}
 
@@ -241,7 +242,7 @@ export default function ArticlePage() {
                 color: '#000000',
               }}
             >
-              Viajes Largos en Auto Eléctrico por Chile: Planificación 2025
+              Viajes Largos en Auto Eléctrico por Chile: Planificación 2026
             </Typography>
           <Box
             component="time"
@@ -605,6 +606,19 @@ export default function ArticlePage() {
 
         {/* Author byline */}
         <AuthorByline dateModified="2026-07-07" />
+
+        {/* Cross-link */}
+        <Box sx={{ py: 3, px: 2 }}>
+          <Container maxWidth="md">
+            <Typography sx={{ mt: 3, fontSize: '0.95rem', color: '#334155' }}>
+              Antes del viaje, asegúrate de tener un cargador rápido en casa.{' '}
+              <Link href="/blog/instalar-cargador-electrico-casa-wallbox" style={{ color: '#0898b9' }}>
+                Guía: instalar un Wallbox en casa
+              </Link>
+              .
+            </Typography>
+          </Container>
+        </Box>
 
         {/* CTA dark band */}
         <Box sx={{ bgcolor: DARK, py: { xs: 7, md: 10 }, textAlign: 'center' }}>

@@ -77,7 +77,7 @@ const nextConfig = {
                 // Fonts
                 "font-src 'self' https://fonts.gstatic.com",
                 // Images: GA, GTM, DoubleClick, Google Ads conversion pixels
-                "img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://*.google.cl https://purecatamphetamine.github.io",
+                "img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://*.google.cl https://purecatamphetamine.github.io https://lh3.googleusercontent.com",
                 // Media
                 "media-src 'self' https://*.prismic.io https://energica-public-site.cdn.prismic.io",
                 // Connections: GA4 endpoints, GTM, DoubleClick, AWS, Prismic, EmailJS

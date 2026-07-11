@@ -81,6 +81,11 @@ const footerLinks = [
               titleText: 'Credenciales',
               link: '/credenciales',
           },
+          {
+              title: false,
+              titleText: 'Cómo funciona',
+              link: '/como-funciona',
+          },
       ],
   },
   // {
@@ -379,7 +384,7 @@ const Footer = () => {
                   height={32}
                   alt="logo"
                 />
-                 <Typography variant="body1" fontSize="15px"  sx={{ textAlign:'left', paddingTop:'6px', color:'#ffffff'}}>Te ayudamos a concretar tu proyecto de electromovilidad industrial o inmobiliario de manera rentable.</Typography>
+                 <Typography variant="body1" fontSize="15px"  sx={{ textAlign:'left', paddingTop:'6px', color:'#ffffff'}}>Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.</Typography>
             
             
             

@@ -73,7 +73,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               "@id": "https://www.energica.city/#organization",
-              "name": "Energica City",
+              "name": "Enérgica City",
               "url": "https://www.energica.city",
               "address": {
                 "@type": "PostalAddress",
@@ -83,22 +83,62 @@ export default function RootLayout({
               },
               "logo": {
                 "@type": "ImageObject",
+                "@id": "https://www.energica.city/#/schema/logo/image/",
                 "url": "https://www.energica.city/images/logos/logo.png",
+                "contentUrl": "https://www.energica.city/images/logos/logo.png",
                 "width": 259,
-                "height": 42
+                "height": 42,
+                "caption": "Enérgica City — Instalación de Cargadores Eléctricos en Chile"
               },
+              "image": { "@id": "https://www.energica.city/#/schema/logo/image/" },
               "telephone": "+56967666652",
+              "email": "contacto@energica.city",
               "contactPoint": {
                 "@type": "ContactPoint",
                 "telephone": "+56967666652",
+                "email": "contacto@energica.city",
                 "contactType": "customer service",
                 "areaServed": "CL",
-                "availableLanguage": "Spanish"
+                "availableLanguage": { "@type": "Language", "name": "Spanish", "alternateName": "es-CL" }
               },
+              "knowsAbout": [
+                "Instalación de cargadores para vehículos eléctricos",
+                "Electromovilidad en Chile",
+                "Cargadores Wallbox residenciales",
+                "Electrolineras comunitarias en edificios",
+                "Electrificación de flotas empresariales",
+                "Trámite eléctrico TE-6 ante la SEC",
+                "Carga en Modo 2, Modo 3 y Modo 4",
+                "Instalaciones eléctricas certificadas SEC",
+                "Cargadores EV para condominios y parkings"
+              ],
+              "hasCredential": {
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": "Certificación",
+                "name": "Técnicos certificados SEC",
+                "description": "Instaladores eléctricos certificados por la Superintendencia de Electricidad y Combustibles (SEC) de Chile, habilitados para realizar el trámite TE-6 de puesta en servicio de infraestructura de carga de vehículos eléctricos.",
+                "recognizedBy": {
+                  "@type": "Organization",
+                  "name": "Superintendencia de Electricidad y Combustibles",
+                  "alternateName": "SEC Chile",
+                  "url": "https://www.sec.cl"
+                }
+              },
+              "potentialAction": [{
+                "@type": "ReserveAction",
+                "name": "Solicitar cotización de cargador eléctrico",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.energica.city/presupuesto-cargador-electrico",
+                  "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+                }
+              }],
               "sameAs": [
                 "https://www.linkedin.com/company/energicacity",
-                "https://www.instagram.com/energicacity/"
-              ]
+                "https://www.instagram.com/energicacity/",
+                "https://abastibletec.cl/electromovilidad/cargadoreselectricos/"
+              ],
+              "inLanguage": "es-CL"
             })
           }}
         />
@@ -109,9 +149,19 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "@id": "https://www.energica.city/#website",
-              "name": "Energica City",
+              "name": "Enérgica City",
               "url": "https://www.energica.city",
-              "publisher": { "@id": "https://www.energica.city/#organization" }
+              "description": "Instalación de cargadores eléctricos para casas, edificios y flotas empresariales en Chile. Técnicos certificados SEC.",
+              "publisher": { "@id": "https://www.energica.city/#organization" },
+              "potentialAction": [{
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.energica.city/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }],
+              "inLanguage": "es-CL"
             })
           }}
         />

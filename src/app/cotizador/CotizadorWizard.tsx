@@ -699,7 +699,7 @@ export default function CotizadorWizard() {
       update({ step: 0, activePanel: null })
       return
     }
-    update({ step: state.step - 1, activePanel: null })
+    update({ step: state.step - 1, activePanel: null, ...(state.step === 1 ? { path: null } : {}) })
   }
 
   // ─── Step tracking helper ─────────────────────────────────────────────────────
@@ -3524,7 +3524,7 @@ export default function CotizadorWizard() {
                           preBookedDate: selected.dateKey,
                           preBookedLabel: selected.label,
                           preBookedCalendarId: selected.calendarId,
-                          step: 2,
+                          step: state.apiResult ? 3 : 2,
                         })
                       }}
                       sx={{

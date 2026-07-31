@@ -1085,9 +1085,10 @@ export default function CotizadorWizard() {
 
   function resetAll() {
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
-    setState({
+    // ponytail: partial reset — conserva ubicación/distancia/pisos (UX spec v4)
+    setState(prev => ({
       step: 0,
-      tipo: null,
+      tipo: prev.tipo,
       address: '',
       addressValidated: false,
       addressCity: '',
@@ -1099,7 +1100,7 @@ export default function CotizadorWizard() {
       regionWarn: false,
       tipoC: null,
       chargerId: null,
-      dist: 10,
+      dist: prev.dist,
       activePanel: null,
       visitaTelefono: '',
       depto: '',
@@ -1126,9 +1127,9 @@ export default function CotizadorWizard() {
       reservePendingAmount: null,
       reservePendingGlosa: '',
       showEdificioData: false,
-      edificioFloor: '',
-      edificioParkingFloor: '',
-      edificioVisitorParking: null,
+      edificioFloor: prev.edificioFloor,
+      edificioParkingFloor: prev.edificioParkingFloor,
+      edificioVisitorParking: prev.edificioVisitorParking,
       edificioRol: '',
       edificioUsersEV: '',
       edificioOption: null,
@@ -1137,7 +1138,7 @@ export default function CotizadorWizard() {
       preBookedDate: null,
       preBookedLabel: null,
       preBookedCalendarId: null,
-    })
+    }))
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────

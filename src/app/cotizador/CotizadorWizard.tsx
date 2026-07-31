@@ -226,14 +226,14 @@ function WizardStepper({ step, paid, booked, path }: StepperProps) {
   const labels = paid ? postLabels : preLabels
   const displayStep = paid
     ? booked ? 2 : step - 4
-    : path === 'cotizar' && step >= 2
-      ? step
+    : path === 'cotizar' && step === 1
+      ? 2  // step 1 with cotizar path = Cargador (index 2)
       : step
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, mt: 1 }}>
       {labels.map((label, idx) => {
-        const isSkipped = !paid && label === 'Agenda' && path === 'cotizar' && step >= 2
+        const isSkipped = !paid && label === 'Agenda' && path === 'cotizar' && step >= 1
         const isCompleted = idx < displayStep && !isSkipped
         const isActive = idx === displayStep && !isSkipped
         return (
@@ -478,10 +478,10 @@ export default function CotizadorWizard() {
   // Track step 0 on mount
   useEffect(() => { trackUnique('step_1_loaded', { step: 1, typeOfResidence }) }, [])
 
-  // Track step_3_abandoned when user leaves while on step 2 and hasn't paid
+  // Track step_3_abandoned when user leaves while on step 3 (Cotización) and hasn't paid
   useEffect(() => {
-    if (state.step !== 2 || state.paid) return
-    const onUnload = () => trackUnique('step_3_abandoned', { step: 2 })
+    if (state.step !== 3 || state.paid) return
+    const onUnload = () => trackUnique('step_3_abandoned', { step: 3 })
     window.addEventListener('beforeunload', onUnload)
     return () => window.removeEventListener('beforeunload', onUnload)
   }, [state.step, state.paid])
@@ -510,7 +510,9 @@ export default function CotizadorWizard() {
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
     if (state.step === 0) return state.tipo !== null
-    if (state.step === 1) {
+    if (state.step === 1 && state.path === 'agendar') return true // agenda step: date optional
+    if (state.step === 2 || (state.step === 1 && state.path === 'cotizar')) {
+      // cargador step
       if (!state.tipoC) return false
       if (state.tipo === 'edificio') return state.edificioFloor.trim() !== '' && state.edificioParkingFloor !== ''
       return true
@@ -519,7 +521,8 @@ export default function CotizadorWizard() {
   })()
 
   const canNextTooltip = (() => {
-    if (state.step !== 1 || canNext) return ''
+    const isCargadorStep = state.step === 2 || (state.step === 1 && state.path === 'cotizar')
+    if (!isCargadorStep || canNext) return ''
     if (state.tipo === 'edificio') {
       const missing = []
       if (!state.edificioFloor.trim()) missing.push('piso del departamento')
@@ -547,8 +550,17 @@ export default function CotizadorWizard() {
   }
 
   async function goNext() {
-    // Trigger cotizar API from step 1 (both casa and edificio)
-    if (state.step === 1) {
+    // Agenda step → Cargador (step 2)
+    if (state.step === 1 && state.path === 'agendar') {
+      trackUnique('step_2_loaded', { step: 2, typeOfResidence })
+      update({ step: 2 })
+      return
+    }
+
+    const isCargadorStep = state.step === 2 || (state.step === 1 && state.path === 'cotizar')
+
+    // Cargador step → call API → Cotización (step 3)
+    if (isCargadorStep) {
       update({ estimateLoading: true })
       try {
         const isWallbox = state.tipoC === 'wallbox'
@@ -597,7 +609,7 @@ export default function CotizadorWizard() {
             trackUnique('step_3_loaded', { formId, total: totalNeto + totalIva, typeOfResidence })
             update({
               estimateLoading: false,
-              step: 2,
+              step: 3,
               formId,
               nextVisitDate: (data as any).nextAvailableDate ?? null,
               apiResult: {
@@ -624,20 +636,24 @@ export default function CotizadorWizard() {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
       trackUnique('step_3_loaded', { formId: state.formId, total: result?.total, typeOfResidence })
-      update({ estimateLoading: false, step: 2 })
+      update({ estimateLoading: false, step: 3 })
       return
     }
 
-    if (state.step < 2) {
-      trackUnique('step_2_loaded', { step: 2, typeOfResidence })
+    if (state.step < 3) {
+      trackUnique('step_2_loaded', { step: state.step + 2, typeOfResidence })
       update({ step: state.step + 1 })
     }
   }
 
   function goBack() {
-    if (state.step > 0) {
-      update({ step: state.step - 1, activePanel: null })
+    if (state.step === 0) return
+    if (state.step === 2 && state.path === 'cotizar') {
+      // Cargador step with direct path → back to tipo (skip agenda step 1)
+      update({ step: 0, activePanel: null })
+      return
     }
+    update({ step: state.step - 1, activePanel: null })
   }
 
   // ─── Step tracking helper ─────────────────────────────────────────────────────
@@ -3192,7 +3208,7 @@ export default function CotizadorWizard() {
     )
   }
 
-  const showBottomNav = state.step < 2 && !state.paid
+  const showBottomNav = state.step < 3 && !state.paid
 
   return (
     <Box>
@@ -3281,7 +3297,7 @@ export default function CotizadorWizard() {
                         fontSize: '0.95rem',
                       }}
                     >
-                      {state.step === 1 ? 'Ver mi cotización' : 'Siguiente →'}
+                      {(state.step === 2 || (state.step === 1 && state.path === 'cotizar')) ? 'Ver mi cotización' : 'Siguiente →'}
                     </Button>
                   </span>
                 </Tooltip>

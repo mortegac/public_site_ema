@@ -1109,7 +1109,7 @@ export default function CotizadorWizard() {
   }
 
   function handleBookDate() {
-    update({ booked: true, step: 4 })
+    update({ booked: true, step: 5 })
   }
 
   function resetAll() {
@@ -1202,6 +1202,57 @@ export default function CotizadorWizard() {
           </Grid>
         </Grid>
 
+        {/* Dual CTAs v4 */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
+          <Tooltip title={!state.tipo ? 'Selecciona dónde instalarás tu cargador' : ''} arrow>
+            <span style={{ width: '100%' }}>
+              <Button
+                fullWidth
+                variant="contained"
+                disabled={!state.tipo}
+                onClick={() => {
+                  track('agenda_path_selected', { tipo: state.tipo })
+                  update({ path: 'agendar', step: 1 })
+                }}
+                sx={{
+                  bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK },
+                  '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                  fontWeight: 700, py: 1.5, fontSize: '0.95rem',
+                  boxShadow: 'none', borderRadius: 2,
+                }}
+              >
+                📅 Agenda visita y cotizar
+              </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title={!state.tipo ? 'Selecciona dónde instalarás tu cargador' : ''} arrow>
+            <span style={{ width: '100%' }}>
+              <Button
+                fullWidth
+                variant="outlined"
+                disabled={!state.tipo}
+                onClick={() => {
+                  track('direct_path_selected', { tipo: state.tipo })
+                  update({ path: 'cotizar', step: 1 })
+                }}
+                sx={{
+                  borderColor: TEAL, color: TEAL,
+                  '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.04)' },
+                  '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
+                  fontWeight: 600, py: 1.25, fontSize: '0.9rem',
+                  boxShadow: 'none', borderRadius: 2,
+                }}
+              >
+                Solo quiero la cotización →
+              </Button>
+            </span>
+          </Tooltip>
+          {state.tipo && (
+            <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, textAlign: 'center', mt: 0.5 }}>
+              Puedes ver la disponibilidad y reservar tu horario ahora, o revisar tu precio primero y agendar después.
+            </Typography>
+          )}
+        </Box>
 
       </Box>
     )
@@ -3256,13 +3307,14 @@ export default function CotizadorWizard() {
             }}
           >
             {state.step === 0 && renderStep0()}
-            {state.step === 1 && renderStep1()}
-            {state.step === 2 && renderStep2()}
-            {state.step === 3 && renderStep3()}
-            {state.step === 4 && renderStep4()}
+            {/* step 1 Agenda: solo cuando path='agendar' — se añade en Task 6 */}
+            {(state.step === 2 || (state.step === 1 && state.path === 'cotizar')) && renderStep1()}
+            {state.step === 3 && renderStep2()}
+            {state.step === 4 && renderStep3()}
+            {state.step === 5 && renderStep4()}
 
             {/* ── Bottom navigation ───────────────────────────────────────── */}
-            {showBottomNav && (
+            {showBottomNav && state.step !== 0 && (
               <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
                 {state.step > 0 && (
                   <Button

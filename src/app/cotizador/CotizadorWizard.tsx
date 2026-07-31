@@ -175,6 +175,9 @@ interface WizardState {
   preBookedDate: string | null
   preBookedLabel: string | null
   preBookedCalendarId: string | null
+  agendaDates: Array<{ dateKey: string; label: string; available: boolean; calendarId: string | null }> | null
+  agendaDatesLoading: boolean
+  agendaSelectedIndex: number | null
 }
 
 interface CalcResult {
@@ -457,6 +460,9 @@ export default function CotizadorWizard() {
     preBookedDate: null,
     preBookedLabel: null,
     preBookedCalendarId: null,
+    agendaDates: null,
+    agendaDatesLoading: false,
+    agendaSelectedIndex: null,
   })
 
   // Derived from state.tipo — passed in tracking event props
@@ -504,6 +510,47 @@ export default function CotizadorWizard() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Load agenda dates when entering agenda step
+  useEffect(() => {
+    if (state.step !== 1 || state.path !== 'agendar') return
+    if (state.agendaDates !== null) return // already loaded
+    update({ agendaDatesLoading: true })
+
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() + 2)
+    startDate.setHours(0, 0, 0, 0)
+    const endDate = new Date()
+    endDate.setDate(endDate.getDate() + 16)
+    endDate.setHours(23, 59, 59, 999)
+
+    fetch(`/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`)
+      .then(r => r.json())
+      .then(({ items }) => {
+        const slotsByDay = new Map<string, string>()
+        for (const slot of (items ?? []) as Array<{ startDate: string; calendarId: string }>) {
+          const key = slot.startDate.slice(0, 10)
+          if (!slotsByDay.has(key)) slotsByDay.set(key, slot.calendarId)
+        }
+        const dates: Array<{ dateKey: string; label: string; available: boolean; calendarId: string | null }> = []
+        const cursor = new Date(startDate)
+        while (cursor <= endDate) {
+          if (cursor.getDay() !== 0) {
+            const key = cursor.toISOString().slice(0, 10)
+            const calId = slotsByDay.get(key) ?? null
+            dates.push({
+              dateKey: key,
+              label: cursor.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }),
+              available: calId !== null,
+              calendarId: calId,
+            })
+          }
+          cursor.setDate(cursor.getDate() + 1)
+        }
+        update({ agendaDates: dates, agendaDatesLoading: false })
+      })
+      .catch(() => update({ agendaDates: [], agendaDatesLoading: false }))
+  }, [state.step, state.path])
 
   const result = calcResult(state, chargerList)
 
@@ -1167,6 +1214,9 @@ export default function CotizadorWizard() {
       preBookedDate: null,
       preBookedLabel: null,
       preBookedCalendarId: null,
+      agendaDates: null,
+      agendaDatesLoading: false,
+      agendaSelectedIndex: null,
     }))
   }
 
@@ -1254,6 +1304,84 @@ export default function CotizadorWizard() {
           )}
         </Box>
 
+      </Box>
+    )
+  }
+
+  function renderStep1Agenda() {
+    const dates = state.agendaDates ?? []
+    const selectedIdx = state.agendaSelectedIndex
+
+    return (
+      <Box>
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
+          Elige una fecha disponible
+        </Typography>
+        <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3, lineHeight: 1.6 }}>
+          Horario hábil 09:00 a 18:00 hrs · se confirma tras reservar.
+        </Typography>
+
+        {state.agendaDatesLoading ? (
+          <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, textAlign: 'center', py: 4 }}>
+            Cargando fechas disponibles…
+          </Typography>
+        ) : dates.length === 0 ? (
+          <Box sx={{ p: 2, bgcolor: SURFACE, borderRadius: 2, mb: 3, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>
+              No hay fechas disponibles en este momento.
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 3 }}>
+            {dates.map((d, i) => (
+              <Box
+                key={d.dateKey}
+                onClick={d.available ? () => {
+                  track('pre_booking_date_selected', { date: d.dateKey })
+                  update({ agendaSelectedIndex: i })
+                } : undefined}
+                sx={{
+                  p: '10px 14px', borderRadius: 2,
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  border: `1.5px solid ${selectedIdx === i ? PINK : d.available ? BORDER : 'transparent'}`,
+                  bgcolor: selectedIdx === i ? 'rgba(232,26,104,0.04)' : d.available ? '#fff' : SURFACE,
+                  cursor: d.available ? 'pointer' : 'default',
+                  opacity: d.available ? 1 : 0.45,
+                  transition: 'all 0.15s',
+                }}
+              >
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 500, color: '#2A3547', textTransform: 'capitalize' }}>
+                  {d.label}
+                </Typography>
+                {d.available ? (
+                  <Chip
+                    label={selectedIdx === i ? 'Seleccionado' : 'Disponible'}
+                    size="small"
+                    sx={{
+                      fontSize: '0.65rem', fontWeight: 600, height: 20,
+                      bgcolor: selectedIdx === i ? 'rgba(232,26,104,0.08)' : '#EBF7F9',
+                      color: selectedIdx === i ? PINK : TEAL,
+                    }}
+                  />
+                ) : (
+                  <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>No disponible</Typography>
+                )}
+              </Box>
+            ))}
+          </Box>
+        )}
+
+        <Button
+          fullWidth
+          variant="text"
+          onClick={() => {
+            track('pre_booking_skipped')
+            update({ agendaSelectedIndex: null, step: 2 })
+          }}
+          sx={{ color: TEXT_MUTED, fontSize: '0.82rem', mt: 1, '&:hover': { color: '#2A3547' } }}
+        >
+          Prefiero elegir la fecha después →
+        </Button>
       </Box>
     )
   }
@@ -3307,7 +3435,7 @@ export default function CotizadorWizard() {
             }}
           >
             {state.step === 0 && renderStep0()}
-            {/* step 1 Agenda: solo cuando path='agendar' — se añade en Task 6 */}
+            {state.step === 1 && state.path === 'agendar' && renderStep1Agenda()}
             {(state.step === 2 || (state.step === 1 && state.path === 'cotizar')) && renderStep1()}
             {state.step === 3 && renderStep2()}
             {state.step === 4 && renderStep3()}
@@ -3355,6 +3483,45 @@ export default function CotizadorWizard() {
               </Box>
             )}
           </Box>
+
+          {/* ── Agenda step confirmation button ─────────────────────── */}
+            {state.step === 1 && state.path === 'agendar' && (
+              <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Tooltip
+                  title={state.agendaSelectedIndex === null ? 'Selecciona una fecha para continuar' : ''}
+                  arrow
+                >
+                  <span style={{ width: '100%' }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      disabled={state.agendaSelectedIndex === null || state.agendaDatesLoading}
+                      onClick={() => {
+                        const selected = (state.agendaDates ?? [])[state.agendaSelectedIndex!]
+                        if (!selected) return
+                        track('pre_booking_confirmed', { date: selected.dateKey })
+                        update({
+                          preBookedDate: selected.dateKey,
+                          preBookedLabel: selected.label,
+                          preBookedCalendarId: selected.calendarId,
+                          step: 2,
+                        })
+                      }}
+                      sx={{
+                        bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK },
+                        '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
+                        fontWeight: 700, py: 1.5, fontSize: '0.95rem',
+                        boxShadow: 'none', borderRadius: 2,
+                      }}
+                    >
+                      {state.agendaSelectedIndex !== null
+                        ? `Confirmar fecha · ${(state.agendaDates ?? [])[state.agendaSelectedIndex!]?.label ?? ''}`
+                        : 'Confirmar fecha →'}
+                    </Button>
+                  </span>
+                </Tooltip>
+              </Box>
+            )}
 
           {/* ── No-install link — steps 0-3 only ───────────────────────── */}
           {state.step <= 3 && !state.paid && (

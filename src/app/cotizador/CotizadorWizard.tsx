@@ -171,6 +171,10 @@ interface WizardState {
   edificioUsersEV: string
   edificioOption: 'dedicated' | 'shared' | null
   removedChargerId: string | null  // remembers charger id when user clicks "quitar"
+  path: 'agendar' | 'cotizar' | null
+  preBookedDate: string | null
+  preBookedLabel: string | null
+  preBookedCalendarId: string | null
 }
 
 interface CalcResult {
@@ -435,6 +439,10 @@ export default function CotizadorWizard() {
     edificioUsersEV: '',
     edificioOption: null,
     removedChargerId: null,
+    path: null,
+    preBookedDate: null,
+    preBookedLabel: null,
+    preBookedCalendarId: null,
   })
 
   // Derived from state.tipo — passed in tracking event props
@@ -1125,6 +1133,10 @@ export default function CotizadorWizard() {
       edificioUsersEV: '',
       edificioOption: null,
       removedChargerId: null,
+      path: null,
+      preBookedDate: null,
+      preBookedLabel: null,
+      preBookedCalendarId: null,
     })
   }
 

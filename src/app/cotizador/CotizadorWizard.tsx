@@ -216,53 +216,65 @@ interface StepperProps {
   step: number
   paid: boolean
   booked: boolean
+  path: 'agendar' | 'cotizar' | null
 }
 
-function WizardStepper({ step, paid, booked }: StepperProps) {
-  const preLabels = ['Ubicación', 'Cargador', 'Cotización']
+function WizardStepper({ step, paid, booked, path }: StepperProps) {
+  const preLabels = ['Tipo', 'Agenda', 'Cargador', 'Cotización']
   const postLabels = ['Pago', 'Agendar', '¡Listo!']
 
   const labels = paid ? postLabels : preLabels
-  const activeIdx = paid ? (booked ? 2 : step - 3) : step
+  const displayStep = paid
+    ? booked ? 2 : step - 4
+    : path === 'cotizar' && step >= 2
+      ? step
+      : step
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, mt: 1 }}>
       {labels.map((label, idx) => {
-        const isCompleted = idx < activeIdx
-        const isActive = idx === activeIdx
+        const isSkipped = !paid && label === 'Agenda' && path === 'cotizar' && step >= 2
+        const isCompleted = idx < displayStep && !isSkipped
+        const isActive = idx === displayStep && !isSkipped
         return (
           <Box key={label} sx={{ display: 'flex', alignItems: 'center' }}>
             {idx > 0 && (
               <Box sx={{
-                width: { xs: 24, sm: 40 },
+                width: { xs: 16, sm: 28 },
                 height: 2,
                 bgcolor: isCompleted ? TEAL : 'rgba(0,0,0,0.2)',
                 transition: 'background-color 0.3s',
               }} />
             )}
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.25 }}>
               <Box sx={{
-                width: 32,
-                height: 32,
+                width: 28,
+                height: 28,
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                bgcolor: isCompleted ? 'transparent' : isActive ? PINK : 'transparent',
-                border: isCompleted ? '1px solid #cccccc' : isActive ? 'none' : '2px solid rgba(0,0,0,0.3)',
+                bgcolor: isSkipped ? 'transparent' : isCompleted ? 'transparent' : isActive ? PINK : 'transparent',
+                border: isSkipped ? '1px solid #e2e8f0' : isCompleted ? '1px solid #cccccc' : isActive ? 'none' : '2px solid rgba(0,0,0,0.3)',
                 transition: 'all 0.3s',
+                opacity: isSkipped ? 0.45 : 1,
               }}>
                 {isCompleted ? (
-                  <Typography sx={{ color: '#fff', fontSize: '0.85rem', fontWeight: 700 }}>✓</Typography>
+                  <Typography sx={{ color: '#fff', fontSize: '0.8rem', fontWeight: 700 }}>✓</Typography>
                 ) : (
-                  <Typography sx={{ color: isActive ? '#fff' : 'rgba(0,0,0,0.5)', fontSize: '0.8rem', fontWeight: 700 }}>
+                  <Typography sx={{ color: isActive ? '#fff' : 'rgba(0,0,0,0.5)', fontSize: '0.7rem', fontWeight: 700 }}>
                     {idx + 1}
                   </Typography>
                 )}
               </Box>
-              <Typography sx={{ fontSize: '0.65rem', fontWeight: isActive ? 700 : 400, color: isActive ? '#000' : 'rgba(0,0,0,0.55)', whiteSpace: 'nowrap' }}>
+              <Typography sx={{ fontSize: '0.58rem', fontWeight: isActive ? 700 : 400, color: isSkipped ? '#cbd5e1' : isActive ? '#000' : 'rgba(0,0,0,0.55)', whiteSpace: 'nowrap' }}>
                 {label}
               </Typography>
+              {isSkipped && (
+                <Typography sx={{ fontSize: '0.5rem', color: '#94A3B8', lineHeight: 1 }}>
+                  omitido
+                </Typography>
+              )}
             </Box>
           </Box>
         )
@@ -374,15 +386,17 @@ const SLIDER_MARKS = [
 
 // ─── Hero title helpers ───────────────────────────────────────────────────────
 const STEP_TITLES = [
-  'Cotiza tu instalación',
-  'Elige tu cargador eléctrico',
-  'Tu cotización al instante',
-  'Agenda tu visita técnica',
-  '¡Todo listo!',
+  'Cotiza tu instalación',        // step 0: Tipo
+  'Agenda tu visita técnica',     // step 1: Agenda [NUEVO]
+  'Elige tu cargador eléctrico',  // step 2: Cargador
+  'Tu cotización al instante',    // step 3: Cotización
+  'Agenda tu visita técnica',     // step 4: post-pago
+  '¡Todo listo!',                 // step 5: booked
 ]
 
 const STEP_SUBTITLES = [
   'Instalación certificada SEC · Precios claros · Sin sorpresas',
+  'Elige una fecha disponible para la visita técnica',
   'Selecciona el equipo que mejor se adapta a tus necesidades',
   'Precio real basado en tu perfil',
   'Coordina la visita técnica a tu domicilio',
@@ -3211,7 +3225,7 @@ export default function CotizadorWizard() {
           <Typography sx={{ color: '#000000', textAlign: 'center', mb: { xs: 1, md: 4 }, fontSize: '0.9rem' }}>
             {heroSubtitle}
           </Typography>
-          {!state.booked && <Box sx={{ mb: '10px' }}><WizardStepper step={state.step} paid={state.paid} booked={state.booked} /></Box>}
+          {!state.booked && <Box sx={{ mb: '10px' }}><WizardStepper step={state.step} paid={state.paid} booked={state.booked} path={state.path} /></Box>}
         </Container>
       </Box>
 

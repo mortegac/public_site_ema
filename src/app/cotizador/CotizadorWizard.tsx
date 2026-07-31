@@ -1283,6 +1283,7 @@ export default function CotizadorWizard() {
                 disabled={!state.tipo}
                 onClick={() => {
                   track('direct_path_selected', { tipo: state.tipo })
+                  trackUnique('step_2_loaded', { step: 2, typeOfResidence })
                   update({ path: 'cotizar', step: 1 })
                 }}
                 sx={{

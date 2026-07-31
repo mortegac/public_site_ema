@@ -641,7 +641,6 @@ export default function CotizadorWizard() {
     }
 
     if (state.step < 3) {
-      trackUnique('step_2_loaded', { step: state.step + 2, typeOfResidence })
       update({ step: state.step + 1 })
     }
   }
@@ -3305,8 +3304,8 @@ export default function CotizadorWizard() {
             )}
           </Box>
 
-          {/* ── No-install link — steps 0-2 only ───────────────────────── */}
-          {state.step <= 2 && !state.paid && (
+          {/* ── No-install link — steps 0-3 only ───────────────────────── */}
+          {state.step <= 3 && !state.paid && (
             <Box sx={{ textAlign: 'center', mt: 1.5 }}>
               <Box
                 component="a"
@@ -3330,8 +3329,8 @@ export default function CotizadorWizard() {
             </Box>
           )}
 
-          {/* ── Trust text — below white card, steps 0-2 only ─────────── */}
-          {state.step <= 2 && !state.paid && (
+          {/* ── Trust text — below white card, steps 0-3 only ─────────── */}
+          {state.step <= 3 && !state.paid && (
             <Typography
               variant="caption"
               sx={{

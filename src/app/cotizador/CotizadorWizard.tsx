@@ -2491,6 +2491,12 @@ export default function CotizadorWizard() {
             <Button
               fullWidth variant="outlined" disabled={state.webpayLoading}
               onClick={() => {
+                // Late booking loop: if no date, navigate to agenda step
+                if (!isVisitaOpen && !state.preBookedLabel) {
+                  track('late_booking_loop', { step: 3 })
+                  update({ path: 'agendar', step: 1, agendaDates: null })
+                  return
+                }
                 if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })
                 update({ selectedReserveOption: 'visita', activePanel: isVisitaOpen ? null : 'visitaPago', reservePendingAmount: null, reservePendingGlosa: '' })
               }}
@@ -2502,7 +2508,7 @@ export default function CotizadorWizard() {
                 fontWeight: 700, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2, mt: 2,
               }}
             >
-              {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
+              {state.webpayLoading ? 'Redirigiendo…' : state.preBookedLabel ? `Confirmar y pagar visita ${fmt(visitaAmount)} →` : `Agendar y pagar visita ${fmt(visitaAmount)} →`}
             </Button>
             {isVisitaOpen && (
               <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
@@ -2686,6 +2692,19 @@ export default function CotizadorWizard() {
 
     return (
       <Box id="COTIZADOR-RESULTADO">
+        {/* Banner verde — solo si hay fecha pre-agendada */}
+        {state.preBookedLabel && (
+          <Box sx={{
+            bgcolor: '#f0fdf4', border: '1px solid #bbf7d0',
+            borderRadius: 2, p: 1.5, mb: 2,
+            display: 'flex', alignItems: 'center', gap: 1,
+          }}>
+            <Typography sx={{ fontSize: '0.9rem' }}>📅</Typography>
+            <Typography sx={{ fontSize: '0.82rem', color: '#166534', fontWeight: 600 }}>
+              Horario elegido: {state.preBookedLabel} · horario hábil 09:00 a 18:00 — se bloquea al pagar
+            </Typography>
+          </Box>
+        )}
         {/* ── Simplified summary header ── */}
         <Box sx={{ textAlign: 'center', mb: 2.5 }}>
           <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: '#2A3547', mb: 0.25 }}>

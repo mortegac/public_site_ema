@@ -583,13 +583,13 @@ export default function CotizadorWizard() {
     ? '¡Visita agendada!'
     : state.paid
     ? STEP_TITLES[state.step] ?? '¡Todo confirmado!'
-    : STEP_TITLES[state.step] ?? 'Cotiza tu instalación'
+    : STEP_TITLES[state.step === 1 && state.path === 'cotizar' ? 2 : state.step] ?? 'Cotiza tu instalación'
 
   const heroSubtitle = state.booked
     ? 'Te contactaremos para confirmar los detalles'
     : state.paid
     ? STEP_SUBTITLES[state.step] ?? ''
-    : STEP_SUBTITLES[state.step] ?? ''
+    : STEP_SUBTITLES[state.step === 1 && state.path === 'cotizar' ? 2 : state.step] ?? ''
 
   // ─── Handlers ────────────────────────────────────────────────────────────
   function update(partial: Partial<WizardState>) {
@@ -699,7 +699,7 @@ export default function CotizadorWizard() {
       update({ step: 0, activePanel: null })
       return
     }
-    update({ step: state.step - 1, activePanel: null, ...(state.step === 1 ? { path: null } : {}) })
+    update({ step: state.step - 1, activePanel: null, ...(state.step === 1 ? { path: null, agendaSelectedIndex: null } : {}) })
   }
 
   // ─── Step tracking helper ─────────────────────────────────────────────────────
@@ -2495,7 +2495,7 @@ export default function CotizadorWizard() {
                 // Late booking loop: if no date, navigate to agenda step
                 if (!isVisitaOpen && !state.preBookedLabel) {
                   track('late_booking_loop', { step: 3 })
-                  update({ path: 'agendar', step: 1, agendaDates: null })
+                  update({ path: 'agendar', step: 1, agendaDates: null, agendaSelectedIndex: null })
                   return
                 }
                 if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })

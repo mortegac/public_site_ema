@@ -95,6 +95,13 @@ function genDates(): Array<{ label: string; available: boolean }> {
   return out
 }
 
+// ─── Time bands for agenda step ──────────────────────────────────────────────
+const TIME_BANDS = [
+  { key: '09-12', label: '09:00 a 12:00', startHour: 9 },
+  { key: '12-15', label: '12:00 a 15:00', startHour: 12 },
+  { key: '15-18', label: '15:00 a 18:00', startHour: 15 },
+]
+
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 interface WizardState {
   step: number
@@ -160,9 +167,16 @@ interface WizardState {
   preBookedDate: string | null
   preBookedLabel: string | null
   preBookedCalendarId: string | null
-  agendaDates: Array<{ dateKey: string; label: string; available: boolean; calendarId: string | null }> | null
+  agendaDates: Array<{
+    dateKey: string
+    label: string
+    available: boolean
+    calendarId: string | null
+    slots: Array<{ key: string; label: string; calendarId: string }>
+  }> | null
   agendaDatesLoading: boolean
   agendaSelectedIndex: number | null
+  agendaSelectedSlot: string | null
 }
 
 interface CalcResult {
@@ -448,6 +462,7 @@ export default function CotizadorWizard() {
     agendaDates: null,
     agendaDatesLoading: false,
     agendaSelectedIndex: null,
+    agendaSelectedSlot: null,
   })
 
   // Derived from state.tipo — passed in tracking event props
@@ -512,22 +527,32 @@ export default function CotizadorWizard() {
     fetch(`/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`)
       .then(r => r.json())
       .then(({ items }) => {
-        const slotsByDay = new Map<string, string>()
+        // Group slots by dateKey → band key → calendarId
+        const slotsByDay = new Map<string, Map<string, string>>() // dateKey → bandKey → calendarId
         for (const slot of (items ?? []) as Array<{ startDate: string; calendarId: string }>) {
-          const key = slot.startDate.slice(0, 10)
-          if (!slotsByDay.has(key)) slotsByDay.set(key, slot.calendarId)
+          const dateKey = slot.startDate.slice(0, 10)
+          const hour = new Date(slot.startDate).getHours()
+          const band = TIME_BANDS.find(b => b.startHour === hour)
+          if (!band) continue
+          if (!slotsByDay.has(dateKey)) slotsByDay.set(dateKey, new Map())
+          slotsByDay.get(dateKey)!.set(band.key, slot.calendarId)
         }
-        const dates: Array<{ dateKey: string; label: string; available: boolean; calendarId: string | null }> = []
+
+        const dates: Array<{ dateKey: string; label: string; available: boolean; calendarId: string | null; slots: Array<{ key: string; label: string; calendarId: string }> }> = []
         const cursor = new Date(startDate)
         while (cursor <= endDate) {
           if (cursor.getDay() !== 0) {
             const key = cursor.toISOString().slice(0, 10)
-            const calId = slotsByDay.get(key) ?? null
+            const daySlots = slotsByDay.get(key)
+            const slots = daySlots
+              ? TIME_BANDS.filter(b => daySlots.has(b.key)).map(b => ({ key: b.key, label: b.label, calendarId: daySlots.get(b.key)! }))
+              : []
             dates.push({
               dateKey: key,
               label: cursor.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }),
-              available: calId !== null,
-              calendarId: calId,
+              available: slots.length > 0,
+              calendarId: slots[0]?.calendarId ?? null,
+              slots,
             })
           }
           cursor.setDate(cursor.getDate() + 1)
@@ -684,7 +709,7 @@ export default function CotizadorWizard() {
       update({ step: 0, activePanel: null })
       return
     }
-    update({ step: state.step - 1, activePanel: null, ...(state.step === 1 ? { path: null, agendaSelectedIndex: null } : {}) })
+    update({ step: state.step - 1, activePanel: null, ...(state.step === 1 ? { path: null, agendaSelectedIndex: null, agendaSelectedSlot: null } : {}) })
   }
 
   // ─── Step tracking helper ─────────────────────────────────────────────────────
@@ -1202,6 +1227,7 @@ export default function CotizadorWizard() {
       agendaDates: null,
       agendaDatesLoading: false,
       agendaSelectedIndex: null,
+      agendaSelectedSlot: null,
     }))
   }
 
@@ -1273,7 +1299,7 @@ export default function CotizadorWizard() {
                 }}
                 sx={{
                   borderColor: TEAL, color: TEAL,
-                  '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.04)' },
+                  '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.04)', color: '#e81a68' },
                   '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
                   fontWeight: 600, py: 1.25, fontSize: '0.9rem',
                   boxShadow: 'none', borderRadius: 2,
@@ -1297,6 +1323,7 @@ export default function CotizadorWizard() {
   function renderStep1Agenda() {
     const dates = state.agendaDates ?? []
     const selectedIdx = state.agendaSelectedIndex
+    const selectedSlot = state.agendaSelectedSlot
 
     return (
       <Box>
@@ -1304,7 +1331,7 @@ export default function CotizadorWizard() {
           Elige una fecha disponible
         </Typography>
         <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3, lineHeight: 1.6 }}>
-          Horario hábil 09:00 a 18:00 hrs · se confirma tras reservar.
+          Selecciona el día y la banda horaria que prefieres para tu visita técnica.
         </Typography>
 
         {state.agendaDatesLoading ? (
@@ -1318,42 +1345,80 @@ export default function CotizadorWizard() {
             </Typography>
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 3 }}>
-            {dates.map((d, i) => (
-              <Box
-                key={d.dateKey}
-                onClick={d.available ? () => {
-                  track('pre_booking_date_selected', { date: d.dateKey })
-                  update({ agendaSelectedIndex: i })
-                } : undefined}
-                sx={{
-                  p: '10px 14px', borderRadius: 2,
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  border: `1.5px solid ${selectedIdx === i ? PINK : d.available ? BORDER : 'transparent'}`,
-                  bgcolor: selectedIdx === i ? 'rgba(232,26,104,0.04)' : d.available ? '#fff' : SURFACE,
-                  cursor: d.available ? 'pointer' : 'default',
-                  opacity: d.available ? 1 : 0.45,
-                  transition: 'all 0.15s',
-                }}
-              >
-                <Typography sx={{ fontSize: '0.85rem', fontWeight: 500, color: '#2A3547', textTransform: 'capitalize' }}>
-                  {d.label}
-                </Typography>
-                {d.available ? (
-                  <Chip
-                    label={selectedIdx === i ? 'Seleccionado' : 'Disponible'}
-                    size="small"
-                    sx={{
-                      fontSize: '0.65rem', fontWeight: 600, height: 20,
-                      bgcolor: selectedIdx === i ? 'rgba(232,26,104,0.08)' : '#EBF7F9',
-                      color: selectedIdx === i ? PINK : TEAL,
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>No disponible</Typography>
-                )}
-              </Box>
-            ))}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 3 }}>
+            {dates.map((d, i) => {
+              const isSelected = selectedIdx === i
+              return (
+                <Box
+                  key={d.dateKey}
+                  onClick={d.available ? () => {
+                    if (selectedIdx !== i) {
+                      track('pre_booking_date_selected', { date: d.dateKey })
+                      update({ agendaSelectedIndex: i, agendaSelectedSlot: null })
+                    }
+                  } : undefined}
+                  sx={{
+                    p: 2, borderRadius: 2,
+                    border: `1.5px solid ${isSelected ? PINK : d.available ? BORDER : 'transparent'}`,
+                    bgcolor: isSelected ? 'rgba(232,26,104,0.03)' : d.available ? '#fff' : SURFACE,
+                    cursor: d.available ? 'pointer' : 'default',
+                    opacity: d.available ? 1 : 0.45,
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {/* Date header row */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: isSelected ? 1.5 : 0 }}>
+                    <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#2A3547', textTransform: 'capitalize' }}>
+                      {d.label}
+                    </Typography>
+                    {d.available ? (
+                      <Chip
+                        label="Disponible"
+                        size="small"
+                        sx={{ fontSize: '0.65rem', fontWeight: 600, height: 22, bgcolor: '#EBF7F9', color: TEAL }}
+                      />
+                    ) : (
+                      <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>No disponible</Typography>
+                    )}
+                  </Box>
+
+                  {/* Time bands — only shown for selected date */}
+                  {isSelected && d.slots.length > 0 && (
+                    <Box>
+                      <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 1.25 }}>
+                        Elige una banda horaria · rango hábil 09:00 a 18:00 hrs
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        {d.slots.map(slot => (
+                          <Box
+                            key={slot.key}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              update({ agendaSelectedSlot: slot.key })
+                            }}
+                            sx={{
+                              flex: '1 1 auto',
+                              textAlign: 'center',
+                              py: 1.25, px: 1,
+                              borderRadius: 2,
+                              border: `1.5px solid ${selectedSlot === slot.key ? PINK : BORDER}`,
+                              bgcolor: selectedSlot === slot.key ? 'rgba(232,26,104,0.06)' : '#fff',
+                              cursor: 'pointer',
+                              transition: 'all 0.12s',
+                              '&:hover': { borderColor: PINK },
+                            }}
+                          >
+                            <Typography sx={{ fontSize: '0.8rem', fontWeight: selectedSlot === slot.key ? 700 : 500, color: selectedSlot === slot.key ? PINK : '#2A3547' }}>
+                              {slot.label}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              )
+            })}
           </Box>
         )}
 
@@ -1362,7 +1427,7 @@ export default function CotizadorWizard() {
           variant="text"
           onClick={() => {
             track('pre_booking_skipped')
-            update({ agendaSelectedIndex: null, step: 2 })
+            update({ agendaSelectedIndex: null, agendaSelectedSlot: null, step: 2 })
           }}
           sx={{ color: TEXT_MUTED, fontSize: '0.82rem', mt: 1, '&:hover': { color: '#2A3547' } }}
         >
@@ -2480,7 +2545,7 @@ export default function CotizadorWizard() {
                 // Late booking loop: if no date, navigate to agenda step
                 if (!isVisitaOpen && !state.preBookedLabel) {
                   track('late_booking_loop', { step: 3 })
-                  update({ path: 'agendar', step: 1, agendaDates: null, agendaSelectedIndex: null })
+                  update({ path: 'agendar', step: 1, agendaDates: null, agendaSelectedIndex: null, agendaSelectedSlot: null })
                   return
                 }
                 if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })
@@ -3493,22 +3558,24 @@ export default function CotizadorWizard() {
             {state.step === 1 && state.path === 'agendar' && (
               <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Tooltip
-                  title={state.agendaSelectedIndex === null ? 'Selecciona una fecha para continuar' : ''}
+                  title={state.agendaSelectedIndex === null || state.agendaSelectedSlot === null ? 'Selecciona fecha y horario para continuar' : ''}
                   arrow
                 >
                   <span style={{ width: '100%' }}>
                     <Button
                       fullWidth
                       variant="contained"
-                      disabled={state.agendaSelectedIndex === null || state.agendaDatesLoading}
+                      disabled={state.agendaSelectedIndex === null || state.agendaSelectedSlot === null || state.agendaDatesLoading}
                       onClick={() => {
-                        const selected = (state.agendaDates ?? [])[state.agendaSelectedIndex!]
-                        if (!selected) return
-                        track('pre_booking_confirmed', { date: selected.dateKey })
+                        const selectedDate = (state.agendaDates ?? [])[state.agendaSelectedIndex!]
+                        const selectedSlotData = selectedDate?.slots.find(s => s.key === state.agendaSelectedSlot)
+                        if (!selectedDate || !selectedSlotData) return
+                        const newLabel = `${selectedDate.label} · ${selectedSlotData.label}`
+                        track('pre_booking_confirmed', { date: selectedDate.dateKey, slot: selectedSlotData.key })
                         update({
-                          preBookedDate: selected.dateKey,
-                          preBookedLabel: selected.label,
-                          preBookedCalendarId: selected.calendarId,
+                          preBookedDate: selectedDate.dateKey,
+                          preBookedLabel: newLabel,
+                          preBookedCalendarId: selectedSlotData.calendarId,
                           step: state.apiResult ? 3 : 2,
                         })
                       }}
@@ -3519,9 +3586,9 @@ export default function CotizadorWizard() {
                         boxShadow: 'none', borderRadius: 2,
                       }}
                     >
-                      {state.agendaSelectedIndex !== null
-                        ? `Confirmar fecha · ${(state.agendaDates ?? [])[state.agendaSelectedIndex!]?.label ?? ''}`
-                        : 'Confirmar fecha →'}
+                      {state.agendaSelectedIndex !== null && state.agendaSelectedSlot !== null
+                        ? `Confirmar · ${(state.agendaDates ?? [])[state.agendaSelectedIndex!]?.label ?? ''} ${TIME_BANDS.find(b => b.key === state.agendaSelectedSlot)?.label ?? ''} →`
+                        : 'Selecciona fecha y horario para continuar'}
                     </Button>
                   </span>
                 </Tooltip>

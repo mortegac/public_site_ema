@@ -5,6 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
@@ -56,13 +57,7 @@ const blogPostingSchema = {
   headline: 'Comparativa de Cargadores para Vehículos Eléctricos en Chile 2026: Wallbox y Portátiles',
   description:
     'Comparativa completa de los 8 cargadores EV disponibles en Chile 2026: ZEERO Minibox, EFFITEC, LIVOLTEK, KPN KBox App, KPN KBox OCPP, BESTE TS-EVC07, BESTE Smart Mini, BENY y Workersbee portátil.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-  },
+  author: getAuthorSchemaData(),
   contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
@@ -351,7 +346,7 @@ export default function ArticlePage() {
             19 de junio, 2026
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography sx={{ fontSize: { xs: '1rem', md: '1.15rem' }, color: '#000000', maxWidth: 600, lineHeight: 1.7, mx: 'auto', mb: 5 }}>
               8 modelos comparados: precios reales, potencia, conectividad y para quién es cada uno.

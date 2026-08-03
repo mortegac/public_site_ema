@@ -19,6 +19,18 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.energica.city/contactanos",
   },
+  openGraph: {
+    url: 'https://www.energica.city/contactanos',
+    title: 'Contáctanos — Enérgica City',
+    description: 'Habla con nuestro equipo de instaladores SEC certificados. Cotiza tu cargador eléctrico o agenda una visita técnica gratuita.',
+    images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: 'Contacto Enérgica City' }],
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'Contáctanos — Enérgica City',
+    description: 'Instaladores SEC certificados. Cotiza tu cargador o agenda visita técnica gratuita.',
+    images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+  },
 };
 
 const breadcrumbSchema = {

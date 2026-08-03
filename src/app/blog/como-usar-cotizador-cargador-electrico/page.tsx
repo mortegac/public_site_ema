@@ -7,6 +7,7 @@ import AuthorByline from '@/app/components/shared/AuthorByline'
 import StepsList from '@/app/components/shared/StepsList'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -57,14 +58,7 @@ const blogPostingSchema = {
     width: 1170,
     height: 400,
   },
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -280,7 +274,7 @@ export default function ArticlePage() {
             11 de junio, 2026
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{
@@ -451,12 +445,7 @@ export default function ArticlePage() {
         </Box>
 
         {/* Author byline */}
-        <AuthorByline
-          name="Manuel Ortega"
-          bio="Ingeniero en desarrollo de software con 8+ años de experiencia en temas asociados a la electromovilidad."
-          imageSrc="/images/profile/manuel-ortega.jpg"
-          imageAlt="Manuel Ortega, Enérgica City"
-        />
+        <AuthorByline dateModified="2026-07-08" />
 
         {/* Cross-link */}
         <Box sx={{ py: 3, textAlign: 'center' }}>

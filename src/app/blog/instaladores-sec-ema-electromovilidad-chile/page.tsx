@@ -6,6 +6,7 @@ import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import TechnicianForm from './TechnicianForm'
 
 const DARK = '#0F172A'
@@ -55,14 +56,7 @@ const blogPostingSchema = {
     width: 1170,
     height: 400,
   },
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -247,7 +241,7 @@ export default function ArticlePage() {
             3 de julio, 2026
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, color: 'rgba(255,255,255,0.75)', maxWidth: 640, lineHeight: 1.7, mb: 4 }}

@@ -16,9 +16,9 @@ const TEXT_MUTED = '#64748B'
 const PAGE_URL = `${CANONICAL_DOMAIN}/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador`
 
 export const metadata: Metadata = {
-  title: 'Agenda una Visita Técnica para Evaluar la Instalación de tu Cargador',
+  title: 'Agenda Visita Técnica — Instalación de Cargador EV',
   description:
-    'Agenda una visita técnica con un instalador certificado SEC para evaluar la instalación de tu cargador eléctrico. Partner oficial de Abastibletec. Presupuesto definitivo en 48 horas.',
+    'Agenda una visita técnica con un instalador certificado SEC para evaluar la instalación de tu cargador eléctrico. Partner oficial de Abastibletec.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     url: PAGE_URL,

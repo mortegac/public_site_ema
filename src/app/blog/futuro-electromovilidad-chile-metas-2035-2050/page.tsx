@@ -7,6 +7,7 @@ import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -58,14 +59,7 @@ const blogPostingSchema = {
   headline: 'Chile 2035: El Fin de los Autos a Gasolina y Cómo Prepararse',
   description:
     'Análisis completo de la Estrategia Nacional de Electromovilidad de Chile: metas 2035 y 2050, ventajas competitivas del país (litio, solar, red eléctrica limpia), acuerdo público-privado y pasos para que empresas y hogares se preparen hoy.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -242,7 +236,7 @@ export default function ArticlePage() {
             5 de mayo, 2025
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               variant="body1"

@@ -189,7 +189,13 @@ const articleSchema = {
   datePublished: '2026-04-01',
   dateModified: '2026-07-06',
   inLanguage: 'es-CL',
-  author: { '@type': 'Organization', name: 'Energica City', url: 'https://www.energica.city' },
+  author: {
+    '@type': 'Person',
+    name: 'Felipe Donoso',
+    jobTitle: 'Ingeniero Eléctrico',
+    url: 'https://www.linkedin.com/in/felipedonoso-energica/',
+    '@id': 'https://www.energica.city/#felipe-donoso',
+  },
   publisher: {
     '@type': 'Organization',
     name: 'Energica City',
@@ -321,11 +327,15 @@ export default async function EnergicaVsCopecVoltexPage() {
             <Typography variant="h2" sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 1 }}>
               Comparativa completa: Energica City vs Copec Voltex
             </Typography>
-            <Typography variant="body2" sx={{ color: TEXT_MUTED, mb: 5 }}>
+            <Typography variant="body2" sx={{ color: TEXT_MUTED, mb: 1 }}>
               Información verificada desde los sitios públicos de ambas empresas. Última actualización: abril 2026.{' '}
               <Box component="a" href="https://copecvoltex.cl" target="_blank" rel="noopener noreferrer" sx={{ color: TEXT_MUTED }}>
                 Fuente: copecvoltex.cl
               </Box>
+            </Typography>
+            <Typography sx={{ fontSize: '0.85rem', color: '#64748b', mt: 1, mb: 4, fontStyle: 'italic' }}>
+              Este análisis fue preparado por Felipe Donoso, Ingeniero Eléctrico de Enérgica City, revisado en abril 2026.
+              Los precios de Copec Voltex se obtuvieron de copecvoltex.cl y pueden variar.
             </Typography>
 
             <Box sx={{ overflowX: 'auto' }}>
@@ -584,7 +594,7 @@ export default async function EnergicaVsCopecVoltexPage() {
               </Box>
               <Box
                 component={Link}
-                href="/cotizador"
+                href="/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador"
                 sx={{
                   display: 'inline-block',
                   color: 'rgba(255,255,255,0.7)',

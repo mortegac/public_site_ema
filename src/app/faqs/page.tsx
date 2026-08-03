@@ -9,6 +9,18 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.energica.city/faqs",
   },
+  openGraph: {
+    url: 'https://www.energica.city/faqs',
+    title: 'Preguntas Frecuentes — Cargadores EV en Chile',
+    description: 'Respuestas a las preguntas más comunes sobre instalación de cargadores eléctricos, trámites SEC, costos y garantías en Chile.',
+    images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: 'FAQ cargadores eléctricos Chile' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FAQ Cargadores EV — Enérgica City',
+    description: 'Todo sobre instalación de cargadores en Chile: costos, trámites SEC, garantías y plazos.',
+    images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+  },
 };
 
 const faqs = [

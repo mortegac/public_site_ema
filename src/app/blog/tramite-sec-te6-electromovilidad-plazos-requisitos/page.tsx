@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
@@ -57,14 +58,7 @@ const blogPostingSchema = {
   headline: 'Trámite TE6 ante la SEC: Plazos y Requisitos para tu Cargador',
   description:
     'Guía completa sobre la declaración TE6 ante la SEC para instalaciones de cargadores de vehículos eléctricos en Chile: requisitos, plazos, costos y consecuencias legales.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -248,7 +242,7 @@ export default function ArticlePage() {
             5 de mayo, 2025
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{

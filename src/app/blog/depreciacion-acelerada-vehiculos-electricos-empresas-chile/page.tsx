@@ -7,6 +7,7 @@ import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -58,14 +59,7 @@ const blogPostingSchema = {
   headline: 'Beneficios Tributarios: Depreciación Acelerada para Flotas EV en Chile',
   description:
     'Análisis completo de los beneficios tributarios para empresas chilenas que electrifican sus flotas: Ley 21.505, depreciación acelerada, IVA recuperable, permiso de circulación e impuesto verde. Caso de cálculo con 10 vehículos BYD Atto 3.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -242,7 +236,7 @@ export default function ArticlePage() {
             5 de mayo, 2025
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               variant="body1"

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.energica.city/cotizador",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function CotizadorPage() {

@@ -7,6 +7,7 @@ import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -55,14 +56,7 @@ const blogPostingSchema = {
   headline: 'Cargador Monofásico vs. Trifásico: ¿Cuál Necesita tu Auto Eléctrico?',
   description:
     'Diferencias entre cargador monofásico (7kW) y trifásico (22kW) para autos eléctricos en Chile. Elige según tu empalme y la capacidad de tu vehículo.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
@@ -248,7 +242,7 @@ export default function ArticlePage() {
             15 de mayo, 2025
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{

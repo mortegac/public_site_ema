@@ -7,6 +7,7 @@ import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb';
 import AuthorByline from '@/app/components/shared/AuthorByline';
 
 import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
+import { getAuthor, getAuthorSchemaData } from "@/data/authors";
 import { asText } from "@prismicio/client";
 import { SliceZone } from "@prismicio/react";
 
@@ -50,7 +51,7 @@ export async function generateMetadata({
       description: page.data.meta_description ?? "",
       publishedTime: page.first_publication_date ?? undefined,
       modifiedTime: page.last_publication_date ?? undefined,
-      authors: ["Felipe Donoso"],
+      authors: [getAuthor().name],
       images: [
         {
           url: (page.data.meta_image?.url ?? "").replace("auto=format,compress", "auto=compress&fm=jpg"),
@@ -157,14 +158,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     "datePublished": page.first_publication_date ?? "",
     "dateModified": page.last_publication_date ?? "",
     "mainEntityOfPage": { "@type": "WebPage", "@id": DOMAIN_PAGE },
-    "author": {
-      "@type": "Person",
-      "name": "Felipe Donoso",
-      "@id": "https://www.energica.city/#author-felipe-donoso",
-      "jobTitle": "Ingeniero Eléctrico, Enérgica City",
-      "url": `${CANONICAL_DOMAIN}/que-es-energica-city`,
-      "sameAs": "https://www.linkedin.com/in/felipedonosovergara/",
-    },
+    "author": getAuthorSchemaData(),
     "publisher": {
       "@type": "Organization",
       "@id": "https://www.energica.city/#organization",
@@ -204,6 +198,29 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     ],
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cómo puedo instalar un cargador eléctrico en Chile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Para instalar un cargador EV en Chile necesitas un instalador con credencial SEC vigente, un circuito eléctrico dedicado, y obtener el certificado TE6 al finalizar la instalación. Enérgica City gestiona todo el proceso."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto cuesta instalar un cargador en casa en Chile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La instalación de un Wallbox en casa en Chile parte desde $159.000 IVA incluido para el escenario estándar (hasta 20 metros al tablero), con certificado TE6 incluido en el precio."
+        }
+      }
+    ]
+  };
+
   // Override takes precedence over Prismic CMS image for specific posts
   const STATIC_IMAGE_OVERRIDES: Record<string, string> = {
     'conoce-nuestra-metodologia-propia': '/images/post/01_1170x400.png',
@@ -214,6 +231,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   return <>
     <SchemaMarkup type="BlogPosting" data={blogPostingSchema} />
     <SchemaMarkup type="BreadcrumbList" data={breadcrumbSchema} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <HpHeaderNew />
       <BlogBreadcrumb title={page?.data?.meta_title ?? uid} />
       {postImageUrl && (
@@ -252,7 +270,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
       >
         <SliceZone slices={page.data.slices} components={components} />
       </Container>
-      <AuthorByline dateModified="2026-07-07" />
+      <AuthorByline dateModified={page.last_publication_date?.slice(0, 10) ?? undefined} />
   </>
 }
 

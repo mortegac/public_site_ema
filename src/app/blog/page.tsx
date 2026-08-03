@@ -15,6 +15,13 @@ export const metadata: Metadata = {
     url: `${CANONICAL_DOMAIN}/blog`,
     title: "Blog sobre Electromovilidad | Energica City",
     description: "Artículos sobre cargadores eléctricos, normativa SEC y electromovilidad empresarial en Chile.",
+    images: [{ url: `${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`, width: 1200, height: 630, alt: 'Blog electromovilidad Chile — Enérgica City' }],
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'Blog Electromovilidad Chile — Enérgica City',
+    description: 'Artículos sobre cargadores EV, normativa SEC y electromovilidad empresarial en Chile.',
+    images: [`${CANONICAL_DOMAIN}/images/og/servicios-cargadores-ev.jpg`],
   },
 };
 
@@ -43,12 +50,20 @@ export default async function BlogPage() {
     name: "Blog Enérgica City — Electromovilidad y Cargadores EV en Chile",
     url: `${CANONICAL_DOMAIN}/blog`,
     numberOfItems: BLOG_ARTICLES.length + posts.length,
-    itemListElement: BLOG_ARTICLES.map((a, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      url: `${CANONICAL_DOMAIN}/blog/${a.uid}`,
-      name: a.title,
-    })),
+    itemListElement: [
+      ...BLOG_ARTICLES.map((a, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${CANONICAL_DOMAIN}/blog/${a.uid}`,
+        name: a.title,
+      })),
+      ...posts.map((p, i) => ({
+        "@type": "ListItem",
+        position: BLOG_ARTICLES.length + i + 1,
+        url: `${CANONICAL_DOMAIN}/blog/${p.uid}`,
+        name: String(p.data.meta_title ?? p.uid),
+      })),
+    ],
   };
 
   const blogSchema = {
@@ -58,6 +73,8 @@ export default async function BlogPage() {
     description: "Artículos sobre cargadores eléctricos, normativa SEC y electromovilidad empresarial en Chile.",
     url: `${CANONICAL_DOMAIN}/blog`,
     inLanguage: "es-CL",
+    datePublished: "2024-06-01",
+    dateModified: posts[0]?.last_publication_date?.slice(0, 10) ?? "2026-07-07",
     publisher: {
       "@type": "Organization",
       name: "Energica City",

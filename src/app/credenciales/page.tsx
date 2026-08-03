@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   title: 'Credenciales SEC y Certificaciones',
   description: 'Instaladores certificados SEC (TE1/TE6) para cargadores EV en Chile. Conoce nuestras credenciales y estándares de seguridad.',
   alternates: { canonical: 'https://www.energica.city/credenciales' },
+  openGraph: {
+    url: 'https://www.energica.city/credenciales',
+    title: 'Credenciales SEC y Certificaciones — Enérgica City',
+    description: 'Instaladores certificados SEC (TE1/TE6) para cargadores EV en Chile. Conoce nuestras credenciales y estándares de seguridad.',
+    images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: 'Credenciales SEC cargadores eléctricos Chile' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Credenciales SEC — Enérgica City',
+    description: 'Instaladores TE1/TE6 certificados por la SEC. Trámite TE6 incluido en cada instalación de cargadores EV en Chile.',
+    images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+  },
 }
 
 const certifications = [
@@ -16,26 +28,33 @@ const certifications = [
 ]
 
 export default function CredencialesPage() {
-  const localBusinessSchema = {
+  const webPageSchema = {
     "@context": "https://schema.org",
-    "@type": "ElectricalContractor",
-    "name": "Energica City",
-    "url": "https://www.energica.city",
-    "image": "https://www.energica.city/images/logos/logo.png",
-    "description": "Instalación certificada SEC de cargadores eléctricos para empresas y edificios en Chile.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Santiago",
-      "addressRegion": "Región Metropolitana",
-      "addressCountry": "CL"
-    },
-    "areaServed": { "@type": "Country", "name": "Chile" },
-    "telephone": "+56967666652",
-    "openingHours": "Mo-Fr 09:00-18:00",
-    "award": [
-      "Certificación TE1 — Superintendencia de Electricidad y Combustibles (SEC) Chile",
-      "Certificación TE6 — Superintendencia de Electricidad y Combustibles (SEC) Chile"
-    ]
+    "@type": "WebPage",
+    "name": "Credenciales SEC y Certificaciones — Enérgica City",
+    "url": "https://www.energica.city/credenciales",
+    "description": "Instaladores certificados SEC (TE1/TE6) para cargadores EV en Chile. Conoce nuestras credenciales y estándares de seguridad.",
+    "inLanguage": "es-CL",
+    "about": {
+      "@type": "ElectricalContractor",
+      "name": "Energica City",
+      "url": "https://www.energica.city",
+      "image": "https://www.energica.city/images/logos/logo.png",
+      "description": "Instalación certificada SEC de cargadores eléctricos para empresas y edificios en Chile.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Santiago",
+        "addressRegion": "Región Metropolitana",
+        "addressCountry": "CL"
+      },
+      "areaServed": { "@type": "Country", "name": "Chile" },
+      "telephone": "+56967666652",
+      "openingHours": "Mo-Fr 09:00-18:00",
+      "award": [
+        "Certificación TE1 — Superintendencia de Electricidad y Combustibles (SEC) Chile",
+        "Certificación TE6 — Superintendencia de Electricidad y Combustibles (SEC) Chile"
+      ]
+    }
   }
 
   const breadcrumbSchema = {
@@ -49,7 +68,7 @@ export default function CredencialesPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HpHeaderNew />
       <Box component="main" sx={{ py: 8 }}>
@@ -76,6 +95,14 @@ export default function CredencialesPage() {
             <Typography variant="body1" color="text.secondary">
               Además, para edificios y empresas se requiere el formulario TE6, que certifica la instalación eléctrica para uso en recarga de vehículos eléctricos. Energica City gestiona todo el trámite por ti.
             </Typography>
+          </Box>
+          <Box sx={{ mt: 6, textAlign: 'center', display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+            <Box component="a" href="/presupuesto-cargador-electrico" sx={{ display: 'inline-block', bgcolor: '#e81a68', color: '#fff', px: 5, py: 2, borderRadius: 1, fontWeight: 600, fontSize: '1rem', textDecoration: 'none', '&:hover': { bgcolor: '#c01556' } }}>
+              Obtén tu presupuesto
+            </Box>
+            <Box component="a" href="/cotizador" sx={{ display: 'inline-block', bgcolor: 'transparent', color: '#0898b9', px: 5, py: 2, borderRadius: 1, fontWeight: 600, fontSize: '1rem', textDecoration: 'none', border: '1px solid #0898b9', '&:hover': { bgcolor: 'rgba(8,152,185,0.08)' } }}>
+              Cotiza tu instalación
+            </Box>
           </Box>
         </Container>
       </Box>

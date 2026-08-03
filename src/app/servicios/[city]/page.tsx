@@ -3,7 +3,7 @@ import { Container, Box, Typography } from '@mui/material'
 import { notFound } from 'next/navigation'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 
-const cities: Record<string, { name: string; demonym: string; description: string; address: string; lat: number; lon: number; zones: string[] }> = {
+const cities: Record<string, { name: string; demonym: string; description: string; address: string; lat: number; lon: number; zones: string[]; region?: string }> = {
   santiago: { name: 'Santiago', demonym: 'santiaguino', description: 'la capital de Chile', address: 'Santiago, Región Metropolitana, Chile', lat: -33.4489, lon: -70.6693, zones: ['Barrio Italia', 'Yungay', 'Estación Central', 'San Miguel', 'La Cisterna', 'El Bosque'] },
   'las-condes': { name: 'Las Condes', demonym: 'de Las Condes', description: 'la comuna financiera y empresarial de Santiago', address: 'Las Condes, Región Metropolitana, Chile', lat: -33.4113, lon: -70.5664, zones: ['Apoquindo', 'El Golf', 'Nueva Las Condes', 'La Dehesa', 'Lo Barnechea', 'Escandinavia'] },
   providencia: { name: 'Providencia', demonym: 'providenciano', description: 'una de las comunas más activas de Santiago', address: 'Providencia, Región Metropolitana, Chile', lat: -33.4323, lon: -70.6100, zones: ['Manuel Montt', 'Los Leones', 'Pedro de Valdivia', 'Tobalaba', 'Baquedano', 'Salvador'] },
@@ -12,18 +12,18 @@ const cities: Record<string, { name: string; demonym: string; description: strin
   'la-florida': { name: 'La Florida', demonym: 'floridano', description: 'la comuna más poblada de Santiago', address: 'La Florida, Región Metropolitana, Chile', lat: -33.5167, lon: -70.5948, zones: ['Vicuña Mackenna', 'Los Quillayes', 'Roble Alto', 'La Florida Centro', 'Santa Amalia', 'El Castillo'] },
   'lo-barnechea': { name: 'Lo Barnechea', demonym: 'barnecheano', description: 'una de las comunas de mayor crecimiento en el sector oriente de Santiago', address: 'Lo Barnechea, Región Metropolitana, Chile', lat: -33.3527, lon: -70.5232, zones: ['El Arrayán', 'La Dehesa', 'San Enrique', 'Valle Escondido', 'Los Trapenses', 'Montecillo'] },
   'san-miguel': { name: 'San Miguel', demonym: 'sanmiguelino', description: 'una de las comunas más conectadas del sur de Santiago', address: 'San Miguel, Región Metropolitana, Chile', lat: -33.4981, lon: -70.6516, zones: ['Gran Avenida', 'Lo Ovalle', 'Club Hípico', 'Santa Rosa', 'Departamental', 'El Llano'] },
-  'villa-alemana': { name: 'Villa Alemana', demonym: 'villalemanino', description: 'una ciudad en crecimiento en la Región de Valparaíso', address: 'Villa Alemana, Región de Valparaíso, Chile', lat: -33.0428, lon: -71.3745, zones: ['Centro Villa Alemana', 'Los Aromos', 'Santa Laura', 'El Belloto', 'Reñaca Alto', 'Parque Industrial'] },
+  'villa-alemana': { name: 'Villa Alemana', demonym: 'villalemanino', description: 'una ciudad en crecimiento en la Región de Valparaíso', address: 'Villa Alemana, Región de Valparaíso, Chile', lat: -33.0428, lon: -71.3745, zones: ['Centro Villa Alemana', 'Los Aromos', 'Santa Laura', 'El Belloto', 'Reñaca Alto', 'Parque Industrial'], region: 'Región de Valparaíso' },
   'estacion-central': { name: 'Estación Central', demonym: 'estacioncentralino', description: 'una de las comunas más céntricas y conectadas de Santiago', address: 'Estación Central, Región Metropolitana, Chile', lat: -33.4569, lon: -70.6828, zones: ['Alameda', 'Acceso Sur', 'Las Rosas', 'Los Nogales', 'Pudahuel Norte', 'Ricardo Cumming'] },
   huechuraba: { name: 'Huechuraba', demonym: 'de Huechuraba', description: 'una comuna industrial y residencial en el norte de Santiago', address: 'Huechuraba, Región Metropolitana, Chile', lat: -33.3614, lon: -70.6458, zones: ['Ciudad Empresarial', 'El Barrero', 'La Pincoya', 'Vivaceta', 'Lo Marcoleta', 'Portal Bicentenario'] },
   colina: { name: 'Colina', demonym: 'colinano', description: 'una comuna en expansión al norte de la Región Metropolitana', address: 'Colina, Región Metropolitana, Chile', lat: -33.2021, lon: -70.6746, zones: ['Colina Centro', 'El Asiento', 'Chicureo', 'Los Almendros', 'Portal del Bosque', 'Valle Grande'] },
   lampa: { name: 'Lampa', demonym: 'lampino', description: 'una comuna logística y residencial al noroeste de Santiago', address: 'Lampa, Región Metropolitana, Chile', lat: -33.2867, lon: -70.8766, zones: ['Lampa Centro', 'Batuco', 'Estación Colina', 'Lo Vargas', 'Parque Industrial Lampa', 'Villa Esperanza'] },
   chicureo: { name: 'Chicureo', demonym: 'chicureano', description: 'un sector residencial de alto estándar al norte de Santiago', address: 'Chicureo, Colina, Región Metropolitana, Chile', lat: -33.2028, lon: -70.6155, zones: ['Piedra Roja', 'Valle Grande', 'Bosques de Montemar', 'La Reserva', 'San Jorge', 'Los Almendros'] },
   maipu: { name: 'Maipú', demonym: 'maipucino', description: 'una de las comunas más grandes y pobladas de la Región Metropolitana', address: 'Maipú, Región Metropolitana, Chile', lat: -33.5131, lon: -70.7578, zones: ['Pajaritos', 'Las Rastras', 'Monte Tabor', 'Villa Los Héroes', 'Santiago Sur', 'Cerrillos'] },
-  algarrobo: { name: 'Algarrobo', demonym: 'algarrobino', description: 'un balneario y comuna costera de la Región de Valparaíso', address: 'Algarrobo, Región de Valparaíso, Chile', lat: -33.3673, lon: -71.6673, zones: ['El Canelo', 'San Alfonso del Mar', 'Mirasol', 'El Tabo', 'Las Cruces', 'Centro Algarrobo'] },
+  algarrobo: { name: 'Algarrobo', demonym: 'algarrobino', description: 'un balneario y comuna costera de la Región de Valparaíso', address: 'Algarrobo, Región de Valparaíso, Chile', lat: -33.3673, lon: -71.6673, zones: ['El Canelo', 'San Alfonso del Mar', 'Mirasol', 'El Tabo', 'Las Cruces', 'Centro Algarrobo'], region: 'Región de Valparaíso' },
   'la-cisterna': { name: 'La Cisterna', demonym: 'cisternino', description: 'una comuna residencial y comercial del sur de Santiago', address: 'La Cisterna, Región Metropolitana, Chile', lat: -33.5275, lon: -70.6636, zones: ['Gran Avenida', 'Lo Ovalle Sur', 'Walker Martínez', 'Santa Rosa Sur', 'El Parrón', 'Villa La Florida'] },
   penalolen: { name: 'Peñalolén', demonym: 'peñalolino', description: 'una comuna residencial en el sector oriente de Santiago', address: 'Peñalolén, Región Metropolitana, Chile', lat: -33.4894, lon: -70.5378, zones: ['Lo Hermida', 'San Luis', 'La Faena', 'San Patricio', 'Las Vizcachas', 'El Vergel'] },
-  'con-con': { name: 'Con Con', demonym: 'conconeño', description: 'una ciudad costera e industrial de la Región de Valparaíso', address: 'Con Con, Región de Valparaíso, Chile', lat: -32.9228, lon: -71.5338, zones: ['Barrio Industrial', 'Playa Negra', 'Los Pinos', 'La Boca', 'Concón Centro', 'Parque Empresarial'] },
-  maitencillo: { name: 'Maitencillo', demonym: 'maitencillano', description: 'un exclusivo balneario en la costa de la Región de Valparaíso', address: 'Maitencillo, Puchuncaví, Región de Valparaíso, Chile', lat: -32.6483, lon: -71.4175, zones: ['Maitencillo Centro', 'Cachagua', 'Zapallar', 'Papudo', 'Los Molles', 'Pichicuy'] },
+  'con-con': { name: 'Con Con', demonym: 'conconeño', description: 'una ciudad costera e industrial de la Región de Valparaíso', address: 'Con Con, Región de Valparaíso, Chile', lat: -32.9228, lon: -71.5338, zones: ['Barrio Industrial', 'Playa Negra', 'Los Pinos', 'La Boca', 'Concón Centro', 'Parque Empresarial'], region: 'Región de Valparaíso' },
+  maitencillo: { name: 'Maitencillo', demonym: 'maitencillano', description: 'un exclusivo balneario en la costa de la Región de Valparaíso', address: 'Maitencillo, Puchuncaví, Región de Valparaíso, Chile', lat: -32.6483, lon: -71.4175, zones: ['Maitencillo Centro', 'Cachagua', 'Zapallar', 'Papudo', 'Los Molles', 'Pichicuy'], region: 'Región de Valparaíso' },
 }
 
 type Props = { params: Promise<{ city: string }> }
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityData = cities[city]
   if (!cityData) return {}
   const url = `https://www.energica.city/servicios/${city}`
-  const description = `Instalación de cargadores eléctricos para empresas, edificios y condominios en ${cityData.name}. Técnicos certificados SEC, gestión TE6 incluida. Cotiza gratis.`
+  const description = `Instalación de cargadores EV en ${cityData.name}. Técnicos certificados SEC, gestión TE6 incluida. Cotiza gratis.`
   return {
     title: `Cargadores EV en ${cityData.name}`,
     description,
@@ -76,7 +76,7 @@ export default async function CityPage({ params }: Props) {
     "address": {
       "@type": "PostalAddress",
       "addressLocality": cityData.name,
-      "addressRegion": "Región Metropolitana",
+      "addressRegion": cityData.region ?? "Región Metropolitana",
       "addressCountry": "CL"
     },
     "telephone": "+56967666652",
@@ -119,7 +119,7 @@ export default async function CityPage({ params }: Props) {
     },
   ]
 
-  const faqs = [
+  const faqs: { question: string; answer: string }[] = [
     {
       question: '¿Cuánto demora la instalación de un cargador eléctrico?',
       answer: `El tiempo de instalación varía según el proyecto. Una instalación estándar toma entre 4 y 8 horas. Proyectos para edificios o flotas en ${cityData.name} pueden tardar varios días según el alcance.`,
@@ -138,10 +138,21 @@ export default async function CityPage({ params }: Props) {
     },
   ]
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+    }))
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <HpHeaderNew />
       <Box component="main" sx={{ py: 8 }}>
         <Container maxWidth="lg">

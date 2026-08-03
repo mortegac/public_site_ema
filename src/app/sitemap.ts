@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '@/prismicio'
 import { BLOG_ARTICLES } from '@/data/blog-articles'
 
-const STATIC_LAST_MODIFIED = new Date('2026-07-06')
+const STATIC_LAST_MODIFIED = new Date('2026-07-08')
 
 const STATIC_ROUTES = [
   '/cotizador',
@@ -21,6 +21,8 @@ const STATIC_ROUTES = [
   '/agenda-una-visita-tecnica-para-evaluar-la-instalacion-de-tu-cargador',
   '/cookie-policy',
   '/presupuesto-cargador-electrico',
+  '/comparar/energica-vs-copec-voltex',
+  '/servicios',
 ]
 
 const CITY_ROUTES = [

@@ -30,7 +30,7 @@ import CustomFormLabel from '@/app/components/shared/CustomFormLabel';
 
 
 import PageContainer from '@/app/components/container/PageContainer';
-import HpHeader from '@/app/components/shared/header/HpHeader';
+import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew';
 import Footer from '@/app/components/shared/footer';
 import ScrollToTop from '@/app/components/shared/scroll-to-top';
 import LoadingIcon from "@/app/components/shared/LoadingIcon";
@@ -282,6 +282,34 @@ const FormSupport: React.FC<SoporteProps> = (props) => {
           </Button>
         </Box>
       </form>
+
+      <Box sx={{ mt: 6, mb: 4, textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
+          ¿Buscas respuestas rápidas? Revisa nuestras{' '}
+          <Box component="a" href="/faqs" sx={{ color: '#0898b9', textDecoration: 'underline' }}>
+            preguntas frecuentes
+          </Box>
+          {' '}antes de enviar un ticket.
+        </Typography>
+        <Box
+          component="a"
+          href="/presupuesto-cargador-electrico"
+          sx={{
+            display: 'inline-block',
+            bgcolor: '#e81a68',
+            color: '#fff',
+            px: 5,
+            py: 2,
+            borderRadius: 1,
+            fontWeight: 600,
+            fontSize: '1rem',
+            textDecoration: 'none',
+            '&:hover': { bgcolor: '#c01556' },
+          }}
+        >
+          Obtén un presupuesto de instalación
+        </Box>
+      </Box>
     </Box>
   );
 }
@@ -303,7 +331,7 @@ export default function SoporteClient() {
 
   return (
     <PageContainer title="Soporte | Energica City" description="Contáctate con nuestro equipo de soporte para resolver tus dudas o problemas con la instalación de cargadores eléctricos.">
-      <HpHeader />
+      <HpHeaderNew />
       <FormSupport
         glosa={glosa}
         total={total}

@@ -1,12 +1,9 @@
 import Image from 'next/image'
 import { Box, Container, Typography } from '@mui/material'
+import { getAuthor } from '@/data/authors'
 
 interface AuthorBylineProps {
-  name?: string
-  bio?: string
-  imageSrc?: string
-  imageAlt?: string
-  url?: string
+  authorId?: string
   dateModified?: string
 }
 
@@ -16,21 +13,16 @@ function formatDate(iso: string): string {
   return `${d} de ${months[m - 1]} de ${y}`
 }
 
-export default function AuthorByline({
-  name = 'Felipe Donoso',
-  bio = 'Ingeniero Eléctrico con 10+ años de experiencia en electromovilidad.',
-  imageSrc = '/images/felipe-donoso.jpeg',
-  imageAlt,
-  url = '/que-es-energica-city',
-  dateModified,
-}: AuthorBylineProps) {
+export default function AuthorByline({ authorId, dateModified }: AuthorBylineProps) {
+  const author = getAuthor(authorId)
+
   return (
     <Box sx={{ py: 4, background: '#fff', borderTop: '1px solid #E2E8F0' }}>
       <Container maxWidth="md">
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5 }}>
           <Box
             component="a"
-            href={url}
+            href={author.url}
             sx={{
               flexShrink: 0,
               width: 64,
@@ -45,8 +37,8 @@ export default function AuthorByline({
             }}
           >
             <Image
-              src={imageSrc}
-              alt={imageAlt ?? `${name}, Enérgica City`}
+              src={author.imageSrc}
+              alt={author.imageAlt}
               fill
               style={{ objectFit: 'cover' }}
               sizes="64px"
@@ -55,10 +47,10 @@ export default function AuthorByline({
           <Box>
             <Typography sx={{ fontSize: '0.9rem', color: '#64748B', lineHeight: 1.7 }}>
               Escrito por{' '}
-              <Box component="a" href={url} sx={{ color: '#0898b9', fontWeight: 700, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
-                {name}
+              <Box component="a" href={author.url} sx={{ color: '#0898b9', fontWeight: 700, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
+                {author.name}
               </Box>
-              , {bio}
+              , {author.bio}
             </Typography>
             {dateModified && (
               <Typography sx={{ fontSize: '0.8rem', color: '#94A3B8', mt: 0.5 }}>

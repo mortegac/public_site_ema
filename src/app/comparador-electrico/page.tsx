@@ -28,6 +28,23 @@ export const metadata: Metadata = {
   },
 };
 
+const appSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Comparador Eléctrico — Calculadora TCO Chile",
+  "description": "Calculadora gratuita de costo total de propiedad (TCO) para comparar tu auto actual con 20+ modelos eléctricos disponibles en Chile.",
+  "url": "https://www.energica.city/comparador-electrico",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CLP" },
+  "provider": { "@type": "Organization", "name": "Energica City", "url": "https://www.energica.city" },
+};
+
 export default function ComparadorElectricoPage() {
-  return <ComparadorWizard />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }} />
+      <ComparadorWizard />
+    </>
+  );
 }

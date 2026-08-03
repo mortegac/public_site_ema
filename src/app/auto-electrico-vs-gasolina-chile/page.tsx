@@ -6,7 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 export const metadata: Metadata = {
   title: 'Auto Eléctrico vs Gasolina en Chile: ¿Cuál conviene en 2025?',
   description:
-    'Descubre si te conviene pasarte a eléctrico con nuestra calculadora TCO gratuita. Compara costos reales en Chile: combustible, mantenimiento y ahorro a 5 años.',
+    'Descubre si te conviene pasarte a eléctrico con nuestra calculadora TCO gratuita. Compara costos reales en Chile: combustible, mantenimiento y ahorro.',
   alternates: { canonical: 'https://www.energica.city/auto-electrico-vs-gasolina-chile' },
   openGraph: {
     url: 'https://www.energica.city/auto-electrico-vs-gasolina-chile',
@@ -42,7 +42,7 @@ const webApplicationSchema = {
   name: 'Comparador Eléctrico Energica City',
   description:
     'Calculadora gratuita TCO que compara tu auto actual con más de 20 modelos eléctricos disponibles en Chile. Calcula ahorro real a 5 años.',
-  url: 'https://www.energica.city/comparador-electrico',
+  url: 'https://www.energica.city/auto-electrico-vs-gasolina-chile',
   applicationCategory: 'FinanceApplication',
   operatingSystem: 'Web',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'CLP' },

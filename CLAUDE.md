@@ -60,6 +60,12 @@ For multi-step tasks, state a brief plan:
 
 ---
 
+## Git Branch Rules
+
+> **CRITICAL: No cambiar de git branch a menos que el usuario lo solicite explícitamente. Trabajar siempre en el branch actual.**
+
+---
+
 ## Related Projects
 
 > **CRITICAL: Only reference code from these three projects. Do not access or modify any other projects.**

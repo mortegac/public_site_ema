@@ -34,8 +34,6 @@ const BORDER = '#E2E8F0'
 const SUCCESS = '#00C47C'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-const GMAPS_KEY = 'AIzaSyBdAjJeBoZ8ehrL0byX2ZBHHtQSI6pfIvQ'
-
 const PARKING_FLOORS = [
   'Piso 1', 'Piso 2', 'Piso 3',
   'Subterráneo -1', 'Subterráneo -2', 'Subterráneo -3', 'Subterráneo -4',
@@ -78,21 +76,8 @@ function fmt(n: number): string {
   return '$' + Math.round(n).toLocaleString('es-CL')
 }
 
-const RM_KEYWORDS = [
-  'región metropolitana', 'region metropolitana', 'metropolitana',
-  'santiago', 'las condes', 'providencia', 'ñuñoa', 'vitacura',
-  'la florida', 'maipú', 'puente alto', 'la reina', 'peñalolén', 'macul',
-  'san miguel', 'huechuraba', 'colina', 'lo barnechea', 'independencia',
-  'san bernardo', 'pudahuel', 'cerrillos', 'cerro navia', 'conchalí',
-  'el bosque', 'estación central', 'la cisterna', 'la granja', 'la pintana',
-  'lo espejo', 'lo prado', 'quinta normal', 'recoleta', 'renca',
-  'san joaquín', 'san ramón', 'quilicura', 'padre hurtado', 'peñaflor',
-  'melipilla', 'talagante', 'buin', 'calera de tango', 'paine',
-]
-
-function isRegionMetropolitana(addr: string): boolean {
-  if (!addr || addr.trim().length < 4) return true // sin dirección → no bloquear
-  return RM_KEYWORDS.some(k => addr.toLowerCase().includes(k))
+function isServiceable(regionCode: string): boolean {
+  return !regionCode || regionCode === 'RM' || regionCode === 'V'
 }
 
 function genDates(): Array<{ label: string; available: boolean }> {
@@ -1685,13 +1670,13 @@ export default function CotizadorWizard() {
             </Box>
             {state.address && !state.addressValidated && (
               <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                Selecciona una dirección del menú desplegable para continuar
+                Completa los tres campos de dirección para continuar
               </Typography>
             )}
-            {state.address && !isRegionMetropolitana(state.address) && (
+            {state.address && !isServiceable(state.addressState) && (
               <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
                 <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                  Solo atendemos Región Metropolitana y Valparaíso
+                  Por ahora solo atendemos Región Metropolitana y Valparaíso
                 </Typography>
               </Box>
             )}
@@ -1864,13 +1849,13 @@ export default function CotizadorWizard() {
                   </Box>
                   {state.address && !state.addressValidated && (
                     <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                      Selecciona una dirección del menú desplegable para continuar
+                      Completa los tres campos de dirección para continuar
                     </Typography>
                   )}
-                  {state.address && !isRegionMetropolitana(state.address) && (
+                  {state.address && !isServiceable(state.addressState) && (
                     <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
                       <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                        Solo atendemos Región Metropolitana y Valparaíso
+                        Por ahora solo atendemos Región Metropolitana y Valparaíso
                       </Typography>
                     </Box>
                   )}
@@ -2095,7 +2080,7 @@ export default function CotizadorWizard() {
             </Box>
             {state.address && !state.addressValidated && (
               <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                Selecciona una dirección del menú desplegable para continuar
+                Completa los tres campos de dirección para continuar
               </Typography>
             )}
             {state.regionWarn && (
@@ -2103,7 +2088,7 @@ export default function CotizadorWizard() {
                 Por el momento solo atendemos la Región Metropolitana y Valparaíso.
               </Alert>
             )}
-            {state.address && !isRegionMetropolitana(state.address) ? (
+            {state.address && !isServiceable(state.addressState) ? (
               <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
                 <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#92400E', mb: 0.75 }}>
                   Sin cobertura en tu región
@@ -2307,13 +2292,13 @@ export default function CotizadorWizard() {
                 </Box>
                 {state.address && !state.addressValidated && (
                   <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                    Selecciona una dirección del menú desplegable para continuar
+                    Completa los tres campos de dirección para continuar
                   </Typography>
                 )}
-                {state.address && !isRegionMetropolitana(state.address) && (
+                {state.address && !isServiceable(state.addressState) && (
                   <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
                     <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                      Solo atendemos Región Metropolitana y Valparaíso
+                      Por ahora solo atendemos Región Metropolitana y Valparaíso
                     </Typography>
                   </Box>
                 )}
@@ -2420,13 +2405,13 @@ export default function CotizadorWizard() {
                 </Box>
                 {state.address && !state.addressValidated && (
                   <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                    Selecciona una dirección del menú desplegable para continuar
+                    Completa los tres campos de dirección para continuar
                   </Typography>
                 )}
-                {state.address && !isRegionMetropolitana(state.address) && (
+                {state.address && !isServiceable(state.addressState) && (
                   <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
                     <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                      Solo atendemos Región Metropolitana y Valparaíso
+                      Por ahora solo atendemos Región Metropolitana y Valparaíso
                     </Typography>
                   </Box>
                 )}
@@ -2611,7 +2596,7 @@ export default function CotizadorWizard() {
             </Box>
             {state.address && !state.addressValidated && (
               <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                Selecciona una dirección del menú desplegable para continuar
+                Completa los tres campos de dirección para continuar
               </Typography>
             )}
 
@@ -2622,7 +2607,7 @@ export default function CotizadorWizard() {
             )}
 
             {/* ── Validación de cobertura RM ───────────────────────────────── */}
-            {state.address && !isRegionMetropolitana(state.address) ? (
+            {state.address && !isServiceable(state.addressState) ? (
               <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
                 <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#92400E', mb: 0.75 }}>
                   Sin cobertura en tu región

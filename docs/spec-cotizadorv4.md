@@ -8,6 +8,15 @@
 
 ---
 
+## Changelog
+
+| Fecha | Cambio |
+|-------|--------|
+| 2026-08-03 | Eliminación de Google Maps Places API — reemplazada por selector región/comuna + campo libre de dirección (aplica a v3 y v4) |
+| 2026-07-31 | Versión inicial v4 — step opcional de agenda pre-pago |
+
+---
+
 ## Objetivo
 
 La versión 4 del cotizador mantiene **todos los flujos de v3 en producción** e incorpora el camino de **agendamiento previo al pago** descrito en el prototipo v4 (cotizador-ema-v2). El cambio principal es añadir un step opcional de calendario entre Tipo y Cargador.
@@ -231,18 +240,54 @@ const STEP_TITLES = [
 
 ---
 
-## Archivos a modificar
+## Archivos modificados
+
+### Cotizador v4 (agendamiento pre-pago)
 
 | Archivo | Cambio |
 |---------|--------|
-| `src/app/cotizador/CotizadorWizard.tsx` | Único archivo con todos los cambios |
+| `src/app/cotizador/CotizadorWizard.tsx` | Todos los cambios v4 |
 
-**Sin cambios:**
-- `src/app/cotizador/page.tsx` — metadata sin cambios
-- `src/app/cotizador/agenda/AgendaClient.tsx` — post-pago sin cambios
-- `src/app/api/schedules/route.ts` — ya existe y funciona
-- `src/app/api/cotizar/route.ts` — sin cambios
-- `src/app/api/payment/route.ts` — sin cambios
+### Dirección — eliminación Google Maps (2026-08-03)
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/app/components/AddressInput2.tsx` | Reescrito: Google Maps → selector región/comuna + campo libre |
+| `src/data/chile-regions.ts` | Nuevo: 16 regiones y ~346 comunas de Chile |
+| `src/app/cotizador/CotizadorWizard.tsx` | Eliminado GMAPS_KEY, RM_KEYWORDS, isRegionMetropolitana; nuevo isServiceable(regionCode) |
+
+**Sin cambios (heredan nuevo AddressInput2 automáticamente):**
+- `src/slices/ContactForm/variants/PostulacionElectrolineras.tsx`
+- `src/slices/StepWizard/components/Step02.tsx`
+- `src/app/forms/ficha-tecnica-cargadores/FichaTecnicaClient.tsx`
+- `src/app/components/shared/CalendarSteps/FormStep01.tsx`
+- `src/app/components/shared/QuoterSteps/FormStep01.tsx`
+- `src/app/cotizador/pago/PagoClient.tsx`
+
+**Sin cambios — APIs:**
+- `src/app/cotizador/page.tsx`
+- `src/app/cotizador/agenda/AgendaClient.tsx`
+- `src/app/api/schedules/route.ts`
+- `src/app/api/cotizar/route.ts`
+- `src/app/api/payment/route.ts`
+- `src/app/api/customer/route.ts` — estructura de datos conservada
+
+### Estructura de datos hacia la API — sin cambios
+
+Antes y después de la migración, `/api/customer` recibe el mismo payload:
+
+```json
+{
+  "address": "Av. Providencia 1234, Las Condes, RM",
+  "city": "Las Condes",
+  "state": "RM",
+  "zipCode": "",
+  "lat": "",
+  "lng": ""
+}
+```
+
+La diferencia: `city` ahora es la comuna seleccionada explícitamente (antes venía de Google Maps), `zipCode`/`lat`/`lng` se envían como strings vacíos (antes venían de geocodificación). La BD acepta strings vacíos en esos campos optativos.
 
 ---
 

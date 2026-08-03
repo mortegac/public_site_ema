@@ -532,7 +532,7 @@ export default function CotizadorWizard() {
         for (const slot of (items ?? []) as Array<{ startDate: string; calendarId: string }>) {
           const dateKey = slot.startDate.slice(0, 10)
           const hour = new Date(slot.startDate).getHours()
-          const band = TIME_BANDS.find(b => b.startHour === hour)
+          const band = TIME_BANDS.find(b => hour >= b.startHour && hour < b.startHour + 3)
           if (!band) continue
           if (!slotsByDay.has(dateKey)) slotsByDay.set(dateKey, new Map())
           slotsByDay.get(dateKey)!.set(band.key, slot.calendarId)

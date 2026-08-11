@@ -20,6 +20,7 @@ import {
   type SelectChangeEvent,
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
+import { CHILE_REGIONS } from '@/data/chile-regions'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 
@@ -157,6 +158,8 @@ interface WizardState {
   edificioUsersEV: string
   edificioOption: 'dedicated' | 'shared' | null
   removedChargerId: string | null  // remembers charger id when user clicks "quitar"
+  showElectrolineraForm: boolean
+  showVisitaForm: boolean
   path: 'agendar' | 'cotizar' | null
   preBookedDate: string | null
   preBookedLabel: string | null
@@ -463,6 +466,8 @@ export default function CotizadorWizard() {
     edificioUsersEV: '',
     edificioOption: null,
     removedChargerId: null,
+    showElectrolineraForm: false,
+    showVisitaForm: false,
     path: null,
     preBookedDate: null,
     preBookedLabel: null,
@@ -473,6 +478,9 @@ export default function CotizadorWizard() {
     agendaSelectedSlot: null,
   })
 
+  // Ref to skip pre-booking when "Prefiero elegir la fecha después" is clicked
+  const skipPreBookRef = useRef(false)
+
   // Derived from state.tipo — passed in tracking event props
   const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
 
@@ -480,14 +488,7 @@ export default function CotizadorWizard() {
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
 
-  // Charger list — loaded from /api/charger, falls back to static CHARGERS
-  const [chargerList, setChargerList] = useState<typeof CHARGERS>(CHARGERS)
-  useEffect(() => {
-    fetch('/api/charger')
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d.chargers) && d.chargers.length > 0) setChargerList(d.chargers) })
-      .catch(() => {/* keep static fallback */})
-  }, [])
+  const chargerList = CHARGERS
 
   // Track step 0 on mount
   useEffect(() => { trackUnique('step_1_loaded', { step: 1, typeOfResidence }) }, [])
@@ -617,20 +618,30 @@ export default function CotizadorWizard() {
   }
 
   async function goNext() {
-    // Agenda step → Cargador (step 2)
-    if (state.step === 1 && state.path === 'agendar') {
-      trackUnique('step_2_loaded', { step: 2, typeOfResidence })
-      update({ step: 2 })
-      return
+    // Capture pre-booking data when proceeding from agenda step (before async API call)
+    let preBookedOverride: { preBookedDate: string; preBookedLabel: string; preBookedCalendarId: string } | null = null
+    if (state.step === 1 && state.path === 'agendar' && !skipPreBookRef.current && state.agendaSelectedIndex !== null && state.agendaSelectedSlot !== null) {
+      const selDate = (state.agendaDates ?? [])[state.agendaSelectedIndex]
+      const selSlot = selDate?.slots.find(s => s.key === state.agendaSelectedSlot)
+      if (selDate && selSlot) {
+        preBookedOverride = {
+          preBookedDate: selDate.dateKey,
+          preBookedLabel: `${selDate.label} · ${selSlot.label}`,
+          preBookedCalendarId: selSlot.calendarId,
+        }
+        track('pre_booking_confirmed', { date: selDate.dateKey, slot: selSlot.key })
+      }
     }
+    skipPreBookRef.current = false
 
-    const isCargadorStep = state.step === 2 || (state.step === 1 && state.path === 'cotizar')
+    // Step 1 (any path) or step 2 → call API → step 3
+    const isCargadorStep = state.step === 2 || state.step === 1
 
     // Cargador step → call API → Cotización (step 3)
     if (isCargadorStep) {
       update({ estimateLoading: true })
       try {
-        const isWallbox = state.tipoC === 'wallbox'
+        const isWallbox = (state.tipoC ?? 'wallbox') === 'wallbox'
         const isPortable = state.tipoC === 'portable'
         const isHouse = state.tipo === 'casa'
         const charger = state.chargerId !== 'own' ? chargerList.find(c => c.id === state.chargerId) : null
@@ -692,6 +703,8 @@ export default function CotizadorWizard() {
                 chargerGrossPrice,
                 installGross,
               },
+              ...(preBookedOverride ?? {}),
+              ...(preBookedOverride ? { activePanel: 'visitaPago', selectedReserveOption: 'visita', showVisitaForm: false } : {}),
             })
             return
           }
@@ -703,7 +716,7 @@ export default function CotizadorWizard() {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
       trackUnique('step_3_loaded', { formId: state.formId, total: result?.total, typeOfResidence })
-      update({ estimateLoading: false, step: 3 })
+      update({ estimateLoading: false, step: 3, ...(preBookedOverride ?? {}), ...(preBookedOverride ? { activePanel: 'visitaPago', selectedReserveOption: 'visita', showVisitaForm: false } : {}) })
       return
     }
 
@@ -1230,6 +1243,8 @@ export default function CotizadorWizard() {
       edificioUsersEV: '',
       edificioOption: null,
       removedChargerId: null,
+      showElectrolineraForm: false,
+      showVisitaForm: false,
       path: null,
       preBookedDate: null,
       preBookedLabel: null,
@@ -1341,6 +1356,17 @@ export default function CotizadorWizard() {
                 />
               </Grid>
             </Grid>
+            {/* Distance estimate pill — shown once both floors are entered */}
+            {state.edificioFloor.trim() !== '' && state.edificioParkingFloor.trim() !== '' && !isNaN(parseInt(state.edificioFloor)) && !isNaN(parseInt(state.edificioParkingFloor)) && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                <Chip
+                  label={`${Math.abs(parseInt(state.edificioFloor) - parseInt(state.edificioParkingFloor))} pisos · ~${state.dist}m`}
+                  size="small"
+                  sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700, fontSize: '0.8rem', px: 0.5 }}
+                />
+              </Box>
+            )}
+
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5, color: '#2A3547' }}>
               ¿El edificio tiene estacionamiento de visitas?
             </Typography>
@@ -1508,7 +1534,8 @@ export default function CotizadorWizard() {
           variant="text"
           onClick={() => {
             track('pre_booking_skipped')
-            update({ agendaSelectedIndex: null, agendaSelectedSlot: null, step: 2 })
+            skipPreBookRef.current = true
+            goNext()
           }}
           sx={{ color: TEXT_MUTED, fontSize: '0.82rem', mt: 1, '&:hover': { color: '#2A3547' } }}
         >
@@ -1662,7 +1689,7 @@ export default function CotizadorWizard() {
             <Box
               onClick={() => {
                 if (!isElectroOpen) trackUnique('cta_form_electrolinera', { step: 3, typeOfResidence })
-                update({ activePanel: isElectroOpen ? null : 'electrolinera' })
+                update({ activePanel: isElectroOpen ? null : 'electrolinera', ...(isElectroOpen ? { showElectrolineraForm: false } : {}) })
               }}
               sx={{ p: { xs: 2, sm: 2.5 }, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', bgcolor: isElectroOpen ? 'rgba(232,26,104,0.03)' : '#fff' }}
             >
@@ -1687,7 +1714,46 @@ export default function CotizadorWizard() {
                     <Typography sx={{ fontWeight: 700, color: '#166534', mb: 0.5 }}>¡Postulación enviada!</Typography>
                     <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED }}>Te contactaremos con la evaluación técnica.</Typography>
                   </Box>
+                ) : !state.showElectrolineraForm ? (
+                  // Info step (Image #36)
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: '1rem', mb: 0.5, color: '#2A3547' }}>Electrolinera compartida · sin costo para ti</Typography>
+                    <Typography sx={{ fontSize: '0.83rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.55 }}>
+                      Energica instala y financia un cargador en el estacionamiento de visitas. Pagas solo lo que cargas.
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 3, mb: 2 }}>
+                      <Box>
+                        <Typography sx={{ fontSize: '1.9rem', fontWeight: 800, color: '#2A3547', lineHeight: 1 }}>$0</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>inversión</Typography>
+                      </Box>
+                      <Box>
+                        <Typography sx={{ fontSize: '1.9rem', fontWeight: 800, color: '#2A3547', lineHeight: 1 }}>$330/kWh</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>solo lo que cargas</Typography>
+                      </Box>
+                    </Box>
+                    {['Sin obra en tu estacionamiento privado', 'No requiere asamblea sobre tu estacionamiento, solo permiso de uso común', 'La opción más fácil y rápida de aprobar'].map(f => (
+                      <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+                        <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0 }}>✓</Typography>
+                        <Typography sx={{ fontSize: '0.83rem', color: '#2A3547' }}>{f}</Typography>
+                      </Box>
+                    ))}
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.88rem', mt: 2, mb: 1, color: '#2A3547' }}>Te entregamos para tu comité:</Typography>
+                    {['Presentación lista para llevar a la reunión', 'Carta de solicitud de autorización', 'Visita comercial a la administración (si la pides)'].map(f => (
+                      <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+                        <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0 }}>✓</Typography>
+                        <Typography sx={{ fontSize: '0.83rem', color: '#2A3547' }}>{f}</Typography>
+                      </Box>
+                    ))}
+                    <Button
+                      fullWidth variant="contained"
+                      onClick={() => update({ showElectrolineraForm: true })}
+                      sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2, mt: 2.5 }}
+                    >
+                      Quiero electrolinera en mi edificio →
+                    </Button>
+                  </Box>
                 ) : (
+                  // Form step (Image #37)
                   <Box sx={{ pt: 2 }}>
                     <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>Regístrate para recibir tu kit</Typography>
                     <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.5 }}>
@@ -1777,13 +1843,8 @@ export default function CotizadorWizard() {
           {/* Header clickable */}
           <Box
             onClick={() => {
-              if (!isVisitaOpen && !state.preBookedLabel && state.path !== 'cotizar') {
-                track('late_booking_loop', { step: 3 })
-                update({ path: 'agendar', step: 1, agendaDates: null, agendaSelectedIndex: null, agendaSelectedSlot: null })
-                return
-              }
               if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })
-              update({ selectedReserveOption: 'visita', activePanel: isVisitaOpen ? null : 'visitaPago', reservePendingAmount: null, reservePendingGlosa: '' })
+              update({ selectedReserveOption: 'visita', activePanel: isVisitaOpen ? null : 'visitaPago', reservePendingAmount: null, reservePendingGlosa: '', ...(isVisitaOpen ? { showVisitaForm: false } : {}) })
             }}
             sx={{ p: { xs: 2, sm: 2.5 }, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', bgcolor: isVisitaOpen ? 'rgba(8,152,185,0.03)' : '#fff' }}
           >
@@ -1803,83 +1864,99 @@ export default function CotizadorWizard() {
 
           {/* Expanded content */}
           {isVisitaOpen && (
-            <Box sx={{ p: { xs: 2, sm: 2.5 }, pt: 0, borderTop: `1px solid ${BORDER}` }}>
-              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, mt: 2, lineHeight: 1.6 }}>
-                Agenda la visita y decide después.
-              </Typography>
-              {[
-                'Profesional certificado SEC en terreno',
-                'Confirmamos distancia y materiales, y hacemos el plan de instalación',
-                `Si avanzas, los ${fmt(visitaAmount)} se descuentan`,
-              ].map(f => (
-                <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
-                  <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-                  <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
-                </Box>
-              ))}
-              {/* Form */}
-              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, mt: 2.5, color: '#2A3547' }}>
-                Datos para el comprobante
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-                Dirección de instalación
-              </Typography>
-              <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-                <AddressInput2
-                  value={state.address}
-                  error={!!state.address && !state.addressValidated}
-                  onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                  onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                  onSelectAddress={(details) => {
-                    if (details) {
-                      const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                      update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
-                    }
-                  }}
-                />
-              </Box>
-              {state.address && !state.addressValidated && (
-                <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                  Completa los tres campos de dirección para continuar
-                </Typography>
-              )}
-              {state.address && !isServiceable(state.addressState) && (
-                <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                  <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                    Por ahora solo atendemos Región Metropolitana y Valparaíso
+            <Box sx={{ px: { xs: 2, sm: 2.5 }, pb: 2.5, borderTop: `1px solid ${BORDER}` }}>
+              {state.preBookedLabel ? (
+                // Date already selected — show form directly (Image #43)
+                <Box sx={{ mt: 2 }}>
+                  {state.preBookedLabel && (
+                    <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid ${TEAL}`, mb: 2 }}>
+                      <Typography sx={{ fontSize: '0.8rem', color: TEAL, fontWeight: 600 }}>
+                        📅 {state.preBookedLabel}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+                    Datos para el comprobante
+                  </Typography>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                    Dirección de instalación
+                  </Typography>
+                  <Select
+                    fullWidth size="small" displayEmpty
+                    value={state.addressState}
+                    onChange={(e: SelectChangeEvent) => update({ addressState: e.target.value, addressCity: '' })}
+                    sx={{ mb: 1.5, fontSize: '0.85rem' }}
+                  >
+                    <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Región</em></MenuItem>
+                    {CHILE_REGIONS.map(r => <MenuItem key={r.code} value={r.code}>{r.name}</MenuItem>)}
+                  </Select>
+                  <Select
+                    fullWidth size="small" displayEmpty
+                    value={state.addressCity}
+                    disabled={!state.addressState}
+                    onChange={(e: SelectChangeEvent) => update({ addressCity: e.target.value })}
+                    sx={{ mb: 1.5, fontSize: '0.85rem' }}
+                  >
+                    <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Comuna</em></MenuItem>
+                    {(CHILE_REGIONS.find(r => r.code === state.addressState)?.comunas ?? []).map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                  </Select>
+                  <TextField fullWidth size="small" label="Dirección (calle y número)" value={state.address}
+                    onChange={e => update({ address: e.target.value })} sx={{ mb: 1.5 }} />
+                  <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 1.5 }} />
+                  <TextField fullWidth size="small" required label="Email para comprobante *" type="email" value={state.emailPago}
+                    onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }}
+                    helperText="Requerido para proceder al pago" sx={{ mb: 1.5 }}
+                  />
+                  <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                  {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
+                  <Button fullWidth variant="contained"
+                    disabled={!state.emailPago.trim() || !state.addressState || !state.addressCity || !state.address.trim() || state.webpayLoading}
+                    onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
+                    sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                  >
+                    {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
+                  </Button>
+                  <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                    Pago seguro · Visa, Mastercard, Redcompra, débito
                   </Typography>
                 </Box>
+              ) : (
+                // No date selected — show info + button that navigates to agenda (Image #41)
+                <>
+                  <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, mt: 2, lineHeight: 1.6 }}>
+                    Agenda la visita y decide después.
+                  </Typography>
+                  {[
+                    'Profesional certificado SEC en terreno',
+                    'Confirmamos distancia y materiales, y hacemos el plan de instalación',
+                    `Si avanzas, los ${fmt(visitaAmount)} se descuentan`,
+                  ].map(f => (
+                    <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
+                      <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                      <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
+                    </Box>
+                  ))}
+                  <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#F0F9FF', border: '1px solid #BAE6FD', mt: 1.5, mb: 2 }}>
+                    <Typography sx={{ fontSize: '0.8rem', color: '#0369A1', lineHeight: 1.55 }}>
+                      Sin compromiso. Si decides no avanzar, no pierdes nada. Si avanzas, el valor se descuenta del total.
+                    </Typography>
+                  </Box>
+                  <Button
+                    fullWidth variant="contained"
+                    onClick={() => {
+                      track('late_booking_loop', { step: 3 })
+                      update({ path: 'agendar', step: 1, agendaDates: null, agendaSelectedIndex: null, agendaSelectedSlot: null, activePanel: null })
+                    }}
+                    sx={{ bgcolor: TEAL, '&:hover': { bgcolor: '#0779a0' }, color: '#fff', fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                  >
+                    {`Agendar y pagar visita ${fmt(visitaAmount)} →`}
+                  </Button>
+                </>
               )}
-              <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-              <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago}
-                onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }}
-                helperText="Requerido para proceder al pago" sx={{ mb: 2 }}
-              />
-              <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
-              {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
-              <Button fullWidth variant="contained"
-                disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-                onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
-                sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
-              >
-                {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
-              </Button>
-              <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                Pago seguro · Visa, Mastercard, Redcompra, débito
-              </Typography>
             </Box>
           )}
         </Box>
 
-        {/* Próxima visita disponible — below ALTERNATIVA 1 */}
-        {state.nextVisitDate && (
-          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textAlign: 'center', mb: 2, mt: -1 }}>
-            Próxima visita disponible:{' '}
-            <Box component="span" sx={{ color: TEAL, fontWeight: 600 }}>
-              {formatVisitDate(state.nextVisitDate)}
-            </Box>
-          </Typography>
-        )}
 
         {/* ALTERNATIVA 2 — Pagar hoy */}
         <Box sx={{ border: `2px solid ${isAlt2Open ? SUCCESS : BORDER}`, borderRadius: '14px', overflow: 'hidden', mb: 2 }}>
@@ -2415,9 +2492,7 @@ export default function CotizadorWizard() {
           </Box>
           {([
             { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
-            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: state.nextVisitDate
-                ? `Próxima fecha: ${formatVisitDate(state.nextVisitDate)}`
-                : 'Próxima fecha disponible', active: true },
+            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: '', active: true },
             { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
             { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
           ] as { label: string; sub: string; active: boolean }[]).map((s, i) => (
@@ -2793,54 +2868,17 @@ export default function CotizadorWizard() {
                         fontSize: '0.95rem',
                       }}
                     >
-                      {(state.step === 2 || (state.step === 1 && state.path === 'cotizar')) ? 'Ver mi cotización' : 'Siguiente →'}
+                      {(state.step === 2 || (state.step === 1 && state.path === 'cotizar'))
+                        ? 'Ver mi cotización'
+                        : (state.step === 1 && state.path === 'agendar' && state.agendaSelectedIndex !== null && state.agendaSelectedSlot !== null)
+                          ? `Confirmar visita · ${(state.agendaDates ?? [])[state.agendaSelectedIndex]?.label ?? ''} · ${TIME_BANDS.find(b => b.key === state.agendaSelectedSlot)?.label ?? ''}`
+                          : 'Siguiente →'}
                     </Button>
                   </span>
                 </Tooltip>
               </Box>
             )}
           </Box>
-
-          {/* ── Agenda step confirmation button ─────────────────────── */}
-            {state.step === 1 && state.path === 'agendar' && (
-              <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Tooltip
-                  title={state.agendaSelectedIndex === null || state.agendaSelectedSlot === null ? 'Selecciona fecha y horario para continuar' : ''}
-                  arrow
-                >
-                  <span style={{ width: '100%' }}>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      disabled={state.agendaSelectedIndex === null || state.agendaSelectedSlot === null || state.agendaDatesLoading}
-                      onClick={() => {
-                        const selectedDate = (state.agendaDates ?? [])[state.agendaSelectedIndex!]
-                        const selectedSlotData = selectedDate?.slots.find(s => s.key === state.agendaSelectedSlot)
-                        if (!selectedDate || !selectedSlotData) return
-                        const newLabel = `${selectedDate.label} · ${selectedSlotData.label}`
-                        track('pre_booking_confirmed', { date: selectedDate.dateKey, slot: selectedSlotData.key })
-                        update({
-                          preBookedDate: selectedDate.dateKey,
-                          preBookedLabel: newLabel,
-                          preBookedCalendarId: selectedSlotData.calendarId,
-                          step: state.apiResult ? 3 : 2,
-                        })
-                      }}
-                      sx={{
-                        bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK },
-                        '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                        fontWeight: 700, py: 1.5, fontSize: '0.95rem',
-                        boxShadow: 'none', borderRadius: 2,
-                      }}
-                    >
-                      {state.agendaSelectedIndex !== null && state.agendaSelectedSlot !== null
-                        ? `Confirmar · ${(state.agendaDates ?? [])[state.agendaSelectedIndex!]?.label ?? ''} ${TIME_BANDS.find(b => b.key === state.agendaSelectedSlot)?.label ?? ''} →`
-                        : 'Selecciona fecha y horario para continuar'}
-                    </Button>
-                  </span>
-                </Tooltip>
-              </Box>
-            )}
 
           {/* ── No-install link — steps 0-3 only ───────────────────────── */}
           {state.step <= 3 && !state.paid && (

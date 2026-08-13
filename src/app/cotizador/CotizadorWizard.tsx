@@ -26,6 +26,8 @@ import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 import { useDispatch } from 'react-redux'
 import { setAgendaSelection } from '@/store/ClientForms/slice'
 import type { AppDispatch } from '@/store/store'
+import { makeReservation } from '@/store/CalendarVisits/services'
+import { fetchWebpayStart } from '@/store/Webpay/services'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -878,6 +880,54 @@ export default function CotizadorWizard() {
       tokenInput.name = 'token_ws'
       tokenInput.value = data.token
       form.appendChild(tokenInput)
+      document.body.appendChild(form)
+      form.submit()
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al procesar el pago'
+      update({ webpayLoading: false, webpayError: message })
+    }
+  }
+
+  async function payWithReservation(amount: number, calendarId: string) {
+    update({ webpayLoading: true, webpayError: '' })
+    const email = state.emailPago?.trim().toLowerCase()
+    if (!email || !calendarId) {
+      update({ webpayLoading: false, webpayError: 'Faltan datos requeridos' })
+      return
+    }
+    try {
+      const reservation = await makeReservation({
+        customerId: email,
+        calendarId,
+      })
+      if (!reservation?.cartId) throw new Error('No se pudo crear la reserva')
+
+      const webpay = await fetchWebpayStart({
+        shoppingCartId: reservation.cartId,
+        glosa: 'Visita técnica',
+      })
+      if (!webpay?.token || !webpay?.url) throw new Error('Error al iniciar el pago')
+
+      sessionStorage.setItem('paymentData', JSON.stringify({
+        tipo: state.tipo ?? '',
+        email,
+        nombre: state.nombreEmail ?? '',
+        telefono: state.visitaTelefono ?? '',
+        total: amount,
+        formId: state.formId ?? '',
+        paymentType: 'visitaTecnica',
+      }))
+
+      trackUnique('webpay_initiated', { total: amount, selectedPaymentOption: 'visit' })
+
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = webpay.url
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = 'token_ws'
+      input.value = webpay.token
+      form.appendChild(input)
       document.body.appendChild(form)
       form.submit()
     } catch (err: unknown) {
@@ -1905,7 +1955,14 @@ export default function CotizadorWizard() {
                   {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
                   <Button fullWidth variant="contained"
                     disabled={!state.emailPago.trim() || !state.addressState || !state.addressCity || !state.address.trim() || state.webpayLoading}
-                    onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
+                    onClick={() => {
+                      const calId = state.preBookedCalendarId
+                      if (calId) {
+                        payWithReservation(visitaAmount, calId)
+                      } else {
+                        payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')
+                      }
+                    }}
                     sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
                   >
                     {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}

@@ -23,6 +23,9 @@ import AddressInput2 from '@/app/components/AddressInput2'
 import { CHILE_REGIONS } from '@/data/chile-regions'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
+import { useDispatch } from 'react-redux'
+import { setAgendaSelection } from '@/store/ClientForms/slice'
+import type { AppDispatch } from '@/store/store'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -481,6 +484,8 @@ export default function CotizadorWizard() {
   // Ref to skip pre-booking when "Prefiero elegir la fecha después" is clicked
   const skipPreBookRef = useRef(false)
 
+  const dispatch = useDispatch<AppDispatch>()
+
   // Derived from state.tipo — passed in tracking event props
   const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
 
@@ -632,6 +637,13 @@ export default function CotizadorWizard() {
         track('pre_booking_confirmed', { date: selDate.dateKey, slot: selSlot.key })
       }
     }
+    if (preBookedOverride) {
+      dispatch(setAgendaSelection({
+        calendarId: preBookedOverride.preBookedCalendarId,
+        dateLabel: preBookedOverride.preBookedLabel,
+        dateKey: preBookedOverride.preBookedDate,
+      }))
+    }
     skipPreBookRef.current = false
 
     // Step 1 (any path) or step 2 → call API → step 3
@@ -704,7 +716,6 @@ export default function CotizadorWizard() {
                 installGross,
               },
               ...(preBookedOverride ?? {}),
-              ...(preBookedOverride ? { activePanel: 'visitaPago', selectedReserveOption: 'visita', showVisitaForm: false } : {}),
             })
             return
           }
@@ -716,7 +727,7 @@ export default function CotizadorWizard() {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
       trackUnique('step_3_loaded', { formId: state.formId, total: result?.total, typeOfResidence })
-      update({ estimateLoading: false, step: 3, ...(preBookedOverride ?? {}), ...(preBookedOverride ? { activePanel: 'visitaPago', selectedReserveOption: 'visita', showVisitaForm: false } : {}) })
+      update({ estimateLoading: false, step: 3, ...(preBookedOverride ?? {}) })
       return
     }
 
@@ -1254,6 +1265,7 @@ export default function CotizadorWizard() {
       agendaSelectedIndex: null,
       agendaSelectedSlot: null,
     }))
+    dispatch(setAgendaSelection({ calendarId: null, dateLabel: null, dateKey: null }))
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────
@@ -1657,25 +1669,7 @@ export default function CotizadorWizard() {
           <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
         )}
 
-        {/* Social proof + heading */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5 }}>
-          <Box sx={{ display: 'flex' }}>
-            {[
-              { letter: 'H', color: '#FBBF24' },
-              { letter: 'C', color: '#93C5FD' },
-              { letter: 'J', color: '#86EFAC' },
-              { letter: 'R', color: '#FCA5A5' },
-            ].map(({ letter, color }, i) => (
-              <Box key={i} sx={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: color, border: '2px solid #fff', ml: i > 0 ? -0.75 : 0, zIndex: 4 - i }}>
-                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
-              </Box>
-            ))}
-          </Box>
-          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
-            +120 instalaciones completadas en Santiago
-          </Typography>
-        </Box>
-        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2, mt: 0.5 }}>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2 }}>
           Elige cómo avanzar
         </Typography>
 
@@ -2519,8 +2513,27 @@ export default function CotizadorWizard() {
           </Box>
         </Box>
 
+        {/* Social proof */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5, mb: 1 }}>
+          <Box sx={{ display: 'flex' }}>
+            {[
+              { letter: 'H', color: '#FBBF24' },
+              { letter: 'C', color: '#93C5FD' },
+              { letter: 'J', color: '#86EFAC' },
+              { letter: 'R', color: '#FCA5A5' },
+            ].map(({ letter, color }, i) => (
+              <Box key={i} sx={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: color, border: '2px solid #fff', ml: i > 0 ? -0.75 : 0, zIndex: 4 - i }}>
+                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
+              </Box>
+            ))}
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
+            +120 instalaciones completadas en Santiago
+          </Typography>
+        </Box>
+
         {/* Trust box — redesigned */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 3 }}>
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 1 }}>
           <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
             Compra protegida
           </Typography>

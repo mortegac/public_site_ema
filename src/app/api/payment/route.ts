@@ -127,7 +127,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  const effectiveTotal = total
+  const isTestMode = process.env.NEXT_PUBLIC_ENVIRONMENT === 'DEV' // ONLY TEST
+  const effectiveTotal = isTestMode ? 6 : total // ONLY TEST
+  const effectiveGlosa = isTestMode ? `PAGO TEST - ${glosa}` : glosa // ONLY TEST
   const effectiveVat   = vat
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
@@ -202,7 +204,7 @@ export async function POST(req: NextRequest) {
   try {
     const detailGlosa = typeOfCart === 'visit'
       ? 'Visita técnica - kit aprobación de tu comunidad.'
-      : (chargerName || glosa)
+      : (chargerName || effectiveGlosa) // ONLY TEST
     const detailInput = {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
@@ -224,7 +226,7 @@ export async function POST(req: NextRequest) {
   try {
     console.log(`[payment] Calling WebpayStart — cartId=${shoppingCartId}, glosa="${glosa}"`)
 
-    const webpayJson = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, { shoppingCartId, glosa }, 'WebpayStart')
+    const webpayJson = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, { shoppingCartId, glosa: effectiveGlosa }, 'WebpayStart') // ONLY TEST
     const result = webpayJson?.data?.WebpayStart
 
     console.log('[payment] WebpayStart result:', JSON.stringify(result))

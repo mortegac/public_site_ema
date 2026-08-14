@@ -25,8 +25,6 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '@/store/store'
-import { makeReservation } from '@/store/CalendarVisits/services'
-import { fetchWebpayStart } from '@/store/Webpay/services'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -882,18 +880,13 @@ export default function CotizadorWizard() {
 
   async function payWithReservation(amount: number, calendarId: string) {
     update({ webpayLoading: true, webpayError: '' })
-    // ONLY TEST — DEV: bypass reservation, route through /api/payment (overrides amount to 5 CLP)
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'DEV') {
-      payDirect(amount, 'Visita técnica · Instalación cargador', 'visit')
-      return
-    }
     const email = state.emailPago?.trim().toLowerCase()
     if (!email || !calendarId) {
       update({ webpayLoading: false, webpayError: 'Faltan datos requeridos' })
       return
     }
     try {
-      // Upsert customer BEFORE reservation — MakeReservationAndCart requires customer to exist
+      // 1. Upsert customer — MakeReservationAndCart (server-side) requires customer to exist
       await fetch('/api/customer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -909,17 +902,25 @@ export default function CotizadorWizard() {
         }),
       })
 
-      const reservation = await makeReservation({
-        customerId: email,
-        calendarId,
+      // 2. Create reservation + start Webpay — all server-side via /api/payment
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          total: amount,
+          vat: 0,
+          email,
+          glosa: 'Visita técnica · Instalación cargador',
+          typeOfCart: 'visit',
+          typeOfItem: 'visit',
+          calendarId,
+          formId: state.formId ?? null,
+        }),
       })
-      if (!reservation?.cartId) throw new Error('No se pudo crear la reserva')
-
-      const webpay = await fetchWebpayStart({
-        shoppingCartId: reservation.cartId,
-        glosa: 'Visita técnica',
-      })
-      if (!webpay?.token || !webpay?.url) throw new Error('Error al iniciar el pago')
+      const data = await res.json()
+      if (!res.ok || !data.token) {
+        throw new Error(data.error ?? 'Error al iniciar el pago')
+      }
 
       sessionStorage.setItem('paymentData', JSON.stringify({
         tipo: state.tipo ?? '',
@@ -935,11 +936,11 @@ export default function CotizadorWizard() {
 
       const form = document.createElement('form')
       form.method = 'POST'
-      form.action = webpay.url
+      form.action = data.url
       const input = document.createElement('input')
       input.type = 'hidden'
       input.name = 'token_ws'
-      input.value = webpay.token
+      input.value = data.token
       form.appendChild(input)
       document.body.appendChild(form)
       form.submit()

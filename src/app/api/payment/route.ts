@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
   }
 
   const isTestMode = process.env.NEXT_PUBLIC_ENVIRONMENT === 'DEV' // ONLY TEST
-  const effectiveTotal = isTestMode ? 6 : total // ONLY TEST
+  const effectiveTotal = isTestMode ? 5 : total // ONLY TEST
   const effectiveGlosa = isTestMode ? `PAGO TEST - ${glosa}` : glosa // ONLY TEST
   const effectiveVat   = vat
 

@@ -882,6 +882,11 @@ export default function CotizadorWizard() {
 
   async function payWithReservation(amount: number, calendarId: string) {
     update({ webpayLoading: true, webpayError: '' })
+    // ONLY TEST — DEV: bypass reservation, route through /api/payment (overrides amount to 5 CLP)
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'DEV') {
+      payDirect(amount, 'Visita técnica · Instalación cargador', 'visit')
+      return
+    }
     const email = state.emailPago?.trim().toLowerCase()
     if (!email || !calendarId) {
       update({ webpayLoading: false, webpayError: 'Faltan datos requeridos' })

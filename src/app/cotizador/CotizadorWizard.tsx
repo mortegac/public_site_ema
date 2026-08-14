@@ -899,6 +899,22 @@ export default function CotizadorWizard() {
       return
     }
     try {
+      // Upsert customer BEFORE reservation — MakeReservationAndCart requires customer to exist
+      await fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: state.nombreEmail || email,
+          phone: state.visitaTelefono || '',
+          address: state.address || '',
+          city: state.addressCity || '',
+          state: state.addressState || '',
+          typeOfResidence: state.tipo === 'casa' ? 'house' : 'appartment',
+          formId: state.formId ?? null,
+        }),
+      })
+
       const reservation = await makeReservation({
         customerId: email,
         calendarId,

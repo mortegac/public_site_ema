@@ -23,9 +23,8 @@ import AddressInput2 from '@/app/components/AddressInput2'
 import { CHILE_REGIONS } from '@/data/chile-regions'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
-import { useDispatch, useSelector } from 'react-redux'
-import { setAgendaSelection } from '@/store/ClientForms/slice'
-import type { AppDispatch, RootState } from '@/store/store'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '@/store/store'
 import { makeReservation } from '@/store/CalendarVisits/services'
 import { fetchWebpayStart } from '@/store/Webpay/services'
 
@@ -488,9 +487,6 @@ export default function CotizadorWizard() {
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const persistedCalendarId = useSelector((s: RootState) => s.clientForms.cotizadorCalendarId)
-  const persistedDateLabel = useSelector((s: RootState) => s.clientForms.cotizadorDateLabel)
-
   // Derived from state.tipo — passed in tracking event props
   const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
 
@@ -641,13 +637,6 @@ export default function CotizadorWizard() {
         }
         track('pre_booking_confirmed', { date: selDate.dateKey, slot: selSlot.key })
       }
-    }
-    if (preBookedOverride) {
-      dispatch(setAgendaSelection({
-        calendarId: preBookedOverride.preBookedCalendarId,
-        dateLabel: preBookedOverride.preBookedLabel,
-        dateKey: preBookedOverride.preBookedDate,
-      }))
     }
     skipPreBookRef.current = false
 
@@ -1334,7 +1323,6 @@ export default function CotizadorWizard() {
       agendaSelectedIndex: null,
       agendaSelectedSlot: null,
     }))
-    dispatch(setAgendaSelection({ calendarId: null, dateLabel: null, dateKey: null }))
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────
@@ -1928,13 +1916,13 @@ export default function CotizadorWizard() {
           {/* Expanded content */}
           {isVisitaOpen && (
             <Box sx={{ px: { xs: 2, sm: 2.5 }, pb: 2.5, borderTop: `1px solid ${BORDER}` }}>
-              {(state.preBookedLabel ?? persistedDateLabel) ? (
+              {state.preBookedLabel ? (
                 // Date already selected — show form directly (Image #43)
                 <Box sx={{ mt: 2 }}>
-                  {(state.preBookedLabel ?? persistedDateLabel) && (
+                  {state.preBookedLabel && (
                     <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid ${TEAL}`, mb: 2 }}>
                       <Typography sx={{ fontSize: '0.8rem', color: TEAL, fontWeight: 600 }}>
-                        📅 {state.preBookedLabel ?? persistedDateLabel}
+                        📅 {state.preBookedLabel}
                       </Typography>
                     </Box>
                   )}
@@ -1975,7 +1963,7 @@ export default function CotizadorWizard() {
                   <Button fullWidth variant="contained"
                     disabled={!state.emailPago.trim() || !state.addressState || !state.addressCity || !state.address.trim() || state.webpayLoading}
                     onClick={() => {
-                      const calId = state.preBookedCalendarId ?? persistedCalendarId
+                      const calId = state.preBookedCalendarId
                       if (calId) {
                         payWithReservation(visitaAmount, calId)
                       } else {

@@ -10,9 +10,6 @@ interface ClientFormsState {
   loading: boolean;
   error: string | null;
   isWallbox: boolean | null;
-  cotizadorCalendarId: string | null;
-  cotizadorDateLabel: string | null;
-  cotizadorDateKey: string | null;
 }
 
 const initialState: ClientFormsState = {
@@ -22,9 +19,6 @@ const initialState: ClientFormsState = {
   loading: false,
   error: null,
   isWallbox: false,
-  cotizadorCalendarId: null,
-  cotizadorDateLabel: null,
-  cotizadorDateKey: null,
 };
 
 export const setFormClient = createAsyncThunk(
@@ -114,15 +108,6 @@ const clientFormsSlice = createSlice({
         state.loading = false;
         state.error = null;
       },
-      setAgendaSelection: (state, action: PayloadAction<{
-        calendarId: string | null;
-        dateLabel: string | null;
-        dateKey: string | null;
-      }>) => {
-        state.cotizadorCalendarId = action.payload.calendarId;
-        state.cotizadorDateLabel = action.payload.dateLabel;
-        state.cotizadorDateKey = action.payload.dateKey;
-      },
   },
   extraReducers: (builder) => {
     builder
@@ -165,7 +150,6 @@ export const {
     setTypeOfBuilder,
     setToggleChargerStatus,
     cleanData,
-    setAgendaSelection,
   } = clientFormsSlice.actions;
   
 export const selectClientForms = (state: RootState) => state.clientForms;

@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  const isTestMode = process.env.NEXT_PUBLIC_ENVIRONMENT === 'DEV' // ONLY TEST
+  const isTestMode = process.env.WEBPAY_TEST_MODE === 'true' // ONLY TEST
   const effectiveTotal = isTestMode ? 5 : total // ONLY TEST
   const effectiveGlosa = isTestMode ? `PAGO TEST - ${glosa}` : glosa // ONLY TEST
   const effectiveVat   = vat

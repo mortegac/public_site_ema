@@ -544,6 +544,8 @@ const ReturnPage = () => {
                       return true;
                   }
 
+                  // Delay for DynamoDB GSI eventual consistency after WebpayCommit
+                  await new Promise(r => setTimeout(r, 1500))
                   const statusResponse: any = await fetchWebpayStatus({ token: token });
                   console.log("---statusResponse-fetchWebpayStatus--", statusResponse);
                   if (!statusResponse || !statusResponse.status) {
@@ -600,6 +602,7 @@ const ReturnPage = () => {
                       glosa: statusResponse?.glosa,
                       shoppingCartId: statusResponse?.shoppingCartId,
                       typeOfCart: statusResponse?.typeOfCart || "",
+                      status: "AUTHORIZED",
                       statusRedirect: "PAYMENT_APPROVED",
                   }));
                   return true;

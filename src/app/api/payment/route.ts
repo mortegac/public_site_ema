@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
   }
 
   const isTestMode = process.env.WEBPAY_TEST_MODE === 'true' // ONLY TEST
-  const effectiveTotal = isTestMode ? 5 : total // ONLY TEST
+  const effectiveTotal = isTestMode ? 50 : total // ONLY TEST
   const effectiveGlosa = isTestMode ? `PAGO TEST - ${glosa}` : glosa // ONLY TEST
   const effectiveVat   = vat
 

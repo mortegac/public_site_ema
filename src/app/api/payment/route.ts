@@ -266,6 +266,7 @@ export async function POST(req: NextRequest) {
       glosa: detailGlosa,
       price: effectiveTotal,
       typeOfItem,
+      ...(body.calendarId ? { calendarId: body.calendarId } : {}),
     }
 
     console.log('[payment] Creating ShoppingCartDetail:', JSON.stringify(detailInput))

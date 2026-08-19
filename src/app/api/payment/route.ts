@@ -81,6 +81,15 @@ const WEBPAY_START = /* GraphQL */ `
   }
 `
 
+const MAKE_RESERVATION_AND_CART = /* GraphQL */ `
+  mutation MakeReservationAndCart($customerId: String!, $calendarId: String!) {
+    MakeReservationAndCart(customerId: $customerId, calendarId: $calendarId) {
+      message
+      cartId
+    }
+  }
+`
+
 // ─── Request body schema ──────────────────────────────────────────────────────
 interface PaymentBody {
   total: number
@@ -98,6 +107,7 @@ interface PaymentBody {
   pendingGlosa?: string
   hasCharger?: boolean
   selectedPaymentOption?: string
+  calendarId?: string
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -127,7 +137,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'total must be a positive number' }, { status: 400 })
   }
 
-  const effectiveTotal = total
+  const isTestMode = process.env.WEBPAY_TEST_MODE === 'true' // ONLY TEST
+  const effectiveTotal = isTestMode ? 50 : total // ONLY TEST
+  const effectiveGlosa = isTestMode ? `PAGO TEST - ${glosa}` : glosa // ONLY TEST
   const effectiveVat   = vat
 
   const { url: appsyncUrl, apiKey } = getAppSyncConfig()
@@ -135,6 +147,51 @@ export async function POST(req: NextRequest) {
 
   console.log(`[payment] Starting payment flow — total=${effectiveTotal}, cartId=${shoppingCartId}`)
   console.log(`[payment] email=${email ?? 'NOT_PROVIDED'}, typeOfCart=chargerInstallation, hasCharger=${hasCharger ?? 'NOT_PROVIDED'}, selectedPaymentOption=${selectedPaymentOption ?? 'NOT_PROVIDED'}`)
+
+  // ── Reservation path (calendarId present, not test mode) ─────────────────────
+  if (body.calendarId && !isTestMode) {
+    const customerId = (email ?? '').trim().toLowerCase()
+    if (!customerId) {
+      return NextResponse.json({ error: 'email required for reservation' }, { status: 400 })
+    }
+    try {
+      console.log(`[payment] Reservation path — customerId=${customerId}, calendarId=${body.calendarId}`)
+      const reservationJson = await callAppSync(appsyncUrl, apiKey, MAKE_RESERVATION_AND_CART, {
+        customerId,
+        calendarId: body.calendarId,
+      }, 'MakeReservationAndCart')
+      const cartId = reservationJson?.data?.MakeReservationAndCart?.cartId
+      if (!cartId) {
+        const msg = reservationJson?.data?.MakeReservationAndCart?.message ?? 'No cartId returned'
+        throw new Error(`MakeReservationAndCart: ${msg}`)
+      }
+      console.log(`[payment] Reservation created, cartId=${cartId}`)
+
+      const webpayJson = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, {
+        shoppingCartId: cartId,
+        glosa: effectiveGlosa,
+      }, 'WebpayStart')
+      const result = webpayJson?.data?.WebpayStart
+      if (!result?.token) {
+        const errors = webpayJson?.errors?.map((e: any) => e.message).join('; ')
+        throw new Error(errors ?? `WebpayStart returned no token (cartId: ${cartId})`)
+      }
+
+      return NextResponse.json({
+        shoppingCartId: cartId,
+        order: result.order,
+        token: result.token,
+        url: result.url,
+        message: result.message,
+        buy_order: result.buy_order,
+        email: result.email,
+      })
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err)
+      console.error('[payment] Reservation path error:', message)
+      return NextResponse.json({ error: `Reservation payment failed: ${message}` }, { status: 502 })
+    }
+  }
 
   // ── Step 1: Create ShoppingCart ──────────────────────────────────────────────
   try {
@@ -202,13 +259,14 @@ export async function POST(req: NextRequest) {
   try {
     const detailGlosa = typeOfCart === 'visit'
       ? 'Visita técnica - kit aprobación de tu comunidad.'
-      : (chargerName || glosa)
+      : (chargerName || effectiveGlosa) // ONLY TEST
     const detailInput = {
       shoppingCartDetailId: crypto.randomUUID(),
       shoppingCartId,
       glosa: detailGlosa,
       price: effectiveTotal,
       typeOfItem,
+      ...(body.calendarId ? { calendarId: body.calendarId } : {}),
     }
 
     console.log('[payment] Creating ShoppingCartDetail:', JSON.stringify(detailInput))
@@ -224,7 +282,7 @@ export async function POST(req: NextRequest) {
   try {
     console.log(`[payment] Calling WebpayStart — cartId=${shoppingCartId}, glosa="${glosa}"`)
 
-    const webpayJson = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, { shoppingCartId, glosa }, 'WebpayStart')
+    const webpayJson = await callAppSync(appsyncUrl, apiKey, WEBPAY_START, { shoppingCartId, glosa: effectiveGlosa }, 'WebpayStart') // ONLY TEST
     const result = webpayJson?.data?.WebpayStart
 
     console.log('[payment] WebpayStart result:', JSON.stringify(result))

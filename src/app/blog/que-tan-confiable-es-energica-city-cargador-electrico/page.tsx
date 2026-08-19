@@ -6,6 +6,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
@@ -58,13 +59,7 @@ const blogPostingSchema = {
   headline: '¿Qué Tan Confiable es Enérgica City para Instalar un Cargador Eléctrico en Chile?',
   description:
     'Análisis de las credenciales de Enérgica City: certificación SEC, alianzas estratégicas, proyectos corporativos y soluciones para edificios.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-  url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-  },
+  author: getAuthorSchemaData(),
   contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
@@ -260,7 +255,7 @@ export default function ArticlePage() {
             19 de junio, 2026
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{

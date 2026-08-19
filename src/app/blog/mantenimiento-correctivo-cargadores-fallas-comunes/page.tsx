@@ -7,6 +7,7 @@ import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 
 const DARK = '#0F172A'
 const TEAL = '#0898b9'
@@ -55,14 +56,7 @@ const blogPostingSchema = {
   headline: 'Fallas Comunes en Cargadores EV: Guía de Mantenimiento',
   description:
     'Qué hacer si tu cargador eléctrico deja de funcionar. Diagnóstico de fallas comunes, mantenimiento preventivo y servicio técnico especializado en Chile.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   contributor: {
     '@type': 'Person',
     name: 'Gilberto Escalona',
@@ -336,7 +330,7 @@ export default function ArticlePage() {
             1 de julio, 2025
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{

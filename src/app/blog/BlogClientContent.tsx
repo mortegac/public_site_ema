@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Box, Container, Typography, Card, CardActionArea, CardContent, Chip } from '@mui/material'
 import type { BlogArticle } from '@/data/blog-articles'
+import { getAuthor } from '@/data/authors'
 
 export interface PrismicPostCard {
   uid: string
@@ -12,6 +13,7 @@ export interface PrismicPostCard {
   description: string
   date: string
   imageUrl: string
+  authorId?: string
 }
 
 interface PostCard {
@@ -21,6 +23,7 @@ interface PostCard {
   date: string
   category: string
   image?: string
+  authorId?: string
 }
 
 function formatDate(dateStr: string): string {
@@ -48,6 +51,7 @@ export default function BlogClientContent({
     date: p.date,
     category: '',
     image: p.imageUrl || undefined,
+    authorId: p.authorId,
   }))
 
   const allCategories = ['Todos', ...Array.from(new Set(restStatic.map((a) => a.category).filter(Boolean)))]
@@ -174,104 +178,128 @@ export default function BlogClientContent({
             gap: 3,
           }}
         >
-          {gridCards.map((card) => (
-            <Card
-              key={card.uid}
-              sx={{
-                borderRadius: 3,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                border: '1px solid rgba(0,0,0,0.07)',
-                transition: 'box-shadow 0.2s',
-                '&:hover': { boxShadow: '0 6px 24px rgba(0,0,0,0.12)' },
-                overflow: 'hidden',
-              }}
-            >
-              <CardActionArea
-                component={Link}
-                href={`/blog/${card.uid}`}
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', height: '100%' }}
+          {gridCards.map((card) => {
+            const author = getAuthor(card.authorId)
+            return (
+              <Card
+                key={card.uid}
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                  border: '1px solid rgba(0,0,0,0.07)',
+                  transition: 'box-shadow 0.2s',
+                  '&:hover': { boxShadow: '0 6px 24px rgba(0,0,0,0.12)' },
+                  overflow: 'hidden',
+                }}
               >
-                {/* Image area */}
-                {card.image ? (
-                  <Box sx={{ width: '100%', aspectRatio: '370/246', position: 'relative', overflow: 'hidden' }}>
-                    <Image
-                      src={card.image}
-                      alt={card.title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                <CardActionArea
+                  component={Link}
+                  href={`/blog/${card.uid}`}
+                  sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', height: '100%' }}
+                >
+                  {/* Image area */}
+                  {card.image ? (
+                    <Box sx={{ width: '100%', aspectRatio: '370/246', position: 'relative', overflow: 'hidden' }}>
+                      <Image
+                        src={card.image}
+                        alt={card.title}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                      />
+                      {card.category && (
+                        <Chip
+                          label={card.category.toUpperCase()}
+                          size="small"
+                          sx={{
+                            position: 'absolute',
+                            top: 12,
+                            left: 12,
+                            bgcolor: '#E81A68',
+                            color: '#fff',
+                            fontWeight: 700,
+                            fontSize: '0.65rem',
+                            letterSpacing: '0.05em',
+                          }}
+                        />
+                      )}
+                    </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        width: '100%',
+                        height: 4,
+                        background: 'linear-gradient(90deg, #0898b9 0%, #4dbfd9 100%)',
+                      }}
                     />
-                    {card.category && (
-                      <Chip
-                        label={card.category.toUpperCase()}
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          top: 12,
-                          left: 12,
-                          bgcolor: '#E81A68',
-                          color: '#fff',
-                          fontWeight: 700,
-                          fontSize: '0.65rem',
-                          letterSpacing: '0.05em',
-                        }}
-                      />
-                    )}
-                  </Box>
-                ) : (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: 4,
-                      background: 'linear-gradient(90deg, #0898b9 0%, #4dbfd9 100%)',
-                    }}
-                  />
-                )}
+                  )}
 
-                {/* Content */}
-                <CardContent sx={{ p: 3, width: '100%', flexGrow: 1 }}>
-                  {/* Teal accent */}
-                  <Box sx={{ width: 32, height: 3, bgcolor: '#0898b9', borderRadius: 2, mb: 2 }} />
+                  {/* Content */}
+                  <CardContent sx={{ p: 3, width: '100%', flexGrow: 1 }}>
+                    {/* Teal accent */}
+                    <Box sx={{ width: 32, height: 3, bgcolor: '#0898b9', borderRadius: 2, mb: 2 }} />
 
-                  {/* Date + category chip */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5, flexWrap: 'wrap' }}>
-                    {card.date && (
-                      <Typography variant="caption" color="text.secondary">
-                        {formatDate(card.date)}
-                      </Typography>
-                    )}
-                    {card.category && (
-                      <Chip
-                        label={card.category}
-                        size="small"
-                        sx={{ height: 20, fontSize: '0.7rem', bgcolor: '#e0f4fa', color: '#0777a0', fontWeight: 600 }}
-                      />
-                    )}
-                  </Box>
+                    {/* Date + category chip */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5, flexWrap: 'wrap' }}>
+                      {card.date && (
+                        <Typography variant="caption" color="text.secondary">
+                          {formatDate(card.date)}
+                        </Typography>
+                      )}
+                      {card.category && (
+                        <Chip
+                          label={card.category}
+                          size="small"
+                          sx={{ height: 20, fontSize: '0.7rem', bgcolor: '#e0f4fa', color: '#0777a0', fontWeight: 600 }}
+                        />
+                      )}
+                    </Box>
 
-                  <Typography
-                    variant="h2"
-                    component="h2"
-                    sx={{ fontSize: '1.05rem', fontWeight: 700, mb: 1.5, lineHeight: 1.4, color: '#0F172A' }}
-                  >
-                    {card.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {card.description}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          ))}
+                    <Typography
+                      variant="h2"
+                      component="h2"
+                      sx={{ fontSize: '1.05rem', fontWeight: 700, mb: 1.5, lineHeight: 1.4, color: '#0F172A' }}
+                    >
+                      {card.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {card.description}
+                    </Typography>
+
+                    {/* Author info */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mt: 2.5, pt: 2, borderTop: '1px solid #F1F5F9' }}>
+                      <Box sx={{ flexShrink: 0, width: 32, height: 32, borderRadius: '50%', overflow: 'hidden', position: 'relative', border: '2px solid #E2E8F0' }}>
+                        <Image
+                          src={author.imageSrc}
+                          alt={author.imageAlt}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          sizes="32px"
+                        />
+                      </Box>
+                      <Box>
+                        <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
+                          {author.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.72rem', color: '#64748B', lineHeight: 1.2 }}>
+                          {author.jobTitle}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            )
+          })}
         </Box>
       </Container>
     </Box>

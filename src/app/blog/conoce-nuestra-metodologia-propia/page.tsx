@@ -5,6 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
@@ -56,14 +57,7 @@ const blogPostingSchema = {
   headline: 'Conoce Nuestra Metodología Propia para Electrificar tu Flota',
   description:
     'Metodología propia de Enérgica City para optimizar y descarbonizar flotas: software GRETA, análisis técnico-económico y acompañamiento en todas las etapas del proyecto.',
-  author: {
-    '@type': 'Person',
-    name: 'Gilberto Escalona',
-    '@id': 'https://www.energica.city/#author-gilberto-escalona',
-    jobTitle: 'Gerente de Desarrollo de Negocios, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/gilbertoescalona/',
-  },
+  author: getAuthorSchemaData('gilberto-escalona'),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -204,7 +198,7 @@ export default function ArticlePage() {
               7 de julio, 2026
             </Box>
             <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-              Por <strong>Gilberto Escalona</strong> · Gerente de Desarrollo de Negocios, Enérgica City
+              Por <strong>{getAuthor('gilberto-escalona').name}</strong> · {getAuthor('gilberto-escalona').jobTitle}
             </Typography>
             <Typography
               sx={{
@@ -475,12 +469,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline
-          name="Gilberto Escalona"
-          bio="Gerente de Desarrollo de Negocios con experiencia en proyectos de electrificación de flotas."
-          imageSrc="/images/gilberto-escalona.jpg"
-          url="/que-es-energica-city"
-        />
+        <AuthorByline authorId="gilberto-escalona" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 7, md: 10 } }}>

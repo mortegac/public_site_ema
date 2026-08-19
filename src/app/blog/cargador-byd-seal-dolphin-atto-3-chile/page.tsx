@@ -5,6 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
@@ -57,14 +58,7 @@ const blogPostingSchema = {
   headline: 'Cargador para BYD Seal, Dolphin y Atto 3 en Chile',
   description:
     'Guía completa para instalar un cargador Wallbox Tipo 2 para BYD en Chile: compatibilidad por modelo, tiempos de carga, opciones para edificios y precios actualizados.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -197,7 +191,7 @@ export default function ArticlePage() {
             11 de junio, 2026
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{

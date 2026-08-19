@@ -18,6 +18,8 @@ import Link from "next/link";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   justifyContent: "center",
+  border: "none",
+  boxShadow: "none",
   [theme.breakpoints.up("lg")]: {
     minHeight: "81px",
     background: "#4dbfd9",

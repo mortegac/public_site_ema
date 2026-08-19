@@ -9,8 +9,27 @@ import HomeIcon from '@mui/icons-material/Home'
 import ApartmentIcon from '@mui/icons-material/Apartment'
 import Link from 'next/link'
 import PresupuestoFAQ from './PresupuestoFAQ'
+import type { Metadata } from 'next'
 
 const CANONICAL_DOMAIN = 'https://www.energica.city'
+
+export const metadata: Metadata = {
+  title: 'Presupuesto de Instalación de Cargador Eléctrico Online',
+  description: 'Obtén el precio exacto de instalación de tu cargador EV. Casa desde $159.000, edificio desde $0 con electrolinera. Sin registro. RM y Valparaíso.',
+  alternates: { canonical: `${CANONICAL_DOMAIN}/presupuesto-cargador-electrico` },
+  openGraph: {
+    url: 'https://www.energica.city/presupuesto-cargador-electrico',
+    title: 'Presupuesto de Instalación de Cargador Eléctrico Online',
+    description: 'Instala tu cargador EV desde $159.000 IVA incluido. Instaladores SEC certificados. Incluye certificado TE6. RM y Valparaíso.',
+    images: [{ url: 'https://www.energica.city/images/og/servicios-cargadores-ev.jpg', width: 1200, height: 630, alt: 'Presupuesto instalación cargador eléctrico Chile' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Presupuesto Cargador Eléctrico — desde $159.000',
+    description: 'Instala tu Wallbox con instaladores SEC. Certificado TE6 incluido. RM y Valparaíso.',
+    images: ['https://www.energica.city/images/og/servicios-cargadores-ev.jpg'],
+  },
+}
 
 // ─── Schema ──────────────────────────────────────────────────────────────────
 

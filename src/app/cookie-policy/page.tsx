@@ -12,6 +12,16 @@ export const metadata: Metadata = {
   },
 };
 
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Política de Cookies — Enérgica City",
+  "description": "Cómo Enérgica City utiliza cookies y tecnologías de monitoreo, conforme a la Ley N° 19.628 de Chile.",
+  "url": "https://www.energica.city/cookie-policy",
+  "inLanguage": "es-CL",
+  "publisher": { "@type": "Organization", "name": "Energica City", "url": "https://www.energica.city" },
+};
+
 const content = `<div style='text-align: justify; font-family: inherit;'>
 
 <p>La finalidad de la Política de Cookies es la de informar a los usuarios sobre los procedimientos que se realizan para la recogida, por medio de cookies y/o otras tecnologías de monitoreo, de informaciones que se recaban al acceder al sitio web <a href='https://www.energica.city' rel='noreferrer'>https://www.energica.city</a> (en adelante el "Sitio").</p>
@@ -149,6 +159,7 @@ const CookiePolicyPage = () => {
       title="Política de Cookies | Enérgica City"
       description="Conoce cómo Enérgica City utiliza cookies y tecnologías de monitoreo en su sitio web, de acuerdo con la Ley N° 19.628 sobre Protección de la Vida Privada en Chile."
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <HpHeaderNew />
 
       <Banner

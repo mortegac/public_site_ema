@@ -5,6 +5,7 @@ import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import AuthorByline from '@/app/components/shared/AuthorByline'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 
 const DARK = '#0F172A'
@@ -57,14 +58,7 @@ const blogPostingSchema = {
   headline: 'Electrolinera para tu Edificio: $0 de Inversión, Pagas Solo lo que Cargas',
   description:
     'Enérgica instala y financia un cargador eléctrico en el estacionamiento de visitas de tu edificio. Inversión $0 para la comunidad. Pagas solo $330/kWh consumido. Sin obra en tu estacionamiento privado.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -197,7 +191,7 @@ export default function ArticlePage() {
             11 de junio, 2026
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{
@@ -547,13 +541,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid={SLUG} />
 
         {/* Author byline */}
-        <AuthorByline
-          name="Felipe Donoso"
-          bio="Ingeniero Eléctrico especializado en instalaciones de carga para edificios residenciales y proyectos de electromovilidad en Chile."
-          imageSrc="/images/felipe-donoso.jpeg"
-          url="https://www.linkedin.com/in/felipedonoso-energica/"
-          dateModified="2026-07-07"
-        />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* Dark CTA band */}
         <Box sx={{ background: DARK, py: { xs: 8, md: 10 } }}>

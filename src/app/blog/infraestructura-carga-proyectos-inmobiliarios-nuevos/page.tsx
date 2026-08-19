@@ -6,6 +6,7 @@ import AuthorByline from '@/app/components/shared/AuthorByline'
 import BlogBreadcrumb from '@/app/components/shared/BlogBreadcrumb'
 import BlogRelatedArticles from '@/app/components/shared/BlogRelatedArticles'
 import { CANONICAL_DOMAIN } from '@/utils/seo-config'
+import { getAuthor, getAuthorSchemaData } from '@/data/authors'
 import ClientsCarousel from './ClientsCarousel'
 
 const DARK = '#0F172A'
@@ -55,14 +56,7 @@ const blogPostingSchema = {
   headline: 'Electromovilidad Inmobiliaria: El 1% que Cambia tu Proyecto',
   description:
     'Cómo habilitar el 100% de estacionamientos EV en proyectos inmobiliarios nuevos. El costo no supera el 1% del presupuesto eléctrico.',
-  author: {
-    '@type': 'Person',
-    name: 'Felipe Donoso',
-    '@id': 'https://www.energica.city/#author-felipe-donoso',
-    jobTitle: 'Ingeniero Eléctrico, Enérgica City',
-    url: `${CANONICAL_DOMAIN}/que-es-energica-city`,
-    sameAs: 'https://www.linkedin.com/in/felipedonosovergara/',
-  },
+  author: getAuthorSchemaData(),
   publisher: {
     '@type': 'Organization',
     name: 'Enérgica City',
@@ -166,7 +160,7 @@ export default function ArticlePage() {
             15 de junio, 2025
           </Box>
           <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', mt: 0.5 }}>
-            Por <strong>Felipe Donoso</strong> · Ingeniero Eléctrico, Enérgica City
+            Por <strong>{getAuthor().name}</strong> · {getAuthor().jobTitle}
           </Typography>
             <Typography
               sx={{
@@ -558,13 +552,7 @@ export default function ArticlePage() {
         <BlogRelatedArticles currentUid="infraestructura-carga-proyectos-inmobiliarios-nuevos" />
 
         {/* Author byline */}
-        <AuthorByline
-          name="Felipe Donoso"
-          bio="Ingeniero Eléctrico especializado en infraestructura de carga EV para proyectos inmobiliarios y edificios en Chile."
-          imageSrc="/images/felipe-donoso.jpeg"
-          url="https://www.linkedin.com/in/felipedonoso-energica/"
-          dateModified="2026-07-07"
-        />
+        <AuthorByline dateModified="2026-07-07" />
 
         {/* ── Dark CTA band ── */}
         <Box sx={{ bgcolor: DARK, py: { xs: 6, md: 10 }, textAlign: 'center' }}>

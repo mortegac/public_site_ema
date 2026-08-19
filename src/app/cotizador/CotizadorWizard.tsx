@@ -20,8 +20,11 @@ import {
   type SelectChangeEvent,
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
+import { CHILE_REGIONS } from '@/data/chile-regions'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '@/store/store'
 
 // ─── Color tokens ────────────────────────────────────────────────────────────
 const PINK = '#e81a68'
@@ -32,12 +35,6 @@ const SURFACE = '#F8FAFC'
 const TEXT_MUTED = '#64748B'
 const BORDER = '#E2E8F0'
 const SUCCESS = '#00C47C'
-
-// ─── Constants ───────────────────────────────────────────────────────────────
-const PARKING_FLOORS = [
-  'Piso 1', 'Piso 2', 'Piso 3',
-  'Subterráneo -1', 'Subterráneo -2', 'Subterráneo -3', 'Subterráneo -4',
-]
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 const CHARGERS = [
@@ -94,6 +91,13 @@ function genDates(): Array<{ label: string; available: boolean }> {
   }
   return out
 }
+
+// ─── Time bands for agenda step ──────────────────────────────────────────────
+const TIME_BANDS = [
+  { key: '09-12', label: '09:00 a 12:00', startHour: 9 },
+  { key: '12-15', label: '12:00 a 15:00', startHour: 12 },
+  { key: '15-18', label: '15:00 a 18:00', startHour: 15 },
+]
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 interface WizardState {
@@ -156,6 +160,22 @@ interface WizardState {
   edificioUsersEV: string
   edificioOption: 'dedicated' | 'shared' | null
   removedChargerId: string | null  // remembers charger id when user clicks "quitar"
+  showElectrolineraForm: boolean
+  showVisitaForm: boolean
+  path: 'agendar' | 'cotizar' | null
+  preBookedDate: string | null
+  preBookedLabel: string | null
+  preBookedCalendarId: string | null
+  agendaDates: Array<{
+    dateKey: string
+    label: string
+    available: boolean
+    calendarId: string | null
+    slots: Array<{ key: string; label: string; calendarId: string }>
+  }> | null
+  agendaDatesLoading: boolean
+  agendaSelectedIndex: number | null
+  agendaSelectedSlot: string | null
 }
 
 interface CalcResult {
@@ -197,53 +217,71 @@ interface StepperProps {
   step: number
   paid: boolean
   booked: boolean
+  path: 'agendar' | 'cotizar' | null
 }
 
-function WizardStepper({ step, paid, booked }: StepperProps) {
-  const preLabels = ['Ubicación', 'Cargador', 'Cotización']
+function WizardStepper({ step, paid, booked, path }: StepperProps) {
+  const preLabels = ['Ubicación', 'Agendar visita', 'Cotización']
   const postLabels = ['Pago', 'Agendar', '¡Listo!']
 
   const labels = paid ? postLabels : preLabels
-  const activeIdx = paid ? (booked ? 2 : step - 3) : step
+  const displayStep = paid
+    ? booked ? 2 : step - 4
+    : step === 0 ? 0
+    : step === 1 && path === 'agendar' ? 1
+    : 2  // cotizar path or step 2+ → Cotización active
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, mt: 1 }}>
       {labels.map((label, idx) => {
-        const isCompleted = idx < activeIdx
-        const isActive = idx === activeIdx
+        const isSkipped = !paid && label === 'Agendar visita' && path === 'cotizar' && step >= 1
+        const isCompleted = idx < displayStep && !isSkipped
+        const isActive = idx === displayStep && !isSkipped
+        const isOptional = !paid && label === 'Agendar visita' && !isActive && !isCompleted && !isSkipped
         return (
           <Box key={label} sx={{ display: 'flex', alignItems: 'center' }}>
             {idx > 0 && (
               <Box sx={{
-                width: { xs: 24, sm: 40 },
+                width: { xs: 24, sm: 36 },
                 height: 2,
-                bgcolor: isCompleted ? TEAL : 'rgba(0,0,0,0.2)',
+                bgcolor: isCompleted ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.3)',
                 transition: 'background-color 0.3s',
               }} />
             )}
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.25 }}>
               <Box sx={{
-                width: 32,
-                height: 32,
+                width: 36,
+                height: 36,
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                bgcolor: isCompleted ? 'transparent' : isActive ? PINK : 'transparent',
-                border: isCompleted ? '1px solid #cccccc' : isActive ? 'none' : '2px solid rgba(0,0,0,0.3)',
+                bgcolor: isActive ? PINK : 'transparent',
+                border: isActive ? 'none' : isCompleted ? '2px solid rgba(255,255,255,0.85)' : '2px solid rgba(255,255,255,0.5)',
                 transition: 'all 0.3s',
+                opacity: isSkipped ? 0.5 : 1,
               }}>
                 {isCompleted ? (
                   <Typography sx={{ color: '#fff', fontSize: '0.85rem', fontWeight: 700 }}>✓</Typography>
                 ) : (
-                  <Typography sx={{ color: isActive ? '#fff' : 'rgba(0,0,0,0.5)', fontSize: '0.8rem', fontWeight: 700 }}>
+                  <Typography sx={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.75)', fontSize: '0.75rem', fontWeight: 700 }}>
                     {idx + 1}
                   </Typography>
                 )}
               </Box>
-              <Typography sx={{ fontSize: '0.65rem', fontWeight: isActive ? 700 : 400, color: isActive ? '#000' : 'rgba(0,0,0,0.55)', whiteSpace: 'nowrap' }}>
+              <Typography sx={{ fontSize: '0.6rem', fontWeight: isActive ? 700 : 500, color: isActive ? '#fff' : 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap' }}>
                 {label}
               </Typography>
+              {isOptional && (
+                <Typography sx={{ fontSize: '0.52rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1 }}>
+                  opcional
+                </Typography>
+              )}
+              {isSkipped && (
+                <Typography sx={{ fontSize: '0.52rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1 }}>
+                  omitido
+                </Typography>
+              )}
             </Box>
           </Box>
         )
@@ -326,12 +364,20 @@ function ChargerListItem({ charger, selected, onClick }: ChargerListItemProps) {
 // Maps UI dropdown value to ClientFormParkingLevel enum
 function mapParkingLevel(val: string): string | undefined {
   if (!val) return undefined
+  // Legacy dropdown values
   if (val.startsWith('Piso')) return 'groundLevel'
   if (val === 'Subterráneo -1') return 'underground1'
   if (val === 'Subterráneo -2') return 'underground2'
   if (val === 'Subterráneo -3') return 'underground3'
   if (val === 'Subterráneo -4') return 'underground4'
-  return undefined
+  // Numeric free-text (e.g. "-2", "0", "3")
+  const n = parseInt(val)
+  if (isNaN(n)) return undefined
+  if (n >= 0) return 'groundLevel'
+  if (n === -1) return 'underground1'
+  if (n === -2) return 'underground2'
+  if (n === -3) return 'underground3'
+  return 'underground4'
 }
 
 // ─── Distance factor label ────────────────────────────────────────────────────
@@ -355,15 +401,17 @@ const SLIDER_MARKS = [
 
 // ─── Hero title helpers ───────────────────────────────────────────────────────
 const STEP_TITLES = [
-  'Cotiza tu instalación',
-  'Elige tu cargador eléctrico',
-  'Tu cotización al instante',
-  'Agenda tu visita técnica',
-  '¡Todo listo!',
+  'Cotiza tu instalación',        // step 0: Tipo
+  'Agenda tu visita técnica',     // step 1: Agenda [NUEVO]
+  'Elige tu cargador eléctrico',  // step 2: Cargador
+  'Tu cotización al instante',    // step 3: Cotización
+  'Agenda tu visita técnica',     // step 4: post-pago
+  '¡Todo listo!',                 // step 5: booked
 ]
 
 const STEP_SUBTITLES = [
   'Instalación certificada SEC · Precios claros · Sin sorpresas',
+  'Elige una fecha disponible para la visita técnica',
   'Selecciona el equipo que mejor se adapta a tus necesidades',
   'Precio real basado en tu perfil',
   'Coordina la visita técnica a tu domicilio',
@@ -420,7 +468,22 @@ export default function CotizadorWizard() {
     edificioUsersEV: '',
     edificioOption: null,
     removedChargerId: null,
+    showElectrolineraForm: false,
+    showVisitaForm: false,
+    path: null,
+    preBookedDate: null,
+    preBookedLabel: null,
+    preBookedCalendarId: null,
+    agendaDates: null,
+    agendaDatesLoading: false,
+    agendaSelectedIndex: null,
+    agendaSelectedSlot: null,
   })
+
+  // Ref to skip pre-booking when "Prefiero elegir la fecha después" is clicked
+  const skipPreBookRef = useRef(false)
+
+  const dispatch = useDispatch<AppDispatch>()
 
   // Derived from state.tipo — passed in tracking event props
   const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
@@ -429,22 +492,15 @@ export default function CotizadorWizard() {
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
   useEffect(() => { setDates(genDates()) }, [])
 
-  // Charger list — loaded from /api/charger, falls back to static CHARGERS
-  const [chargerList, setChargerList] = useState<typeof CHARGERS>(CHARGERS)
-  useEffect(() => {
-    fetch('/api/charger')
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d.chargers) && d.chargers.length > 0) setChargerList(d.chargers) })
-      .catch(() => {/* keep static fallback */})
-  }, [])
+  const chargerList = CHARGERS
 
   // Track step 0 on mount
   useEffect(() => { trackUnique('step_1_loaded', { step: 1, typeOfResidence }) }, [])
 
-  // Track step_3_abandoned when user leaves while on step 2 and hasn't paid
+  // Track step_3_abandoned when user leaves while on step 3 (Cotización) and hasn't paid
   useEffect(() => {
-    if (state.step !== 2 || state.paid) return
-    const onUnload = () => trackUnique('step_3_abandoned', { step: 2 })
+    if (state.step !== 3 || state.paid) return
+    const onUnload = () => trackUnique('step_3_abandoned', { step: 3 })
     window.addEventListener('beforeunload', onUnload)
     return () => window.removeEventListener('beforeunload', onUnload)
   }, [state.step, state.paid])
@@ -468,27 +524,83 @@ export default function CotizadorWizard() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Auto-skip "Tu cargador" step for cotizar path — both Casa and Edificio capture all data in step 0
+  useEffect(() => {
+    if (state.step === 1 && state.path === 'cotizar' && !state.estimateLoading) {
+      goNext()
+    }
+  }, [state.step]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Load agenda dates when entering agenda step
+  useEffect(() => {
+    if (state.step !== 1 || state.path !== 'agendar') return
+    if (state.agendaDates !== null) return // already loaded
+    update({ agendaDatesLoading: true })
+
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() + 2)
+    startDate.setHours(0, 0, 0, 0)
+    const endDate = new Date()
+    endDate.setDate(endDate.getDate() + 16)
+    endDate.setHours(23, 59, 59, 999)
+
+    fetch(`/api/schedules?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`)
+      .then(r => r.json())
+      .then(({ items }) => {
+        // Group slots by dateKey → band key → calendarId
+        const slotsByDay = new Map<string, Map<string, string>>() // dateKey → bandKey → calendarId
+        for (const slot of (items ?? []) as Array<{ startDate: string; calendarId: string }>) {
+          const dateKey = slot.startDate.slice(0, 10)
+          const hour = new Date(slot.startDate).getHours()
+          const band = TIME_BANDS.find(b => hour >= b.startHour && hour < b.startHour + 3)
+          if (!band) continue
+          if (!slotsByDay.has(dateKey)) slotsByDay.set(dateKey, new Map())
+          slotsByDay.get(dateKey)!.set(band.key, slot.calendarId)
+        }
+
+        const dates: Array<{ dateKey: string; label: string; available: boolean; calendarId: string | null; slots: Array<{ key: string; label: string; calendarId: string }> }> = []
+        const cursor = new Date(startDate)
+        while (cursor <= endDate) {
+          if (cursor.getDay() !== 0) {
+            const key = cursor.toISOString().slice(0, 10)
+            const daySlots = slotsByDay.get(key)
+            const slots = daySlots
+              ? TIME_BANDS.filter(b => daySlots.has(b.key)).map(b => ({ key: b.key, label: b.label, calendarId: daySlots.get(b.key)! }))
+              : []
+            dates.push({
+              dateKey: key,
+              label: cursor.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }),
+              available: slots.length > 0,
+              calendarId: slots[0]?.calendarId ?? null,
+              slots,
+            })
+          }
+          cursor.setDate(cursor.getDate() + 1)
+        }
+        update({ agendaDates: dates, agendaDatesLoading: false })
+      })
+      .catch(() => update({ agendaDates: [], agendaDatesLoading: false }))
+  }, [state.step, state.path])
+
   const result = calcResult(state, chargerList)
 
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
-    if (state.step === 0) return state.tipo !== null
-    if (state.step === 1) {
-      if (!state.tipoC) return false
-      if (state.tipo === 'edificio') return state.edificioFloor.trim() !== '' && state.edificioParkingFloor !== ''
+    if (state.step === 0) {
+      if (!state.tipo) return false
+      if (state.tipo === 'edificio') return state.edificioFloor.trim() !== '' && state.edificioParkingFloor.trim() !== '' && state.edificioVisitorParking !== null
       return true
+    }
+    if (state.step === 1 && state.path === 'agendar') return true
+    if (state.step === 2 || (state.step === 1 && state.path === 'cotizar')) {
+      return !!state.tipoC
     }
     return true
   })()
 
   const canNextTooltip = (() => {
-    if (state.step !== 1 || canNext) return ''
-    if (state.tipo === 'edificio') {
-      const missing = []
-      if (!state.edificioFloor.trim()) missing.push('piso del departamento')
-      if (!state.edificioParkingFloor) missing.push('piso del estacionamiento')
-      return `Completa: ${missing.join(' y ')}`
-    }
+    if (state.step !== 2 && !(state.step === 1 && state.path === 'cotizar')) return ''
+    if (canNext) return ''
     return 'Selecciona el tipo de cargador para continuar'
   })()
 
@@ -496,13 +608,13 @@ export default function CotizadorWizard() {
     ? '¡Visita agendada!'
     : state.paid
     ? STEP_TITLES[state.step] ?? '¡Todo confirmado!'
-    : STEP_TITLES[state.step] ?? 'Cotiza tu instalación'
+    : STEP_TITLES[state.step === 1 && state.path === 'cotizar' ? 2 : state.step] ?? 'Cotiza tu instalación'
 
   const heroSubtitle = state.booked
     ? 'Te contactaremos para confirmar los detalles'
     : state.paid
     ? STEP_SUBTITLES[state.step] ?? ''
-    : STEP_SUBTITLES[state.step] ?? ''
+    : STEP_SUBTITLES[state.step === 1 && state.path === 'cotizar' ? 2 : state.step] ?? ''
 
   // ─── Handlers ────────────────────────────────────────────────────────────
   function update(partial: Partial<WizardState>) {
@@ -510,11 +622,30 @@ export default function CotizadorWizard() {
   }
 
   async function goNext() {
-    // Trigger cotizar API from step 1 (both casa and edificio)
-    if (state.step === 1) {
+    // Capture pre-booking data when proceeding from agenda step (before async API call)
+    let preBookedOverride: { preBookedDate: string; preBookedLabel: string; preBookedCalendarId: string } | null = null
+    if (state.step === 1 && state.path === 'agendar' && !skipPreBookRef.current && state.agendaSelectedIndex !== null && state.agendaSelectedSlot !== null) {
+      const selDate = (state.agendaDates ?? [])[state.agendaSelectedIndex]
+      const selSlot = selDate?.slots.find(s => s.key === state.agendaSelectedSlot)
+      if (selDate && selSlot) {
+        preBookedOverride = {
+          preBookedDate: selDate.dateKey,
+          preBookedLabel: `${selDate.label} · ${selSlot.label}`,
+          preBookedCalendarId: selSlot.calendarId,
+        }
+        track('pre_booking_confirmed', { date: selDate.dateKey, slot: selSlot.key })
+      }
+    }
+    skipPreBookRef.current = false
+
+    // Step 1 (any path) or step 2 → call API → step 3
+    const isCargadorStep = state.step === 2 || state.step === 1
+
+    // Cargador step → call API → Cotización (step 3)
+    if (isCargadorStep) {
       update({ estimateLoading: true })
       try {
-        const isWallbox = state.tipoC === 'wallbox'
+        const isWallbox = (state.tipoC ?? 'wallbox') === 'wallbox'
         const isPortable = state.tipoC === 'portable'
         const isHouse = state.tipo === 'casa'
         const charger = state.chargerId !== 'own' ? chargerList.find(c => c.id === state.chargerId) : null
@@ -560,7 +691,7 @@ export default function CotizadorWizard() {
             trackUnique('step_3_loaded', { formId, total: totalNeto + totalIva, typeOfResidence })
             update({
               estimateLoading: false,
-              step: 2,
+              step: 3,
               formId,
               nextVisitDate: (data as any).nextAvailableDate ?? null,
               apiResult: {
@@ -576,6 +707,7 @@ export default function CotizadorWizard() {
                 chargerGrossPrice,
                 installGross,
               },
+              ...(preBookedOverride ?? {}),
             })
             return
           }
@@ -587,20 +719,23 @@ export default function CotizadorWizard() {
         console.error('[cotizador] fetch /api/cotizar failed, falling back to local calc:', err)
       }
       trackUnique('step_3_loaded', { formId: state.formId, total: result?.total, typeOfResidence })
-      update({ estimateLoading: false, step: 2 })
+      update({ estimateLoading: false, step: 3, ...(preBookedOverride ?? {}) })
       return
     }
 
-    if (state.step < 2) {
-      trackUnique('step_2_loaded', { step: 2, typeOfResidence })
+    if (state.step < 3) {
       update({ step: state.step + 1 })
     }
   }
 
   function goBack() {
-    if (state.step > 0) {
-      update({ step: state.step - 1, activePanel: null })
+    if (state.step === 0) return
+    if (state.step === 2 && state.path === 'cotizar') {
+      // Cargador step with direct path → back to tipo (skip agenda step 1)
+      update({ step: 0, activePanel: null })
+      return
     }
+    update({ step: state.step - 1, activePanel: null, ...(state.step === 1 ? { path: null, agendaSelectedIndex: null, agendaSelectedSlot: null } : {}) })
   }
 
   // ─── Step tracking helper ─────────────────────────────────────────────────────
@@ -735,6 +870,78 @@ export default function CotizadorWizard() {
       tokenInput.name = 'token_ws'
       tokenInput.value = data.token
       form.appendChild(tokenInput)
+      document.body.appendChild(form)
+      form.submit()
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al procesar el pago'
+      update({ webpayLoading: false, webpayError: message })
+    }
+  }
+
+  async function payWithReservation(amount: number, calendarId: string) {
+    update({ webpayLoading: true, webpayError: '' })
+    const email = state.emailPago?.trim().toLowerCase()
+    if (!email || !calendarId) {
+      update({ webpayLoading: false, webpayError: 'Faltan datos requeridos' })
+      return
+    }
+    try {
+      // 1. Upsert customer — MakeReservationAndCart (server-side) requires customer to exist
+      await fetch('/api/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: state.nombreEmail || email,
+          phone: state.visitaTelefono || '',
+          address: state.address || '',
+          city: state.addressCity || '',
+          state: state.addressState || '',
+          typeOfResidence: state.tipo === 'casa' ? 'house' : 'appartment',
+          formId: state.formId ?? null,
+        }),
+      })
+
+      // 2. Create reservation + start Webpay — all server-side via /api/payment
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          total: amount,
+          vat: 0,
+          email,
+          glosa: 'Visita técnica · Instalación cargador',
+          typeOfCart: 'visit',
+          typeOfItem: 'visit',
+          calendarId,
+          formId: state.formId ?? null,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.token) {
+        throw new Error(data.error ?? 'Error al iniciar el pago')
+      }
+
+      sessionStorage.setItem('paymentData', JSON.stringify({
+        tipo: state.tipo ?? '',
+        email,
+        nombre: state.nombreEmail ?? '',
+        telefono: state.visitaTelefono ?? '',
+        total: amount,
+        formId: state.formId ?? '',
+        paymentType: 'visitaTecnica',
+      }))
+
+      trackUnique('webpay_initiated', { total: amount, selectedPaymentOption: 'visit' })
+
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = data.url
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = 'token_ws'
+      input.value = data.token
+      form.appendChild(input)
       document.body.appendChild(form)
       form.submit()
     } catch (err: unknown) {
@@ -1057,14 +1264,15 @@ export default function CotizadorWizard() {
   }
 
   function handleBookDate() {
-    update({ booked: true, step: 4 })
+    update({ booked: true, step: 5 })
   }
 
   function resetAll() {
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
-    setState({
+    // ponytail: partial reset — conserva ubicación/distancia/pisos (UX spec v4)
+    setState(prev => ({
       step: 0,
-      tipo: null,
+      tipo: prev.tipo,
       address: '',
       addressValidated: false,
       addressCity: '',
@@ -1076,7 +1284,7 @@ export default function CotizadorWizard() {
       regionWarn: false,
       tipoC: null,
       chargerId: null,
-      dist: 10,
+      dist: prev.dist,
       activePanel: null,
       visitaTelefono: '',
       depto: '',
@@ -1103,14 +1311,24 @@ export default function CotizadorWizard() {
       reservePendingAmount: null,
       reservePendingGlosa: '',
       showEdificioData: false,
-      edificioFloor: '',
-      edificioParkingFloor: '',
-      edificioVisitorParking: null,
+      edificioFloor: prev.edificioFloor,
+      edificioParkingFloor: prev.edificioParkingFloor,
+      edificioVisitorParking: prev.edificioVisitorParking,
       edificioRol: '',
       edificioUsersEV: '',
       edificioOption: null,
       removedChargerId: null,
-    })
+      showElectrolineraForm: false,
+      showVisitaForm: false,
+      path: null,
+      preBookedDate: null,
+      preBookedLabel: null,
+      preBookedCalendarId: null,
+      agendaDates: null,
+      agendaDatesLoading: false,
+      agendaSelectedIndex: null,
+      agendaSelectedSlot: null,
+    }))
   }
 
   // ─── Step renderers ───────────────────────────────────────────────────────
@@ -1128,7 +1346,7 @@ export default function CotizadorWizard() {
           <Grid size={{ xs: 6 }}>
             <SelectionCard
               selected={state.tipo === 'casa'}
-              onClick={() => { track('tipo_selected', { tipo: 'casa' }); update({ tipo: 'casa' }) }}
+              onClick={() => { track('tipo_selected', { tipo: 'casa' }); update({ tipo: 'casa', tipoC: 'wallbox', chargerId: 'own' }) }}
               icon="🏠"
               title="Casa"
               subtitle="Estacionamiento propio"
@@ -1140,87 +1358,282 @@ export default function CotizadorWizard() {
               onClick={() => { track('tipo_selected', { tipo: 'edificio' }); update({ tipo: 'edificio' }) }}
               icon="🏢"
               title="Edificio"
-              subtitle="Estacionamiento propio"
+              subtitle="Depto · propiedad horizontal"
             />
           </Grid>
         </Grid>
 
+        {/* Distance slider — solo para Casa */}
+        {state.tipo !== 'edificio' && (
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>
+              Distancia al tablero eléctrico
+            </Typography>
+            <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 2 }}>
+              Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+            </Typography>
+            <Box sx={{ px: 1 }}>
+              <Slider
+                value={state.dist}
+                min={1}
+                max={60}
+                marks={SLIDER_MARKS}
+                onChange={(_, v) => { update({ dist: v as number }); track('distance_changed', { distance: v as number, step: 0 }) }}
+                onChangeCommitted={(_, v) => track('distance_final', { distance: v as number, step: 0 })}
+                sx={{ color: PINK, '& .MuiSlider-markLabel': { fontSize: '0.65rem', color: TEXT_MUTED } }}
+              />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+              <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>{distLabel(state.dist)}</Typography>
+              <Chip label={`${state.dist} m`} size="small" sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700 }} />
+            </Box>
+          </Box>
+        )}
+
+        {/* Edificio: campos de ubicación dentro del edificio */}
+        {state.tipo === 'edificio' && (
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
+              Ubicación dentro del edificio
+            </Typography>
+            <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 2 }}>
+              Con esto estimamos la distancia al tablero (≈ 4 m por piso).
+            </Typography>
+            <Grid container spacing={2} sx={{ mb: 2.5 }}>
+              <Grid size={{ xs: 6 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>Piso donde vives</Typography>
+                <TextField
+                  fullWidth size="small" type="number" placeholder="Ej: 12"
+                  value={state.edificioFloor}
+                  onChange={e => {
+                    const v = e.target.value
+                    update({ edificioFloor: v })
+                    const mine = parseInt(v)
+                    const park = parseInt(state.edificioParkingFloor)
+                    if (!isNaN(mine) && !isNaN(park)) update({ dist: Math.max(1, Math.abs(mine - park) * 4) })
+                  }}
+                  sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff', '& fieldset': { borderColor: BORDER }, '&:hover fieldset': { borderColor: TEAL }, '&.Mui-focused fieldset': { borderColor: TEAL } } }}
+                />
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>Piso del estacionamiento</Typography>
+                <TextField
+                  fullWidth size="small" type="number" placeholder="Ej: -2"
+                  value={state.edificioParkingFloor}
+                  onChange={e => {
+                    const v = e.target.value
+                    update({ edificioParkingFloor: v })
+                    const mine = parseInt(state.edificioFloor)
+                    const park = parseInt(v)
+                    if (!isNaN(mine) && !isNaN(park)) update({ dist: Math.max(1, Math.abs(mine - park) * 4) })
+                  }}
+                  sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff', '& fieldset': { borderColor: BORDER }, '&:hover fieldset': { borderColor: TEAL }, '&.Mui-focused fieldset': { borderColor: TEAL } } }}
+                />
+              </Grid>
+            </Grid>
+            {/* Distance estimate pill — shown once both floors are entered */}
+            {state.edificioFloor.trim() !== '' && state.edificioParkingFloor.trim() !== '' && !isNaN(parseInt(state.edificioFloor)) && !isNaN(parseInt(state.edificioParkingFloor)) && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                <Chip
+                  label={`${Math.abs(parseInt(state.edificioFloor) - parseInt(state.edificioParkingFloor))} pisos · ~${state.dist}m`}
+                  size="small"
+                  sx={{ bgcolor: 'rgba(232,26,104,0.08)', color: PINK, fontWeight: 700, fontSize: '0.8rem', px: 0.5 }}
+                />
+              </Box>
+            )}
+
+            <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5, color: '#2A3547' }}>
+              ¿El edificio tiene estacionamiento de visitas?
+            </Typography>
+            <Grid container spacing={2} sx={{ mb: 1.5 }}>
+              <Grid size={{ xs: 6 }}>
+                <Box onClick={() => update({ edificioVisitorParking: true })} role="button" tabIndex={0}
+                  sx={{ border: `2px solid ${state.edificioVisitorParking === true ? PINK : BORDER}`, borderRadius: 2, p: 2, cursor: 'pointer', bgcolor: state.edificioVisitorParking === true ? 'rgba(232,26,104,0.04)' : '#fff', textAlign: 'center', transition: 'all 0.2s', '&:hover': { borderColor: PINK } }}
+                >
+                  <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === true ? PINK : '#2A3547' }}>Sí</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <Box onClick={() => update({ edificioVisitorParking: false })} role="button" tabIndex={0}
+                  sx={{ border: `2px solid ${state.edificioVisitorParking === false ? PINK : BORDER}`, borderRadius: 2, p: 2, cursor: 'pointer', bgcolor: state.edificioVisitorParking === false ? 'rgba(232,26,104,0.04)' : '#fff', textAlign: 'center', transition: 'all 0.2s', '&:hover': { borderColor: PINK } }}
+                >
+                  <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === false ? PINK : '#2A3547' }}>No</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+            {(!state.edificioFloor.trim() || !state.edificioParkingFloor.trim() || state.edificioVisitorParking === null) && (
+              <Typography sx={{ fontSize: '0.82rem', color: PINK, textAlign: 'center', mt: 1 }}>
+                Completa los pisos y el estacionamiento de visitas para continuar.
+              </Typography>
+            )}
+          </Box>
+        )}
+
+        {/* Dual CTAs v4 */}
+        {(() => {
+          const edificioIncomplete = state.tipo === 'edificio' && (!state.edificioFloor.trim() || !state.edificioParkingFloor.trim() || state.edificioVisitorParking === null)
+          const ctaDisabled = !state.tipo || edificioIncomplete
+          return (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
+            <Button
+              fullWidth variant="contained" disabled={ctaDisabled}
+              onClick={() => { track('agenda_path_selected', { tipo: state.tipo }); update({ path: 'agendar', step: 1 }) }}
+              sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+            >
+              📅 Agenda visita y cotizar
+            </Button>
+            <Button
+              fullWidth variant="outlined" disabled={ctaDisabled}
+              onClick={() => { track('direct_path_selected', { tipo: state.tipo }); trackUnique('step_2_loaded', { step: 2, typeOfResidence }); update({ path: 'cotizar', step: 1 }) }}
+              sx={{ borderColor: TEAL, color: TEAL, '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.04)', color: '#e81a68' }, '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' }, fontWeight: 600, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2 }}
+            >
+              Solo quiero la cotización →
+            </Button>
+            {state.tipo === 'casa' && (
+              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, textAlign: 'center', mt: 0.5 }}>
+                Puedes ver la disponibilidad y reservar tu horario ahora, o revisar tu precio primero y agendar después.
+              </Typography>
+            )}
+          </Box>
+          )
+        })()}
 
       </Box>
     )
   }
 
+  function renderStep1Agenda() {
+    const dates = state.agendaDates ?? []
+    const selectedIdx = state.agendaSelectedIndex
+    const selectedSlot = state.agendaSelectedSlot
+
+    return (
+      <Box>
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
+          Elige una fecha disponible
+        </Typography>
+        <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3, lineHeight: 1.6 }}>
+          Selecciona el día y la banda horaria que prefieres para tu visita técnica.
+        </Typography>
+
+        {state.agendaDatesLoading ? (
+          <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, textAlign: 'center', py: 4 }}>
+            Cargando fechas disponibles…
+          </Typography>
+        ) : dates.length === 0 ? (
+          <Box sx={{ p: 2, bgcolor: SURFACE, borderRadius: 2, mb: 3, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED }}>
+              No hay fechas disponibles en este momento.
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 3 }}>
+            {dates.map((d, i) => {
+              const isSelected = selectedIdx === i
+              return (
+                <Box
+                  key={d.dateKey}
+                  onClick={d.available ? () => {
+                    if (selectedIdx !== i) {
+                      track('pre_booking_date_selected', { date: d.dateKey })
+                      update({ agendaSelectedIndex: i, agendaSelectedSlot: null })
+                    }
+                  } : undefined}
+                  sx={{
+                    p: 2, borderRadius: 2,
+                    border: `1.5px solid ${isSelected ? PINK : d.available ? BORDER : 'transparent'}`,
+                    bgcolor: isSelected ? 'rgba(232,26,104,0.03)' : d.available ? '#fff' : SURFACE,
+                    cursor: d.available ? 'pointer' : 'default',
+                    opacity: d.available ? 1 : 0.45,
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {/* Date header row */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: isSelected ? 1.5 : 0 }}>
+                    <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#2A3547', textTransform: 'capitalize' }}>
+                      {d.label}
+                    </Typography>
+                    {d.available ? (
+                      <Chip
+                        label="Disponible"
+                        size="small"
+                        sx={{ fontSize: '0.65rem', fontWeight: 600, height: 22, bgcolor: '#EBF7F9', color: TEAL }}
+                      />
+                    ) : (
+                      <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>No disponible</Typography>
+                    )}
+                  </Box>
+
+                  {/* Time bands — only shown for selected date */}
+                  {isSelected && d.slots.length > 0 && (
+                    <Box>
+                      <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 1.25 }}>
+                        Elige una banda horaria · rango hábil 09:00 a 18:00 hrs
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        {d.slots.map(slot => (
+                          <Box
+                            key={slot.key}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              update({ agendaSelectedSlot: slot.key })
+                            }}
+                            sx={{
+                              flex: '1 1 auto',
+                              textAlign: 'center',
+                              py: 1.25, px: 1,
+                              borderRadius: 2,
+                              border: `1.5px solid ${selectedSlot === slot.key ? PINK : BORDER}`,
+                              bgcolor: selectedSlot === slot.key ? 'rgba(232,26,104,0.06)' : '#fff',
+                              cursor: 'pointer',
+                              transition: 'all 0.12s',
+                              '&:hover': { borderColor: PINK },
+                            }}
+                          >
+                            <Typography sx={{ fontSize: '0.8rem', fontWeight: selectedSlot === slot.key ? 700 : 500, color: selectedSlot === slot.key ? PINK : '#2A3547' }}>
+                              {slot.label}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              )
+            })}
+          </Box>
+        )}
+
+        <Button
+          fullWidth
+          variant="text"
+          onClick={() => {
+            track('pre_booking_skipped')
+            skipPreBookRef.current = true
+            goNext()
+          }}
+          sx={{ color: TEXT_MUTED, fontSize: '0.82rem', mt: 1, '&:hover': { color: '#2A3547' } }}
+        >
+          Prefiero elegir la fecha después →
+        </Button>
+      </Box>
+    )
+  }
+
   function renderStep1() {
-    const portables = chargerList.filter(c => c.tipo === 'portable')
     const wallboxes = chargerList.filter(c => c.tipo === 'wallbox')
 
     return (
       <Box>
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
-          Tipo de cargador
+          Tu cargador
         </Typography>
         <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3 }}>
-          Los wallbox se instalan fijos en la pared. Los portátiles son más flexibles.
+          Selecciona el modelo o indica que ya tienes tu cargador
         </Typography>
 
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid size={{ xs: 6 }}>
-            <SelectionCard
-              selected={state.tipoC === 'portable'}
-              onClick={() => update({ tipoC: 'portable', chargerId: 'own' })}
-              icon="🔌"
-              title="Portátil"
-              subtitle="Cable de carga"
-            />
-          </Grid>
-          <Grid size={{ xs: 6 }}>
-            <SelectionCard
-              selected={state.tipoC === 'wallbox'}
-              onClick={() => update({ tipoC: 'wallbox', chargerId: 'own' })}
-              icon="⚡"
-              title="Wallbox"
-              subtitle="Mayor potencia · Fijo en pared"
-            />
-          </Grid>
-        </Grid>
-
-        {/* Portátil list */}
-        {state.tipoC === 'portable' && (
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1.5, color: '#2A3547' }}>
-              Selecciona tu cargador portátil
-            </Typography>
-            {portables.map(c => (
-              <ChargerListItem
-                key={c.id}
-                charger={c}
-                selected={state.chargerId === c.id}
-                onClick={() => { track('charger_selected', { charger: c.name, type: c.tipo, step: 2 }); update({ chargerId: c.id }) }}
-              />
-            ))}
-            <Box
-              onClick={() => update({ chargerId: 'own' })}
-              sx={{
-                border: `2px solid ${state.chargerId === 'own' ? PINK : BORDER}`,
-                borderRadius: 2,
-                p: 2,
-                cursor: 'pointer',
-                bgcolor: state.chargerId === 'own' ? 'rgba(232,26,104,0.04)' : '#fff',
-                transition: 'all 0.2s',
-                '&:hover': { borderColor: PINK },
-                mb: 1,
-              }}
-            >
-              <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', color: state.chargerId === 'own' ? PINK : '#2A3547' }}>
-                Ya tengo mi cargador
-              </Typography>
-              <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED }}>Solo necesito la instalación</Typography>
-            </Box>
-          </Box>
-        )}
-
-        {/* Wallbox dropdown Select (Image #13 style) */}
-        {state.tipoC === 'wallbox' && (
+        {/* Wallbox model dropdown — only shown for edificio */}
+        {state.tipo !== 'casa' && (
           <Box>
             <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
               Modelo
@@ -1288,896 +1701,10 @@ export default function CotizadorWizard() {
           </Box>
         </Box>
 
-        {/* Edificio extra fields — only shown when tipo === 'edificio' */}
-        {state.tipo === 'edificio' && (
-          <Box sx={{ mt: 3, pt: 3, borderTop: `1px solid ${BORDER}` }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>
-              Cuéntanos de tu edificio
-            </Typography>
-            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2.5, lineHeight: 1.6 }}>
-              El costo depende del recorrido del cable desde el tablero común hasta tu estacionamiento.
-            </Typography>
-
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-              ¿En qué piso vives?
-            </Typography>
-            <TextField
-              fullWidth
-              size="small"
-              type="number"
-              placeholder="5"
-              inputProps={{ min: -10, max: 60 }}
-              value={state.edificioFloor}
-              onChange={e => update({ edificioFloor: e.target.value })}
-              error={state.tipo === 'edificio' && !state.edificioFloor.trim()}
-              helperText={state.tipo === 'edificio' && !state.edificioFloor.trim() ? 'Requerido para cotizar' : ''}
-              sx={{
-                mb: 2.5,
-                '& .MuiOutlinedInput-root': {
-                  bgcolor: '#fff',
-                  '& fieldset': { borderColor: BORDER },
-                  '&:hover fieldset': { borderColor: TEAL },
-                  '&.Mui-focused fieldset': { borderColor: TEAL },
-                },
-              }}
-            />
-
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-              ¿En qué piso está tu estacionamiento?
-            </Typography>
-            <FormControl fullWidth size="small" sx={{ mb: 2.5 }} error={state.tipo === 'edificio' && !state.edificioParkingFloor}>
-              <Select
-                displayEmpty
-                value={state.edificioParkingFloor}
-                onChange={(e: SelectChangeEvent<string>) => update({ edificioParkingFloor: e.target.value as string })}
-                renderValue={(val: string) =>
-                  val
-                    ? val
-                    : <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
-                }
-                sx={{
-                  bgcolor: '#fff',
-                  '& .MuiOutlinedInput-notchedOutline': { borderColor: BORDER },
-                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
-                  fontSize: '0.875rem',
-                }}
-              >
-                <MenuItem value="" disabled>
-                  <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
-                </MenuItem>
-                {PARKING_FLOORS.map(f => (
-                  <MenuItem key={f} value={f} sx={{ fontSize: '0.875rem' }}>{f}</MenuItem>
-                ))}
-              </Select>
-              {state.tipo === 'edificio' && !state.edificioParkingFloor && (
-                <FormHelperText>Requerido para cotizar</FormHelperText>
-              )}
-            </FormControl>
-
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5, color: '#2A3547' }}>
-              ¿Tu edificio tiene estacionamiento de visitas?
-            </Typography>
-            <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 1.5 }}>
-              Es donde podríamos instalar la electrolinera compartida.
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 6 }}>
-                <Box
-                  onClick={() => update({ edificioVisitorParking: true })}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: true })}
-                  sx={{
-                    border: `2px solid ${state.edificioVisitorParking === true ? PINK : BORDER}`,
-                    borderRadius: 2,
-                    p: 2,
-                    cursor: 'pointer',
-                    bgcolor: state.edificioVisitorParking === true ? 'rgba(232,26,104,0.04)' : '#fff',
-                    textAlign: 'center',
-                    transition: 'all 0.2s',
-                    '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
-                  }}
-                >
-                  <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === true ? PINK : '#2A3547' }}>
-                    Sí
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid size={{ xs: 6 }}>
-                <Box
-                  onClick={() => update({ edificioVisitorParking: false })}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: false })}
-                  sx={{
-                    border: `2px solid ${state.edificioVisitorParking === false ? PINK : BORDER}`,
-                    borderRadius: 2,
-                    p: 2,
-                    cursor: 'pointer',
-                    bgcolor: state.edificioVisitorParking === false ? 'rgba(232,26,104,0.04)' : '#fff',
-                    textAlign: 'center',
-                    transition: 'all 0.2s',
-                    '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
-                  }}
-                >
-                  <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === false ? PINK : '#2A3547' }}>
-                    No
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        )}
       </Box>
     )
   }
 
-  // ─── Step: edificio data collection ──────────────────────────────────────────
-  function renderEdificioData() {
-    return (
-      <Box>
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
-          Cuéntanos de tu edificio
-        </Typography>
-        <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, mb: 3, lineHeight: 1.6 }}>
-          En edificios el costo depende del recorrido del cable desde el tablero común hasta tu estacionamiento.
-        </Typography>
-
-        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-          ¿En qué piso vives?
-        </Typography>
-        <TextField
-          fullWidth
-          size="small"
-          type="number"
-          placeholder="5"
-          inputProps={{ min: -10, max: 60 }}
-          value={state.edificioFloor}
-          onChange={e => update({ edificioFloor: e.target.value })}
-          error={state.tipo === 'edificio' && !state.edificioFloor.trim()}
-          helperText={state.tipo === 'edificio' && !state.edificioFloor.trim() ? 'Requerido para cotizar' : ''}
-          sx={{
-            mb: 3,
-            '& .MuiOutlinedInput-root': {
-              bgcolor: '#fff',
-              '& fieldset': { borderColor: BORDER },
-              '&:hover fieldset': { borderColor: TEAL },
-              '&.Mui-focused fieldset': { borderColor: TEAL },
-            },
-          }}
-        />
-
-        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-          ¿En qué piso está tu estacionamiento?
-        </Typography>
-        <FormControl fullWidth size="small" sx={{ mb: 3 }} error={state.tipo === 'edificio' && !state.edificioParkingFloor}>
-          <Select
-            displayEmpty
-            value={state.edificioParkingFloor}
-            onChange={(e: SelectChangeEvent<string>) => update({ edificioParkingFloor: e.target.value as string })}
-            renderValue={(val: string) =>
-              val
-                ? val
-                : <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
-            }
-            sx={{
-              bgcolor: '#fff',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: BORDER },
-              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: TEAL },
-              fontSize: '0.875rem',
-            }}
-          >
-            <MenuItem value="" disabled>
-              <Typography sx={{ color: TEXT_MUTED, fontSize: '0.875rem' }}>Selecciona un piso…</Typography>
-            </MenuItem>
-            {PARKING_FLOORS.map(f => (
-              <MenuItem key={f} value={f} sx={{ fontSize: '0.875rem' }}>{f}</MenuItem>
-            ))}
-          </Select>
-          {state.tipo === 'edificio' && !state.edificioParkingFloor && (
-            <FormHelperText>Requerido para cotizar</FormHelperText>
-          )}
-        </FormControl>
-
-        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5, color: '#2A3547' }}>
-          ¿Tu edificio tiene estacionamiento de visitas?
-        </Typography>
-        <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mb: 1.5 }}>
-          Es donde podríamos instalar la electrolinera compartida.
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 6 }}>
-            <Box
-              onClick={() => update({ edificioVisitorParking: true })}
-              role="button"
-              tabIndex={0}
-              onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: true })}
-              sx={{
-                border: `2px solid ${state.edificioVisitorParking === true ? PINK : BORDER}`,
-                borderRadius: 2,
-                p: 2,
-                cursor: 'pointer',
-                bgcolor: state.edificioVisitorParking === true ? 'rgba(232,26,104,0.04)' : '#fff',
-                textAlign: 'center',
-                transition: 'all 0.2s',
-                '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
-              }}
-            >
-              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === true ? PINK : '#2A3547' }}>
-                Sí
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 6 }}>
-            <Box
-              onClick={() => update({ edificioVisitorParking: false })}
-              role="button"
-              tabIndex={0}
-              onKeyDown={e => e.key === 'Enter' && update({ edificioVisitorParking: false })}
-              sx={{
-                border: `2px solid ${state.edificioVisitorParking === false ? PINK : BORDER}`,
-                borderRadius: 2,
-                p: 2,
-                cursor: 'pointer',
-                bgcolor: state.edificioVisitorParking === false ? 'rgba(232,26,104,0.04)' : '#fff',
-                textAlign: 'center',
-                transition: 'all 0.2s',
-                '&:hover': { borderColor: PINK, bgcolor: 'rgba(232,26,104,0.04)' },
-              }}
-            >
-              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === false ? PINK : '#2A3547' }}>
-                No
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-    )
-  }
-
-  // ─── Step 2: edificio option selector ────────────────────────────────────────
-  function renderStep2Edificio() {
-    const localResult = result
-    const displayResult = state.apiResult ?? localResult
-    if (!displayResult) return null
-
-    const RANGE_LOW = 1350000
-    const RANGE_HIGH = 3110000
-
-    return (
-      <Box id="COTIZADOR-RESULTADO">
-        <Box sx={{ textAlign: 'center', mb: 2 }}>
-          <Typography sx={{ fontSize: '0.95rem', fontWeight: 700, color: '#2A3547' }}>
-            Tu estimación referencial
-          </Typography>
-          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.25 }}>
-            Edificio · recorrido estimado {state.dist} m
-          </Typography>
-        </Box>
-
-        {/* Community notice */}
-        <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1.5, p: 2, mb: 3 }}>
-          <Box sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
-            <Typography sx={{ fontSize: '1rem', flexShrink: 0 }}>🏢</Typography>
-            <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: '#2A3547', lineHeight: 1.4 }}>
-              En un edificio no decides solo: necesitas el OK de la comunidad
-            </Typography>
-          </Box>
-          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, lineHeight: 1.6, pl: '1.75rem' }}>
-            Por eso no te cobramos una instalación que aún no está aprobada. Te damos las herramientas para conseguir ese permiso — y la opción que casi siempre lo logra más rápido.
-          </Typography>
-        </Box>
-
-        {/* Price range */}
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, mb: 0.5, letterSpacing: '0.03em' }}>
-            Rango referencial de instalación dedicada
-          </Typography>
-          <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.75rem' }, fontWeight: 900, color: '#2A3547', lineHeight: 1.1 }}>
-            {fmt(RANGE_LOW)} – {fmt(RANGE_HIGH)}
-          </Typography>
-          <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.5 }}>
-            El precio definitivo se confirma con visita técnica.
-          </Typography>
-        </Box>
-
-        {/* Option 1: Instalación dedicada */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: { xs: 2, sm: 2.5 }, mb: 2 }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.75 }}>
-            Instalación dedicada en tu estacionamiento
-          </Typography>
-          <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.6 }}>
-            Recibe tu presupuesto definitivo <strong>+ el kit para conseguir la aprobación</strong> de tu comunidad.
-          </Typography>
-
-          <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', mb: 1.25, color: '#2A3547' }}>
-            Después de pagar la visita recibes:
-          </Typography>
-          {[
-            'Visita técnica con profesional certificado SEC',
-            'Presupuesto definitivo en 48 horas',
-            'Carta tipo para presentar a la administración',
-            'Memoria técnica firmada',
-            'Fotos del recorrido propuesto',
-          ].map(item => (
-            <Box key={item} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
-              <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-              <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', lineHeight: 1.5 }}>{item}</Typography>
-            </Box>
-          ))}
-
-          <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1.5 }}>
-              <Typography sx={{ fontWeight: 900, fontSize: '1.5rem', color: '#2A3547' }}>$9.990</Typography>
-              <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>acreditable al presupuesto final</Typography>
-            </Box>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => {
-                if (state.activePanel !== 'visitaPago') trackUnique('cta_kit_edificio', { step: 3, typeOfResidence })
-                update({ activePanel: state.activePanel === 'visitaPago' ? null : 'visitaPago' })
-              }}
-              sx={{
-                bgcolor: state.activePanel === 'visitaPago' ? '#94A3B8' : PINK,
-                '&:hover': { bgcolor: state.activePanel === 'visitaPago' ? '#64748B' : PINK_DARK },
-                fontWeight: 700,
-                py: 1.25,
-                fontSize: '0.9rem',
-                boxShadow: 'none',
-                borderRadius: 2,
-              }}
-            >
-              Pagar visita y recibir mi kit →
-            </Button>
-          </Box>
-        </Box>
-
-        {/* Panel datos de contacto para visita técnica */}
-        {state.activePanel === 'visitaPago' && (
-          <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
-              Datos para el comprobante
-            </Typography>
-            {/* Address */}
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-              Dirección de instalación
-            </Typography>
-            <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-              <AddressInput2
-                value={state.address}
-                error={!!state.address && !state.addressValidated}
-                onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                onSelectAddress={(details) => {
-                  if (details) {
-                    const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                    update({
-                      address: full,
-                      addressValidated: true,
-                      addressCity: details.City ?? '',
-                      addressState: details.State ?? '',
-                      addressZipCode: details.ZipCode ?? '',
-                      addressLat: String(details.Latitude ?? ''),
-                      addressLng: String(details.Longitude ?? ''),
-                      regionWarn: false,
-                    })
-                  }
-                }}
-              />
-            </Box>
-            {state.address && !state.addressValidated && (
-              <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                Completa los tres campos de dirección para continuar
-              </Typography>
-            )}
-            {state.address && !isServiceable(state.addressState) && (
-              <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                  Por ahora solo atendemos Región Metropolitana y Valparaíso
-                </Typography>
-              </Box>
-            )}
-            <TextField
-              fullWidth
-              size="small"
-              label="Tu nombre completo (opcional)"
-              value={state.nombreEmail}
-              onChange={e => update({ nombreEmail: e.target.value })}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              size="small"
-              required
-              label="Email para comprobante"
-              type="email"
-              value={state.emailPago}
-              onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }}
-              helperText="Requerido para proceder al pago"
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              size="small"
-              label="Teléfono"
-              type="tel"
-              value={state.visitaTelefono}
-              onChange={e => update({ visitaTelefono: e.target.value })}
-              sx={{ mb: 2.5 }}
-            />
-            {state.webpayError && (
-              <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
-                {state.webpayError}
-              </Alert>
-            )}
-            <Button
-              fullWidth
-              variant="contained"
-              disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-              onClick={() => payDirect(9990, 'Visita técnica · Instalación dedicada edificio', 'visit')}
-              sx={{
-                bgcolor: PINK,
-                color: '#fff',
-                '&:hover': { bgcolor: PINK_DARK },
-                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                fontWeight: 700,
-                py: 1.5,
-                fontSize: '0.95rem',
-                boxShadow: 'none',
-              }}
-            >
-              {state.webpayLoading ? 'Redirigiendo…' : 'Pagar $9.990 con Webpay →'}
-            </Button>
-            <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-              Pago seguro · Visa, Mastercard, Redcompra, débito
-            </Typography>
-          </Box>
-        )}
-
-        {/* Option 2: Electrolinera compartida */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, overflow: 'hidden', mb: 3 }}>
-          <Box sx={{ bgcolor: PINK, px: 2, py: 0.875, display: 'flex', alignItems: 'center', gap: 0.75 }}>
-            <Typography sx={{ fontSize: '0.8rem' }}>🔥</Typography>
-            <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.08em' }}>
-              LA MÁS ELEGIDA
-            </Typography>
-          </Box>
-          <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 0.5 }}>
-              Electrolinera compartida · sin costo para ti
-            </Typography>
-            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.6 }}>
-              Energica instala y financia un cargador en el estacionamiento de visitas. Pagas solo lo que cargas.
-            </Typography>
-
-            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2.5, mb: 2 }}>
-              <Box>
-                <Typography sx={{ fontWeight: 900, fontSize: '2rem', color: '#2A3547', lineHeight: 1 }}>$0</Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>inversión</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontWeight: 700, fontSize: '1.1rem', color: '#2A3547', lineHeight: 1 }}>$330/kWh</Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED }}>solo lo que cargas</Typography>
-              </Box>
-            </Box>
-
-            {[
-              'Sin obra en tu estacionamiento privado',
-              'No requiere asamblea sobre tu estacionamiento, solo permiso de uso común',
-              'La opción más fácil y rápida de aprobar',
-            ].map(item => (
-              <Box key={item} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
-                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', lineHeight: 1.5 }}>{item}</Typography>
-              </Box>
-            ))}
-
-            <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', mt: 2, mb: 1.25, color: '#2A3547' }}>
-              Te entregamos para tu comité:
-            </Typography>
-            {[
-              'Presentación lista para llevar a la reunión',
-              'Carta de solicitud de autorización',
-              'Visita comercial a la administración (si la pides)',
-            ].map(item => (
-              <Box key={item} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
-                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', lineHeight: 1.5 }}>{item}</Typography>
-              </Box>
-            ))}
-
-            <Box sx={{ mt: 2.5 }}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => {
-                  if (state.activePanel !== 'electrolinera') trackUnique('cta_form_electrolinera', { step: 3, typeOfResidence })
-                  update({ activePanel: state.activePanel === 'electrolinera' ? null : 'electrolinera' })
-                }}
-                sx={{
-                  bgcolor: state.activePanel === 'electrolinera' ? '#94A3B8' : PINK,
-                  '&:hover': { bgcolor: state.activePanel === 'electrolinera' ? '#64748B' : PINK_DARK },
-                  fontWeight: 700,
-                  py: 1.25,
-                  fontSize: '0.9rem',
-                  boxShadow: 'none',
-                  borderRadius: 2,
-                }}
-              >
-                Quiero electrolinera en mi edificio →
-              </Button>
-              {state.activePanel === 'electrolinera' && (
-                <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
-                  {state.electrolineraSubmitted ? (
-                    <Box sx={{ textAlign: 'center', py: 2 }}>
-                      <Typography sx={{ fontSize: '2rem', mb: 1 }}>✅</Typography>
-                      <Typography sx={{ fontWeight: 700, color: '#166534', mb: 0.5, fontSize: '1rem' }}>
-                        ¡Postulación enviada correctamente!
-                      </Typography>
-                      <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, lineHeight: 1.6 }}>
-                        Nuestro equipo evaluará la factibilidad técnica. Recibirás una respuesta lo antes posible.
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <>
-                  <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>
-                    Regístrate para recibir tu kit
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.5 }}>
-                    Te enviamos todo lo que necesitas para presentar en la próxima reunión de tu comunidad.
-                  </Typography>
-                  {/* Dirección con validación Google Maps + RM only */}
-                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-                    Dirección del edificio
-                  </Typography>
-                  <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-                    <AddressInput2
-                      value={state.address}
-                      error={!!state.address && !state.addressValidated}
-                      onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                      onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                      onSelectAddress={(details) => {
-                        if (details) {
-                          const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                          update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
-                        }
-                      }}
-                    />
-                  </Box>
-                  {state.address && !state.addressValidated && (
-                    <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                      Completa los tres campos de dirección para continuar
-                    </Typography>
-                  )}
-                  {state.address && !isServiceable(state.addressState) && (
-                    <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                      <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                        Por ahora solo atendemos Región Metropolitana y Valparaíso
-                      </Typography>
-                    </Box>
-                  )}
-                  <TextField fullWidth size="small" label="Nombre"
-                    value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                  <TextField fullWidth size="small" label="Email" type="email"
-                    value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} sx={{ mb: 2 }} />
-                  <TextField fullWidth size="small" label="Teléfono" type="tel"
-                    value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
-                  {/* Cargo/Rol */}
-                  <Box sx={{ mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#2A3547', mb: 0.75 }}>
-                      Cargo / Rol
-                    </Typography>
-                    <Select
-                      fullWidth
-                      size="small"
-                      displayEmpty
-                      value={state.edificioRol}
-                      onChange={e => update({ edificioRol: e.target.value })}
-                      sx={{ fontSize: '0.85rem' }}
-                    >
-                      <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Seleccione una opción</em></MenuItem>
-                      <MenuItem value="Administrador(a)">Administrador(a)</MenuItem>
-                      <MenuItem value="Copropietario(a)">Copropietario(a)</MenuItem>
-                      <MenuItem value="Arrendatario(a)">Arrendatario(a)</MenuItem>
-                      <MenuItem value="Miembro del comité de la comunidad">Miembro del comité de la comunidad</MenuItem>
-                      <MenuItem value="Otro">Otro</MenuItem>
-                    </Select>
-                  </Box>
-                  {/* Cantidad usuarios con auto eléctrico */}
-                  <Box sx={{ mb: 2.5 }}>
-                    <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#2A3547', mb: 0.75 }}>
-                      ¿Cantidad de usuarios con auto eléctrico?
-                    </Typography>
-                    <Select
-                      fullWidth
-                      size="small"
-                      displayEmpty
-                      value={state.edificioUsersEV}
-                      onChange={e => update({ edificioUsersEV: e.target.value })}
-                      sx={{ fontSize: '0.85rem' }}
-                    >
-                      <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Seleccione una opción</em></MenuItem>
-                      <MenuItem value="No lo sé">No lo sé</MenuItem>
-                      <MenuItem value="Si hay, pero no sé cuántos">Si hay, pero no sé cuántos</MenuItem>
-                      <MenuItem value="Si hay, 2 o menos">Si hay, 2 o menos</MenuItem>
-                      <MenuItem value="Si hay, más de 2">Si hay, más de 2</MenuItem>
-                      <MenuItem value="No hay">No hay</MenuItem>
-                    </Select>
-                  </Box>
-                  {state.webpayError && (
-                    <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
-                  )}
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-                    onClick={async () => {
-                      if (!state.emailPago.trim() || !state.addressValidated) return
-                      update({ webpayLoading: true, webpayError: '' })
-                      trackUnique('cta_envio_form_electrolinera', { step: 3, typeOfResidence })
-                      try {
-                        const { default: _emailjs2, init: _initEmailjs2 } = await import('emailjs-com')
-                        _initEmailjs2('UYcrSeCqLGW8xqT4S')
-                        const parkingLabel = state.edificioParkingFloor || 'No indicado'
-                        const visitasLabel = state.edificioVisitorParking === true ? 'Sí' : state.edificioVisitorParking === false ? 'No' : 'No indicado'
-                        await _emailjs2.send('service_dbrrm6b', 'template_eysyecb', {
-                          to_email: state.emailPago,
-                          name: state.nombreEmail || state.emailPago,
-                          subject: `Nueva postulación electrolinera — ${state.nombreEmail || state.emailPago}`,
-                          CONTENT_HTML: `
-                            <h3 style="font-family:sans-serif;">Nueva postulación: Electrolinera compartida en edificio</h3>
-                            <table style="border-collapse:collapse;width:100%;font-family:sans-serif;font-size:13px;">
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Nombre</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.nombreEmail || '—'}</td></tr>
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Email</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.emailPago}</td></tr>
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Teléfono</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.visitaTelefono || '—'}</td></tr>
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Dirección edificio</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.address || '—'}</td></tr>
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso departamento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioFloor || '—'}</td></tr>
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso estacionamiento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${parkingLabel}</td></tr>
-                              <tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">¿Tiene estacionamiento visitas?</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${visitasLabel}</td></tr>
-                              ${state.edificioRol ? `<tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Cargo/Rol</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioRol}</td></tr>` : ''}
-                              ${state.edificioUsersEV ? `<tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Usuarios con auto eléctrico</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioUsersEV}</td></tr>` : ''}
-                            </table>
-                            <p style="font-family:sans-serif;font-size:13px;color:#4B4B5C;line-height:1.6;margin-top:16px;">
-                              Nuestro equipo evaluará la factibilidad técnica y la coordinación con la administración o entidad responsable.<br><br>
-                              💡 Este programa está orientado a comunidades, establecimientos y espacios de alto tránsito que busquen fomentar la movilidad eléctrica y compartir el beneficio entre sus residentes, huéspedes, clientes o colaboradores.<br><br>
-                              Recibirás una respuesta de nuestros consultores lo antes posible.
-                            </p>`,
-                        })
-                        track('electrolinera_submitted')
-                        update({ webpayLoading: false, electrolineraSubmitted: true })
-                      } catch {
-                        update({ webpayLoading: false, webpayError: 'No se pudo enviar. Intenta nuevamente.' })
-                      }
-                    }}
-                    sx={{
-                      bgcolor: PINK, color: '#fff',
-                      '&:hover': { bgcolor: PINK_DARK },
-                      '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                      fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2,
-                    }}
-                  >
-                    {state.webpayLoading ? 'Enviando…' : 'Quiero electrolinera en mi edificio →'}
-                  </Button>
-                  <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                    Sin compromiso si la comunidad la rechaza.
-                  </Typography>
-                    </>
-                  )}
-                </Box>
-              )}
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Cómo se aprueba en tu edificio */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: { xs: 2.5, sm: 3 }, mb: 2 }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
-            Cómo se aprueba en tu edificio
-          </Typography>
-
-          {([
-            { n: 1, title: 'Te registras hoy', desc: 'Recibes tu kit por correo' },
-            { n: 2, title: 'Presentas a tu comunidad', desc: 'Con la carta y presentación que te damos' },
-            { n: 3, title: 'Aprobación del comité', desc: 'Te acompañamos en la gestión' },
-            { n: 4, title: 'Instalación', desc: 'Energica instala y financia' },
-          ] as { n: number; title: string; desc: string }[]).map((s, i, arr) => (
-            <Box key={s.n} sx={{ display: 'flex', gap: 2, mb: i < arr.length - 1 ? 2 : 0, alignItems: 'flex-start' }}>
-              <Box sx={{
-                width: 28, height: 28, borderRadius: '50%', bgcolor: PINK,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, mt: 0.1,
-              }}>
-                <Typography sx={{ color: '#fff', fontSize: '0.75rem', fontWeight: 700 }}>{s.n}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547', lineHeight: 1.3 }}>
-                  {s.title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mt: 0.2 }}>
-                  {s.desc}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
-
-          <Box sx={{ mt: 2.5, pt: 2, borderTop: `1px solid ${BORDER}`, textAlign: 'center' }}>
-            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2 }}>
-              Ya operamos en{' '}
-              <Box component="span" sx={{ fontWeight: 700, color: '#2A3547' }}>14 edificios</Box>
-              {' · '}
-              <Box component="span" sx={{ fontWeight: 700, color: '#2A3547' }}>+100 usuarios</Box>
-              {' '}cargando
-            </Typography>
-
-            <Box
-              component="a"
-              href={`https://wa.me/56967666652?text=${encodeURIComponent('Hola, quiero información sobre la electrolinera compartida para mi edificio.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackUnique('cta_whatsapp', { step: 3, typeOfResidence })}
-              sx={{ display: 'block', textDecoration: 'none', mb: 1.5 }}
-            >
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{
-                  bgcolor: '#25D366',
-                  '&:hover': { bgcolor: '#1ebe5d' },
-                  fontWeight: 700,
-                  py: 1.25,
-                  fontSize: '0.9rem',
-                  color: '#fff',
-                  boxShadow: 'none',
-                  borderRadius: 2,
-                  display: 'flex',
-                  gap: 1,
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="12" fill="#25D366"/>
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#fff"/>
-                </svg>
-                💬 Hablar con un asesor por WhatsApp
-              </Button>
-            </Box>
-
-          </Box>
-        </Box>
-
-        {/* Panel de pago — se muestra al hacer clic en "Pagar visita" */}
-        {state.activePanel === 'pago' && (
-          <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 2, p: 2.5, mb: 2 }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 2, color: '#2A3547' }}>
-              Datos para la visita técnica
-            </Typography>
-            <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-              Dirección del edificio
-            </Typography>
-            <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-              <AddressInput2
-                value={state.address}
-                error={!!state.address && !state.addressValidated}
-                onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                onSelectAddress={(details) => {
-                  if (details) {
-                    const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                    update({
-                      address: full,
-                      addressValidated: true,
-                      addressCity: details.City ?? '',
-                      addressState: details.State ?? '',
-                      addressZipCode: details.ZipCode ?? '',
-                      addressLat: String(details.Latitude ?? ''),
-                      addressLng: String(details.Longitude ?? ''),
-                      regionWarn: false,
-                    })
-                  }
-                }}
-              />
-            </Box>
-            {state.address && !state.addressValidated && (
-              <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                Completa los tres campos de dirección para continuar
-              </Typography>
-            )}
-            {state.regionWarn && (
-              <Alert severity="warning" sx={{ fontSize: '0.78rem', mb: 1.5 }}>
-                Por el momento solo atendemos la Región Metropolitana y Valparaíso.
-              </Alert>
-            )}
-            {state.address && !isServiceable(state.addressState) ? (
-              <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#92400E', mb: 0.75 }}>
-                  Sin cobertura en tu región
-                </Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: '#78350F', lineHeight: 1.6, mb: 1.5 }}>
-                  De momento no tenemos cobertura en tu región por esta vía. Contáctanos para evaluar tu caso.
-                </Typography>
-                <Button size="small" variant="outlined" onClick={() => update({ address: '' })}
-                  sx={{ fontSize: '0.78rem', borderColor: '#92400E', color: '#92400E', textTransform: 'none' }}>
-                  Cambiar dirección
-                </Button>
-              </Box>
-            ) : (
-              <>
-                <TextField fullWidth size="small" label="Depto / N° de estacionamiento (opcional)"
-                  value={state.depto} onChange={e => update({ depto: e.target.value })} sx={{ mb: 2 }} />
-                <TextField
-                  fullWidth size="small" required label="Email para comprobante" type="email"
-                  value={state.emailPago}
-                  onChange={e => update({ emailPago: e.target.value, customerSaved: false })}
-                  onBlur={async (e) => {
-                    const email = e.target.value.trim().toLowerCase()
-                    if (!email || !/\S+@\S+\.\S+/.test(email)) return
-                    update({ customerSaving: true, customerSaved: false })
-                    try {
-                      const res = await fetch('/api/customer', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          email,
-                          address: state.address || '',
-                          city: state.addressCity || '',
-                          state: state.addressState || '',
-                          zipCode: state.addressZipCode || '',
-                          lat: state.addressLat || '',
-                          lng: state.addressLng || '',
-                          depto: state.depto || '',
-                          typeOfResidence: 'appartment',
-                          formId: state.formId ?? null,
-                        }),
-                      })
-                      update({ customerSaving: false, customerSaved: res.ok })
-                    } catch {
-                      update({ customerSaving: false, customerSaved: false })
-                    }
-                  }}
-                  helperText={state.customerSaving ? 'Verificando datos…' : 'Requerido para proceder al pago'}
-                  sx={{ mb: 2.5 }}
-                />
-                {state.webpayError && (
-                  <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>
-                    {state.webpayError}.{' '}
-                    <Button size="small" onClick={initiatePayment}
-                      sx={{ textTransform: 'none', fontSize: '0.78rem', p: 0, color: 'inherit', textDecoration: 'underline' }}>
-                      Reintentar
-                    </Button>
-                  </Alert>
-                )}
-                <Button fullWidth variant="contained" onClick={submitWebpay}
-                  disabled={!state.webpayData || state.webpayLoading || !state.emailPago.trim() || !state.addressValidated || state.customerSaving || !state.customerSaved}
-                  sx={{
-                    bgcolor: PINK, color: '#fff',
-                    '&:hover': { bgcolor: PINK_DARK },
-                    '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                    fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none',
-                  }}
-                >
-                  {state.webpayLoading ? 'Generando orden…' : 'Pagar $9.990 con Webpay →'}
-                </Button>
-                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                  Pago seguro · Visa, Mastercard, Redcompra, débito
-                </Typography>
-              </>
-            )}
-          </Box>
-        )}
-
-        <Box sx={{ textAlign: 'center' }}>
-          <Button
-            variant="text"
-            onClick={() => { trackUnique('cta_new_simulacion', { step: 3, typeOfResidence }); track('nueva_simulacion_clicked', { step: 3, tipoC: state.tipoC }); resetAll() }}
-            sx={{ color: TEXT_MUTED, fontSize: '0.82rem', textTransform: 'none', textDecoration: 'underline', '&:hover': { color: '#2A3547', bgcolor: 'transparent' } }}
-          >
-            ← Nueva simulación
-          </Button>
-        </Box>
-      </Box>
-    )
-  }
 
   function formatVisitDate(iso: string): string {
     const d = new Date(iso)
@@ -2194,9 +1721,10 @@ export default function CotizadorWizard() {
     const discountedInstall = Math.round(installBaseGross * 0.9)
     const discountSavings = installBaseGross - discountedInstall
     const visitaAmount = 9990
-    const features70 = ['Prioridad máxima en la agenda de instalación', 'Visita técnica sin costo', 'Puedes desistir tras la visita y te devolvemos lo pagado']
     const isAlt2Open = state.activePanel === 'visitaPago' && state.selectedReserveOption === 'r70'
     const isVisitaOpen = state.activePanel === 'visitaPago' && state.selectedReserveOption === 'visita'
+    const isElectroOpen = state.activePanel === 'electrolinera'
+    const isEdificio = state.tipo === 'edificio'
 
     return (
       <Box sx={{ mb: 2 }}>
@@ -2204,259 +1732,424 @@ export default function CotizadorWizard() {
           <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>
         )}
 
-        {/* Social proof + heading */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5 }}>
-          <Box sx={{ display: 'flex' }}>
-            {[
-              { letter: 'H', color: '#FBBF24' },
-              { letter: 'C', color: '#93C5FD' },
-              { letter: 'J', color: '#86EFAC' },
-              { letter: 'R', color: '#FCA5A5' },
-            ].map(({ letter, color }, i) => (
-              <Box key={i} sx={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: color, border: '2px solid #fff', ml: i > 0 ? -0.75 : 0, zIndex: 4 - i }}>
-                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
-              </Box>
-            ))}
-          </Box>
-          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
-            +120 instalaciones completadas en Santiago
-          </Typography>
-        </Box>
-        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2, mt: 0.5 }}>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2 }}>
           Elige cómo avanzar
         </Typography>
 
-        {/* ALTERNATIVA 1 — Solo visita técnica */}
-        <Box sx={{ bgcolor: 'rgb(250,251,251)', border: '1.5px solid rgb(223,227,230)', borderRadius: '14px', mt: 2, overflow: 'hidden', mb: 2 }}>
-          <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-              <Box sx={{ bgcolor: TEAL, borderRadius: 10, px: 1.25, py: 0.35, display: 'inline-flex', flexShrink: 0 }}>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>ALTERNATIVA 1</Typography>
-              </Box>
-              <Typography sx={{ fontSize: '0.82rem', fontWeight: 600, color: '#2A3547' }}>— SOLO VISITA TÉCNICA</Typography>
+        {/* ALTERNATIVA 1 edificio — Electrolinera compartida */}
+        {isEdificio && (
+          <Box sx={{ border: `1.5px solid ${isElectroOpen ? PINK : BORDER}`, borderRadius: '14px', overflow: 'hidden', mb: 2 }}>
+            <Box sx={{ bgcolor: PINK, px: 2, py: 0.625, display: 'flex', gap: 0.75, alignItems: 'center' }}>
+              <Typography sx={{ fontSize: '0.75rem' }}>🔥</Typography>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.08em' }}>LA MÁS ELEGIDA</Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.5 }}>
-              <Typography sx={{ fontWeight: 800, fontSize: '1.35rem', color: '#2A3547' }}>{fmt(visitaAmount)}</Typography>
-              <Typography sx={{ fontSize: '0.82rem', color: TEAL, fontWeight: 600 }}>acreditable a tu instalación</Typography>
-            </Box>
-            <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-              Agenda la visita y decide después.
-            </Typography>
-            {[
-              'Profesional certificado SEC en terreno',
-              'Confirmamos distancia y materiales, y hacemos el plan de instalación',
-              `Si avanzas, los ${fmt(visitaAmount)} se descuentan`,
-            ].map(f => (
-              <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
-                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
-              </Box>
-            ))}
-            <Button
-              fullWidth variant="outlined" disabled={state.webpayLoading}
+            <Box
               onClick={() => {
-                if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })
-                update({ selectedReserveOption: 'visita', activePanel: isVisitaOpen ? null : 'visitaPago', reservePendingAmount: null, reservePendingGlosa: '' })
+                if (!isElectroOpen) trackUnique('cta_form_electrolinera', { step: 3, typeOfResidence })
+                update({ activePanel: isElectroOpen ? null : 'electrolinera', ...(isElectroOpen ? { showElectrolineraForm: false } : {}) })
               }}
-              sx={{
-                color: isVisitaOpen ? '#94A3B8' : TEAL,
-                borderColor: isVisitaOpen ? '#94A3B8' : TEAL,
-                '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.05)', color: TEAL },
-                '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' },
-                fontWeight: 700, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2, mt: 2,
-              }}
+              sx={{ p: { xs: 2, sm: 2.5 }, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', bgcolor: isElectroOpen ? 'rgba(232,26,104,0.03)' : '#fff' }}
             >
-              {state.webpayLoading ? 'Redirigiendo…' : `Pagar visita ${fmt(visitaAmount)} →`}
-            </Button>
-            {isVisitaOpen && (
-              <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
-                  Datos para el comprobante
-                </Typography>
-                <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-                  Dirección de instalación
-                </Typography>
-                <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-                  <AddressInput2
-                    value={state.address}
-                    error={!!state.address && !state.addressValidated}
-                    onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                    onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                    onSelectAddress={(details) => {
-                      if (details) {
-                        const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                        update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
-                      }
-                    }}
-                  />
-                </Box>
-                {state.address && !state.addressValidated && (
-                  <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                    Completa los tres campos de dirección para continuar
-                  </Typography>
-                )}
-                {state.address && !isServiceable(state.addressState) && (
-                  <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                      Por ahora solo atendemos Región Metropolitana y Valparaíso
+              <Box sx={{ bgcolor: PINK, borderRadius: 10, px: 1.25, py: 0.35, flexShrink: 0 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>ALT 1</Typography>
+              </Box>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>Electrolinera compartida</Typography>
+                <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>Sin costo para ti · pagas solo lo que cargas</Typography>
+              </Box>
+              <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
+                <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: '#2A3547' }}>$0</Typography>
+                <Typography sx={{ fontSize: '0.72rem', color: PINK, fontWeight: 600 }}>inversión</Typography>
+              </Box>
+              <Typography sx={{ color: TEXT_MUTED, fontSize: '0.75rem', ml: 0.5 }}>{isElectroOpen ? '▲' : '▼'}</Typography>
+            </Box>
+            {isElectroOpen && (
+              <Box sx={{ px: { xs: 2, sm: 2.5 }, pb: 2.5, borderTop: `1px solid ${BORDER}` }}>
+                {state.electrolineraSubmitted ? (
+                  <Box sx={{ textAlign: 'center', py: 2 }}>
+                    <Typography sx={{ fontSize: '2rem', mb: 1 }}>✅</Typography>
+                    <Typography sx={{ fontWeight: 700, color: '#166534', mb: 0.5 }}>¡Postulación enviada!</Typography>
+                    <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED }}>Te contactaremos con la evaluación técnica.</Typography>
+                  </Box>
+                ) : !state.showElectrolineraForm ? (
+                  // Info step (Image #36)
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: '1rem', mb: 0.5, color: '#2A3547' }}>Electrolinera compartida · sin costo para ti</Typography>
+                    <Typography sx={{ fontSize: '0.83rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.55 }}>
+                      Energica instala y financia un cargador en el estacionamiento de visitas. Pagas solo lo que cargas.
                     </Typography>
+                    <Box sx={{ display: 'flex', gap: 3, mb: 2 }}>
+                      <Box>
+                        <Typography sx={{ fontSize: '1.9rem', fontWeight: 800, color: '#2A3547', lineHeight: 1 }}>$0</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>inversión</Typography>
+                      </Box>
+                      <Box>
+                        <Typography sx={{ fontSize: '1.9rem', fontWeight: 800, color: '#2A3547', lineHeight: 1 }}>$330/kWh</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mt: 0.25 }}>solo lo que cargas</Typography>
+                      </Box>
+                    </Box>
+                    {['Sin obra en tu estacionamiento privado', 'No requiere asamblea sobre tu estacionamiento, solo permiso de uso común', 'La opción más fácil y rápida de aprobar'].map(f => (
+                      <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+                        <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0 }}>✓</Typography>
+                        <Typography sx={{ fontSize: '0.83rem', color: '#2A3547' }}>{f}</Typography>
+                      </Box>
+                    ))}
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.88rem', mt: 2, mb: 1, color: '#2A3547' }}>Te entregamos para tu comité:</Typography>
+                    {['Presentación lista para llevar a la reunión', 'Carta de solicitud de autorización', 'Visita comercial a la administración (si la pides)'].map(f => (
+                      <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.75, alignItems: 'flex-start' }}>
+                        <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0 }}>✓</Typography>
+                        <Typography sx={{ fontSize: '0.83rem', color: '#2A3547' }}>{f}</Typography>
+                      </Box>
+                    ))}
+                    <Button
+                      fullWidth variant="contained"
+                      onClick={() => update({ showElectrolineraForm: true })}
+                      sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2, mt: 2.5 }}
+                    >
+                      Quiero electrolinera en mi edificio →
+                    </Button>
+                  </Box>
+                ) : (
+                  // Form step (Image #37)
+                  <Box sx={{ pt: 2 }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 0.5, color: '#2A3547' }}>Regístrate para recibir tu kit</Typography>
+                    <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.5 }}>
+                      Te enviamos todo lo que necesitas para presentar en la próxima reunión de tu comunidad.
+                    </Typography>
+                    <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>Dirección del edificio</Typography>
+                    <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                      <AddressInput2
+                        value={state.address}
+                        error={!!state.address && !state.addressValidated}
+                        onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                        onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                        onSelectAddress={(details) => {
+                          if (details) {
+                            const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                            update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
+                          }
+                        }}
+                      />
+                    </Box>
+                    {state.address && !state.addressValidated && (
+                      <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5 }}>Completa los tres campos para continuar</Typography>
+                    )}
+                    <TextField fullWidth size="small" label="Nombre" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+                    <TextField fullWidth size="small" label="Email" type="email"
+                      value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} sx={{ mb: 2 }} />
+                    <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                    <Box sx={{ mb: 2 }}>
+                      <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#2A3547', mb: 0.75 }}>Cargo / Rol</Typography>
+                      <Select fullWidth size="small" displayEmpty value={state.edificioRol} onChange={e => update({ edificioRol: e.target.value })} sx={{ fontSize: '0.85rem' }}>
+                        <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Seleccione una opción</em></MenuItem>
+                        <MenuItem value="Administrador(a)">Administrador(a)</MenuItem>
+                        <MenuItem value="Copropietario(a)">Copropietario(a)</MenuItem>
+                        <MenuItem value="Arrendatario(a)">Arrendatario(a)</MenuItem>
+                        <MenuItem value="Miembro del comité de la comunidad">Miembro del comité de la comunidad</MenuItem>
+                        <MenuItem value="Otro">Otro</MenuItem>
+                      </Select>
+                    </Box>
+                    <Box sx={{ mb: 2.5 }}>
+                      <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#2A3547', mb: 0.75 }}>¿Cantidad de usuarios con auto eléctrico?</Typography>
+                      <Select fullWidth size="small" displayEmpty value={state.edificioUsersEV} onChange={e => update({ edificioUsersEV: e.target.value })} sx={{ fontSize: '0.85rem' }}>
+                        <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Seleccione una opción</em></MenuItem>
+                        <MenuItem value="No lo sé">No lo sé</MenuItem>
+                        <MenuItem value="Si hay, pero no sé cuántos">Si hay, pero no sé cuántos</MenuItem>
+                        <MenuItem value="Si hay, 2 o menos">Si hay, 2 o menos</MenuItem>
+                        <MenuItem value="Si hay, más de 2">Si hay, más de 2</MenuItem>
+                        <MenuItem value="No hay">No hay</MenuItem>
+                      </Select>
+                    </Box>
+                    {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
+                    <Button fullWidth variant="contained"
+                      disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
+                      onClick={async () => {
+                        if (!state.emailPago.trim() || !state.addressValidated) return
+                        update({ webpayLoading: true, webpayError: '' })
+                        trackUnique('cta_envio_form_electrolinera', { step: 3, typeOfResidence })
+                        try {
+                          const { default: _emailjs2, init: _initEmailjs2 } = await import('emailjs-com')
+                          _initEmailjs2('UYcrSeCqLGW8xqT4S')
+                          const parkingLabel = state.edificioParkingFloor || 'No indicado'
+                          const visitasLabel = state.edificioVisitorParking === true ? 'Sí' : state.edificioVisitorParking === false ? 'No' : 'No indicado'
+                          await _emailjs2.send('service_dbrrm6b', 'template_eysyecb', {
+                            to_email: state.emailPago, name: state.nombreEmail || state.emailPago,
+                            subject: `Nueva postulación electrolinera — ${state.nombreEmail || state.emailPago}`,
+                            CONTENT_HTML: `<h3 style="font-family:sans-serif;">Nueva postulación: Electrolinera compartida en edificio</h3><table style="border-collapse:collapse;width:100%;font-family:sans-serif;font-size:13px;"><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Nombre</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.nombreEmail || '—'}</td></tr><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Email</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.emailPago}</td></tr><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Teléfono</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.visitaTelefono || '—'}</td></tr><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Dirección edificio</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.address || '—'}</td></tr><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso departamento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioFloor || '—'}</td></tr><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Piso estacionamiento</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${parkingLabel}</td></tr><tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">¿Tiene estacionamiento visitas?</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${visitasLabel}</td></tr>${state.edificioRol ? `<tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Cargo/Rol</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioRol}</td></tr>` : ''}${state.edificioUsersEV ? `<tr><td style="padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;">Usuarios con auto eléctrico</td><td style="padding:8px 12px;border:1px solid #e8e8e8;">${state.edificioUsersEV}</td></tr>` : ''}</table>`,
+                          })
+                          track('electrolinera_submitted')
+                          update({ webpayLoading: false, electrolineraSubmitted: true })
+                        } catch {
+                          update({ webpayLoading: false, webpayError: 'No se pudo enviar. Intenta nuevamente.' })
+                        }
+                      }}
+                      sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                    >
+                      {state.webpayLoading ? 'Enviando…' : 'Quiero electrolinera en mi edificio →'}
+                    </Button>
+                    <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>Sin compromiso si la comunidad la rechaza.</Typography>
                   </Box>
                 )}
-                <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
-                {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
-                <Button fullWidth variant="contained"
-                  disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-                  onClick={() => payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')}
-                  sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
-                >
-                  {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
-                </Button>
-                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                  Pago seguro · Visa, Mastercard, Redcompra, débito
-                </Typography>
               </Box>
             )}
           </Box>
-        </Box>
-
-        {/* Próxima visita disponible — below ALTERNATIVA 1 */}
-        {state.nextVisitDate && (
-          <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textAlign: 'center', mb: 2, mt: -1 }}>
-            Próxima visita disponible:{' '}
-            <Box component="span" sx={{ color: TEAL, fontWeight: 600 }}>
-              {formatVisitDate(state.nextVisitDate)}
-            </Box>
-          </Typography>
         )}
 
-        {/* ALTERNATIVA 2 — Descuento si pagas hoy */}
-        <Box sx={{ bgcolor: '#fff', border: '2px solid #00C47C', borderRadius: 2, overflow: 'hidden', mb: 2 }}>
-          <Box sx={{ bgcolor: '#00C47C', px: 2, py: 1.25, borderRadius: 0 }}>
-            <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>
-              ALTERNATIVA 2 — DESCUENTO SI PAGAS HOY
-            </Typography>
-          </Box>
-          <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.25 }}>
-              <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, mr: 0.5 }}>Instalación</Typography>
-              <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547' }}>{fmt(discountedInstall)}</Typography>
-              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(installBaseGross)}</Typography>
+        {/* ALTERNATIVA Visita Técnica (ALT 1 para Casa, ALT 2 para Edificio) */}
+        <Box sx={{ border: `1.5px solid ${isVisitaOpen ? TEAL : BORDER}`, borderRadius: '14px', overflow: 'hidden', mb: 2 }}>
+          {/* Header clickable */}
+          <Box
+            onClick={() => {
+              if (!isVisitaOpen) track('pagar_visita_clicked', { step: 3, amount: visitaAmount, option: 'visita', tipoC: state.tipoC, chargerId: state.chargerId })
+              update({ selectedReserveOption: 'visita', activePanel: isVisitaOpen ? null : 'visitaPago', reservePendingAmount: null, reservePendingGlosa: '', ...(isVisitaOpen ? { showVisitaForm: false } : {}) })
+            }}
+            sx={{ p: { xs: 2, sm: 2.5 }, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', bgcolor: isVisitaOpen ? 'rgba(8,152,185,0.03)' : '#fff' }}
+          >
+            <Box sx={{ bgcolor: TEAL, borderRadius: 10, px: 1.25, py: 0.35, flexShrink: 0 }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>{isEdificio ? 'ALT 2' : 'ALT 1'}</Typography>
             </Box>
-            <Typography sx={{ fontSize: '0.8rem', color: SUCCESS, fontWeight: 600, mb: 1.5 }}>
-              10% dcto · ahorras {fmt(discountSavings)} en la instalación
-            </Typography>
-            {(result?.isOwn ?? state.chargerId === 'own') ? (
-              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-                Cargador: lo pones tú ($0).
-              </Typography>
-            ) : (result?.chargerGrossPrice ?? 0) > 0 ? (
-              <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
-                Cargador <strong>{fmt(result?.chargerGrossPrice ?? 0)}</strong>, se paga después de la visita técnica.
-              </Typography>
-            ) : null}
-            {features70.map(f => (
-              <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
-                <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: '#2A3547', fontWeight: 600 }}>{f}</Typography>
-              </Box>
-            ))}
-            <Typography sx={{ fontSize: '0.73rem', color: TEXT_MUTED, mt: 1, lineHeight: 1.5, fontStyle: 'italic' }}>
-              Si en la visita técnica detectamos algún impedimento técnico para instalar, te devolvemos el 100% de lo pagado, sin preguntas.
-            </Typography>
-            <Button
-              fullWidth variant="contained" disabled={state.webpayLoading}
-              onClick={() => {
-                const isOpening = !isAlt2Open
-                if (isOpening) track('pagar_hoy_clicked', { step: 3, amount: discountedInstall, amountGross: installBaseGross, discount: discountSavings, option: 'chargerInstallation', tipoC: state.tipoC, chargerId: state.chargerId })
-                update({ selectedReserveOption: 'r70', activePanel: isOpening ? 'visitaPago' : null, reservePendingAmount: null, reservePendingGlosa: '' })
-              }}
-              sx={{
-                bgcolor: isAlt2Open ? '#94A3B8' : PINK,
-                '&:hover': { bgcolor: isAlt2Open ? '#64748B' : PINK_DARK },
-                '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' },
-                fontWeight: 700, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2, mt: 2,
-              }}
-            >
-              {state.webpayLoading ? 'Redirigiendo…' : `Pagar hoy ${fmt(discountedInstall)} →`}
-            </Button>
-            {isAlt2Open && (
-              <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${BORDER}` }}>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
-                  Datos para el comprobante
-                </Typography>
-                <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
-                  Dirección de instalación
-                </Typography>
-                <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
-                  <AddressInput2
-                    value={state.address}
-                    error={!!state.address && !state.addressValidated}
-                    onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
-                    onValidationChange={(isValid) => update({ addressValidated: isValid })}
-                    onSelectAddress={(details) => {
-                      if (details) {
-                        const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
-                        update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>Visita Técnica</Typography>
+              <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>Agenda y decide después</Typography>
+            </Box>
+            <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
+              <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: '#2A3547' }}>{fmt(visitaAmount)}</Typography>
+              <Typography sx={{ fontSize: '0.72rem', color: TEAL, fontWeight: 600 }}>acreditable</Typography>
+            </Box>
+            <Typography sx={{ color: TEXT_MUTED, fontSize: '0.85rem', ml: 0.5 }}>{isVisitaOpen ? '▲' : '▼'}</Typography>
+          </Box>
+
+          {/* Expanded content */}
+          {isVisitaOpen && (
+            <Box sx={{ px: { xs: 2, sm: 2.5 }, pb: 2.5, borderTop: `1px solid ${BORDER}` }}>
+              {state.preBookedLabel ? (
+                // Date already selected — show form directly (Image #43)
+                <Box sx={{ mt: 2 }}>
+                  {state.preBookedLabel && (
+                    <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: 'rgba(8,152,185,0.06)', border: `1px solid ${TEAL}`, mb: 2 }}>
+                      <Typography sx={{ fontSize: '0.8rem', color: TEAL, fontWeight: 600 }}>
+                        📅 {state.preBookedLabel}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', mb: 1.5, color: '#2A3547' }}>
+                    Datos para el comprobante
+                  </Typography>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 1, color: '#2A3547' }}>
+                    Dirección de instalación
+                  </Typography>
+                  <Select
+                    fullWidth size="small" displayEmpty
+                    value={state.addressState}
+                    onChange={(e: SelectChangeEvent) => update({ addressState: e.target.value, addressCity: '' })}
+                    sx={{ mb: 1.5, fontSize: '0.85rem' }}
+                  >
+                    <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Región</em></MenuItem>
+                    {CHILE_REGIONS.map(r => <MenuItem key={r.code} value={r.code}>{r.name}</MenuItem>)}
+                  </Select>
+                  <Select
+                    fullWidth size="small" displayEmpty
+                    value={state.addressCity}
+                    disabled={!state.addressState}
+                    onChange={(e: SelectChangeEvent) => update({ addressCity: e.target.value })}
+                    sx={{ mb: 1.5, fontSize: '0.85rem' }}
+                  >
+                    <MenuItem value="" disabled><em style={{ color: '#94A3B8' }}>Comuna</em></MenuItem>
+                    {(CHILE_REGIONS.find(r => r.code === state.addressState)?.comunas ?? []).map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                  </Select>
+                  <TextField fullWidth size="small" label="Dirección (calle y número)" value={state.address}
+                    onChange={e => update({ address: e.target.value })} sx={{ mb: 1.5 }} />
+                  <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 1.5 }} />
+                  <TextField fullWidth size="small" required label="Email para comprobante *" type="email" value={state.emailPago}
+                    onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }}
+                    helperText="Requerido para proceder al pago" sx={{ mb: 1.5 }}
+                  />
+                  <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+                  {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
+                  <Button fullWidth variant="contained"
+                    disabled={!state.emailPago.trim() || !state.addressState || !state.addressCity || !state.address.trim() || state.webpayLoading}
+                    onClick={() => {
+                      const calId = state.preBookedCalendarId
+                      if (calId) {
+                        payWithReservation(visitaAmount, calId)
+                      } else {
+                        payDirect(visitaAmount, 'Visita técnica · Instalación cargador', 'visit')
                       }
                     }}
-                  />
-                </Box>
-                {state.address && !state.addressValidated && (
-                  <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
-                    Completa los tres campos de dirección para continuar
+                    sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                  >
+                    {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(visitaAmount)} con Webpay →`}
+                  </Button>
+                  <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                    Pago seguro · Visa, Mastercard, Redcompra, débito
                   </Typography>
-                )}
-                {state.address && !isServiceable(state.addressState) && (
-                  <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                      Por ahora solo atendemos Región Metropolitana y Valparaíso
+                </Box>
+              ) : (
+                // No date selected — show info + button that navigates to agenda (Image #41)
+                <>
+                  <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, mt: 2, lineHeight: 1.6 }}>
+                    Agenda la visita y decide después.
+                  </Typography>
+                  {[
+                    'Profesional certificado SEC en terreno',
+                    'Confirmamos distancia y materiales, y hacemos el plan de instalación',
+                    `Si avanzas, los ${fmt(visitaAmount)} se descuentan`,
+                  ].map(f => (
+                    <Box key={f} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'flex-start' }}>
+                      <Typography sx={{ color: SUCCESS, fontWeight: 700, flexShrink: 0, fontSize: '0.9rem' }}>✓</Typography>
+                      <Typography sx={{ fontSize: '0.82rem', color: '#2A3547' }}>{f}</Typography>
+                    </Box>
+                  ))}
+                  <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#F0F9FF', border: '1px solid #BAE6FD', mt: 1.5, mb: 2 }}>
+                    <Typography sx={{ fontSize: '0.8rem', color: '#0369A1', lineHeight: 1.55 }}>
+                      Sin compromiso. Si decides no avanzar, no pierdes nada. Si avanzas, el valor se descuenta del total.
                     </Typography>
                   </Box>
-                )}
-                <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
-                <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
-                {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
-                <Button fullWidth variant="contained"
-                  disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
-                  onClick={() => payDirect(discountedInstall, 'Pago instalación cargador eléctrico', 'chargerInstallation')}
-                  sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
-                >
-                  {state.webpayLoading ? 'Redirigiendo…' : `Pagar ${fmt(discountedInstall)} con Webpay →`}
-                </Button>
-                <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
-                  Pago seguro · Visa, Mastercard, Redcompra, débito
-                </Typography>
-              </Box>
-            )}
+                  <Button
+                    fullWidth variant="contained"
+                    onClick={() => {
+                      track('late_booking_loop', { step: 3 })
+                      update({ path: 'agendar', step: 1, agendaDates: null, agendaSelectedIndex: null, agendaSelectedSlot: null, activePanel: null })
+                    }}
+                    sx={{ bgcolor: TEAL, '&:hover': { bgcolor: '#0779a0' }, color: '#fff', fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+                  >
+                    {`Agendar y pagar visita ${fmt(visitaAmount)} →`}
+                  </Button>
+                </>
+              )}
+            </Box>
+          )}
+        </Box>
+
+
+        {/* ALTERNATIVA 2 — Pagar hoy */}
+        <Box sx={{ border: `2px solid ${isAlt2Open ? SUCCESS : BORDER}`, borderRadius: '14px', overflow: 'hidden', mb: 2 }}>
+          {/* Header clickable */}
+          <Box
+            onClick={() => {
+              const isOpening = !isAlt2Open
+              if (isOpening) track('pagar_hoy_clicked', { step: 3, amount: discountedInstall, amountGross: installBaseGross, discount: discountSavings, option: 'chargerInstallation', tipoC: state.tipoC, chargerId: state.chargerId })
+              update({ selectedReserveOption: 'r70', activePanel: isOpening ? 'visitaPago' : null, reservePendingAmount: null, reservePendingGlosa: '' })
+            }}
+            sx={{ p: { xs: 2, sm: 2.5 }, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', bgcolor: isAlt2Open ? 'rgba(0,196,124,0.03)' : '#fff' }}
+          >
+            <Box sx={{ bgcolor: SUCCESS, borderRadius: 10, px: 1.25, py: 0.35, flexShrink: 0 }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.72rem', color: '#fff', letterSpacing: '0.06em' }}>{isEdificio ? 'ALT 3' : 'ALT 2'}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>Pagar hoy</Typography>
+              <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>Descuento incluido</Typography>
+            </Box>
+            <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
+              <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: '#2A3547' }}>{fmt(discountedInstall)}</Typography>
+              <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(installBaseGross)}</Typography>
+            </Box>
+            <Typography sx={{ color: TEXT_MUTED, fontSize: '0.85rem', ml: 0.5 }}>{isAlt2Open ? '▲' : '▼'}</Typography>
           </Box>
+
+          {/* Expanded content */}
+          {isAlt2Open && (
+            <Box sx={{ p: { xs: 2, sm: 2.5 }, pt: 0, borderTop: `1px solid ${BORDER}` }}>
+              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.5, mt: 2 }}>
+                <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>Instalación</Typography>
+                <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547' }}>{fmt(discountedInstall)}</Typography>
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, textDecoration: 'line-through' }}>{fmt(installBaseGross)}</Typography>
+              </Box>
+              <Typography sx={{ fontSize: '0.8rem', color: SUCCESS, fontWeight: 600, mb: 1.5 }}>
+                Si pagas ahora obtienes un 10% de descuento por {fmt(discountSavings)}
+              </Typography>
+              {(result?.isOwn ?? state.chargerId === 'own') ? (
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+                  Cargador: lo pones tú ($0).
+                </Typography>
+              ) : (result?.chargerGrossPrice ?? 0) > 0 ? (
+                <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5, lineHeight: 1.6 }}>
+                  Cargador <strong>{fmt(result?.chargerGrossPrice ?? 0)}</strong>, se paga después de la visita técnica.
+                </Typography>
+              ) : null}
+              <Box sx={{ mb: state.address && !state.addressValidated ? 0.5 : 1.5 }}>
+                <AddressInput2
+                  value={state.address}
+                  error={!!state.address && !state.addressValidated}
+                  onAddressChange={(v) => update({ address: v, addressValidated: false, regionWarn: false })}
+                  onValidationChange={(isValid) => update({ addressValidated: isValid })}
+                  onSelectAddress={(details) => {
+                    if (details) {
+                      const full = [details.StreetAddress, details.City, details.State].filter(Boolean).join(', ')
+                      update({ address: full, addressValidated: true, addressCity: details.City ?? '', addressState: details.State ?? '', addressZipCode: details.ZipCode ?? '', addressLat: String(details.Latitude ?? ''), addressLng: String(details.Longitude ?? ''), regionWarn: false })
+                    }
+                  }}
+                />
+              </Box>
+              {state.address && !state.addressValidated && (
+                <Typography sx={{ fontSize: '0.75rem', color: 'error.main', mb: 1.5, ml: 0.25 }}>
+                  Completa los tres campos de dirección para continuar
+                </Typography>
+              )}
+              {state.address && !isServiceable(state.addressState) && (
+                <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#FEF3C7', border: '1px solid #FCD34D', mb: 2 }}>
+                  <Typography sx={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
+                    Por ahora solo atendemos Región Metropolitana y Valparaíso
+                  </Typography>
+                </Box>
+              )}
+              <TextField fullWidth size="small" label="Tu nombre completo (opcional)" value={state.nombreEmail} onChange={e => update({ nombreEmail: e.target.value })} sx={{ mb: 2 }} />
+              <TextField fullWidth size="small" required label="Email para comprobante" type="email" value={state.emailPago} onChange={e => { const v = e.target.value.toLowerCase(); update({ emailPago: v }); if (v.includes('@') && v.includes('.')) { setTrackerIdentity({ customerId: v }); trackUnique('email_captured', { step: state.step + 1, typeOfResidence }) } }} helperText="Requerido para proceder al pago" sx={{ mb: 2 }} />
+              <TextField fullWidth size="small" label="Teléfono" type="tel" value={state.visitaTelefono} onChange={e => update({ visitaTelefono: e.target.value })} sx={{ mb: 2.5 }} />
+              {state.webpayError && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{state.webpayError}</Alert>}
+              <Button fullWidth variant="contained"
+                disabled={!state.emailPago.trim() || !state.addressValidated || state.webpayLoading}
+                onClick={() => payDirect(discountedInstall, 'Pago instalación cargador eléctrico', 'chargerInstallation')}
+                sx={{ bgcolor: PINK, color: '#fff', '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+              >
+                {state.webpayLoading ? 'Redirigiendo…' : `Pagar hoy ${fmt(discountedInstall)} →`}
+              </Button>
+              <Typography sx={{ fontSize: '0.7rem', color: TEXT_MUTED, textAlign: 'center', mt: 1 }}>
+                Pago seguro · Visa, Mastercard, Redcompra, débito
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     )
   }
 
   function renderStep2() {
-    if (state.tipo === 'edificio') return renderStep2Edificio()
-
     const localResult = result
     const displayResult = state.apiResult ?? localResult
     if (!displayResult) return null
 
-    const tipoLabel = state.tipo === 'casa' ? 'Casa' : 'Edificio'
-    const distLabel2 = `${state.dist}m`
     const removedCharger = state.removedChargerId ? chargerList.find(c => c.id === state.removedChargerId) ?? null : null
+
+    const floorDiff = state.tipo === 'edificio'
+      ? Math.abs(parseInt(state.edificioFloor || '0') - parseInt(state.edificioParkingFloor || '0'))
+      : 0
+    const subtitle2 = state.tipo === 'edificio'
+      ? `Edificio · ${floorDiff > 0 ? floorDiff + ' pisos · ' : ''}~${state.dist}m al tablero`
+      : `Casa · instalación a ${state.dist}m del tablero`
 
     return (
       <Box id="COTIZADOR-RESULTADO">
+        {/* Banner verde — solo si hay fecha pre-agendada */}
+        {state.preBookedLabel && (
+          <Box sx={{
+            bgcolor: '#f0fdf4', border: '1px solid #bbf7d0',
+            borderRadius: 2, p: 1.5, mb: 2,
+            display: 'flex', alignItems: 'center', gap: 1,
+          }}>
+            <Typography sx={{ fontSize: '0.9rem' }}>📅</Typography>
+            <Typography sx={{ fontSize: '0.82rem', color: '#166534', fontWeight: 600 }}>
+              Horario elegido: {state.preBookedLabel} · horario hábil 09:00 a 18:00 — se bloquea al pagar
+            </Typography>
+          </Box>
+        )}
         {/* ── Simplified summary header ── */}
         <Box sx={{ textAlign: 'center', mb: 2.5 }}>
           <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: '#2A3547', mb: 0.25 }}>
             Tu cotización personalizada
           </Typography>
           <Typography sx={{ fontSize: '0.82rem', color: TEXT_MUTED, mb: 1.5 }}>
-            {tipoLabel} · instalación a {distLabel2} del tablero
+            {subtitle2}
           </Typography>
           <Typography sx={{ fontSize: '0.75rem', color: TEXT_MUTED, mb: 0.5 }}>
             Instalación llave en mano (IVA incl.)
@@ -2863,9 +2556,7 @@ export default function CotizadorWizard() {
           </Box>
           {([
             { label: 'Pago y agenda de visita', sub: 'Hoy', active: true },
-            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: state.nextVisitDate
-                ? `Próxima fecha: ${formatVisitDate(state.nextVisitDate)}`
-                : 'Próxima fecha disponible', active: true },
+            { label: 'Visita técnica para confirmar distancia y tipo de canalización', sub: '', active: true },
             { label: 'Compra de materiales', sub: '2 a 3 días hábiles', active: false },
             { label: 'Instalación de tu cargador', sub: '2 días hábiles', active: false },
           ] as { label: string; sub: string; active: boolean }[]).map((s, i) => (
@@ -2892,8 +2583,27 @@ export default function CotizadorWizard() {
           </Box>
         </Box>
 
+        {/* Social proof */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5, mb: 1 }}>
+          <Box sx={{ display: 'flex' }}>
+            {[
+              { letter: 'H', color: '#FBBF24' },
+              { letter: 'C', color: '#93C5FD' },
+              { letter: 'J', color: '#86EFAC' },
+              { letter: 'R', color: '#FCA5A5' },
+            ].map(({ letter, color }, i) => (
+              <Box key={i} sx={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: color, border: '2px solid #fff', ml: i > 0 ? -0.75 : 0, zIndex: 4 - i }}>
+                <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff' }}>{letter}</Typography>
+              </Box>
+            ))}
+          </Box>
+          <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED }}>
+            +120 instalaciones completadas en Santiago
+          </Typography>
+        </Box>
+
         {/* Trust box — redesigned */}
-        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 3 }}>
+        <Box sx={{ bgcolor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 2, p: 3, mt: 1 }}>
           <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: '#2A3547', mb: 2.5 }}>
             Compra protegida
           </Typography>
@@ -3150,7 +2860,7 @@ export default function CotizadorWizard() {
     )
   }
 
-  const showBottomNav = state.step < 2 && !state.paid
+  const showBottomNav = state.step < 3 && !state.paid
 
   return (
     <Box>
@@ -3165,25 +2875,26 @@ export default function CotizadorWizard() {
       )}
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, pt: 0, pb: 2 }}>
+      <Box sx={{ background: `linear-gradient(180deg, ${TEAL_LIGHT} 10%, ${TEAL} 80%)`, mt: '-2px', pt: 3, pb: 2 }}>
         <Container maxWidth="sm" sx={{ px: { xs: 1, sm: 3 } }}>
           <Typography
             variant="h1"
             sx={{
-              fontSize: { xs: '1.6rem', md: '2rem' },
+              fontSize: '34px',
               fontWeight: 800,
-              color: '#000000',
+              color: '#ffffff',
               textAlign: 'center',
+              mt: '8px',
               mb: 1,
               fontFamily: 'Plus Jakarta Sans, sans-serif',
             }}
           >
             {heroTitle}
           </Typography>
-          <Typography sx={{ color: '#000000', textAlign: 'center', mb: { xs: 1, md: 4 }, fontSize: '0.9rem' }}>
+          <Typography sx={{ color: '#ffffff', textAlign: 'center', mb: { xs: 1, md: 4 }, fontSize: '0.9rem' }}>
             {heroSubtitle}
           </Typography>
-          {!state.booked && <Box sx={{ mb: '10px' }}><WizardStepper step={state.step} paid={state.paid} booked={state.booked} /></Box>}
+          {!state.booked && <Box sx={{ mb: '10px' }}><WizardStepper step={state.step} paid={state.paid} booked={state.booked} path={state.path} /></Box>}
         </Container>
       </Box>
 
@@ -3199,13 +2910,14 @@ export default function CotizadorWizard() {
             }}
           >
             {state.step === 0 && renderStep0()}
-            {state.step === 1 && renderStep1()}
-            {state.step === 2 && renderStep2()}
-            {state.step === 3 && renderStep3()}
-            {state.step === 4 && renderStep4()}
+            {state.step === 1 && state.path === 'agendar' && renderStep1Agenda()}
+            {(state.step === 2 || (state.step === 1 && state.path === 'cotizar')) && renderStep1()}
+            {state.step === 3 && renderStep2()}
+            {state.step === 4 && renderStep3()}
+            {state.step === 5 && renderStep4()}
 
             {/* ── Bottom navigation ───────────────────────────────────────── */}
-            {showBottomNav && (
+            {showBottomNav && state.step !== 0 && (
               <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
                 {state.step > 0 && (
                   <Button
@@ -3239,7 +2951,11 @@ export default function CotizadorWizard() {
                         fontSize: '0.95rem',
                       }}
                     >
-                      {state.step === 1 ? 'Ver mi cotización' : 'Siguiente →'}
+                      {(state.step === 2 || (state.step === 1 && state.path === 'cotizar'))
+                        ? 'Ver mi cotización'
+                        : (state.step === 1 && state.path === 'agendar' && state.agendaSelectedIndex !== null && state.agendaSelectedSlot !== null)
+                          ? `Confirmar visita · ${(state.agendaDates ?? [])[state.agendaSelectedIndex]?.label ?? ''} · ${TIME_BANDS.find(b => b.key === state.agendaSelectedSlot)?.label ?? ''}`
+                          : 'Siguiente →'}
                     </Button>
                   </span>
                 </Tooltip>
@@ -3247,8 +2963,8 @@ export default function CotizadorWizard() {
             )}
           </Box>
 
-          {/* ── No-install link — steps 0-2 only ───────────────────────── */}
-          {state.step <= 2 && !state.paid && (
+          {/* ── No-install link — steps 0-3 only ───────────────────────── */}
+          {state.step <= 3 && !state.paid && (
             <Box sx={{ textAlign: 'center', mt: 1.5 }}>
               <Box
                 component="a"
@@ -3272,8 +2988,8 @@ export default function CotizadorWizard() {
             </Box>
           )}
 
-          {/* ── Trust text — below white card, steps 0-2 only ─────────── */}
-          {state.step <= 2 && !state.paid && (
+          {/* ── Trust text — below white card, steps 0-3 only ─────────── */}
+          {state.step <= 3 && !state.paid && (
             <Typography
               variant="caption"
               sx={{

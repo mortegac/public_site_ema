@@ -56,7 +56,7 @@ const GET_CLIENT_FORM_WITH_ESTIMATES = /* GraphQL */ `
           createdAt
         }
       }
-      ShoppingCarts(filter: {status: {eq: "completed"}}, limit: 1) {
+      ShoppingCarts(filter: {status: {eq: completed}}, limit: 1) {
         items {
           shoppingCartId
           total

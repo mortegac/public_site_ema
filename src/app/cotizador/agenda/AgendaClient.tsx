@@ -186,7 +186,7 @@ function ActiveVisitCard({ visit, email, onReschedule, paymentData }: { visit: A
             ['Distancia est.', paymentData.dist != null ? `${paymentData.dist}m` : null],
             ['Dirección', paymentData.address ?? null],
             ['Referencia', paymentData.depto || null],
-            ['Total', paymentData.total ? ('$' + Math.round(Number(paymentData.total)).toLocaleString('es-CL')) : null],
+            ['Total cotización', paymentData.total ? ('$' + Math.round(Number(paymentData.total)).toLocaleString('es-CL')) : null],
           ] as [string, string | null][])
             .filter(([, v]) => v !== null)
             .map(([label, value], i) => (

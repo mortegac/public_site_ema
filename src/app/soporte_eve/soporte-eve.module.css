@@ -1,0 +1,564 @@
+/* Página de soporte EVE — port fiel de dashboard.energica.city/soporte-eve.html */
+.page {
+  --magenta: #F5006E;
+  --magenta-700: #C4005A;
+  --magenta-050: #FFEAF3;
+  --cyan: #2FBDD8;
+  --cyan-050: #E6F8FB;
+  --ink: #0F1B33;
+  --slate: #5C6C86;
+  --slate-light: #8695AC;
+  --line: #E5EAF2;
+  --bg: #F4F6FA;
+  --white: #FFFFFF;
+  --ok: #0FA968;
+  --amber: #B26A00;
+  --amber-050: #FFF5E5;
+  --radius: 18px;
+  --shadow: 0 1px 2px rgba(15, 27, 51, .05), 0 8px 24px -12px rgba(15, 27, 51, .18);
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.page * {
+  box-sizing: border-box;
+}
+
+.page a {
+  color: inherit;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  font-family: var(--font-poppins), sans-serif;
+  margin: 0;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  background: var(--bg);
+  min-height: 100vh;
+  position: relative;
+}
+
+@media (min-width: 560px) {
+  .page {
+    background: #EDF0F6;
+  }
+  .wrap {
+    box-shadow: 0 0 60px rgba(15, 27, 51, .10);
+  }
+}
+
+/* ---------- barra superior ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  background: var(--magenta-050);
+  padding: 5px 10px;
+  border-radius: 99px;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  background: linear-gradient(160deg, var(--magenta) 0%, #D8005F 100%);
+  color: #fff;
+  padding: 30px 20px 58px;
+  border-radius: 0 0 26px 26px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .72);
+  margin-bottom: 10px;
+}
+
+.hero h1 {
+  font-size: 31px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.hero p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, .86);
+  max-width: 38ch;
+}
+
+.point {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  background: rgba(255, 255, 255, .16);
+  border: 1px solid rgba(255, 255, 255, .26);
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 13.5px;
+}
+
+.point b {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+/* ---------- estructura ---------- */
+.body {
+  padding: 0 16px 34px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 2;
+}
+
+.body section {
+  margin-top: 26px;
+}
+
+.sectionHead {
+  padding: 0 4px;
+  margin-bottom: 12px;
+}
+
+.sectionHead h2 {
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.sectionHead p {
+  margin: 5px 0 0;
+  font-size: 13.5px;
+  color: var(--slate);
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- contacto ---------- */
+.contact {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 16px;
+  border-radius: 14px;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn:active {
+  transform: scale(.985);
+}
+
+.btn .ico {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.btn .ico svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.btn .txt {
+  min-width: 0;
+}
+
+.btn .t {
+  display: block;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.3;
+}
+
+.btn .s {
+  display: block;
+  font-size: 13px;
+  color: var(--slate);
+  margin-top: 2px;
+}
+
+.btn .chev {
+  margin-left: auto;
+  color: #C3CCDA;
+  flex: none;
+}
+
+.btn.primary {
+  background: var(--magenta);
+  border-color: var(--magenta);
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgba(245, 0, 110, .85);
+}
+
+.btn.primary .t {
+  color: #fff;
+}
+
+.btn.primary .s {
+  color: rgba(255, 255, 255, .82);
+}
+
+.btn.primary .ico {
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+}
+
+.btn.primary .chev {
+  color: rgba(255, 255, 255, .6);
+}
+
+.btn.mail .ico {
+  background: var(--cyan-050);
+  color: #1596B0;
+}
+
+.btn.tel .ico {
+  background: #EEF1F7;
+  color: var(--ink);
+}
+
+/* ---------- línea de tiempo ---------- */
+.flow {
+  padding: 20px 18px 6px;
+  position: relative;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 14px;
+  padding-bottom: 22px;
+  position: relative;
+}
+
+.step:last-child {
+  padding-bottom: 20px;
+}
+
+.step::before {
+  content: "";
+  position: absolute;
+  left: 12.5px;
+  top: 26px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(var(--line), var(--line));
+}
+
+.step:last-child::before {
+  display: none;
+}
+
+.dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  background: #EEF1F7;
+  color: var(--slate);
+  z-index: 1;
+}
+
+.live .dot {
+  background: var(--magenta);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--magenta-050);
+}
+
+.live::before {
+  background: linear-gradient(var(--magenta), var(--line));
+}
+
+.step h3 {
+  font-size: 15.5px;
+  font-weight: 600;
+  padding-top: 2px;
+}
+
+.step p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--slate);
+}
+
+.tip {
+  margin-top: 10px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: var(--amber-050);
+  color: var(--amber);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.tip b {
+  font-weight: 600;
+}
+
+.refund {
+  margin: 0 18px 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--magenta-050);
+  border: 1px solid #FFD4E5;
+}
+
+.refund .k {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--magenta);
+}
+
+.refund h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 7px;
+  color: var(--ink);
+}
+
+.refund p {
+  margin: 7px 0 0;
+  font-size: 14px;
+  color: #7A2148;
+  line-height: 1.55;
+}
+
+.refund p + p {
+  margin-top: 8px;
+}
+
+/* ---------- preguntas frecuentes ---------- */
+.group {
+  margin-top: 18px;
+}
+
+.groupTitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--slate-light);
+  padding: 0 6px;
+  margin-bottom: 8px;
+}
+
+.faq {
+  overflow: hidden;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq details:last-child {
+  border-bottom: none;
+}
+
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+.plus {
+  margin-left: auto;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  margin-top: 2px;
+}
+
+.plus::before,
+.plus::after {
+  content: "";
+  position: absolute;
+  background: var(--magenta);
+  border-radius: 2px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.plus::before {
+  width: 12px;
+  height: 2px;
+}
+
+.plus::after {
+  width: 2px;
+  height: 12px;
+  transition: transform .2s ease;
+}
+
+.faq details[open] .plus::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+.faq details > div {
+  padding: 0 18px 18px;
+  font-size: 14.5px;
+  color: var(--slate);
+  line-height: 1.6;
+}
+
+.faq details > div p {
+  margin: 0;
+}
+
+.faq details > div p + p {
+  margin-top: 10px;
+}
+
+.faq details > div b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.faq details > div ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+
+.faq details > div li {
+  margin-bottom: 5px;
+}
+
+/* ---------- datos a mano ---------- */
+.ready {
+  padding: 18px;
+}
+
+.ready h3 {
+  font-size: 15.5px;
+  font-weight: 600;
+}
+
+.ready ul {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+
+.ready li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--slate);
+  align-items: flex-start;
+}
+
+.ready li svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--ok);
+}
+
+/* ---------- pie ---------- */
+.footer {
+  padding: 26px 22px 40px;
+  text-align: center;
+  color: var(--slate-light);
+  font-size: 12.5px;
+}
+
+.footer .logo {
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.footer a {
+  color: var(--slate);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.hours {
+  margin-top: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

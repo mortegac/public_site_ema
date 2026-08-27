@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { usePathname } from "next/navigation";
 import {
   Box,
   Grid,
@@ -164,6 +165,9 @@ const footerLinks = [
 ];
 
 const Footer = () => {
+  const pathname = usePathname();
+  // /soporte_eve es una landing standalone (QR en puntos de carga) con su propio pie
+  if (pathname === "/soporte_eve") return null;
   return (
     <>
     <Box

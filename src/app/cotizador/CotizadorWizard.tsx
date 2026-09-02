@@ -487,6 +487,7 @@ export default function CotizadorWizard() {
   // Ref to skip pre-booking when "Prefiero elegir la fecha después" is clicked
   const skipPreBookRef = useRef(false)
   const edificioFetchRef = useRef<AbortController | null>(null)
+  const edificioDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -587,15 +588,24 @@ export default function CotizadorWizard() {
       .catch(() => update({ agendaDates: [], agendaDatesLoading: false }))
   }, [state.step, state.path])
 
-  // Fetch edificio estimate whenever floor/parking/visitorParking change
+  // Reset estimate when edificio fields become invalid
   useEffect(() => {
     if (state.tipo !== 'edificio') return
     const floor = parseInt(state.edificioFloor)
     const park = parseInt(state.edificioParkingFloor)
     if (isNaN(floor) || isNaN(park) || state.edificioVisitorParking === null) {
+      if (edificioFetchRef.current) edificioFetchRef.current.abort()
+      if (edificioDebounceRef.current) clearTimeout(edificioDebounceRef.current)
       update({ edificioApiResult: null, edificioEstimateLoading: false })
-      return
     }
+  }, [state.edificioFloor, state.edificioParkingFloor, state.edificioVisitorParking, state.tipo]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const result = calcResult(state, chargerList)
+
+  function doEdificioFetch(floorStr: string, parkStr: string, visitor: boolean | null, fid: string | null) {
+    const floor = parseInt(floorStr)
+    const park = parseInt(parkStr)
+    if (isNaN(floor) || isNaN(park) || visitor === null) return
     if (edificioFetchRef.current) edificioFetchRef.current.abort()
     const ctrl = new AbortController()
     edificioFetchRef.current = ctrl
@@ -604,13 +614,7 @@ export default function CotizadorWizard() {
     fetch('/api/cotizar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        isHouse: false, isPortable: false, isWallbox: true,
-        distance: dist, numberOfChargers: 1,
-        apartmentFloor: state.edificioFloor,
-        parkingLevel: mapParkingLevel(state.edificioParkingFloor),
-        hasVisitorParking: state.edificioVisitorParking,
-      }),
+      body: JSON.stringify({ isHouse: false, isPortable: false, isWallbox: true, distance: dist, numberOfChargers: 1, apartmentFloor: floorStr, parkingLevel: mapParkingLevel(parkStr), hasVisitorParking: visitor }),
       signal: ctrl.signal,
     })
       .then(r => r.ok ? r.json() : null)
@@ -618,23 +622,24 @@ export default function CotizadorWizard() {
         if (!data || ctrl.signal.aborted) return
         const est = (data.estimates as any[])?.find((e: any) => Number(e.chargerPotence) === 7) ?? data.estimates?.[0]
         if (est) {
-          const installGross = Math.round((Number(est.materialsCost ?? 0) + Number(est.installationCost ?? 0)) * 1.19)
-          update({ edificioEstimateLoading: false, edificioApiResult: { installGross }, ...(data.formId && !state.formId ? { formId: data.formId } : {}) })
+          update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Number(est.materialsCost ?? 0) + Number(est.installationCost ?? 0)) * 1.19) }, ...(data.formId && !fid ? { formId: data.formId } : {}) })
           return
         }
-        const base = INSTALL_BASE.edificio
-        const f = dFactor(dist)
+        const base = INSTALL_BASE.edificio; const f = dFactor(dist)
         update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Math.round(base.mat * f) + Math.round(base.inst * f)) * 1.19) } })
       })
       .catch(err => {
         if (err.name === 'AbortError') return
-        const base = INSTALL_BASE.edificio
-        const f = dFactor(dist)
+        const base = INSTALL_BASE.edificio; const f = dFactor(dist)
         update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Math.round(base.mat * f) + Math.round(base.inst * f)) * 1.19) } })
       })
-  }, [state.edificioFloor, state.edificioParkingFloor, state.edificioVisitorParking, state.tipo]) // eslint-disable-line react-hooks/exhaustive-deps
+  }
 
-  const result = calcResult(state, chargerList)
+  function scheduleEdificioFetch(floorStr: string, parkStr: string, visitor: boolean | null, delay: number) {
+    if (edificioDebounceRef.current) clearTimeout(edificioDebounceRef.current)
+    if (delay === 0) { doEdificioFetch(floorStr, parkStr, visitor, state.formId); return }
+    edificioDebounceRef.current = setTimeout(() => doEdificioFetch(floorStr, parkStr, visitor, state.formId), delay)
+  }
 
   // ─── Derived ─────────────────────────────────────────────────────────────
   const canNext = (() => {
@@ -1465,7 +1470,9 @@ export default function CotizadorWizard() {
                     const mine = parseInt(v)
                     const park = parseInt(state.edificioParkingFloor)
                     if (!isNaN(mine) && !isNaN(park)) update({ dist: Math.max(1, Math.abs(mine - park) * 4) })
+                    scheduleEdificioFetch(v, state.edificioParkingFloor, state.edificioVisitorParking, 3000)
                   }}
+                  onBlur={e => scheduleEdificioFetch(e.target.value, state.edificioParkingFloor, state.edificioVisitorParking, 0)}
                   sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff', '& fieldset': { borderColor: BORDER }, '&:hover fieldset': { borderColor: TEAL }, '&.Mui-focused fieldset': { borderColor: TEAL } } }}
                 />
               </Grid>
@@ -1480,7 +1487,9 @@ export default function CotizadorWizard() {
                     const mine = parseInt(state.edificioFloor)
                     const park = parseInt(v)
                     if (!isNaN(mine) && !isNaN(park)) update({ dist: Math.max(1, Math.abs(mine - park) * 4) })
+                    scheduleEdificioFetch(state.edificioFloor, v, state.edificioVisitorParking, 3000)
                   }}
+                  onBlur={e => scheduleEdificioFetch(state.edificioFloor, e.target.value, state.edificioVisitorParking, 0)}
                   sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff', '& fieldset': { borderColor: BORDER }, '&:hover fieldset': { borderColor: TEAL }, '&.Mui-focused fieldset': { borderColor: TEAL } } }}
                 />
               </Grid>
@@ -1501,14 +1510,14 @@ export default function CotizadorWizard() {
             </Typography>
             <Grid container spacing={2} sx={{ mb: 1.5 }}>
               <Grid size={{ xs: 6 }}>
-                <Box onClick={() => update({ edificioVisitorParking: true })} role="button" tabIndex={0}
+                <Box onClick={() => { update({ edificioVisitorParking: true }); scheduleEdificioFetch(state.edificioFloor, state.edificioParkingFloor, true, 0) }} role="button" tabIndex={0}
                   sx={{ border: `2px solid ${state.edificioVisitorParking === true ? PINK : BORDER}`, borderRadius: 2, p: 2, cursor: 'pointer', bgcolor: state.edificioVisitorParking === true ? 'rgba(232,26,104,0.04)' : '#fff', textAlign: 'center', transition: 'all 0.2s', '&:hover': { borderColor: PINK } }}
                 >
                   <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === true ? PINK : '#2A3547' }}>Sí</Typography>
                 </Box>
               </Grid>
               <Grid size={{ xs: 6 }}>
-                <Box onClick={() => update({ edificioVisitorParking: false })} role="button" tabIndex={0}
+                <Box onClick={() => { update({ edificioVisitorParking: false }); scheduleEdificioFetch(state.edificioFloor, state.edificioParkingFloor, false, 0) }} role="button" tabIndex={0}
                   sx={{ border: `2px solid ${state.edificioVisitorParking === false ? PINK : BORDER}`, borderRadius: 2, p: 2, cursor: 'pointer', bgcolor: state.edificioVisitorParking === false ? 'rgba(232,26,104,0.04)' : '#fff', textAlign: 'center', transition: 'all 0.2s', '&:hover': { borderColor: PINK } }}
                 >
                   <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: state.edificioVisitorParking === false ? PINK : '#2A3547' }}>No</Typography>

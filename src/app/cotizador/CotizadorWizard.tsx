@@ -21,6 +21,7 @@ import {
 } from '@mui/material'
 import AddressInput2 from '@/app/components/AddressInput2'
 import { CHILE_REGIONS } from '@/data/chile-regions'
+import SharedInstallModal from './SharedInstallModal'
 import HpHeaderNew from '@/app/components/shared/header/HpHeaderNew'
 import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 import { useDispatch } from 'react-redux'
@@ -493,6 +494,8 @@ export default function CotizadorWizard() {
 
   // Derived from state.tipo — passed in tracking event props
   const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
+
+  const [sharedInstallOpen, setSharedInstallOpen] = useState(false)
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
@@ -1570,7 +1573,7 @@ export default function CotizadorWizard() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2 }}>
             <Button
               fullWidth variant="contained"
-              onClick={() => { track('edificio_shared_selected', { tipo: 'edificio' }); update({ path: 'cotizar', step: 1, activePanel: 'electrolinera' }) }}
+              onClick={() => { track('edificio_shared_selected', { tipo: 'edificio' }); setSharedInstallOpen(true) }}
               sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
             >
               ⚡ Quiero instalación compartida →
@@ -3146,6 +3149,16 @@ export default function CotizadorWizard() {
         </Container>
       </Box>
       {/* <Footer /> */}
+
+      <SharedInstallModal
+        open={sharedInstallOpen}
+        onClose={() => setSharedInstallOpen(false)}
+        initialName={state.nombreEmail}
+        initialEmail={state.emailPago}
+        initialPhone={state.visitaTelefono}
+        initialRol={state.edificioRol}
+        initialUsersEV={state.edificioUsersEV}
+      />
     </Box>
   )
 }

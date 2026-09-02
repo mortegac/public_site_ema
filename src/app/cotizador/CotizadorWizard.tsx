@@ -159,6 +159,8 @@ interface WizardState {
   edificioRol: string
   edificioUsersEV: string
   edificioOption: 'dedicated' | 'shared' | null
+  edificioEstimateLoading: boolean
+  edificioApiResult: { installGross: number } | null
   removedChargerId: string | null  // remembers charger id when user clicks "quitar"
   showElectrolineraForm: boolean
   showVisitaForm: boolean
@@ -467,6 +469,8 @@ export default function CotizadorWizard() {
     edificioRol: '',
     edificioUsersEV: '',
     edificioOption: null,
+    edificioEstimateLoading: false,
+    edificioApiResult: null,
     removedChargerId: null,
     showElectrolineraForm: false,
     showVisitaForm: false,
@@ -482,6 +486,7 @@ export default function CotizadorWizard() {
 
   // Ref to skip pre-booking when "Prefiero elegir la fecha después" is clicked
   const skipPreBookRef = useRef(false)
+  const edificioFetchRef = useRef<AbortController | null>(null)
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -581,6 +586,53 @@ export default function CotizadorWizard() {
       })
       .catch(() => update({ agendaDates: [], agendaDatesLoading: false }))
   }, [state.step, state.path])
+
+  // Fetch edificio estimate whenever floor/parking/visitorParking change
+  useEffect(() => {
+    if (state.tipo !== 'edificio') return
+    const floor = parseInt(state.edificioFloor)
+    const park = parseInt(state.edificioParkingFloor)
+    if (isNaN(floor) || isNaN(park) || state.edificioVisitorParking === null) {
+      update({ edificioApiResult: null, edificioEstimateLoading: false })
+      return
+    }
+    if (edificioFetchRef.current) edificioFetchRef.current.abort()
+    const ctrl = new AbortController()
+    edificioFetchRef.current = ctrl
+    const dist = Math.max(1, Math.abs(floor - park) * 4)
+    update({ edificioEstimateLoading: true })
+    fetch('/api/cotizar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        isHouse: false, isPortable: false, isWallbox: true,
+        distance: dist, numberOfChargers: 1,
+        apartmentFloor: state.edificioFloor,
+        parkingLevel: mapParkingLevel(state.edificioParkingFloor),
+        hasVisitorParking: state.edificioVisitorParking,
+      }),
+      signal: ctrl.signal,
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data || ctrl.signal.aborted) return
+        const est = (data.estimates as any[])?.find((e: any) => Number(e.chargerPotence) === 7) ?? data.estimates?.[0]
+        if (est) {
+          const installGross = Math.round((Number(est.materialsCost ?? 0) + Number(est.installationCost ?? 0)) * 1.19)
+          update({ edificioEstimateLoading: false, edificioApiResult: { installGross }, ...(data.formId && !state.formId ? { formId: data.formId } : {}) })
+          return
+        }
+        const base = INSTALL_BASE.edificio
+        const f = dFactor(dist)
+        update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Math.round(base.mat * f) + Math.round(base.inst * f)) * 1.19) } })
+      })
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        const base = INSTALL_BASE.edificio
+        const f = dFactor(dist)
+        update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Math.round(base.mat * f) + Math.round(base.inst * f)) * 1.19) } })
+      })
+  }, [state.edificioFloor, state.edificioParkingFloor, state.edificioVisitorParking, state.tipo]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const result = calcResult(state, chargerList)
 
@@ -1317,6 +1369,8 @@ export default function CotizadorWizard() {
       edificioRol: '',
       edificioUsersEV: '',
       edificioOption: null,
+      edificioEstimateLoading: false,
+      edificioApiResult: null,
       removedChargerId: null,
       showElectrolineraForm: false,
       showVisitaForm: false,
@@ -1466,24 +1520,103 @@ export default function CotizadorWizard() {
                 Completa los pisos y el estacionamiento de visitas para continuar.
               </Typography>
             )}
+
+            {/* Pricing card — shown when all edificio fields are filled */}
+            {state.edificioFloor.trim() !== '' && state.edificioParkingFloor.trim() !== '' && !isNaN(parseInt(state.edificioFloor)) && !isNaN(parseInt(state.edificioParkingFloor)) && state.edificioVisitorParking !== null && (
+              <Box sx={{ position: 'relative', mt: 2, border: `1.5px solid ${BORDER}`, borderRadius: 2, p: 2, opacity: state.edificioEstimateLoading ? 0.5 : 1, transition: 'opacity 0.3s' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', pb: 1.5, borderBottom: `1px dashed ${BORDER}` }}>
+                  <Box>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>Instalación privada</Typography>
+                    <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>en tu estacionamiento · ~{state.dist}m de canalización</Typography>
+                  </Box>
+                  <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: '#2A3547', flexShrink: 0, ml: 2 }}>
+                    {state.edificioApiResult ? `desde ${fmt(state.edificioApiResult.installGross)}` : '—'}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', pt: 1.5 }}>
+                  <Box>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>Instalación compartida</Typography>
+                    <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED }}>en el estacionamiento de visitas · pagas por kWh</Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'right', flexShrink: 0, ml: 2 }}>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.2rem', color: SUCCESS }}>$0</Typography>
+                    <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED }}>inversión</Typography>
+                  </Box>
+                </Box>
+                <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, mt: 1.5, lineHeight: 1.5 }}>
+                  En tu instalación privada, la canalización recorre {Math.abs(parseInt(state.edificioFloor) - parseInt(state.edificioParkingFloor))} pisos, y eso es lo que encarece el costo. Por eso te ofrecemos la alternativa sin costo de la instalación compartida.
+                </Typography>
+                {state.edificioEstimateLoading && (
+                  <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 2, bgcolor: 'rgba(255,255,255,0.65)' }}>
+                    <Typography sx={{ fontSize: '0.85rem', color: TEXT_MUTED, fontWeight: 600 }}>Calculando su presupuesto…</Typography>
+                  </Box>
+                )}
+              </Box>
+            )}
           </Box>
         )}
 
-        {/* Dual CTAs v4 */}
-        {(() => {
-          const edificioIncomplete = state.tipo === 'edificio' && (!state.edificioFloor.trim() || !state.edificioParkingFloor.trim() || state.edificioVisitorParking === null)
-          const ctaDisabled = !state.tipo || edificioIncomplete
-          return (
+        {/* CTAs — edificio complete: 5-button layout; otherwise: casa/fallback 2-button layout */}
+        {state.tipo === 'edificio' && state.edificioFloor.trim() !== '' && state.edificioParkingFloor.trim() !== '' && !isNaN(parseInt(state.edificioFloor)) && !isNaN(parseInt(state.edificioParkingFloor)) && state.edificioVisitorParking !== null ? (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2 }}>
+            <Button
+              fullWidth variant="contained"
+              onClick={() => { track('edificio_shared_selected', { tipo: 'edificio' }); update({ path: 'cotizar', step: 1, activePanel: 'electrolinera' }) }}
+              sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+            >
+              ⚡ Quiero instalación compartida →
+            </Button>
+            <Box
+              component="a"
+              href="https://api.whatsapp.com/send/?text=Hola%20vecinos.%20Estoy%20viendo%20la%20opci%C3%B3n%20de%20instalar%20una%20electrolinera%20para%20el%20edificio%20con%20En%C3%A9rgica%20City%2C%20para%20autos%20el%C3%A9ctricos.%0AC%C3%B3mo%20funciona%3A%0A*%20Ellos%20instalan%20y%20financian%20el%20cargador%20%E2%80%94%20%240%20de%20inversi%C3%B3n%20para%20la%20comunidad.%0A*%20Va%20en%20el%20estacionamiento%20de%20visitas%2C%20as%C3%AD%20que%20no%20hay%20obra%20en%20estacionamientos%20privados.%0A*%20Cada%20uno%20paga%20solo%20lo%20que%20carga%20(%24330%2FkWh%20tarifa%20aprox.).%0A%0A%C2%BFAlguien%20m%C3%A1s%20le%20interesa%3F%20Con%20varios%20vecinos%20tenemos%20m%C3%A1s%20quorum%20para%20presentarlo%20al%20comit%C3%A9."
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => track('edificio_whatsapp_share', { tipo: 'edificio' })}
+              sx={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5,
+                py: 1.5, px: 2, borderRadius: 2,
+                bgcolor: '#f0fdf4', border: '1.5px solid #bbf7d0',
+                textDecoration: 'none', cursor: 'pointer',
+                transition: 'all 0.15s',
+                '&:hover': { bgcolor: '#dcfce7', borderColor: '#86efac' },
+              }}
+            >
+              <Box sx={{ width: 28, height: 28, borderRadius: '50%', bgcolor: '#22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12l8-8 8 8M4 12l8 8 8-8" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </Box>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#16a34a' }}>
+                Compartir con el grupo del edificio
+              </Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.8rem', color: TEXT_MUTED, textAlign: 'center', my: 0.25 }}>
+              o cotiza tu instalación privada
+            </Typography>
+            <Button
+              fullWidth variant="outlined"
+              onClick={() => { track('agenda_path_selected', { tipo: state.tipo }); update({ path: 'agendar', step: 1 }) }}
+              sx={{ borderColor: BORDER, color: '#2A3547', '&:hover': { borderColor: PINK, color: PINK }, fontWeight: 600, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2 }}
+            >
+              📅 Agenda visita y cotizar
+            </Button>
+            <Button
+              fullWidth variant="text"
+              onClick={() => { track('direct_path_selected', { tipo: state.tipo }); trackUnique('step_2_loaded', { step: 2, typeOfResidence }); update({ path: 'cotizar', step: 1 }) }}
+              sx={{ color: TEAL, '&:hover': { color: '#0777a0', bgcolor: 'rgba(8,152,185,0.04)' }, fontWeight: 600, py: 1, fontSize: '0.9rem' }}
+            >
+              Cotizar mi instalación privada →
+            </Button>
+          </Box>
+        ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
             <Button
-              fullWidth variant="contained" disabled={ctaDisabled}
+              fullWidth variant="contained" disabled={!state.tipo || (state.tipo === 'edificio' && (!state.edificioFloor.trim() || !state.edificioParkingFloor.trim() || state.edificioVisitorParking === null))}
               onClick={() => { track('agenda_path_selected', { tipo: state.tipo }); update({ path: 'agendar', step: 1 }) }}
               sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, '&:disabled': { bgcolor: '#e0e0e0', color: '#aaa' }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
             >
               📅 Agenda visita y cotizar
             </Button>
             <Button
-              fullWidth variant="outlined" disabled={ctaDisabled}
+              fullWidth variant="outlined" disabled={!state.tipo || (state.tipo === 'edificio' && (!state.edificioFloor.trim() || !state.edificioParkingFloor.trim() || state.edificioVisitorParking === null))}
               onClick={() => { track('direct_path_selected', { tipo: state.tipo }); trackUnique('step_2_loaded', { step: 2, typeOfResidence }); update({ path: 'cotizar', step: 1 }) }}
               sx={{ borderColor: TEAL, color: TEAL, '&:hover': { borderColor: TEAL, bgcolor: 'rgba(8,152,185,0.04)', color: '#e81a68' }, '&:disabled': { borderColor: '#e0e0e0', color: '#aaa' }, fontWeight: 600, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2 }}
             >
@@ -1495,8 +1628,7 @@ export default function CotizadorWizard() {
               </Typography>
             )}
           </Box>
-          )
-        })()}
+        )}
 
       </Box>
     )

@@ -496,6 +496,7 @@ export default function CotizadorWizard() {
   const typeOfResidence = state.tipo ? (state.tipo.toUpperCase() as 'CASA' | 'EDIFICIO') : undefined
 
   const [sharedInstallOpen, setSharedInstallOpen] = useState(false)
+  const [edificioCompare, setEdificioCompare] = useState(false)
 
   // Initialize dates client-only to avoid SSR/hydration mismatch (Math.random + Date)
   const [dates, setDates] = useState<Array<{ label: string; available: boolean }>>([])
@@ -1395,6 +1396,90 @@ export default function CotizadorWizard() {
 
   // ─── Step renderers ───────────────────────────────────────────────────────
   function renderStep0() {
+    // ── Vista comparativa instalación privada vs compartida ──────────────────
+    if (edificioCompare) {
+      const floorDiff = Math.abs(parseInt(state.edificioFloor) - parseInt(state.edificioParkingFloor))
+      const privatePriceLabel = state.edificioApiResult ? fmt(state.edificioApiResult.installGross) : '—'
+      const ROW_STYLE = { display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr', borderBottom: `1px solid ${BORDER}` }
+      const CELL = { p: '10px 12px', fontSize: '0.82rem' }
+      const rows = [
+        ['Inversión inicial', privatePriceLabel, '$0'],
+        ['Costo de carga', 'Tarifa de tu propia cuenta de luz', '$330/kWh · pagas solo lo que cargas'],
+        ['Obra en tu estacionamiento', `Sí, canalización de ~${state.dist}m`, 'No'],
+        ['Qué hay que aprobar', 'Administración y, en varios edificios, asamblea', 'Permiso de uso común'],
+        ['Plazo estimado', '7 a 12 días hábiles desde el pago', 'Depende del comité'],
+        ['Cargador', 'Lo compras tú', 'Incluido'],
+      ]
+      const WA_URL = 'https://api.whatsapp.com/send/?text=Hola%20vecinos.%20Estoy%20viendo%20la%20opci%C3%B3n%20de%20instalar%20una%20electrolinera%20para%20el%20edificio%20con%20En%C3%A9rgica%20City%2C%20para%20autos%20el%C3%A9ctricos.%0AC%C3%B3mo%20funciona%3A%0A*%20Ellos%20instalan%20y%20financian%20el%20cargador%20%E2%80%94%20%240%20de%20inversi%C3%B3n%20para%20la%20comunidad.%0A*%20Va%20en%20el%20estacionamiento%20de%20visitas%2C%20as%C3%AD%20que%20no%20hay%20obra%20en%20estacionamientos%20privados.%0A*%20Cada%20uno%20paga%20solo%20lo%20que%20carga%20(%24330%2FkWh%20tarifa%20aprox.).%0A%0A%C2%BFAlguien%20m%C3%A1s%20le%20interesa%3F%20Con%20varios%20vecinos%20tenemos%20m%C3%A1s%20quorum%20para%20presentarlo%20al%20comit%C3%A9.'
+      return (
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 800, mb: 0.5, color: '#2A3547', fontSize: '1.05rem' }}>
+            Tu departamento está a {floorDiff} {floorDiff === 1 ? 'piso' : 'pisos'} del estacionamiento
+          </Typography>
+          <Typography sx={{ fontSize: '0.83rem', color: TEXT_MUTED, mb: 2, lineHeight: 1.5 }}>
+            Eso son ~{state.dist}m de canalización. Antes de mostrarte el precio, mira los dos caminos que existen en edificios — ambos con instalación certificada SEC.
+          </Typography>
+
+          {/* Comparison table */}
+          <Box sx={{ border: `1px solid ${BORDER}`, borderRadius: 2, overflow: 'hidden', mb: 2.5 }}>
+            {/* Header row */}
+            <Box sx={{ ...ROW_STYLE, bgcolor: '#F8FAFC' }}>
+              <Box sx={{ ...CELL }} />
+              <Box sx={{ ...CELL, fontWeight: 700, color: '#2A3547', fontSize: '0.85rem' }}>
+                Instalación privada
+                <Typography sx={{ fontSize: '0.72rem', color: TEXT_MUTED, fontWeight: 400 }}>en tu estacionamiento</Typography>
+              </Box>
+              <Box sx={{ ...CELL, fontWeight: 700, color: PINK, fontSize: '0.85rem' }}>
+                Instalación compartida
+                <Typography sx={{ fontSize: '0.72rem', color: PINK, fontWeight: 400, opacity: 0.8 }}>en zona común</Typography>
+              </Box>
+            </Box>
+            {rows.map(([label, priv, shared], i) => (
+              <Box key={label} sx={{ ...ROW_STYLE, bgcolor: i % 2 === 0 ? '#fff' : '#FAFBFC', ...(i === rows.length - 1 ? { borderBottom: 'none' } : {}) }}>
+                <Box sx={{ ...CELL, color: TEXT_MUTED, fontWeight: 500 }}>{label}</Box>
+                <Box sx={{ ...CELL, color: '#2A3547', fontWeight: label === 'Inversión inicial' ? 700 : 400 }}>{priv}</Box>
+                <Box sx={{ ...CELL, color: label === 'Inversión inicial' ? '#16a34a' : '#2A3547', fontWeight: label === 'Inversión inicial' ? 700 : 400 }}>{shared}</Box>
+              </Box>
+            ))}
+          </Box>
+
+          {/* CTAs */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            <Button fullWidth variant="contained"
+              onClick={() => { track('edificio_shared_selected', { tipo: 'edificio' }); setSharedInstallOpen(true) }}
+              sx={{ bgcolor: PINK, '&:hover': { bgcolor: PINK_DARK }, fontWeight: 700, py: 1.5, fontSize: '0.95rem', boxShadow: 'none', borderRadius: 2 }}
+            >
+              ⚡ Quiero instalación compartida →
+            </Button>
+            <Button fullWidth variant="outlined"
+              onClick={() => { trackUnique('step_2_loaded', { step: 2, typeOfResidence }); update({ path: 'cotizar', step: 1 }); setEdificioCompare(false) }}
+              sx={{ borderColor: TEAL, color: TEAL, '&:hover': { bgcolor: 'rgba(8,152,185,0.05)' }, fontWeight: 600, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2 }}
+            >
+              Ver mi cotización de instalación privada →
+            </Button>
+            <Box component="a" href={WA_URL} target="_blank" rel="noopener noreferrer"
+              onClick={() => track('edificio_whatsapp_share', { tipo: 'edificio' })}
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 1.5, px: 2, borderRadius: 2, bgcolor: '#f0fdf4', border: '1.5px solid #bbf7d0', textDecoration: 'none', cursor: 'pointer', transition: 'all 0.15s', '&:hover': { bgcolor: '#dcfce7', borderColor: '#86efac' } }}
+            >
+              <Box sx={{ width: 26, height: 26, borderRadius: '50%', bgcolor: '#22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 12l8-8 8 8M4 12l8 8 8-8" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </Box>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#16a34a' }}>Compartir con el grupo del edificio</Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.78rem', color: TEXT_MUTED, textAlign: 'center', lineHeight: 1.5 }}>
+              La electrolinera se aprueba en comité. Con 2 o 3 vecinos interesados, la conversación con la administración es mucho más fácil.
+            </Typography>
+            <Button fullWidth variant="text"
+              onClick={() => setEdificioCompare(false)}
+              sx={{ color: TEXT_MUTED, fontWeight: 600, py: 0.75, fontSize: '0.88rem' }}
+            >
+              ← Atrás
+            </Button>
+          </Box>
+        </Box>
+      )
+    }
+
     return (
       <Box>
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: '#2A3547' }}>
@@ -1612,7 +1697,7 @@ export default function CotizadorWizard() {
             </Button>
             <Button
               fullWidth variant="text"
-              onClick={() => { track('direct_path_selected', { tipo: state.tipo }); trackUnique('step_2_loaded', { step: 2, typeOfResidence }); update({ path: 'cotizar', step: 1 }) }}
+              onClick={() => { track('direct_path_selected', { tipo: state.tipo }); setEdificioCompare(true) }}
               sx={{ color: TEAL, '&:hover': { color: '#0777a0', bgcolor: 'rgba(8,152,185,0.04)' }, fontWeight: 600, py: 1, fontSize: '0.9rem' }}
             >
               Cotizar mi instalación privada →

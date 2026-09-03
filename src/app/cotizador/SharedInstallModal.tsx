@@ -6,9 +6,7 @@ import {
   FormControl, Select, MenuItem, Button, CircularProgress,
 } from '@mui/material'
 import { CHILE_REGIONS } from '@/data/chile-regions'
-import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '@/store/store'
-import { setWebContactForm } from '@/store/WebContactForm/slice'
+import { track, trackUnique, setTrackerIdentity } from '@/lib/tracker'
 
 const PINK = '#e81a68'
 const PINK_DARK = '#c01556'
@@ -32,6 +30,13 @@ const fieldSx = {
   },
 }
 
+const TD_LABEL = 'padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;'
+const TD_VALUE = 'padding:8px 12px;border:1px solid #e8e8e8;'
+
+function row(label: string, value: string) {
+  return `<tr><td style="${TD_LABEL}">${label}</td><td style="${TD_VALUE}">${value}</td></tr>`
+}
+
 interface Props {
   open: boolean
   onClose: () => void
@@ -40,14 +45,18 @@ interface Props {
   initialPhone?: string
   initialRol?: string
   initialUsersEV?: string
+  // edificio context for the email
+  edificioFloor?: string
+  edificioParkingFloor?: string
+  edificioVisitorParking?: boolean | null
+  formId?: string | null
 }
 
 export default function SharedInstallModal({
   open, onClose,
   initialName = '', initialEmail = '', initialPhone = '', initialRol = '', initialUsersEV = '',
+  edificioFloor = '', edificioParkingFloor = '', edificioVisitorParking = null,
 }: Props) {
-  const dispatch = useDispatch<AppDispatch>()
-
   const [region, setRegion] = useState('')
   const [comuna, setComuna] = useState('')
   const [address, setAddress] = useState('')
@@ -63,26 +72,47 @@ export default function SharedInstallModal({
   const comunas = CHILE_REGIONS.find(r => r.name === region)?.comunas ?? []
   const canSubmit = !!(region && comuna && address.trim() && name.trim() && email.trim() && phone.trim() && rol && usersEV)
 
+  function handleEmailChange(v: string) {
+    setEmail(v)
+    if (v.includes('@') && v.includes('.')) {
+      setTrackerIdentity({ customerId: v })
+      trackUnique('email_captured', { step: 0, typeOfResidence: 'EDIFICIO' })
+    }
+  }
+
   async function handleSubmit() {
     if (!canSubmit || loading) return
     setLoading(true)
     setError('')
+    trackUnique('cta_envio_form_electrolinera', { step: 0, typeOfResidence: 'EDIFICIO' })
     try {
-      await dispatch(setWebContactForm({
-        webContactFormId: crypto.randomUUID(),
-        date: new Date().toISOString(),
-        type: 'OTHER',
-        name,
-        email,
-        phone,
-        whatsapp: phone,
-        message: `Región: ${region} | Comuna: ${comuna} | Dirección: ${address} | Cargo: ${rol} | Usuarios EV: ${usersEV}`,
-        subject: 'Postulación Electrolinera Edificio — Instalación Compartida',
-        category: 'Edificio',
-        companyName: '',
-        cantidadVehiculos: 0,
-        customerId: email,
-      })).unwrap()
+      const { default: emailjs, init } = await import('emailjs-com')
+      init('UYcrSeCqLGW8xqT4S')
+      const parkingLabel = edificioParkingFloor || 'No indicado'
+      const visitasLabel = edificioVisitorParking === true ? 'Sí' : edificioVisitorParking === false ? 'No' : 'No indicado'
+      const fullAddress = [address, comuna, region].filter(Boolean).join(', ')
+      const CONTENT_HTML = [
+        '<h3 style="font-family:sans-serif;">Nueva postulación: Electrolinera compartida en edificio</h3>',
+        '<table style="border-collapse:collapse;width:100%;font-family:sans-serif;font-size:13px;">',
+        row('Nombre', name || '—'),
+        row('Email', email),
+        row('Teléfono', phone || '—'),
+        row('Dirección edificio', fullAddress || '—'),
+        row('Piso departamento', edificioFloor || '—'),
+        row('Piso estacionamiento', parkingLabel),
+        row('¿Tiene estacionamiento visitas?', visitasLabel),
+        rol ? row('Cargo/Rol', rol) : '',
+        usersEV ? row('Usuarios con auto eléctrico', usersEV) : '',
+        '</table>',
+      ].join('')
+
+      await emailjs.send('service_dbrrm6b', 'template_eysyecb', {
+        to_email: email,
+        name: name || email,
+        subject: `Nueva postulación electrolinera — ${name || email}`,
+        CONTENT_HTML,
+      })
+      track('electrolinera_submitted')
       setSubmitted(true)
     } catch {
       setError('No se pudo enviar. Intenta nuevamente.')
@@ -166,7 +196,7 @@ export default function SharedInstallModal({
               value={name} onChange={e => setName(e.target.value)} sx={fieldSx} />
 
             <TextField fullWidth size="small" placeholder="Email" type="email"
-              value={email} onChange={e => setEmail(e.target.value)} sx={fieldSx} />
+              value={email} onChange={e => handleEmailChange(e.target.value)} sx={fieldSx} />
 
             <TextField fullWidth size="small" placeholder="Teléfono" type="tel"
               value={phone} onChange={e => setPhone(e.target.value)} sx={fieldSx} />

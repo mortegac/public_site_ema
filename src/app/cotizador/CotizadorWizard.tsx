@@ -3158,6 +3158,10 @@ export default function CotizadorWizard() {
         initialPhone={state.visitaTelefono}
         initialRol={state.edificioRol}
         initialUsersEV={state.edificioUsersEV}
+        edificioFloor={state.edificioFloor}
+        edificioParkingFloor={state.edificioParkingFloor}
+        edificioVisitorParking={state.edificioVisitorParking}
+        formId={state.formId}
       />
     </Box>
   )

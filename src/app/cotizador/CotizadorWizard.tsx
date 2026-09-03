@@ -161,7 +161,7 @@ interface WizardState {
   edificioUsersEV: string
   edificioOption: 'dedicated' | 'shared' | null
   edificioEstimateLoading: boolean
-  edificioApiResult: { installGross: number } | null
+  edificioApiResult: { installGross: number; mat?: number; inst?: number; netPrice?: number; sec?: number; nextVisitDate?: string | null } | null
   removedChargerId: string | null  // remembers charger id when user clicks "quitar"
   showElectrolineraForm: boolean
   showVisitaForm: boolean
@@ -626,16 +626,20 @@ export default function CotizadorWizard() {
         if (!data || ctrl.signal.aborted) return
         const est = (data.estimates as any[])?.find((e: any) => Number(e.chargerPotence) === 7) ?? data.estimates?.[0]
         if (est) {
-          update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Number(est.materialsCost ?? 0) + Number(est.installationCost ?? 0)) * 1.19) }, ...(data.formId && !fid ? { formId: data.formId } : {}) })
+          const mat = Number(est.materialsCost ?? 0)
+          const inst = Number(est.installationCost ?? 0)
+          update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((mat + inst) * 1.19), mat, inst, netPrice: Number(est.netPrice ?? 0), sec: Number(est.SECCost ?? INSTALL_BASE.edificio.sec), nextVisitDate: data.nextAvailableDate ?? null }, ...(data.formId && !fid ? { formId: data.formId } : {}) })
           return
         }
         const base = INSTALL_BASE.edificio; const f = dFactor(dist)
-        update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Math.round(base.mat * f) + Math.round(base.inst * f)) * 1.19) } })
+        const mat = Math.round(base.mat * f); const inst = Math.round(base.inst * f)
+        update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((mat + inst) * 1.19), mat, inst } })
       })
       .catch(err => {
         if (err.name === 'AbortError') return
         const base = INSTALL_BASE.edificio; const f = dFactor(dist)
-        update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((Math.round(base.mat * f) + Math.round(base.inst * f)) * 1.19) } })
+        const mat = Math.round(base.mat * f); const inst = Math.round(base.inst * f)
+        update({ edificioEstimateLoading: false, edificioApiResult: { installGross: Math.round((mat + inst) * 1.19), mat, inst } })
       })
   }
 
@@ -701,6 +705,31 @@ export default function CotizadorWizard() {
 
     // Step 1 (any path) or step 2 → call API → step 3
     const isCargadorStep = state.step === 2 || state.step === 1
+
+    // Edificio already pre-fetched → reuse data, skip second /api/cotizar call
+    if (isCargadorStep && state.tipo === 'edificio' && state.edificioApiResult?.mat !== undefined && state.formId) {
+      const er = state.edificioApiResult
+      const charger = state.chargerId !== 'own' ? chargerList.find(c => c.id === state.chargerId) : null
+      const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
+      const chargerGrossPrice = charger ? charger.precio : 0
+      const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
+      const installNeto = er.netPrice ?? 0
+      const totalNeto = installNeto + chargerPrice
+      const totalIva = Math.round(totalNeto * 0.19)
+      trackUnique('step_3_loaded', { formId: state.formId, total: totalNeto + totalIva, typeOfResidence })
+      update({
+        estimateLoading: false, step: 3,
+        nextVisitDate: er.nextVisitDate ?? null,
+        apiResult: {
+          mat: er.mat ?? 0, inst: er.inst ?? 0,
+          sec: er.sec ?? INSTALL_BASE.edificio.sec,
+          chargerPrice, chargerName, neto: totalNeto, iva: totalIva, total: totalNeto + totalIva,
+          isOwn: state.chargerId === 'own', chargerGrossPrice, installGross: er.installGross,
+        },
+        ...(preBookedOverride ?? {}),
+      })
+      return
+    }
 
     // Cargador step → call API → Cotización (step 3)
     if (isCargadorStep) {
@@ -1453,7 +1482,7 @@ export default function CotizadorWizard() {
             </Button>
             <Button fullWidth variant="outlined"
               onClick={() => { trackUnique('step_2_loaded', { step: 2, typeOfResidence }); update({ path: 'cotizar', step: 1 }); setEdificioCompare(false) }}
-              sx={{ borderColor: TEAL, color: TEAL, '&:hover': { bgcolor: 'rgba(8,152,185,0.05)' }, fontWeight: 600, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2 }}
+              sx={{ borderColor: TEAL, color: TEAL, '&:hover': { bgcolor: 'rgba(8,152,185,0.05)', color: '#0898b9' }, fontWeight: 600, py: 1.25, fontSize: '0.9rem', boxShadow: 'none', borderRadius: 2 }}
             >
               Ver mi cotización de instalación privada →
             </Button>

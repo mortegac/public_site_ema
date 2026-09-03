@@ -33,8 +33,12 @@ const fieldSx = {
 const TD_LABEL = 'padding:8px 12px;border:1px solid #e8e8e8;font-weight:600;color:#4B4B5C;'
 const TD_VALUE = 'padding:8px 12px;border:1px solid #e8e8e8;'
 
+function escapeHtml(s: string) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
+
 function row(label: string, value: string) {
-  return `<tr><td style="${TD_LABEL}">${label}</td><td style="${TD_VALUE}">${value}</td></tr>`
+  return `<tr><td style="${TD_LABEL}">${escapeHtml(label)}</td><td style="${TD_VALUE}">${escapeHtml(value)}</td></tr>`
 }
 
 interface Props {

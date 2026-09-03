@@ -131,26 +131,6 @@ export default function SharedInstallModal({
       PaperProps={{ sx: { borderRadius: 3, m: { xs: 1, sm: 2 } } }}
     >
       <DialogContent sx={{ p: { xs: 3, sm: 4 } }}>
-        {/* Header */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2.5 }}>
-          <Box sx={{ pr: 2 }}>
-            <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547', lineHeight: 1.3 }}>
-              Regístrate para recibir tu{' '}
-              <Box component="span" sx={{ color: PINK }}>kit</Box>
-            </Typography>
-            <Typography sx={{ fontSize: '0.875rem', color: TEXT_MUTED, mt: 0.5, lineHeight: 1.5 }}>
-              Te enviamos todo lo que necesitas para presentar en la próxima reunión de tu comunidad.
-            </Typography>
-          </Box>
-          <Box
-            component="button" onClick={onClose}
-            sx={{ border: 'none', background: 'none', cursor: 'pointer', p: 0.5, color: TEXT_MUTED, flexShrink: 0, lineHeight: 1, fontSize: '1.25rem', '&:hover': { color: '#2A3547' } }}
-            aria-label="Cerrar"
-          >
-            ✕
-          </Box>
-        </Box>
-
         {submitted ? (
           <Box sx={{ textAlign: 'center', py: 5 }}>
             <Typography sx={{ fontSize: '2.5rem', mb: 1.5 }}>✅</Typography>
@@ -163,6 +143,26 @@ export default function SharedInstallModal({
           </Box>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            {/* Header */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+              <Box sx={{ pr: 2 }}>
+                <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: '#2A3547', lineHeight: 1.3 }}>
+                  Regístrate para recibir tu{' '}
+                  <Box component="span" sx={{ color: PINK }}>kit</Box>
+                </Typography>
+                <Typography sx={{ fontSize: '0.875rem', color: TEXT_MUTED, mt: 0.5, lineHeight: 1.5 }}>
+                  Te enviamos todo lo que necesitas para presentar en la próxima reunión de tu comunidad.
+                </Typography>
+              </Box>
+              <Box
+                component="button" onClick={onClose}
+                sx={{ border: 'none', background: 'none', cursor: 'pointer', p: 0.5, color: TEXT_MUTED, flexShrink: 0, lineHeight: 1, fontSize: '1.25rem', '&:hover': { color: '#2A3547' } }}
+                aria-label="Cerrar"
+              >
+                ✕
+              </Box>
+            </Box>
+
             <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#2A3547' }}>
               Dirección del edificio
             </Typography>

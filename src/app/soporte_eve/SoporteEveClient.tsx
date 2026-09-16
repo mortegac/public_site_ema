@@ -9,7 +9,6 @@ const CONFIG = {
   whatsapp: "56967666652",
   email: "contacto@energica.city",
   telefono: "+56 9 6766 6652",
-  telefonoLink: "+56967666652",
   horario: "Lun a Vie, 9:00 a 18:00",
 };
 
@@ -26,6 +25,12 @@ const Chevron = () => (
     strokeLinejoin="round"
   >
     <path d="m9 18 6-6-6-6" />
+  </svg>
+);
+
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.25 8.21Zm4.52-6.15c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.71-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.47c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.06 0 1.22.89 2.39 1.01 2.56.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z" />
   </svg>
 );
 
@@ -100,7 +105,7 @@ export default function SoporteEveClient() {
           <div className={styles.eyebrow}>Puntos de carga EVE</div>
           <h1>¿Tuviste un problema con tu carga?</h1>
           <p>
-            Acá están las respuestas a lo que más nos preguntan y las tres
+            Acá están las respuestas a lo que más nos preguntan y las dos
             formas de hablar con nosotros.
           </p>
           {punto && (
@@ -121,12 +126,20 @@ export default function SoporteEveClient() {
                 rel="noopener"
               >
                 <span className={styles.ico} aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.25 8.21Zm4.52-6.15c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.71-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.47c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.06 0 1.22.89 2.39 1.01 2.56.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-2.9-.4L4 21l1.4-3.8A8.2 8.2 0 0 1 3 11.5C3 6.8 7 3 12 3s9 3.8 9 8.5Z" />
+                    <path d="M8.5 11h7M8.5 14.5h4.5" />
                   </svg>
                 </span>
                 <span className={styles.txt}>
-                  <span className={styles.t}>Escríbenos por WhatsApp</span>
+                  <span className={styles.t}>Escríbenos</span>
                   <span className={styles.s}>
                     La vía más rápida. Respondemos en minutos.
                   </span>
@@ -156,23 +169,16 @@ export default function SoporteEveClient() {
               </a>
 
               <a
-                className={`${styles.btn} ${styles.tel}`}
-                href={`tel:${CONFIG.telefonoLink}`}
+                className={`${styles.btn} ${styles.wa}`}
+                href={waHref}
+                target="_blank"
+                rel="noopener"
               >
                 <span className={styles.ico} aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M6.5 3h3l1.5 4-2 1.3a12.5 12.5 0 0 0 6.7 6.7L17 13l4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3.5 5.2 2 2 0 0 1 5.5 3Z" />
-                  </svg>
+                  <WhatsAppIcon />
                 </span>
                 <span className={styles.txt}>
-                  <span className={styles.t}>Llámanos</span>
+                  <span className={styles.t}>Escríbenos por WhatsApp</span>
                   <span className={styles.s}>
                     {CONFIG.telefono} · {CONFIG.horario}
                   </span>

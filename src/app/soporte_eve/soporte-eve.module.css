@@ -266,9 +266,30 @@
   color: #1596B0;
 }
 
-.btn.tel .ico {
-  background: #EEF1F7;
-  color: var(--ink);
+.btn.wa {
+  padding: 11px 14px;
+  gap: 11px;
+}
+
+.btn.wa .ico {
+  background: #E7F8EF;
+  color: #1FA855;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+
+.btn.wa .ico svg {
+  width: 17px;
+  height: 17px;
+}
+
+.btn.wa .t {
+  font-size: 14px;
+}
+
+.btn.wa .s {
+  font-size: 12px;
 }
 
 /* ---------- línea de tiempo ---------- */

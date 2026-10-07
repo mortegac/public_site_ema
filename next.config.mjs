@@ -71,19 +71,21 @@ const nextConfig = {
               value: [
                 "default-src 'self'",
                 // Scripts: GTM, GA, Google Ads, Prismic, Maps, AdServices
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.google.com https://static.cdn.prismic.io https://maps.googleapis.com",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.google.com https://static.cdn.prismic.io https://maps.googleapis.com https://cdnjs.cloudflare.com",
                 // Styles
                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                 // Fonts
                 "font-src 'self' https://fonts.gstatic.com",
-                // Images: GA, GTM, DoubleClick, Google Ads conversion pixels
-                "img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://*.google.cl https://purecatamphetamine.github.io https://lh3.googleusercontent.com",
+                // Images: GA, GTM, DoubleClick, Google Ads conversion pixels, map tiles
+                "img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://*.google.cl https://purecatamphetamine.github.io https://lh3.googleusercontent.com https://*.openfreemap.org",
                 // Media
                 "media-src 'self' https://*.prismic.io https://energica-public-site.cdn.prismic.io",
-                // Connections: GA4 endpoints, GTM, DoubleClick, AWS, Prismic, EmailJS
-                "connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://analytics.google.com https://region1.analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://www.googleadservices.com https://ad.doubleclick.net https://cognito-identity.us-east-2.amazonaws.com https://*.amazonaws.com https://*.appsync-api.us-east-2.amazonaws.com https://api.emailjs.com",
-                // Frames: GTM noscript, DoubleClick, Prismic preview
-                "frame-src https://www.googletagmanager.com https://googleads.g.doubleclick.net https://td.doubleclick.net https://energica-public-site.prismic.io",
+                // Connections: GA4 endpoints, GTM, DoubleClick, AWS, Prismic, EmailJS, map tiles
+                "connect-src 'self' https://*.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://analytics.google.com https://region1.analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://www.googleadservices.com https://ad.doubleclick.net https://cognito-identity.us-east-2.amazonaws.com https://*.amazonaws.com https://*.appsync-api.us-east-2.amazonaws.com https://api.emailjs.com https://*.openfreemap.org https://cdnjs.cloudflare.com",
+                // Workers: MapLibre GL uses blob: workers for tile rendering
+                "worker-src blob:",
+                // Frames: GTM noscript, DoubleClick, Prismic preview, same-origin (red-eve map)
+                "frame-src 'self' https://www.googletagmanager.com https://googleads.g.doubleclick.net https://td.doubleclick.net https://energica-public-site.prismic.io",
               ].join('; '),
             },
           ],

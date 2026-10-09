@@ -84,3 +84,25 @@ import { CLIENT_FORM_STEPS } from '@/app/api/update-step/route'
 | `src/app/return/ReturnClient.tsx` | Transición 4 (pago aprobado) |
 | `src/app/cotizador/agenda/AgendaClient.tsx` | Transición 4 (visita a /cotizador/agenda) |
 | `src/app/cotizador/recibo-pago/ReciboPagoClient.tsx` | Transición 5 (fecha confirmada) |
+
+---
+
+## Cobertura geográfica del cotizador
+
+Fuente: `src/data/chile-regions.ts` (rama `feat/cambios-edificiov4.2`)
+
+El cotizador acepta comunas de dos regiones. Solo las comunas listadas aquí son válidas en el formulario de cotización.
+
+### Región Metropolitana (código `RM`) — 52 comunas
+
+Alhué, Buin, Calera de Tango, Cerrillos, Cerro Navia, Colina, Conchalí, Curacaví, El Bosque, El Monte, Estación Central, Huechuraba, Independencia, Isla de Maipo, La Cisterna, La Florida, La Granja, La Pintana, La Reina, Lampa, Las Condes, Lo Barnechea, Lo Espejo, Lo Prado, Macul, Maipú, María Pinto, Melipilla, Padre Hurtado, Paine, Pedro Aguirre Cerda, Peñaflor, Peñalolén, Pirque, Providencia, Pudahuel, Puente Alto, Quilicura, Quinta Normal, Recoleta, Renca, San Bernardo, San Joaquín, San José de Maipo, San Miguel, San Pedro, San Ramón, Santiago, Talagante, Til Til, Vitacura, Ñuñoa
+
+### Región de Valparaíso (código `V`) — 5 comunas
+
+| # | Comuna |
+|---|--------|
+| 1 | Concón |
+| 2 | Quilpué |
+| 3 | Valparaíso |
+| 4 | Villa Alemana |
+| 5 | Viña del Mar |

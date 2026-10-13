@@ -552,7 +552,8 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
         const CONTENT_HTML =HTML() // contentHTML
         const templateParams = {
           from_name: values.firstname,
-          to_email: values.email,
+          to_email: "franco@energica.city",
+          // values.email,
           to_name: values.firstname,
           reply_to: values.email,
           contentTitle: CONTENT_TITLE,

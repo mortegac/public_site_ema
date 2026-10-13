@@ -487,7 +487,13 @@ export const PostulacionElectrolineras: FC<ContactFormProps> = ({ slice }) => {
                                 
                                 <p >
                                     Dirección completa: <b>${values?.address ? values.address:""}</b></p>
-                                
+
+                                <p >
+                                    Región: <b>${customer?.state ? customer.state:""}</b></p>
+
+                                <p >
+                                    Ciudad/Comuna: <b>${customer?.city ? customer.city:""}</b></p>
+
                                 <p >
                                   ¿Tiene estacionamientos de visita?: <b>${values?.visitorparkingstatus ? values.visitorparkingstatus:""}</b>
                                 </p>

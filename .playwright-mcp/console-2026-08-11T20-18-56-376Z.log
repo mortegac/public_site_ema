@@ -1,0 +1,6 @@
+[    1529ms] [INFO] [O11Y] [DatadogRUM] Initialized {service: claude-ai, env: production, version: 0705df3dda} @ https://assets-proxy.anthropic.com/claude-ai/v2/assets/v1/vendor-datadog-BxH0POCI.js:0
+[    2626ms] [WARNING] Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://www.claudeusercontent.com') does not match the recipient window's origin ('https://claude.ai'). @ https://assets-proxy.anthropic.com/claude-ai/v2/assets/v1/shared-9-Ceeh0wFc.js:1
+[    3811ms] [ERROR] Unrecognized Content-Security-Policy directive 'webrtc'. @ https://www.claudeusercontent.com/artifact/46b2e2a6-34f1-49a6-a0b6-ce24c8693b9e?domain=claude.ai&parentOrigin=https%3A%2F%2Fclaude.ai&errorReportingMode=parent&formattedSpreadsheets=true:0
+[    4561ms] [WARNING] [ARTIFACTS] Received message does not conform to basic message shape, ignoring @ https://assets-proxy.anthropic.com/claude-ai/v2/assets/v1/vendor-datadog-BxH0POCI.js:0
+[    4567ms] [ERROR] Unrecognized Content-Security-Policy directive 'webrtc'. @ https://www.claudeusercontent.com/_next/static/chunks/2_d4dn_p50adr.js:0
+[    4572ms] [ERROR] Unrecognized Content-Security-Policy directive 'webrtc'. @ about:srcdoc:0

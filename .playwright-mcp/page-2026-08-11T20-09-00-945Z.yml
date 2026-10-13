@@ -1,0 +1,185 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e3]:
+    - generic [ref=f4e10]:
+      - heading "Tu cotización al instante" [level=1] [ref=f4e239]
+      - paragraph [ref=f4e12]: Precio real basado en tu perfil
+      - generic [ref=f4e14]:
+        - generic [ref=f4e16]:
+          - paragraph [ref=f4e18]: ✓
+          - paragraph [ref=f4e19]: Ubicación
+        - generic [ref=f4e22]:
+          - paragraph [ref=f4e24]: "2"
+          - paragraph [ref=f4e25]: Agendar visita
+          - paragraph [ref=f4e199]: omitido
+        - generic [ref=f4e29]:
+          - paragraph [ref=f4e31]: "3"
+          - paragraph [ref=f4e32]: Cotización
+    - generic [ref=f4e34]:
+      - generic [ref=f4e240]:
+        - generic [ref=f4e241]:
+          - paragraph [ref=f4e242]: Tu cotización personalizada
+          - paragraph [ref=f4e243]: Edificio · 7 pisos · ~28m al tablero
+          - paragraph [ref=f4e244]: Instalación llave en mano (IVA incl.)
+          - paragraph [ref=f4e245]: $997.433
+          - paragraph [ref=f4e246]: $897.690
+          - paragraph [ref=f4e248]: 10% dcto pagando hoy · ahorras $99.743
+          - paragraph [ref=f4e249]: Materiales, mano de obra, trámite SEC y visita técnica incluidos.
+        - generic [ref=f4e250]:
+          - generic [ref=f4e251]:
+            - generic [ref=f4e252]:
+              - paragraph [ref=f4e254]: H
+              - paragraph [ref=f4e256]: C
+              - paragraph [ref=f4e258]: J
+              - paragraph [ref=f4e260]: R
+            - paragraph [ref=f4e261]: +120 instalaciones completadas en Santiago
+          - paragraph [ref=f4e262]: Elige cómo avanzar
+          - generic [ref=f4e263]:
+            - generic [ref=f4e264]:
+              - paragraph [ref=f4e265]: 🔥
+              - paragraph [ref=f4e266]: LA MÁS ELEGIDA
+            - generic [ref=f4e267] [cursor=pointer]:
+              - paragraph [ref=f4e269]: ALT 1
+              - generic [ref=f4e270]:
+                - paragraph [ref=f4e271]: Electrolinera compartida
+                - paragraph [ref=f4e272]: Sin costo para ti · pagas solo lo que cargas
+              - generic [ref=f4e273]:
+                - paragraph [ref=f4e274]: $0
+                - paragraph [ref=f4e275]: inversión
+              - paragraph [ref=f4e276]: ▼
+          - generic [ref=f4e278] [cursor=pointer]:
+            - paragraph [ref=f4e280]: ALT 2
+            - generic [ref=f4e281]:
+              - paragraph [ref=f4e282]: Visita Técnica
+              - paragraph [ref=f4e283]: Agenda y decide después
+            - generic [ref=f4e284]:
+              - paragraph [ref=f4e285]: $9.990
+              - paragraph [ref=f4e286]: acreditable
+            - paragraph [ref=f4e287]: ▼
+          - paragraph [ref=f4e288]: "Próxima visita disponible: Miércoles, 12 Agosto"
+          - generic [ref=f4e290] [cursor=pointer]:
+            - paragraph [ref=f4e292]: ALT 3
+            - generic [ref=f4e293]:
+              - paragraph [ref=f4e294]: Pagar hoy
+              - paragraph [ref=f4e295]: Descuento incluido
+            - generic [ref=f4e296]:
+              - paragraph [ref=f4e297]: $897.690
+              - paragraph [ref=f4e298]: $997.433
+            - paragraph [ref=f4e299]: ▼
+        - button "Enviar mi cotización por email" [ref=f4e301] [cursor=pointer]
+        - link [ref=f4e303] [cursor=pointer]:
+          - /url: https://wa.me/56967666652?text=Hola%2C%20estoy%20viendo%20la%20cotizaci%C3%B3n%20para%20mi%20cargador%20en%20%20(28m%2C%20%24997.433)%20y%20tengo%20una%20consulta.
+          - paragraph [ref=f4e307]: ¿Tienes dudas? Habla con nosotros
+        - generic [ref=f4e308]:
+          - paragraph [ref=f4e313]: Tu proceso de instalación
+          - generic [ref=f4e314]:
+            - paragraph [ref=f4e316]: "1"
+            - generic [ref=f4e317]:
+              - paragraph [ref=f4e318]: Pago y agenda de visita
+              - paragraph [ref=f4e319]: Hoy
+          - generic [ref=f4e320]:
+            - paragraph [ref=f4e322]: "2"
+            - generic [ref=f4e323]:
+              - paragraph [ref=f4e324]: Visita técnica para confirmar distancia y tipo de canalización
+              - paragraph [ref=f4e325]: "Próxima fecha: Miércoles, 12 Agosto"
+          - generic [ref=f4e326]:
+            - paragraph [ref=f4e328]: "3"
+            - generic [ref=f4e329]:
+              - paragraph [ref=f4e330]: Compra de materiales
+              - paragraph [ref=f4e331]: 2 a 3 días hábiles
+          - generic [ref=f4e332]:
+            - paragraph [ref=f4e334]: "4"
+            - generic [ref=f4e335]:
+              - paragraph [ref=f4e336]: Instalación de tu cargador
+              - paragraph [ref=f4e337]: 2 días hábiles
+          - paragraph [ref=f4e339]: "De pago a cargador funcionando: ~7 a 12 días hábiles"
+        - generic [ref=f4e340]:
+          - paragraph [ref=f4e341]: Compra protegida
+          - paragraph [ref=f4e348]:
+            - strong [ref=f4e349]: Tu dinero queda resguardado
+            - text: hasta que la instalación se complete.
+          - paragraph [ref=f4e355]:
+            - strong [ref=f4e356]: Devolución sin preguntas.
+            - text: Puedes solicitar la devolución de tu dinero en todo momento antes de la instalación.
+          - paragraph [ref=f4e362]:
+            - strong [ref=f4e363]: Garantía de 3 meses
+            - text: sobre la instalación completa.
+        - button "← Nueva simulación" [ref=f4e365] [cursor=pointer]
+      - link "No quiero instalación, solo comprar un cargador" [ref=f4e79] [cursor=pointer]:
+        - /url: /cargadores-vehiculos-electricos-sin-instalacion
+      - generic [ref=f4e80]: Instalación certificada SEC · Garantía de 3 meses · Tu compra esta protegida
+  - generic [ref=f4e81]:
+    - img "city background" [ref=f4e84]
+    - generic [ref=f4e85]:
+      - generic [ref=f4e86]:
+        - generic [ref=f4e87]:
+          - paragraph [ref=f4e88]: Redes sociales
+          - generic [ref=f4e89]:
+            - link "Instagram" [ref=f4e90] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=f4e91]
+            - link "Linkedin" [ref=f4e92] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=f4e93]
+          - paragraph [ref=f4e94]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=f4e95] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=f4e97] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=f4e99]:
+          - link "Inicio" [ref=f4e100] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=f4e102] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=f4e104] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=f4e106] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=f4e108] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=f4e110] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=f4e112]:
+          - link "Blog" [ref=f4e113] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=f4e115] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=f4e117] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=f4e119] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=f4e121] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=f4e123] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=f4e125] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=f4e127]
+      - generic [ref=f4e128]:
+        - generic [ref=f4e130]:
+          - img "logo" [ref=f4e131]
+          - paragraph [ref=f4e132]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=f4e133] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=f4e138]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=f4e139] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=f4e144]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=f4e145]: Copyright © 2026
+        - paragraph [ref=f4e146]:
+          - link "Política de privacidad" [ref=f4e147] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=f4e148] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .
+  - generic [ref=f4e153] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f4e154]
+    - generic [ref=f4e158]:
+      - button "Open issues overlay" [ref=f4e159]:
+        - generic [ref=f4e160]:
+          - generic [ref=f4e161]: "1"
+          - generic [ref=f4e162]: "2"
+        - generic [ref=f4e163]:
+          - text: Issue
+          - generic [ref=f4e164]: s
+      - button "Collapse issues badge" [ref=f4e165]
+  - alert [ref=f4e168]

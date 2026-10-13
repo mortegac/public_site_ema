@@ -1,0 +1,67 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e3]:
+    - generic: This content is blocked. Contact the site owner to fix the issue.
+  - generic [ref=e4]:
+    - img "city background" [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - paragraph [ref=e11]: Redes sociales
+          - generic [ref=e12]:
+            - link "Instagram" [ref=e13] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=e14]
+            - link "Linkedin" [ref=e15] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=e16]
+          - paragraph [ref=e17]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=e18] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=e20] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=e22]:
+          - link "Inicio" [ref=e23] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=e25] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=e27] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=e29] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=e31] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=e33] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=e35]:
+          - link "Blog" [ref=e36] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=e38] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=e40] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=e42] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=e44] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=e46] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=e48] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=e50]
+      - generic [ref=e51]:
+        - generic [ref=e53]:
+          - img "logo" [ref=e54]
+          - paragraph [ref=e55]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=e56] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=e61]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=e62] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=e67]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=e68]: Copyright © 2026
+        - paragraph [ref=e69]:
+          - link "Política de privacidad" [ref=e70] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=e71] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .

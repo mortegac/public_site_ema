@@ -1,0 +1,11 @@
+[    6481ms] [WARNING] Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://www.youtube.com') does not match the recipient window's origin ('https://www.google.com'). @ https://www.youtube.com/s/player/8d2a370b/www-widgetapi.vflset/www-widgetapi.js:162
+[   11644ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2Fbusiness%2Ftools%2Fmeta-business-suite%3Fcontent_id%3DxhK3KlQBBLIArJQ%26ref%3Dsem_smb%26utm_term%3Dmeta%2Bbusiness%2Bsuite%26gclid%3DEAIaIQobChMIxOquvN2ZlgMVhVxIAB1d8glWEAAYASAAEgLo_vD_BwE%26gad_source%3D1%26gad_campaignid%3D21776370200%26gbraid%3D0AAAAACr-yC-p5ax-i73vxUd_ht38RC-Ka&gclid=EAIaIQobChMIxOquvN2ZlgMVhVxIAB1d8glWEAAYASAAEgLo_vD_BwE:0
+[   12157ms] [WARNING] Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently @ https://static.xx.fbcdn.net/rsrc.php/v4/yL/r/QG7NEXDr5Fm.js:57
+[   12255ms] [LOG] 
+%cStop! font-family:helvetica; font-size:20px; font-size:50px; font-weight:bold; color:red; -webkit-text-stroke:1px black; @ https://static.xx.fbcdn.net/rsrc.php/v4/yp/r/qjgdCxOk2tm.js:246
+[   12255ms] [LOG] 
+%cThis is a browser feature intended for developers. If someone told you to copy-paste something here to enable a Facebook feature or "hack" someone's account, it's a scam and will give them access to your Facebook account. font-family:helvetica; font-size:20px;  @ https://static.xx.fbcdn.net/rsrc.php/v4/yp/r/qjgdCxOk2tm.js:246
+[   12255ms] [LOG] 
+%cSee https://www.facebook.com/selfxss for more information. font-family:helvetica; font-size:20px;  @ https://static.xx.fbcdn.net/rsrc.php/v4/yp/r/qjgdCxOk2tm.js:246
+[   12255ms] [LOG] 
+%c  @ https://static.xx.fbcdn.net/rsrc.php/v4/yp/r/qjgdCxOk2tm.js:246

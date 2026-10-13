@@ -1,0 +1,16 @@
+[     255ms] [ERROR] Framing 'http://localhost:3000/red-eve.html' violates the following Content Security Policy directive: "frame-src https://www.googletagmanager.com https://googleads.g.doubleclick.net https://td.doubleclick.net https://energica-public-site.prismic.io". The request has been blocked.
+ @ http://localhost:3000/mapa-red-eve:0
+[     645ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[     761ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     764ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     766ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     768ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     769ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     772ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     773ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     774ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     776ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     777ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     779ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[     853ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[     853ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56

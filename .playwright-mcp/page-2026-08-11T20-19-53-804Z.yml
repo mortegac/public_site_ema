@@ -1,0 +1,113 @@
+- generic [ref=f24e3]:
+  - generic [ref=f24e8]:
+    - generic [ref=f24e9]:
+      - generic [ref=f24e10]:
+        - generic [ref=f24e11]:
+          - link [ref=f24e12] [cursor=pointer]:
+            - /url: https://claude.ai
+            - img "Claude" [ref=f24e13]
+          - generic [ref=f24e15]: Content is user-generated and unverified.
+          - radiogroup "Artifact view" [ref=f24e17]:
+            - radio "Preview" [checked] [ref=f24e18] [cursor=pointer]:
+              - generic [ref=f24e19]: 
+            - radio [checked] [ref=f24e20]
+            - radio "Code" [ref=f24e21] [cursor=pointer]:
+              - generic [ref=f24e22]: 
+            - radio [ref=f24e23]
+        - generic [ref=f24e24]: "8"
+      - generic [ref=f24e28]:
+        - button "Copy link" [ref=f24e31] [cursor=pointer]
+        - button "Report" [ref=f24e36] [cursor=pointer]
+        - button "Copy" [ref=f24e40] [cursor=pointer]
+        - link "Learn about artifacts" [ref=f24e50] [cursor=pointer]:
+          - /url: https://support.claude.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them
+    - iframe [ref=f24e56]:
+      - generic [ref=f29e1]:
+        - alert [ref=f29e2]
+        - iframe [ref=f29e5]:
+          - generic [ref=f30e1]:
+            - generic [ref=f30e2]:
+              - navigation [ref=f30e3]:
+                - generic [ref=f30e4]:
+                  - generic [ref=f30e5]: e
+                  - generic [ref=f30e6]: enérgicacity
+                - generic [ref=f30e7]:
+                  - generic [ref=f30e8]: Electrificación de flotas
+                  - generic [ref=f30e9]: Instalación de cargadores
+                  - generic [ref=f30e10]: Electrolineras en edificios
+                  - generic [ref=f30e11]: Sobre Energica
+                  - generic [ref=f30e12]: Blog
+                  - generic [ref=f30e13]: Contacto
+                - generic [ref=f30e14]: 🛒
+              - heading "Cotiza tu instalación" [level=1] [ref=f30e15]
+              - generic [ref=f30e16]: Instalación certificada SEC · Precios claros · Sin sorpresas
+              - generic [ref=f30e17]:
+                - generic [ref=f30e18]:
+                  - generic [ref=f30e19]: "1"
+                  - generic [ref=f30e20]: Ubicación
+                - generic [ref=f30e22]:
+                  - generic [ref=f30e23]: "2"
+                  - generic [ref=f30e24]:
+                    - text: Agendar visita
+                    - generic [ref=f30e25]: opcional
+                - generic [ref=f30e27]:
+                  - generic [ref=f30e28]: "3"
+                  - generic [ref=f30e29]: Cotización
+            - generic [ref=f30e30]:
+              - generic [ref=f30e31]:
+                - heading "¿Dónde instalarás tu cargador?" [level=2] [ref=f30e32]
+                - generic [ref=f30e33]: Indícanos si vives en casa o departamento de un edificio
+                - generic [ref=f30e34]:
+                  - generic [ref=f30e35]:
+                    - generic [ref=f30e36]: 🏠
+                    - generic [ref=f30e37]: Casa
+                    - generic [ref=f30e38]: Estacionamiento propio
+                  - generic [ref=f30e39]:
+                    - generic [ref=f30e40]: 🏢
+                    - generic [ref=f30e41]: Edificio
+                    - generic [ref=f30e42]: Depto · propiedad horizontal
+                - generic [ref=f30e43]:
+                  - generic [ref=f30e44]: Distancia al tablero eléctrico
+                  - generic [ref=f30e45]: Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+                  - slider [ref=f30e46]: "1"
+                  - generic [ref=f30e47]:
+                    - generic [ref=f30e48]: 5m
+                    - generic [ref=f30e49]: 10m
+                    - generic [ref=f30e50]: 15m
+                    - generic [ref=f30e51]: 20m
+                    - generic [ref=f30e52]: 30m
+                    - generic [ref=f30e53]: 40m
+                    - generic [ref=f30e54]: 60m
+                  - generic [ref=f30e55]:
+                    - generic [ref=f30e56]: Distancia estándar
+                    - generic [ref=f30e57]: 10 m
+                - generic [ref=f30e58]:
+                  - button "📅 Agenda visita y cotizar" [ref=f30e59] [cursor=pointer]
+                  - generic [ref=f30e60]: o
+                  - button "Solo quiero la cotización →" [ref=f30e61] [cursor=pointer]
+                - generic [ref=f30e62]: Puedes ver la disponibilidad y reservar tu horario ahora, o revisar tu precio primero y agendar después.
+              - button "No quiero instalación, solo comprar un cargador" [ref=f30e63] [cursor=pointer]
+              - generic [ref=f30e64]: Instalación certificada SEC · Garantía de 3 meses · Tu compra está protegida
+            - contentinfo [ref=f30e65]:
+              - generic [ref=f30e66]:
+                - generic [ref=f30e67]:
+                  - heading "Redes sociales" [level=4] [ref=f30e68]
+                  - generic [ref=f30e69]:
+                    - generic [ref=f30e70]: ◎
+                    - generic [ref=f30e71]: in
+                  - heading "¡Hablemos!" [level=4] [ref=f30e72]
+                  - generic [ref=f30e73]: +56 9 6766 6652
+                  - generic [ref=f30e74]: contacto@energica.city
+                - generic [ref=f30e75]:
+                  - generic [ref=f30e76]: Inicio
+                  - generic [ref=f30e77]: Cotizador
+                  - generic [ref=f30e78]: Electrificación de flotas
+                  - generic [ref=f30e79]: Instalación de cargadores
+                  - generic [ref=f30e80]: Electrolineras en edificios
+                  - generic [ref=f30e81]: Sobre Energica
+              - generic [ref=f30e82]:
+                - generic [ref=f30e83]: e
+                - generic [ref=f30e84]: enérgicacity
+              - generic [ref=f30e85]: Te ayudamos a concretar tu proyecto de electromovilidad industrial o inmobiliario de manera rentable.📍 Av. Apoquindo 5950, Las Condes, Santiago. 📍 Viña del Mar, Región de Valparaíso, Chile.Copyright © 2026
+  - region "Notifications (F8)":
+    - list

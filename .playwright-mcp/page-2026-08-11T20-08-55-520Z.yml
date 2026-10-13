@@ -1,0 +1,128 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e3]:
+    - generic [ref=f4e194]:
+      - paragraph [ref=f4e195]: ⚡
+      - paragraph [ref=f4e196]: Calculando tu presupuesto…
+      - paragraph [ref=f4e197]: Procesando con datos reales del servidor
+    - generic [ref=f4e10]:
+      - heading "Elige tu cargador eléctrico" [level=1] [ref=f4e198]
+      - paragraph [ref=f4e12]: Selecciona el equipo que mejor se adapta a tus necesidades
+      - generic [ref=f4e14]:
+        - generic [ref=f4e16]:
+          - paragraph [ref=f4e18]: ✓
+          - paragraph [ref=f4e19]: Ubicación
+        - generic [ref=f4e22]:
+          - paragraph [ref=f4e24]: "2"
+          - paragraph [ref=f4e25]: Agendar visita
+          - paragraph [ref=f4e199]: omitido
+        - generic [ref=f4e29]:
+          - paragraph [ref=f4e31]: "3"
+          - paragraph [ref=f4e32]: Cotización
+    - generic [ref=f4e34]:
+      - generic [ref=f4e35]:
+        - generic [ref=f4e200]:
+          - heading "Tu cargador" [level=6] [ref=f4e201]
+          - paragraph [ref=f4e202]: Selecciona el modelo o indica que ya tienes tu cargador
+          - generic [ref=f4e203]:
+            - paragraph [ref=f4e204]: Modelo
+            - generic [ref=f4e206]:
+              - combobox [ref=f4e207] [cursor=pointer]: Ya tengo mi cargador (solo instalación)
+              - textbox: own
+              - group
+          - generic [ref=f4e208]:
+            - paragraph [ref=f4e209]: Distancia al tablero eléctrico
+            - paragraph [ref=f4e210]: Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+            - generic [ref=f4e212] [cursor=pointer]:
+              - generic [ref=f4e216]: 5m
+              - generic [ref=f4e218]: 10m
+              - generic [ref=f4e220]: 15m
+              - generic [ref=f4e222]: 20m
+              - generic [ref=f4e224]: 30m
+              - generic [ref=f4e226]: 40m
+              - generic [ref=f4e228]: 60m
+              - slider [ref=f4e230]: "28"
+            - generic [ref=f4e231]:
+              - paragraph [ref=f4e232]: Distancia larga
+              - generic [ref=f4e233]: 28 m
+        - generic [ref=f4e235]:
+          - button "Atrás" [ref=f4e236] [cursor=pointer]
+          - button "Ver mi cotización" [ref=f4e238] [cursor=pointer]
+      - link "No quiero instalación, solo comprar un cargador" [ref=f4e79] [cursor=pointer]:
+        - /url: /cargadores-vehiculos-electricos-sin-instalacion
+      - generic [ref=f4e80]: Instalación certificada SEC · Garantía de 3 meses · Tu compra esta protegida
+  - generic [ref=f4e81]:
+    - img "city background" [ref=f4e84]
+    - generic [ref=f4e85]:
+      - generic [ref=f4e86]:
+        - generic [ref=f4e87]:
+          - paragraph [ref=f4e88]: Redes sociales
+          - generic [ref=f4e89]:
+            - link "Instagram" [ref=f4e90] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=f4e91]
+            - link "Linkedin" [ref=f4e92] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=f4e93]
+          - paragraph [ref=f4e94]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=f4e95] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=f4e97] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=f4e99]:
+          - link "Inicio" [ref=f4e100] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=f4e102] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=f4e104] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=f4e106] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=f4e108] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=f4e110] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=f4e112]:
+          - link "Blog" [ref=f4e113] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=f4e115] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=f4e117] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=f4e119] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=f4e121] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=f4e123] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=f4e125] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=f4e127]
+      - generic [ref=f4e128]:
+        - generic [ref=f4e130]:
+          - img "logo" [ref=f4e131]
+          - paragraph [ref=f4e132]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=f4e133] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=f4e138]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=f4e139] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=f4e144]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=f4e145]: Copyright © 2026
+        - paragraph [ref=f4e146]:
+          - link "Política de privacidad" [ref=f4e147] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=f4e148] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .
+  - generic [ref=f4e153] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f4e154]
+    - generic [ref=f4e158]:
+      - button "Open issues overlay" [ref=f4e159]:
+        - generic [ref=f4e160]:
+          - generic [ref=f4e161]: "1"
+          - generic [ref=f4e162]: "2"
+        - generic [ref=f4e163]:
+          - text: Issue
+          - generic [ref=f4e164]: s
+      - button "Collapse issues badge" [ref=f4e165]
+  - alert [ref=f4e168]

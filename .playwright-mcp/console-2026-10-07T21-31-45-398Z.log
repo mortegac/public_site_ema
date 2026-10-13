@@ -1,0 +1,16 @@
+[    5050ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[    5144ms] [WARNING] Expected value to be of type number, but found null instead. @ blob:http://localhost:3000/42b44c67-55a2-44b2-8b2f-84395ffce15a:0
+[    5144ms] [WARNING] Expected value to be of type number, but found null instead. @ blob:http://localhost:3000/42b44c67-55a2-44b2-8b2f-84395ffce15a:0
+[    5421ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5429ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5431ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5433ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5436ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5439ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5442ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5445ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5447ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5448ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5449ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6014ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    6014ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56

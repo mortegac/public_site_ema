@@ -1,0 +1,146 @@
+- generic [active] [ref=f31e1]:
+  - generic [ref=f31e2]:
+    - banner [ref=f31e3]:
+      - link [ref=f31e6] [cursor=pointer]:
+        - /url: /
+        - img "Energica City" [ref=f31e7]
+    - generic [ref=f31e8]:
+      - heading "Página no encontrada" [level=2] [ref=f31e9]
+      - paragraph [ref=f31e40]: Lo sentimos, la página que estás buscando no existe o ha sido movida.
+      - generic [ref=f31e41]:
+        - link "Volver al inicio" [ref=f31e42] [cursor=pointer]:
+          - /url: /
+        - link "Ir al nuevo cotizador" [ref=f31e43] [cursor=pointer]:
+          - /url: /cotizador
+        - link "Contactar" [ref=f31e44] [cursor=pointer]:
+          - /url: /contacto
+        - link "Ir al nuevo cotizador" [ref=f31e45] [cursor=pointer]:
+          - /url: /cotizador
+    - generic [ref=f31e46]:
+      - img "city background" [ref=f31e49]
+      - generic [ref=f31e50]:
+        - generic [ref=f31e51]:
+          - generic [ref=f31e52]:
+            - paragraph [ref=f31e53]: Redes sociales
+            - generic [ref=f31e54]:
+              - link "Instagram" [ref=f31e55] [cursor=pointer]:
+                - /url: https://www.instagram.com/energicacity/
+                - img "instagram" [ref=f31e56]
+              - link "Linkedin" [ref=f31e57] [cursor=pointer]:
+                - /url: https://www.linkedin.com/company/energicacity
+                - img "linkedin" [ref=f31e58]
+            - paragraph [ref=f31e59]: ¡Hablemos!
+            - link "+56 9 6766 6652" [ref=f31e60] [cursor=pointer]:
+              - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+            - link "contacto@energica.city" [ref=f31e62] [cursor=pointer]:
+              - /url: mailto:contacto@energica.city
+          - generic [ref=f31e64]:
+            - link "Inicio" [ref=f31e65] [cursor=pointer]:
+              - /url: /
+            - link "Cotizador" [ref=f31e67] [cursor=pointer]:
+              - /url: /cotizador
+            - link "Electrificación de flotas" [ref=f31e69] [cursor=pointer]:
+              - /url: /asesoria-electrificacion-flotas
+            - link "Instalación de cargadores" [ref=f31e71] [cursor=pointer]:
+              - /url: /instalacion-cargadores
+            - link "Electrolineras en edificios" [ref=f31e73] [cursor=pointer]:
+              - /url: /cargadores-en-edificios
+            - link "Sobre Energica" [ref=f31e75] [cursor=pointer]:
+              - /url: /que-es-energica-city
+          - generic [ref=f31e77]:
+            - link "Blog" [ref=f31e78] [cursor=pointer]:
+              - /url: /blog
+            - link "Preguntas frecuentes" [ref=f31e80] [cursor=pointer]:
+              - /url: /faqs
+            - link "Contáctanos" [ref=f31e82] [cursor=pointer]:
+              - /url: /contactanos
+            - link "Soporte" [ref=f31e84] [cursor=pointer]:
+              - /url: /soporte
+            - link "Casos de éxito" [ref=f31e86] [cursor=pointer]:
+              - /url: /casos-de-exito
+            - link "Credenciales" [ref=f31e88] [cursor=pointer]:
+              - /url: /credenciales
+            - link "Cómo funciona" [ref=f31e90] [cursor=pointer]:
+              - /url: /como-funciona
+        - separator [ref=f31e92]
+        - generic [ref=f31e93]:
+          - generic [ref=f31e95]:
+            - img "logo" [ref=f31e96]
+            - paragraph [ref=f31e97]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+            - link [ref=f31e98] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+              - paragraph [ref=f31e103]: Av. Apoquindo 5950, Las Condes, Santiago.
+            - link [ref=f31e104] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+              - paragraph [ref=f31e109]: Viña del Mar, Región de Valparaíso, Chile.
+            - paragraph [ref=f31e110]: Copyright © 2026
+          - paragraph [ref=f31e111]:
+            - link "Política de privacidad" [ref=f31e112] [cursor=pointer]:
+              - /url: /privacidad
+            - link "| Términos y Condiciones" [ref=f31e113] [cursor=pointer]:
+              - /url: /terminos-condiciones
+            - text: .
+  - generic [ref=f31e114]:
+    - img "city background" [ref=f31e117]
+    - generic [ref=f31e118]:
+      - generic [ref=f31e119]:
+        - generic [ref=f31e120]:
+          - paragraph [ref=f31e121]: Redes sociales
+          - generic [ref=f31e122]:
+            - link "Instagram" [ref=f31e123] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=f31e124]
+            - link "Linkedin" [ref=f31e125] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=f31e126]
+          - paragraph [ref=f31e127]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=f31e128] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=f31e130] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=f31e132]:
+          - link "Inicio" [ref=f31e133] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=f31e135] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=f31e137] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=f31e139] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=f31e141] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=f31e143] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=f31e145]:
+          - link "Blog" [ref=f31e146] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=f31e148] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=f31e150] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=f31e152] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=f31e154] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=f31e156] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=f31e158] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=f31e160]
+      - generic [ref=f31e161]:
+        - generic [ref=f31e163]:
+          - img "logo" [ref=f31e164]
+          - paragraph [ref=f31e165]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=f31e166] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=f31e171]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=f31e172] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=f31e177]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=f31e178]: Copyright © 2026
+        - paragraph [ref=f31e179]:
+          - link "Política de privacidad" [ref=f31e180] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=f31e181] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .

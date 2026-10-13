@@ -1,0 +1,70 @@
+- generic [active] [ref=f34e1]:
+  - text: "\"\\n\\n\\n \\n \\n \\n \\n \\n \\n\\n\\n\\n"
+  - generic [ref=f34e2]:
+    - text: \n
+    - navigation [ref=f34e3]:
+      - text: \n
+      - generic [ref=f34e4]:
+        - text: e
+        - generic [ref=f34e5]: enÃ©rgicacity
+      - text: \n
+      - generic [ref=f34e6]: \n ElectrificaciÃ³n de flotasInstalaciÃ³n de cargadores\n Electrolineras en edificiosSobre EnergicaBlog\n Contacto\n
+      - text: \n ðŸ›’\n
+    - text: \n
+    - heading "Cotiza tu instalaciÃ³n" [level=1] [ref=f34e7]
+    - text: \n
+    - generic [ref=f34e8]: InstalaciÃ³n certificada SEC Â· Precios claros Â· Sin sorpresas
+    - text: \n \n
+  - text: \n\n
+  - generic [ref=f34e9]:
+    - text: \n \n
+    - button "No quiero instalaciÃ³n, solo comprar un cargador" [ref=f34e10]
+    - text: \n
+    - generic [ref=f34e11]: InstalaciÃ³n certificada SEC Â· GarantÃa de 3 meses Â· Tu compra estÃ¡ protegida
+    - text: \n
+  - text: \n\n\n
+  - generic [ref=f34e12]:
+    - text: \n
+    - generic [ref=f34e13]:
+      - text: \n
+      - generic [ref=f34e14]:
+        - text: \n
+        - generic [ref=f34e15]:
+          - text: \n
+          - heading "Agregar un cargador" [level=3] [ref=f34e16]
+          - text: \n
+          - paragraph [ref=f34e17]: Suma tu equipo a la cotizaciÃ³n. Elige el que mejor se adapta a tus necesidades.
+          - text: \n
+        - text: \n
+        - button "âœ•" [ref=f34e18]
+        - text: \n
+      - text: \n \n
+    - text: \n
+  - text: \n\n
+  - contentinfo [ref=f34e19]:
+    - text: \n
+    - generic [ref=f34e20]:
+      - text: \n
+      - generic [ref=f34e21]:
+        - text: \n
+        - heading "Redes sociales" [level=4] [ref=f34e22]
+        - text: \n
+        - generic [ref=f34e23]: â—Žin
+        - text: \n
+        - heading "Â¡Hablemos!" [level=4] [ref=f34e24]
+        - text: \n
+        - generic [ref=f34e25]: +56 9 6766 6652
+        - text: \n
+        - generic [ref=f34e26]: contacto@energica.city
+        - text: \n
+      - text: \n
+      - generic [ref=f34e27]: \n InicioCotizador\n ElectrificaciÃ³n de flotasInstalaciÃ³n de cargadores\n Electrolineras en edificiosSobre Energica\n
+      - text: \n
+    - text: \n
+    - generic [ref=f34e28]:
+      - text: e
+      - generic [ref=f34e29]: enÃ©rgicacity
+    - text: \n
+    - generic [ref=f34e30]: "Te ayudamos a concretar tu proyecto de electromovilidad industrial o inmobiliario de manera rentable.ðŸ“\x8d Av. Apoquindo 5950, Las Condes, Santiago. ðŸ“\x8d ViÃ±a del Mar, RegiÃ³n de ValparaÃso, Chile.Copyright Â© 2026"
+    - text: \n
+  - text: \n\n \n\n\n"

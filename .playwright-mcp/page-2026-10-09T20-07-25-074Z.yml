@@ -1,0 +1,138 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - link [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Energica City" [ref=e8]
+        - generic [ref=e149]:
+          - button [ref=e191] [cursor=pointer]:
+            - link "Electrificación de flotas" [ref=e192]:
+              - /url: /asesoria-electrificacion-flotas
+          - button [ref=e193] [cursor=pointer]:
+            - link "Instalación de cargadores" [ref=e194]:
+              - /url: /instalacion-cargadores
+          - button [ref=e195] [cursor=pointer]:
+            - link "Electrolineras en edificios" [ref=e196]:
+              - /url: /cargadores-en-edificios
+          - button [ref=e197] [cursor=pointer]:
+            - link "Sobre Energica" [ref=e198]:
+              - /url: /que-es-energica-city
+          - button [ref=e199] [cursor=pointer]:
+            - link "Blog" [ref=e200]:
+              - /url: /blog
+        - generic [ref=e160]:
+          - link "Contacto" [ref=e161] [cursor=pointer]:
+            - /url: /contacto
+          - link "Ir al carrito" [ref=e162] [cursor=pointer]:
+            - /url: /cargadores-vehiculos-electricos-sin-instalacion?step=3
+    - generic [ref=e201]:
+      - paragraph [ref=e202]: ⚡
+      - paragraph [ref=e203]: Calculando tu presupuesto…
+      - paragraph [ref=e204]: Procesando con datos reales del servidor
+    - generic [ref=e10]:
+      - heading "Elige tu cargador eléctrico" [level=1] [ref=e205]
+      - paragraph [ref=e12]: Selecciona el equipo que mejor se adapta a tus necesidades
+      - generic [ref=e14]:
+        - generic [ref=e16]:
+          - paragraph [ref=e18]: ✓
+          - paragraph [ref=e19]: Ubicación
+        - generic [ref=e22]:
+          - paragraph [ref=e24]: "2"
+          - paragraph [ref=e25]: Agendar visita
+          - paragraph [ref=e206]: omitido
+        - generic [ref=e29]:
+          - paragraph [ref=e31]: "3"
+          - paragraph [ref=e32]: Cotización
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e207]:
+          - heading "Tu cargador" [level=6] [ref=e208]
+          - paragraph [ref=e209]: Selecciona el modelo o indica que ya tienes tu cargador
+          - generic [ref=e210]:
+            - paragraph [ref=e211]: Distancia al tablero eléctrico
+            - paragraph [ref=e212]: Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+            - generic [ref=e214] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e218]: 5m
+              - generic [aria-hidden] [ref=e220]: 10m
+              - generic [aria-hidden] [ref=e222]: 15m
+              - generic [aria-hidden] [ref=e224]: 20m
+              - generic [aria-hidden] [ref=e226]: 30m
+              - generic [aria-hidden] [ref=e228]: 40m
+              - generic [aria-hidden] [ref=e230]: 60m
+              - slider [ref=e232]: "10"
+            - generic [ref=e233]:
+              - paragraph [ref=e234]: Distancia estándar
+              - generic [ref=e235]: 10 m
+        - generic [ref=e237]:
+          - button "Atrás" [ref=e238] [cursor=pointer]
+          - button "Ver mi cotización" [ref=e240] [cursor=pointer]
+      - link "No quiero instalación, solo comprar un cargador" [ref=e79] [cursor=pointer]:
+        - /url: /cargadores-vehiculos-electricos-sin-instalacion
+      - generic [ref=e80]: Instalación certificada SEC · Garantía de 3 meses · Tu compra esta protegida
+  - generic [ref=e81]:
+    - img "city background" [ref=e84]
+    - generic [ref=e85]:
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - paragraph [ref=e88]: Redes sociales
+          - generic [ref=e89]:
+            - link "Instagram" [ref=e90] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=e91]
+            - link "Linkedin" [ref=e92] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=e93]
+          - paragraph [ref=e94]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=e95] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=e97] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=e99]:
+          - link "Inicio" [ref=e100] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=e102] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=e104] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=e106] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=e108] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=e110] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=e112]:
+          - link "Blog" [ref=e113] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=e115] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=e117] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=e119] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=e121] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=e123] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=e125] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=e127]
+      - generic [ref=e128]:
+        - generic [ref=e130]:
+          - img "logo" [ref=e131]
+          - paragraph [ref=e132]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=e133] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=e138]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=e139] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=e144]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=e145]: Copyright © 2026
+        - paragraph [ref=e146]:
+          - link "Política de privacidad" [ref=e147] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=e148] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .
+  - button "Open Next.js Dev Tools" [ref=e173] [cursor=pointer]
+  - alert [ref=e177]

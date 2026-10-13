@@ -1,0 +1,24 @@
+[    5018ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[    5147ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5150ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5151ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5153ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5155ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5158ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5159ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5162ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5163ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5164ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5165ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    5222ms] [WARNING] Image with src "/images/backgrounds/bg-city.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+Read more: https://nextjs.org/docs/api-reference/next/image#priority @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    5251ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    5251ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[   78020ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[   78950ms] [LOG] [Fast Refresh] done in 930ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[   79329ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[   79908ms] [LOG] [Fast Refresh] done in 579ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[   85081ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[   85630ms] [LOG] [Fast Refresh] done in 548ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[   86433ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[   86799ms] [LOG] [Fast Refresh] done in 365ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13

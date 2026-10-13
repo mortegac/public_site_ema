@@ -1,0 +1,219 @@
+[    6655ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[    6784ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6787ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6789ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6790ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6792ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6794ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6795ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6797ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6798ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6799ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6800ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6881ms] [LOG] {nextTick: , title: browser, browser: true, env: Object, argv: Array(0)} @ webpack-internal:///(app-pages-browser)/./src/utils/log.ts:67
+[    6882ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    6941ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    6941ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    7133ms] [WARNING] Image with src "https://images.prismic.io/energica-public-site/aNK8np5xUNkB1ByM_cargando-auto-electrico-v3.png?auto=format,compress" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    7137ms] [WARNING] Image with src "https://images.prismic.io/energica-public-site/aWVh3wIvOtkhBYmX_cargando-auto-electrico.png?auto=format,compress" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    7142ms] [WARNING] Image with src "https://images.prismic.io/energica-public-site/aNK8np5xUNkB1ByL_EVE-satolaya-energica-cityv3.png?auto=format,compress" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    7879ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[    8004ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8006ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8007ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8009ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8011ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8013ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8014ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8016ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8017ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8019ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8021ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8103ms] [LOG] {nextTick: , title: browser, browser: true, env: Object, argv: Array(0)} @ webpack-internal:///(app-pages-browser)/./src/utils/log.ts:67
+[    8104ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    8160ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    8160ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    8302ms] [WARNING] Image with src "https://images.prismic.io/energica-public-site/aNK8np5xUNkB1ByM_cargando-auto-electrico-v3.png?auto=format,compress" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    8313ms] [WARNING] Image with src "https://images.prismic.io/energica-public-site/aWVh3wIvOtkhBYmX_cargando-auto-electrico.png?auto=format,compress" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    8313ms] [WARNING] Image with src "https://images.prismic.io/energica-public-site/aNK8np5xUNkB1ByL_EVE-satolaya-energica-cityv3.png?auto=format,compress" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[   12846ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[   14543ms] [LOG] [Fast Refresh] done in 1696ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[   14978ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[   15068ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15069ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15070ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15071ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15073ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15074ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15074ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15075ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15076ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15076ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15077ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15147ms] [LOG] {nextTick: , title: browser, browser: true, env: Object, argv: Array(0)} @ webpack-internal:///(app-pages-browser)/./src/utils/log.ts:67
+[   15148ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[   15206ms] [WARNING] Image with src "/images/backgrounds/bg-city.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+Read more: https://nextjs.org/docs/api-reference/next/image#priority @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[   15219ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[   15219ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[   15407ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[   16303ms] [LOG] [Fast Refresh] done in 896ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[  131698ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[  132780ms] [LOG] [Fast Refresh] done in 1082ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[  141931ms] [ERROR] Loading the image 'https://www.googleadservices.com/ccm/conversion/11543502542/?random=1786481491531&cv=11&fst=1786481491531&fmt=3&bg=ffffff&guid=ON&async=1&en=conversion&gtm=45be68a0v9211585338z89221840502za20gzb9221840502zd9221840502xea&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616986~115938466~115938468~118897920~118897930~119367802~119367810~119527019~119896802~120125305&u_w=5120&u_h=1440&url=http%3A%2F%2Flocalhost%3A3001%2Fcotizador&rcb=9&label=PJbtCIbUhbocEM69r4Ar&capi=1&frm=0&tiba=Cotizador%20de%20Instalaci%C3%B3n%20de%20Carg...=noapi&auid=1080019558.1786478534&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CGoogle%2520Chrome%3B151.0.7922.77%7CChromium%3B151.0.7922.77&uamb=0&uam=&uap=macOS&uapv=14.8.1&uaw=0&ec_m=body%3E.MuiBox-root.mui-yc4yev%3Anth-child(6)%3E.MuiCont*DIV%3Atrue%3A22%3Afalse*1&ec_sel=body%3E.MuiBox-root.mui-yc4yev%3Anth-child(6)%3E.MuiCont&ec_meta=DIV%3Atrue%3A22%3Afalse&ec_lat=0&ec_s=1&ec_mode=a&oid=1061642680.1786481492&oidsrc=3&ecsid2=1528894605.1786478727&_tu=CBA&gcl_ctr=4~0~0~0&em=tv.1~ec.e3&emd=tvd.1' violates the following Content Security Policy directive: "img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://*.google.cl https://purecatamphetamine.github.io https://lh3.googleusercontent.com". The action has been blocked. @ http://localhost:3001/cotizador:0
+[ 3322547ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 3324107ms] [LOG] [Fast Refresh] done in 1559ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4261342ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4263730ms] [LOG] [Fast Refresh] done in 2389ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4266753ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4267589ms] [LOG] [Fast Refresh] done in 837ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4275609ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4276502ms] [LOG] [Fast Refresh] done in 894ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4290400ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4291675ms] [LOG] [Fast Refresh] done in 1276ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4313009ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4314597ms] [LOG] [Fast Refresh] done in 1588ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4326427ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4327742ms] [LOG] [Fast Refresh] done in 1314ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4337169ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4337947ms] [LOG] [Fast Refresh] done in 778ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4345762ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4346969ms] [LOG] [Fast Refresh] done in 1208ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4352742ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4353725ms] [LOG] [Fast Refresh] done in 983ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4360212ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4360800ms] [LOG] [Fast Refresh] done in 587ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4367515ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4368265ms] [LOG] [Fast Refresh] done in 749ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4393183ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4394393ms] [LOG] [Fast Refresh] done in 1210ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4560533ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4561309ms] [LOG] [Fast Refresh] done in 776ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4605417ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4607115ms] [LOG] [Fast Refresh] done in 1698ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4627813ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4628841ms] [LOG] [Fast Refresh] done in 1027ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4857272ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4858880ms] [LOG] [Fast Refresh] done in 1608ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 4858978ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 4859993ms] [ERROR] Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED @ http://localhost:3001/_next/static/webpack/webpack.feab7986b71c5362.hot-update.js:0
+[ 4859994ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:111
+[ 6135882ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[ 6136012ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136014ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136015ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136017ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136019ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136020ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136022ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136023ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136025ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136026ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136027ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6136070ms] [WARNING] Image with src "/images/backgrounds/bg-city.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+Read more: https://nextjs.org/docs/api-reference/next/image#priority @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[ 6136085ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[ 6136085ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[ 6280116ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[ 6280174ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280175ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280176ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280177ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280177ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280178ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280178ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280179ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280181ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280181ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280182ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 6280223ms] [WARNING] Image with src "/images/backgrounds/bg-city.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+Read more: https://nextjs.org/docs/api-reference/next/image#priority @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[ 6280225ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[ 6280225ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[ 6291749ms] [ERROR] Loading the image 'https://www.googleadservices.com/ccm/conversion/11543502542/?random=1786487641351&cv=11&fst=1786487641351&fmt=3&bg=ffffff&guid=ON&async=1&en=conversion&gtm=45be68a1v9211585338z89221840502za20gzb9221840502zd9221840502xea&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938469~118897920~118897930~119367802~119367810~119527020~119896802~120125305&u_w=5120&u_h=1440&url=http%3A%2F%2Flocalhost%3A3001%2Fcotizador&ref=http%3A%2F%2Flocalhost%3A3001%2Fcotizador&rcb=15&label=PJbtCIbUhbocEM69r4Ar&capi=1&frm=0&tiba=Cotizado...l=noapi&auid=1080019558.1786478534&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CGoogle%2520Chrome%3B151.0.7922.77%7CChromium%3B151.0.7922.77&uamb=0&uam=&uap=macOS&uapv=14.8.1&uaw=0&ec_m=body%3E.MuiBox-root.mui-yc4yev%3Anth-child(6)%3E.MuiCont*DIV%3Atrue%3A22%3Afalse*1&ec_sel=body%3E.MuiBox-root.mui-yc4yev%3Anth-child(6)%3E.MuiCont&ec_meta=DIV%3Atrue%3A22%3Afalse&ec_lat=1&ec_s=1&ec_mode=a&oid=680305521.1786487641&oidsrc=3&ecsid2=1528894605.1786478727&_tu=CBA&gcl_ctr=5~0~0~0&em=tv.1~ec.e3&emd=tvd.1' violates the following Content Security Policy directive: "img-src 'self' data: https://images.prismic.io https://energica-public-site.cdn.prismic.io https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://td.doubleclick.net https://www.google.com https://www.google.cl https://*.google.cl https://purecatamphetamine.github.io https://lh3.googleusercontent.com". The action has been blocked. @ http://localhost:3001/cotizador:0
+[ 6827275ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 6828788ms] [LOG] [Fast Refresh] done in 1514ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 6838685ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 6839288ms] [LOG] [Fast Refresh] done in 603ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 6850381ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 6850998ms] [LOG] [Fast Refresh] done in 617ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 6863347ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 6864040ms] [LOG] [Fast Refresh] done in 693ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 6913517ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 6914508ms] [LOG] [Fast Refresh] done in 991ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 6942116ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 6942836ms] [LOG] [Fast Refresh] done in 719ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7063531ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7064275ms] [LOG] [Fast Refresh] done in 743ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7065119ms] [ERROR] Refused to apply style from 'http://localhost:3001/_next/static/css/app/layout.css?v=1786488414666' because its MIME type ('text/plain') is not a supported stylesheet MIME type, and strict MIME checking is enabled. @ http://localhost:3001/cotizador:0
+[ 7065291ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/cotizador:0
+[ 7065836ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:28004
+[ 7065929ms] TypeError: __webpack_modules__[moduleId] is not a function
+    at Object.__webpack_require__ [as require] (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/.next/server/webpack-runtime.js:25:42)
+    at Object.require (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:39:28541)
+    at globalThis.__next_require__ (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:39:29364)
+    at requireModule (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:318257)
+    at initializeModuleChunk (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:347649)
+    at getOutlinedModel (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:357408)
+    at <unknown> (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:365361)
+    at ResponseInstance._fromJSON (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:365452)
+    at JSON.parse (<anonymous>)
+    at initializeModelChunk (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:347040)
+    at resolveModelChunk (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:345328)
+    at processFullStringRow (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:384472)
+    at <unknown> (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:386875)
+    at processBinaryChunk (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:386947)
+    at progress (file:///Users/manu/_CODE/ENERGICA/_CODE/EMA/public_site_ema/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:2:388475)
+[ 7065925ms] [LOG] [HMR] connected @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/websocket.js:45
+[ 7083198ms] [ERROR] WebSocket connection to 'ws://localhost:3001/_next/webpack-hmr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/websocket.js:88
+[ 7084200ms] [ERROR] WebSocket connection to 'ws://localhost:3001/_next/webpack-hmr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/websocket.js:88
+[ 7086949ms] [LOG] [HMR] connected @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/websocket.js:45
+[ 7087015ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/_next/static/webpack/7ef35499170028e1.webpack.hot-update.json:0
+[ 7087016ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/hot-reloader-pages.js:347
+[ 7087881ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/hot-reloader-pages.js:206
+[ 7090633ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/_next/static/webpack/7ef35499170028e1.webpack.hot-update.json:0
+[ 7090633ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/dev/hot-reloader/pages/hot-reloader-pages.js:347
+[ 7092446ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[ 7092883ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092892ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092896ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092899ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092902ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092905ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092907ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092909ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092913ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092914ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092915ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[ 7092976ms] [WARNING] Image with src "/images/backgrounds/bg-city.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+Read more: https://nextjs.org/docs/api-reference/next/image#priority @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[ 7093001ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[ 7093001ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[ 7098702ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7099358ms] [LOG] [Fast Refresh] done in 657ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7117148ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7117695ms] [LOG] [Fast Refresh] done in 547ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7135266ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7135730ms] [LOG] [Fast Refresh] done in 463ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7374445ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7376420ms] [LOG] [Fast Refresh] done in 1976ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7383150ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7384100ms] [LOG] [Fast Refresh] done in 950ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7481872ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7482617ms] [LOG] [Fast Refresh] done in 745ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7483873ms] [ERROR] Refused to apply style from 'http://localhost:3001/_next/static/css/app/layout.css?v=1786488833156' because its MIME type ('text/plain') is not a supported stylesheet MIME type, and strict MIME checking is enabled. @ http://localhost:3001/cotizador:0
+[ 7484084ms] [ERROR] Refused to apply style from 'http://localhost:3001/_next/static/css/app/layout.css?v=1786488833156' because its MIME type ('text/plain') is not a supported stylesheet MIME type, and strict MIME checking is enabled. @ http://localhost:3001/cotizador:0
+[ 7484091ms] Event
+[ 7523892ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7524457ms] [LOG] [Fast Refresh] done in 565ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7524496ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7525078ms] [LOG] [Fast Refresh] done in 581ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13
+[ 7564495ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:196
+[ 7567913ms] [LOG] [Fast Refresh] done in 3418ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js:13

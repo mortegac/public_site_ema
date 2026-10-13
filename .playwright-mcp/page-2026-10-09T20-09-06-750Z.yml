@@ -1,0 +1,273 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - banner [ref=f2e4]:
+      - generic [ref=f2e6]:
+        - link [ref=f2e458] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f2e149]:
+          - button [ref=f2e460] [cursor=pointer]:
+            - link [ref=f2e461]:
+              - /url: /asesoria-electrificacion-flotas
+              - text: Electrificación de flotas
+          - button [ref=f2e462] [cursor=pointer]:
+            - link [ref=f2e463]:
+              - /url: /instalacion-cargadores
+              - text: Instalación de cargadores
+          - button [ref=f2e464] [cursor=pointer]:
+            - link [ref=f2e465]:
+              - /url: /cargadores-en-edificios
+              - text: Electrolineras en edificios
+          - button [ref=f2e466] [cursor=pointer]:
+            - link [ref=f2e467]:
+              - /url: /que-es-energica-city
+              - text: Sobre Energica
+          - button [ref=f2e468] [cursor=pointer]:
+            - link [ref=f2e469]:
+              - /url: /blog
+              - text: Blog
+        - generic [ref=f2e160]:
+          - link [ref=f2e470] [cursor=pointer]:
+            - /url: /contacto
+            - text: Contacto
+          - link [ref=f2e471] [cursor=pointer]:
+            - /url: /cargadores-vehiculos-electricos-sin-instalacion?step=3
+    - generic [ref=f2e10]:
+      - heading [level=1] [ref=f2e472]: Tu cotización al instante
+      - paragraph [ref=f2e12]: Precio real basado en tu perfil
+      - generic [ref=f2e14]:
+        - generic [ref=f2e16]:
+          - paragraph [ref=f2e18]: ✓
+          - paragraph [ref=f2e19]: Ubicación
+        - generic [ref=f2e22]:
+          - paragraph [ref=f2e24]: "2"
+          - paragraph [ref=f2e25]: Agendar visita
+          - paragraph [ref=f2e202]: omitido
+        - generic [ref=f2e29]:
+          - paragraph [ref=f2e31]: "3"
+          - paragraph [ref=f2e32]: Cotización
+    - generic [ref=f2e34]:
+      - generic [ref=f2e203]:
+        - generic [ref=f2e204]:
+          - paragraph [ref=f2e205]: Tu cotización personalizada
+          - paragraph [ref=f2e206]: Casa · instalación a 10m del tablero
+          - paragraph [ref=f2e207]: Instalación llave en mano (IVA incl.)
+          - paragraph [ref=f2e208]: $569.676
+          - paragraph [ref=f2e209]: $512.708
+          - paragraph [ref=f2e211]: 10% dcto pagando hoy · ahorras $56.968
+          - paragraph [ref=f2e212]: Materiales, mano de obra, trámite SEC y visita técnica incluidos.
+        - generic [ref=f2e213]:
+          - paragraph [ref=f2e214]: Elige cómo avanzar
+          - generic [ref=f2e216] [cursor=pointer]:
+            - paragraph [ref=f2e218]: ALT 1
+            - generic [ref=f2e219]:
+              - paragraph [ref=f2e220]: Visita Técnica
+              - paragraph [ref=f2e221]: Agenda y decide después
+            - generic [ref=f2e222]:
+              - paragraph [ref=f2e223]: $9.990
+              - paragraph [ref=f2e224]: acreditable
+            - paragraph [ref=f2e225]: ▼
+          - generic [ref=f2e226]:
+            - generic [ref=f2e227] [cursor=pointer]:
+              - paragraph [ref=f2e229]: ALT 2
+              - generic [ref=f2e230]:
+                - paragraph [ref=f2e231]: Pagar hoy
+                - paragraph [ref=f2e232]: Descuento incluido
+              - generic [ref=f2e233]:
+                - paragraph [ref=f2e234]: $512.708
+                - paragraph [ref=f2e235]: $569.676
+              - paragraph [ref=f2e236]: ▲
+            - generic [ref=f2e323]:
+              - generic [ref=f2e324]:
+                - paragraph [ref=f2e325]: Instalación
+                - paragraph [ref=f2e326]: $512.708
+                - paragraph [ref=f2e327]: $569.676
+              - paragraph [ref=f2e328]: Si pagas ahora obtienes un 10% de descuento por $56.968
+              - paragraph [ref=f2e329]: "Cargador: lo pones tú ($0)."
+              - generic [ref=f2e331]:
+                - generic [ref=f2e332]:
+                  - generic [ref=f2e367]: Región
+                  - generic [ref=f2e333]:
+                    - combobox [ref=f2e473] [cursor=pointer]: Región de Valparaíso
+                    - textbox [aria-hidden]: V
+                    - group [aria-hidden]:
+                      - generic: Región
+                - generic [ref=f2e335]:
+                  - generic [ref=f2e474]: Comuna
+                  - generic [ref=f2e336]:
+                    - combobox [expanded] [ref=f2e475] [cursor=pointer]
+                    - textbox [aria-hidden]
+                    - group [aria-hidden]:
+                      - generic: Comuna
+                - generic [ref=f2e338]:
+                  - generic: Dirección (calle y número)
+                  - generic [ref=f2e339]:
+                    - textbox [ref=f2e476]:
+                      - /placeholder: "Ej: Av. Providencia 1234"
+                    - group [aria-hidden]:
+                      - generic: Dirección (calle y número)
+              - generic [ref=f2e341]:
+                - generic: Tu nombre completo (opcional)
+                - generic [ref=f2e342]:
+                  - textbox [ref=f2e477]
+                  - group [aria-hidden]:
+                    - generic: Tu nombre completo (opcional)
+              - generic [ref=f2e344]:
+                - generic:
+                  - text: Email para comprobante
+                  - generic [aria-hidden]: "*"
+                - generic [ref=f2e345]:
+                  - textbox [ref=f2e478]
+                  - group [aria-hidden]:
+                    - generic: Email para comprobante *
+                - paragraph [ref=f2e347]: Requerido para proceder al pago
+              - generic [ref=f2e348]:
+                - generic: Teléfono
+                - generic [ref=f2e349]:
+                  - textbox [ref=f2e479]
+                  - group [aria-hidden]:
+                    - generic: Teléfono
+              - button [disabled]: Pagar hoy $512.708 →
+              - paragraph [ref=f2e351]: Pago seguro · Visa, Mastercard, Redcompra, débito
+        - button [ref=f2e480] [cursor=pointer]: Enviar mi cotización por email
+        - link [ref=f2e481] [cursor=pointer]:
+          - /url: https://wa.me/56967666652?text=Hola%2C%20estoy%20viendo%20la%20cotizaci%C3%B3n%20para%20mi%20cargador%20en%20%20(10m%2C%20%24569.676)%20y%20tengo%20una%20consulta.
+          - paragraph [ref=f2e244]: ¿Tienes dudas? Habla con nosotros
+        - generic [ref=f2e245]:
+          - paragraph [ref=f2e250]: Tu proceso de instalación
+          - generic [ref=f2e251]:
+            - paragraph [ref=f2e253]: "1"
+            - generic [ref=f2e254]:
+              - paragraph [ref=f2e255]: Pago y agenda de visita
+              - paragraph [ref=f2e256]: Hoy
+          - generic [ref=f2e257]:
+            - paragraph [ref=f2e259]: "2"
+            - paragraph [ref=f2e261]: Visita técnica para confirmar distancia y tipo de canalización
+          - generic [ref=f2e262]:
+            - paragraph [ref=f2e264]: "3"
+            - generic [ref=f2e265]:
+              - paragraph [ref=f2e266]: Compra de materiales
+              - paragraph [ref=f2e267]: 2 a 3 días hábiles
+          - generic [ref=f2e268]:
+            - paragraph [ref=f2e270]: "4"
+            - generic [ref=f2e271]:
+              - paragraph [ref=f2e272]: Instalación de tu cargador
+              - paragraph [ref=f2e273]: 2 días hábiles
+          - paragraph [ref=f2e275]: "De pago a cargador funcionando: ~7 a 12 días hábiles"
+        - generic [ref=f2e276]:
+          - generic [ref=f2e277]:
+            - paragraph [ref=f2e279]: H
+            - paragraph [ref=f2e281]: C
+            - paragraph [ref=f2e283]: J
+            - paragraph [ref=f2e285]: R
+          - paragraph [ref=f2e286]: +120 instalaciones completadas en Santiago
+        - generic [ref=f2e287]:
+          - paragraph [ref=f2e288]: Compra protegida
+          - paragraph [ref=f2e295]:
+            - strong [ref=f2e296]: Tu dinero queda resguardado
+            - text: hasta que la instalación se complete.
+          - paragraph [ref=f2e302]:
+            - strong [ref=f2e303]: Devolución sin preguntas.
+            - text: Puedes solicitar la devolución de tu dinero en todo momento antes de la instalación.
+          - paragraph [ref=f2e309]:
+            - strong [ref=f2e310]: Garantía de 3 meses
+            - text: sobre la instalación completa.
+        - button [ref=f2e482] [cursor=pointer]: ← Nueva simulación
+      - link [ref=f2e483] [cursor=pointer]:
+        - /url: /cargadores-vehiculos-electricos-sin-instalacion
+        - text: No quiero instalación, solo comprar un cargador
+      - generic [ref=f2e80]: Instalación certificada SEC · Garantía de 3 meses · Tu compra esta protegida
+  - generic [ref=f2e85]:
+    - generic [ref=f2e86]:
+      - generic [ref=f2e87]:
+        - paragraph [ref=f2e88]: Redes sociales
+        - generic [ref=f2e89]:
+          - link [ref=f2e485] [cursor=pointer]:
+            - /url: https://www.instagram.com/energicacity/
+          - link [ref=f2e487] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/energicacity
+        - paragraph [ref=f2e94]: ¡Hablemos!
+        - link [ref=f2e489] [cursor=pointer]:
+          - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - generic [ref=f2e96]: +56 9 6766 6652
+        - link [ref=f2e490] [cursor=pointer]:
+          - /url: mailto:contacto@energica.city
+          - generic [ref=f2e98]: contacto@energica.city
+      - generic [ref=f2e99]:
+        - link [ref=f2e491] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f2e101]: Inicio
+        - link [ref=f2e492] [cursor=pointer]:
+          - /url: /cotizador
+          - generic [ref=f2e103]: Cotizador
+        - link [ref=f2e493] [cursor=pointer]:
+          - /url: /asesoria-electrificacion-flotas
+          - generic [ref=f2e105]: Electrificación de flotas
+        - link [ref=f2e494] [cursor=pointer]:
+          - /url: /instalacion-cargadores
+          - generic [ref=f2e107]: Instalación de cargadores
+        - link [ref=f2e495] [cursor=pointer]:
+          - /url: /cargadores-en-edificios
+          - generic [ref=f2e109]: Electrolineras en edificios
+        - link [ref=f2e496] [cursor=pointer]:
+          - /url: /que-es-energica-city
+          - generic [ref=f2e111]: Sobre Energica
+      - generic [ref=f2e112]:
+        - link [ref=f2e497] [cursor=pointer]:
+          - /url: /blog
+          - generic [ref=f2e114]: Blog
+        - link [ref=f2e498] [cursor=pointer]:
+          - /url: /faqs
+          - generic [ref=f2e116]: Preguntas frecuentes
+        - link [ref=f2e499] [cursor=pointer]:
+          - /url: /contactanos
+          - generic [ref=f2e118]: Contáctanos
+        - link [ref=f2e500] [cursor=pointer]:
+          - /url: /soporte
+          - generic [ref=f2e120]: Soporte
+        - link [ref=f2e501] [cursor=pointer]:
+          - /url: /casos-de-exito
+          - generic [ref=f2e122]: Casos de éxito
+        - link [ref=f2e502] [cursor=pointer]:
+          - /url: /credenciales
+          - generic [ref=f2e124]: Credenciales
+        - link [ref=f2e503] [cursor=pointer]:
+          - /url: /como-funciona
+          - generic [ref=f2e126]: Cómo funciona
+    - separator [ref=f2e127]
+    - generic [ref=f2e128]:
+      - generic [ref=f2e130]:
+        - paragraph [ref=f2e132]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+        - link [ref=f2e505] [cursor=pointer]:
+          - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+          - paragraph [ref=f2e138]: Av. Apoquindo 5950, Las Condes, Santiago.
+        - link [ref=f2e506] [cursor=pointer]:
+          - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+          - paragraph [ref=f2e144]: Viña del Mar, Región de Valparaíso, Chile.
+        - paragraph [ref=f2e145]: Copyright © 2026
+      - paragraph [ref=f2e146]:
+        - link [ref=f2e507] [cursor=pointer]:
+          - /url: /privacidad
+          - text: Política de privacidad
+        - link [ref=f2e508] [cursor=pointer]:
+          - /url: /terminos-condiciones
+          - text: "| Términos y Condiciones"
+        - text: .
+  - generic [ref=f2e175] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f2e176]
+    - generic [ref=f2e180]:
+      - button "Open issues overlay" [ref=f2e181]:
+        - generic [ref=f2e182]:
+          - generic [aria-hidden] [ref=f2e183]: "1"
+          - generic [ref=f2e184]: "2"
+        - generic [ref=f2e185]:
+          - text: Issue
+          - generic [aria-hidden] [ref=f2e186]: s
+      - button "Collapse issues badge" [ref=f2e187]
+  - alert [ref=f2e190]
+  - listbox "Comuna" [ref=f2e511]:
+    - option "Concón" [active] [ref=f2e512] [cursor=pointer]
+    - option "Quilpué" [ref=f2e513] [cursor=pointer]
+    - option "Valparaíso" [ref=f2e514] [cursor=pointer]
+    - option "Villa Alemana" [ref=f2e515] [cursor=pointer]
+    - option "Viña del Mar" [ref=f2e516] [cursor=pointer]
+  - button [ref=f2e517] [cursor=pointer]

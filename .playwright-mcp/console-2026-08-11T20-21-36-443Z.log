@@ -1,0 +1,20 @@
+[    1937ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/cotizador-screenshots/v2.html:0
+[    2340ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25630
+[    2456ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2458ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2459ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2461ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2463ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2465ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2466ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2467ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2469ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2470ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2471ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2537ms] [LOG] {nextTick: , title: browser, browser: true, env: Object, argv: Array(0)} @ webpack-internal:///(app-pages-browser)/./src/utils/log.ts:67
+[    2537ms] [LOG] USANDO AMBIENTE  PROD @ webpack-internal:///(app-pages-browser)/./src/utils/amplify-config.ts:15
+[    2576ms] [WARNING] Image with src "/images/backgrounds/bg-city.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+Read more: https://nextjs.org/docs/api-reference/next/image#priority @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js:15
+[    2603ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-rule fillRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    2603ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? clip-rule clipRule @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56
+[    2635ms] [ERROR] Invalid DOM property `%s`. Did you mean `%s`? fill-opacity fillOpacity @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:56

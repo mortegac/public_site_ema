@@ -1,0 +1,129 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - img "Enérgica City" [ref=e8]
+      - generic [ref=e9]: Soporte EVE
+    - banner [ref=e10]:
+      - generic [ref=e11]: Puntos de carga EVE
+      - heading "¿Tuviste un problema con tu carga?" [level=1] [ref=e12]
+      - paragraph [ref=e13]: Acá están las respuestas a lo que más nos preguntan y las tres formas de hablar con nosotros.
+      - generic [ref=e14]:
+        - text: Estás en el punto
+        - generic [ref=e15]: E-14
+    - main [ref=e16]:
+      - generic [ref=e18]:
+        - link "Escríbenos por WhatsApp La vía más rápida. Respondemos en minutos." [ref=e19] [cursor=pointer]:
+          - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Hola%2C%20necesito%20ayuda%20con%20una%20carga%20en%20EVE.%20Estoy%20en%20el%20punto%20de%20carga%20E-14.&type=phone_number&app_absent=0
+          - generic [ref=e23]:
+            - generic [ref=e24]: Escríbenos por WhatsApp
+            - generic [ref=e25]: La vía más rápida. Respondemos en minutos.
+        - link "Envíanos un correo contacto@energica.city" [ref=e28] [cursor=pointer]:
+          - /url: mailto:contacto@energica.city?subject=Soporte%20EVE%20%E2%80%94%20punto%20E-14&body=Hola%2C%0A%0ANecesito%20ayuda%20con%20una%20carga%20en%20EVE.%0A%0APunto%20de%20carga%20o%20estacionamiento%3A%20E-14%0AFecha%20y%20hora%20de%20la%20carga%3A%20%0AMonto%20pagado%3A%20%0ACorreo%20del%20pago%3A%20%0A%0ADescripci%C3%B3n%20del%20problema%3A%0A
+          - generic [ref=e33]:
+            - generic [ref=e34]: Envíanos un correo
+            - generic [ref=e35]: contacto@energica.city
+        - link "Llámanos +56 9 6766 6652 · Lun a Vie, 9:00 a 18:00" [ref=e38] [cursor=pointer]:
+          - /url: tel:+56967666652
+          - generic [ref=e42]:
+            - generic [ref=e43]: Llámanos
+            - generic [ref=e44]: +56 9 6766 6652 · Lun a Vie, 9:00 a 18:00
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - heading "Así funciona una carga" [level=2] [ref=e49]
+          - paragraph [ref=e50]: Entender estos cinco pasos resuelve la mayoría de las dudas.
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - generic [ref=e54]: "1"
+              - generic [ref=e55]:
+                - heading "Conectas el cable" [level=3] [ref=e56]
+                - paragraph [ref=e57]: Primero al auto y al punto de carga, firme en ambos extremos.
+                - generic [ref=e58]: Conecta antes de pagar. El punto espera cerca de 2 minutos a detectar el cable. Si pagas primero y no alcanzas a conectar, la sesión se cancela sola.
+            - generic [ref=e59]:
+              - generic [ref=e60]: "2"
+              - generic [ref=e61]:
+                - heading "Pagas un monto estimado" [level=3] [ref=e62]
+                - paragraph [ref=e63]: Se calcula con el tiempo que elegiste y la potencia del punto. Es solo para autorizar la carga, no es el cobro final.
+            - generic [ref=e64]:
+              - generic [ref=e65]: "3"
+              - generic [ref=e66]:
+                - heading "La carga parte" [level=3] [ref=e67]
+                - paragraph [ref=e68]: El punto se enciende y empieza a entregar energía. Puede tardar unos segundos en partir.
+            - generic [ref=e69]:
+              - generic [ref=e70]: "4"
+              - generic [ref=e71]:
+                - heading "La carga termina" [level=3] [ref=e72]
+                - paragraph [ref=e73]: Se detiene al cumplir el tiempo, cuando tu auto lo decide o si la desconectas. Te llega el comprobante por correo.
+            - generic [ref=e74]:
+              - generic [ref=e75]: "5"
+              - generic [ref=e76]:
+                - heading "Se devuelve el excedente" [level=3] [ref=e77]
+                - paragraph [ref=e78]: Al día hábil siguiente comparamos lo que pagaste con la energía real que recibió tu auto.
+          - generic [ref=e79]:
+            - generic [ref=e80]: Devoluciones
+            - heading "El excedente se procesa al día hábil siguiente" [level=3] [ref=e81]
+            - paragraph [ref=e82]: Nuestra plataforma revisa todas las cargas del día anterior, sea cual sea el motivo por el que sobró saldo, y envía la devolución a Mercado Pago de forma automática.
+            - paragraph [ref=e83]: La devolución es total si la carga nunca entregó energía, o parcial si tu auto cargó menos de lo estimado. No tienes que pedirla. El tiempo en que se refleja en tu tarjeta o cuenta depende de tu banco o emisor.
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - heading "Preguntas frecuentes" [level=2] [ref=e86]
+          - paragraph [ref=e87]: Toca una pregunta para ver la respuesta.
+        - generic [ref=e88]:
+          - generic [ref=e89]: Pagos y devoluciones
+          - generic [ref=e90]:
+            - group [ref=e91]:
+              - generic "Pagué y la carga nunca partió. ¿Pierdo la plata?" [ref=e92] [cursor=pointer]
+            - group [ref=e94]:
+              - generic "¿Por qué me cobraron más de lo que cargué?" [ref=e95] [cursor=pointer]
+            - group [ref=e97]:
+              - generic "¿Cuánto se demora en llegar la devolución?" [ref=e98] [cursor=pointer]
+            - group [ref=e100]:
+              - generic "Mi pago fue rechazado" [ref=e101] [cursor=pointer]
+            - group [ref=e103]:
+              - generic "No me llegó el comprobante de la carga" [ref=e104] [cursor=pointer]
+        - generic [ref=e106]:
+          - generic [ref=e107]: Durante la carga
+          - generic [ref=e108]:
+            - group [ref=e109]:
+              - generic "Pagué, conecté el cable y no pasa nada" [ref=e110] [cursor=pointer]
+            - group [ref=e112]:
+              - generic "La carga se detuvo antes de tiempo" [ref=e113] [cursor=pointer]
+            - group [ref=e115]:
+              - generic "Cargué menos kWh de los que esperaba" [ref=e116] [cursor=pointer]
+            - group [ref=e118]:
+              - generic "¿Puedo dejar el auto enchufado después de que termina?" [ref=e119] [cursor=pointer]
+        - generic [ref=e121]:
+          - generic [ref=e122]: El punto de carga
+          - generic [ref=e123]:
+            - group [ref=e124]:
+              - generic "El punto tiene luz roja o muestra un error" [ref=e125] [cursor=pointer]
+            - group [ref=e127]:
+              - generic "El punto aparece ocupado y no hay ningún auto" [ref=e128] [cursor=pointer]
+            - group [ref=e130]:
+              - generic "¿Qué hago si el punto está dañado o el cable está en mal estado?" [ref=e131] [cursor=pointer]
+      - generic [ref=e134]:
+        - heading "Ten esto a mano al escribirnos" [level=3] [ref=e135]
+        - list [ref=e136]:
+          - listitem [ref=e137]: Número del punto de carga o del estacionamiento
+          - listitem [ref=e140]: Fecha y hora aproximada de la carga
+          - listitem [ref=e143]: Monto pagado y medio de pago
+          - listitem [ref=e146]: Correo con el que hiciste el pago
+    - contentinfo [ref=e149]:
+      - img "Enérgica City" [ref=e151]
+      - generic [ref=e152]: EVE · Gestión de carga para edificios y condominios
+      - generic [ref=e153]: "Atención telefónica: Lun a Vie, 9:00 a 18:00"
+      - link "energica.city" [ref=e155] [cursor=pointer]:
+        - /url: https://www.energica.city
+  - alert [ref=e156]
+  - dialog "Consentimiento de cookies" [ref=e157]:
+    - paragraph [ref=e158]:
+      - text: Usamos cookies para mejorar tu experiencia. Consulta nuestra
+      - link "Política de Privacidad" [ref=e159] [cursor=pointer]:
+        - /url: /privacidad
+      - text: "y"
+      - link "Política de Cookies" [ref=e160] [cursor=pointer]:
+        - /url: /cookie-policy
+      - text: .
+    - generic [ref=e161]:
+      - button "Rechazar" [ref=e162] [cursor=pointer]
+      - button "Aceptar" [ref=e163] [cursor=pointer]

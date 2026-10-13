@@ -1,0 +1,84 @@
+- generic [active] [ref=f35e1]:
+  - generic [ref=f35e2]:
+    - navigation [ref=f35e3]:
+      - generic [ref=f35e4]:
+        - generic [ref=f35e5]: e
+        - generic [ref=f35e6]: enérgicacity
+      - generic [ref=f35e7]:
+        - generic [ref=f35e8]: Electrificación de flotas
+        - generic [ref=f35e9]: Instalación de cargadores
+        - generic [ref=f35e10]: Electrolineras en edificios
+        - generic [ref=f35e11]: Sobre Energica
+        - generic [ref=f35e12]: Blog
+        - generic [ref=f35e13]: Contacto
+      - generic [ref=f35e14]: 🛒
+    - heading "Cotiza tu instalación" [level=1] [ref=f35e15]
+    - generic [ref=f35e16]: Instalación certificada SEC · Precios claros · Sin sorpresas
+    - generic [ref=f35e17]:
+      - generic [ref=f35e18]:
+        - generic [ref=f35e19]: "1"
+        - generic [ref=f35e20]: Ubicación
+      - generic [ref=f35e22]:
+        - generic [ref=f35e23]: "2"
+        - generic [ref=f35e24]:
+          - text: Agendar visita
+          - generic [ref=f35e25]: opcional
+      - generic [ref=f35e27]:
+        - generic [ref=f35e28]: "3"
+        - generic [ref=f35e29]: Cotización
+  - generic [ref=f35e30]:
+    - generic [ref=f35e31]:
+      - heading "¿Dónde instalarás tu cargador?" [level=2] [ref=f35e32]
+      - generic [ref=f35e33]: Indícanos si vives en casa o departamento de un edificio
+      - generic [ref=f35e34]:
+        - generic [ref=f35e35]:
+          - generic [ref=f35e36]: 🏠
+          - generic [ref=f35e37]: Casa
+          - generic [ref=f35e38]: Estacionamiento propio
+        - generic [ref=f35e39]:
+          - generic [ref=f35e40]: 🏢
+          - generic [ref=f35e41]: Edificio
+          - generic [ref=f35e42]: Depto · propiedad horizontal
+      - generic [ref=f35e43]:
+        - generic [ref=f35e44]: Distancia al tablero eléctrico
+        - generic [ref=f35e45]: Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+        - slider [ref=f35e46]: "1"
+        - generic [ref=f35e47]:
+          - generic [ref=f35e48]: 5m
+          - generic [ref=f35e49]: 10m
+          - generic [ref=f35e50]: 15m
+          - generic [ref=f35e51]: 20m
+          - generic [ref=f35e52]: 30m
+          - generic [ref=f35e53]: 40m
+          - generic [ref=f35e54]: 60m
+        - generic [ref=f35e55]:
+          - generic [ref=f35e56]: Distancia estándar
+          - generic [ref=f35e57]: 10 m
+      - generic [ref=f35e58]:
+        - button "📅 Agenda visita y cotizar" [ref=f35e59] [cursor=pointer]
+        - generic [ref=f35e60]: o
+        - button "Solo quiero la cotización →" [ref=f35e61] [cursor=pointer]
+      - generic [ref=f35e62]: Puedes ver la disponibilidad y reservar tu horario ahora, o revisar tu precio primero y agendar después.
+    - button "No quiero instalación, solo comprar un cargador" [ref=f35e63] [cursor=pointer]
+    - generic [ref=f35e64]: Instalación certificada SEC · Garantía de 3 meses · Tu compra está protegida
+  - contentinfo [ref=f35e65]:
+    - generic [ref=f35e66]:
+      - generic [ref=f35e67]:
+        - heading "Redes sociales" [level=4] [ref=f35e68]
+        - generic [ref=f35e69]:
+          - generic [ref=f35e70]: ◎
+          - generic [ref=f35e71]: in
+        - heading "¡Hablemos!" [level=4] [ref=f35e72]
+        - generic [ref=f35e73]: +56 9 6766 6652
+        - generic [ref=f35e74]: contacto@energica.city
+      - generic [ref=f35e75]:
+        - generic [ref=f35e76]: Inicio
+        - generic [ref=f35e77]: Cotizador
+        - generic [ref=f35e78]: Electrificación de flotas
+        - generic [ref=f35e79]: Instalación de cargadores
+        - generic [ref=f35e80]: Electrolineras en edificios
+        - generic [ref=f35e81]: Sobre Energica
+    - generic [ref=f35e82]:
+      - generic [ref=f35e83]: e
+      - generic [ref=f35e84]: enérgicacity
+    - generic [ref=f35e85]: Te ayudamos a concretar tu proyecto de electromovilidad industrial o inmobiliario de manera rentable.📍 Av. Apoquindo 5950, Las Condes, Santiago. 📍 Viña del Mar, Región de Valparaíso, Chile.Copyright © 2026

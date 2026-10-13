@@ -1,0 +1,118 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e3]:
+    - banner [ref=f4e4]:
+      - link [ref=f4e7] [cursor=pointer]:
+        - /url: /
+        - img "Energica City" [ref=f4e8]
+    - generic [ref=f4e10]:
+      - heading "Cotiza tu instalación" [level=1] [ref=f4e11]
+      - paragraph [ref=f4e12]: Instalación certificada SEC · Precios claros · Sin sorpresas
+      - generic [ref=f4e14]:
+        - generic [ref=f4e16]:
+          - paragraph [ref=f4e18]: "1"
+          - paragraph [ref=f4e19]: Ubicación
+        - generic [ref=f4e22]:
+          - paragraph [ref=f4e24]: "2"
+          - paragraph [ref=f4e25]: Agendar visita
+          - paragraph [ref=f4e26]: opcional
+        - generic [ref=f4e29]:
+          - paragraph [ref=f4e31]: "3"
+          - paragraph [ref=f4e32]: Cotización
+    - generic [ref=f4e34]:
+      - generic [ref=f4e36]:
+        - heading "¿Dónde instalarás tu cargador?" [level=6] [ref=f4e37]
+        - paragraph [ref=f4e38]: Indícanos si vives en casa o departamento de un edificio
+        - generic [ref=f4e39]:
+          - button [ref=f4e41] [cursor=pointer]:
+            - paragraph [ref=f4e42]: 🏠
+            - paragraph [ref=f4e43]: Casa
+            - paragraph [ref=f4e44]: Estacionamiento propio
+          - button [ref=f4e46] [cursor=pointer]:
+            - paragraph [ref=f4e47]: 🏢
+            - paragraph [ref=f4e48]: Edificio
+            - paragraph [ref=f4e49]: Depto · propiedad horizontal
+        - generic [ref=f4e50]:
+          - paragraph [ref=f4e51]: Distancia al tablero eléctrico
+          - paragraph [ref=f4e52]: Distancia aproximada entre el estacionamiento y el tablero eléctrico principal.
+          - generic [ref=f4e54] [cursor=pointer]:
+            - generic [ref=f4e58]: 5m
+            - generic [ref=f4e60]: 10m
+            - generic [ref=f4e62]: 15m
+            - generic [ref=f4e64]: 20m
+            - generic [ref=f4e66]: 30m
+            - generic [ref=f4e68]: 40m
+            - generic [ref=f4e70]: 60m
+            - slider [ref=f4e72]: "10"
+          - generic [ref=f4e73]:
+            - paragraph [ref=f4e74]: Distancia estándar
+            - generic [ref=f4e75]: 10 m
+        - generic [ref=f4e77]:
+          - button "📅 Agenda visita y cotizar" [disabled]
+          - button "Solo quiero la cotización →" [disabled]
+      - link "No quiero instalación, solo comprar un cargador" [ref=f4e79] [cursor=pointer]:
+        - /url: /cargadores-vehiculos-electricos-sin-instalacion
+      - generic [ref=f4e80]: Instalación certificada SEC · Garantía de 3 meses · Tu compra esta protegida
+  - generic [ref=f4e81]:
+    - img "city background" [ref=f4e84]
+    - generic [ref=f4e85]:
+      - generic [ref=f4e86]:
+        - generic [ref=f4e87]:
+          - paragraph [ref=f4e88]: Redes sociales
+          - generic [ref=f4e89]:
+            - link "Instagram" [ref=f4e90] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=f4e91]
+            - link "Linkedin" [ref=f4e92] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=f4e93]
+          - paragraph [ref=f4e94]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=f4e95] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=f4e97] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=f4e99]:
+          - link "Inicio" [ref=f4e100] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=f4e102] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=f4e104] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=f4e106] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=f4e108] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=f4e110] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=f4e112]:
+          - link "Blog" [ref=f4e113] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=f4e115] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=f4e117] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=f4e119] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=f4e121] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=f4e123] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=f4e125] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=f4e127]
+      - generic [ref=f4e128]:
+        - generic [ref=f4e130]:
+          - img "logo" [ref=f4e131]
+          - paragraph [ref=f4e132]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=f4e133] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=f4e138]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=f4e139] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=f4e144]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=f4e145]: Copyright © 2026
+        - paragraph [ref=f4e146]:
+          - link "Política de privacidad" [ref=f4e147] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=f4e148] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .

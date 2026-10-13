@@ -1,0 +1,312 @@
+- generic [ref=f9e1]:
+  - iframe [ref=f9e3]:
+    - generic [ref=f10e1]:
+      - banner [ref=f10e2]:
+        - generic [ref=f10e3]:
+          - img "Enérgica City" [ref=f10e4]
+          - generic [ref=f10e5]: Red EVE · Carga comunitaria
+      - toolbar "Filtros" [ref=f10e6]:
+        - button "Toda la red19" [pressed] [ref=f10e7] [cursor=pointer]
+        - button "Acceso público3" [ref=f10e8] [cursor=pointer]
+        - button "Solo residentes16" [ref=f10e9] [cursor=pointer]
+        - searchbox "Buscar por comuna o edificio" [ref=f10e11]
+        - link "¿Tu edificio aún no tiene EVE? Habla con nosotros" [ref=f10e12] [cursor=pointer]:
+          - /url: https://wa.me/56967666652?text=Hola%2C%20quiero%20llevar%20EVE%20a%20mi%20edificio
+          - generic [ref=f10e13]: ¿Tu edificio aún no tiene EVE?
+          - generic [ref=f10e14]: Habla con nosotros →
+      - generic [ref=f10e15]:
+        - complementary "Ubicaciones de la red EVE" [ref=f10e16]:
+          - generic [ref=f10e17]:
+            - heading "Dónde está la red EVE" [level=1] [ref=f10e18]
+            - generic [ref=f10e19]:
+              - generic [ref=f10e20]:
+                - generic [ref=f10e21]: "19"
+                - text: Ubicaciones
+              - generic [ref=f10e22]:
+                - generic [ref=f10e23]: "34"
+                - text: Cargadores en uso
+              - generic [ref=f10e24]:
+                - generic [ref=f10e25]: "10"
+                - text: Comunas
+          - generic [ref=f10e26]:
+            - paragraph [ref=f10e27]: Las Condes · 4
+            - generic [ref=f10e28]:
+              - button "Edificio Alto El Plomo Cerro El Plomo 5855 En operación Solo residentes" [ref=f10e29] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e30]: "1"
+                - generic [ref=f10e31]:
+                  - heading "Edificio Alto El Plomo" [level=3] [ref=f10e32]
+                  - paragraph [ref=f10e33]: Cerro El Plomo 5855
+                  - generic [ref=f10e34]:
+                    - generic [ref=f10e35]: En operación
+                    - generic [ref=f10e36]: Solo residentes
+              - button "Edificio Vivaldi Hermanos Cabot 6700 En operación Solo residentes" [ref=f10e37] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e38]: "1"
+                - generic [ref=f10e39]:
+                  - heading "Edificio Vivaldi" [level=3] [ref=f10e40]
+                  - paragraph [ref=f10e41]: Hermanos Cabot 6700
+                  - generic [ref=f10e42]:
+                    - generic [ref=f10e43]: En operación
+                    - generic [ref=f10e44]: Solo residentes
+              - button "Estadio Español Nevería 4855 En operación Acceso público" [ref=f10e45] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e46]: "5"
+                - generic [ref=f10e47]:
+                  - heading "Estadio Español" [level=3] [ref=f10e48]
+                  - paragraph [ref=f10e49]: Nevería 4855
+                  - generic [ref=f10e50]:
+                    - generic [ref=f10e51]: En operación
+                    - generic [ref=f10e52]: Acceso público
+              - button "Edificio Torre Badajoz Badajoz 45 En operación Solo residentes" [ref=f10e53] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e54]: "1"
+                - generic [ref=f10e55]:
+                  - heading "Edificio Torre Badajoz" [level=3] [ref=f10e56]
+                  - paragraph [ref=f10e57]: Badajoz 45
+                  - generic [ref=f10e58]:
+                    - generic [ref=f10e59]: En operación
+                    - generic [ref=f10e60]: Solo residentes
+            - paragraph [ref=f10e61]: Lo Barnechea · 3
+            - generic [ref=f10e62]:
+              - button "Edificio Parque Arrayán Av. El Rodeo 12737, esq. Av. La Dehesa En operación Solo residentes" [ref=f10e63] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e64]: "4"
+                - generic [ref=f10e65]:
+                  - heading "Edificio Parque Arrayán" [level=3] [ref=f10e66]
+                  - paragraph [ref=f10e67]: Av. El Rodeo 12737, esq. Av. La Dehesa
+                  - generic [ref=f10e68]:
+                    - generic [ref=f10e69]: En operación
+                    - generic [ref=f10e70]: Solo residentes
+              - button "Hotel Pettra Comandante Malbec 12851 En operación Acceso público" [ref=f10e71] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e72]: "4"
+                - generic [ref=f10e73]:
+                  - heading "Hotel Pettra" [level=3] [ref=f10e74]
+                  - paragraph [ref=f10e75]: Comandante Malbec 12851
+                  - generic [ref=f10e76]:
+                    - generic [ref=f10e77]: En operación
+                    - generic [ref=f10e78]: Acceso público
+              - button "Edificio La Espuela La Espuela 12600 En operación Solo residentes" [ref=f10e79] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e80]: "1"
+                - generic [ref=f10e81]:
+                  - heading "Edificio La Espuela" [level=3] [ref=f10e82]
+                  - paragraph [ref=f10e83]: La Espuela 12600
+                  - generic [ref=f10e84]:
+                    - generic [ref=f10e85]: En operación
+                    - generic [ref=f10e86]: Solo residentes
+            - paragraph [ref=f10e87]: Ñuñoa · 2
+            - generic [ref=f10e88]:
+              - button "Condominio Parque Villanueva Augusto Villanueva 65 En operación Solo residentes" [ref=f10e89] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e90]: "1"
+                - generic [ref=f10e91]:
+                  - heading "Condominio Parque Villanueva" [level=3] [ref=f10e92]
+                  - paragraph [ref=f10e93]: Augusto Villanueva 65
+                  - generic [ref=f10e94]:
+                    - generic [ref=f10e95]: En operación
+                    - generic [ref=f10e96]: Solo residentes
+              - button "Condominio Seminario Irarrázaval Seminario 850 En operación Solo residentes" [ref=f10e97] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e98]: "3"
+                - generic [ref=f10e99]:
+                  - heading "Condominio Seminario Irarrázaval" [level=3] [ref=f10e100]
+                  - paragraph [ref=f10e101]: Seminario 850
+                  - generic [ref=f10e102]:
+                    - generic [ref=f10e103]: En operación
+                    - generic [ref=f10e104]: Solo residentes
+            - paragraph [ref=f10e105]: Santiago · 2
+            - generic [ref=f10e106]:
+              - button "Edificio Sueña Toesca Toesca 2145 En operación Solo residentes" [ref=f10e107] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e108]: "2"
+                - generic [ref=f10e109]:
+                  - heading "Edificio Sueña Toesca" [level=3] [ref=f10e110]
+                  - paragraph [ref=f10e111]: Toesca 2145
+                  - generic [ref=f10e112]:
+                    - generic [ref=f10e113]: En operación
+                    - generic [ref=f10e114]: Solo residentes
+              - button "Edificio Tocornal Manuel Antonio Tocornal 652 Por activar Solo residentes" [ref=f10e115] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e116]: –
+                - generic [ref=f10e117]:
+                  - heading "Edificio Tocornal" [level=3] [ref=f10e118]
+                  - paragraph [ref=f10e119]: Manuel Antonio Tocornal 652
+                  - generic [ref=f10e120]:
+                    - generic [ref=f10e121]: Por activar
+                    - generic [ref=f10e122]: Solo residentes
+            - paragraph [ref=f10e123]: Vitacura · 2
+            - generic [ref=f10e124]:
+              - button "Condominio Parque Arboleda Vía Aurora 9255, Lo Curro En operación Solo residentes" [ref=f10e125] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e126]: "2"
+                - generic [ref=f10e127]:
+                  - heading "Condominio Parque Arboleda" [level=3] [ref=f10e128]
+                  - paragraph [ref=f10e129]: Vía Aurora 9255, Lo Curro
+                  - generic [ref=f10e130]:
+                    - generic [ref=f10e131]: En operación
+                    - generic [ref=f10e132]: Solo residentes
+              - button "Hotel Renaissance Santiago Av. Presidente Kennedy 4700 En operación Acceso público" [ref=f10e133] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f10e134]: "2"
+                - generic [ref=f10e135]:
+                  - heading "Hotel Renaissance Santiago" [level=3] [ref=f10e136]
+                  - paragraph [ref=f10e137]: Av. Presidente Kennedy 4700
+                  - generic [ref=f10e138]:
+                    - generic [ref=f10e139]: En operación
+                    - generic [ref=f10e140]: Acceso público
+            - paragraph [ref=f10e141]: La Florida · 1
+            - button "Edificio Activa Vicuña Av. Vicuña Mackenna Poniente 6315 En operación Solo residentes" [ref=f10e143] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f10e144]: "2"
+              - generic [ref=f10e145]:
+                - heading "Edificio Activa Vicuña" [level=3] [ref=f10e146]
+                - paragraph [ref=f10e147]: Av. Vicuña Mackenna Poniente 6315
+                - generic [ref=f10e148]:
+                  - generic [ref=f10e149]: En operación
+                  - generic [ref=f10e150]: Solo residentes
+            - paragraph [ref=f10e151]: Macul · 1
+            - button "Edificio Garden Macul Av. Macul 2330 En operación Solo residentes" [ref=f10e153] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f10e154]: "2"
+              - generic [ref=f10e155]:
+                - heading "Edificio Garden Macul" [level=3] [ref=f10e156]
+                - paragraph [ref=f10e157]: Av. Macul 2330
+                - generic [ref=f10e158]:
+                  - generic [ref=f10e159]: En operación
+                  - generic [ref=f10e160]: Solo residentes
+            - paragraph [ref=f10e161]: Providencia · 1
+            - button "Edificio Nueva Suecia 440 Suecia 440 En operación Solo residentes" [ref=f10e163] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f10e164]: "1"
+              - generic [ref=f10e165]:
+                - heading "Edificio Nueva Suecia 440" [level=3] [ref=f10e166]
+                - paragraph [ref=f10e167]: Suecia 440
+                - generic [ref=f10e168]:
+                  - generic [ref=f10e169]: En operación
+                  - generic [ref=f10e170]: Solo residentes
+            - paragraph [ref=f10e171]: Puente Alto · 1
+            - button "Ruta 78 Independencia 043 Por activar Acceso privado" [ref=f10e173] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f10e174]: –
+              - generic [ref=f10e175]:
+                - heading "Ruta 78" [level=3] [ref=f10e176]
+                - paragraph [ref=f10e177]: Independencia 043
+                - generic [ref=f10e178]:
+                  - generic [ref=f10e179]: Por activar
+                  - generic [ref=f10e180]: Acceso privado
+            - paragraph [ref=f10e181]: Rancagua · 1
+            - button "Parque Las Nieves Dirección por confirmar En operación Solo residentes Sin ubicación en el mapa" [ref=f10e183] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f10e184]: "2"
+              - generic [ref=f10e185]:
+                - heading "Parque Las Nieves" [level=3] [ref=f10e186]
+                - paragraph [ref=f10e187]: Dirección por confirmar
+                - generic [ref=f10e188]:
+                  - generic [ref=f10e189]: En operación
+                  - generic [ref=f10e190]: Solo residentes
+                  - generic [ref=f10e191]: Sin ubicación en el mapa
+            - paragraph [ref=f10e192]: Por confirmar · 1
+            - button "Polo Apoquindo Dirección por confirmar Por activar Acceso privado Sin ubicación en el mapa" [ref=f10e194] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f10e195]: –
+              - generic [ref=f10e196]:
+                - heading "Polo Apoquindo" [level=3] [ref=f10e197]
+                - paragraph [ref=f10e198]: Dirección por confirmar
+                - generic [ref=f10e199]:
+                  - generic [ref=f10e200]: Por activar
+                  - generic [ref=f10e201]: Acceso privado
+                  - generic [ref=f10e202]: Sin ubicación en el mapa
+          - generic [ref=f10e203]:
+            - heading "¿Tu edificio aún no tiene EVE?" [level=3] [ref=f10e204]
+            - paragraph [ref=f10e205]: Instalamos y gestionamos la carga comunitaria. Cada residente paga solo la energía que consume, con boleta, y la comunidad no asume el costo de los cargadores.
+            - link "Habla con nosotros" [ref=f10e206] [cursor=pointer]:
+              - /url: https://wa.me/56967666652?text=Hola%2C%20quiero%20llevar%20EVE%20a%20mi%20edificio
+          - paragraph [ref=f10e207]: Los puntos de acceso público pueden usarlos visitas y clientes del recinto. En los demás, los cargadores son de uso exclusivo de residentes o usuarios autorizados. Ubicaciones aproximadas a nivel de calle; usa “Cómo llegar” para la ruta exacta.
+        - generic [ref=f10e208]:
+          - generic "Mapa de la red EVE" [ref=f10e209]:
+            - generic:
+              - generic [ref=f10e211]:
+                - generic:
+                  - region "Map"
+              - generic:
+                - button "2" [ref=f10e213] [cursor=pointer]
+                - button "1" [ref=f10e216] [cursor=pointer]
+                - button "1" [ref=f10e219] [cursor=pointer]
+                - button "5" [ref=f10e222] [cursor=pointer]
+                - button "1" [ref=f10e225] [cursor=pointer]
+                - button "4" [ref=f10e228] [cursor=pointer]
+                - button "4" [ref=f10e231] [cursor=pointer]
+                - button "1" [ref=f10e234] [cursor=pointer]
+                - button "2" [ref=f10e237] [cursor=pointer]
+                - button "1" [ref=f10e240] [cursor=pointer]
+                - button "·" [ref=f10e243] [cursor=pointer]
+                - button "2" [ref=f10e246] [cursor=pointer]
+                - button "·" [ref=f10e249] [cursor=pointer]
+                - button "2" [ref=f10e252] [cursor=pointer]
+                - button "2" [ref=f10e255] [cursor=pointer]
+                - button "1" [ref=f10e258] [cursor=pointer]
+                - button "3" [ref=f10e261] [cursor=pointer]
+            - generic:
+              - generic:
+                - generic [ref=f10e264]:
+                  - button "Zoom in" [ref=f10e265] [cursor=pointer]: +
+                  - button "Zoom out" [ref=f10e266] [cursor=pointer]: −
+                - generic [ref=f10e267]:
+                  - link "OpenFreeMap" [ref=f10e268] [cursor=pointer]:
+                    - /url: https://openfreemap.org
+                  - text: ©
+                  - link "OpenMapTiles" [ref=f10e269] [cursor=pointer]:
+                    - /url: https://www.openmaptiles.org/
+                  - text: © colaboradores de
+                  - link "OpenStreetMap" [ref=f10e270] [cursor=pointer]:
+                    - /url: https://www.openstreetmap.org/copyright
+          - generic [aria-hidden] [ref=f10e271]:
+            - generic [ref=f10e272]: En operación
+            - generic [ref=f10e274]: Por activar
+  - generic [ref=f9e4]:
+    - img "city background" [ref=f9e7]
+    - generic [ref=f9e8]:
+      - generic [ref=f9e9]:
+        - generic [ref=f9e10]:
+          - paragraph [ref=f9e11]: Redes sociales
+          - generic [ref=f9e12]:
+            - link "Instagram" [ref=f9e13] [cursor=pointer]:
+              - /url: https://www.instagram.com/energicacity/
+              - img "instagram" [ref=f9e14]
+            - link "Linkedin" [ref=f9e15] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/energicacity
+              - img "linkedin" [ref=f9e16]
+          - paragraph [ref=f9e17]: ¡Hablemos!
+          - link "+56 9 6766 6652" [ref=f9e18] [cursor=pointer]:
+            - /url: https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0
+          - link "contacto@energica.city" [ref=f9e20] [cursor=pointer]:
+            - /url: mailto:contacto@energica.city
+        - generic [ref=f9e22]:
+          - link "Inicio" [ref=f9e23] [cursor=pointer]:
+            - /url: /
+          - link "Cotizador" [ref=f9e25] [cursor=pointer]:
+            - /url: /cotizador
+          - link "Electrificación de flotas" [ref=f9e27] [cursor=pointer]:
+            - /url: /asesoria-electrificacion-flotas
+          - link "Instalación de cargadores" [ref=f9e29] [cursor=pointer]:
+            - /url: /instalacion-cargadores
+          - link "Electrolineras en edificios" [ref=f9e31] [cursor=pointer]:
+            - /url: /cargadores-en-edificios
+          - link "Sobre Energica" [ref=f9e33] [cursor=pointer]:
+            - /url: /que-es-energica-city
+        - generic [ref=f9e35]:
+          - link "Blog" [ref=f9e36] [cursor=pointer]:
+            - /url: /blog
+          - link "Preguntas frecuentes" [ref=f9e38] [cursor=pointer]:
+            - /url: /faqs
+          - link "Contáctanos" [ref=f9e40] [cursor=pointer]:
+            - /url: /contactanos
+          - link "Soporte" [ref=f9e42] [cursor=pointer]:
+            - /url: /soporte
+          - link "Casos de éxito" [ref=f9e44] [cursor=pointer]:
+            - /url: /casos-de-exito
+          - link "Credenciales" [ref=f9e46] [cursor=pointer]:
+            - /url: /credenciales
+          - link "Cómo funciona" [ref=f9e48] [cursor=pointer]:
+            - /url: /como-funciona
+      - separator [ref=f9e50]
+      - generic [ref=f9e51]:
+        - generic [ref=f9e53]:
+          - img "logo" [ref=f9e54]
+          - paragraph [ref=f9e55]: Especialistas en la instalación de cargadores para autos eléctricos e infraestructura de recarga EV en edificios, condominios e industrias. Con instaladores autorizados por la SEC, implementamos sistemas de gestión centralizada y cobro por carga eléctrica de forma rentable y con opciones de $0 inversión para edificios.
+          - link [ref=f9e56] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/zWASHCe6ZahfxUACA
+            - paragraph [ref=f9e61]: Av. Apoquindo 5950, Las Condes, Santiago.
+          - link [ref=f9e62] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/iPn73DCJrn2uStpL6
+            - paragraph [ref=f9e67]: Viña del Mar, Región de Valparaíso, Chile.
+          - paragraph [ref=f9e68]: Copyright © 2026
+        - paragraph [ref=f9e69]:
+          - link "Política de privacidad" [ref=f9e70] [cursor=pointer]:
+            - /url: /privacidad
+          - link "| Términos y Condiciones" [ref=f9e71] [cursor=pointer]:
+            - /url: /terminos-condiciones
+          - text: .

@@ -45,7 +45,11 @@ export const createClient = (config: ClientConfig = {}) => {
       ? { next: { tags: ["prismic"] }, cache: "force-cache" }
       : { next: { revalidate: 5 } };
 
-  const client = baseCreateClient(repositoryName, {
+  // En desarrollo el CDN de Prismic (CloudFront) puede ser inalcanzable.
+  // El endpoint directo siempre responde y Next.js maneja el caché por su cuenta.
+  const endpoint = `https://${repositoryName}.prismic.io/api/v2`;
+
+  const client = baseCreateClient(endpoint, {
     routes,
     fetchOptions: fetchOptions as any,
     ...config,

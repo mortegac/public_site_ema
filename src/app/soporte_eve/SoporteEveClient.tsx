@@ -6,9 +6,9 @@ import Image from "next/image";
 import styles from "./soporte-eve.module.css";
 
 const CONFIG = {
-  whatsapp: "56967666652",
+  whatsapp: "56962247432",
   email: "contacto@energica.city",
-  telefono: "+56 9 6766 6652",
+  telefono: "+56 9 6224 7432",
   horario: "Lun a Vie, 9:00 a 18:00",
 };
 

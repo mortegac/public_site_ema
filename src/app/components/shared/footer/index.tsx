@@ -269,8 +269,8 @@ const Footer = () => {
             <Typography fontSize="17px" fontWeight="600" mb="10px" mt="26px" textAlign={"left"}  sx={{ color: "#ffffff",}}>
             ¡Hablemos!
             </Typography>
-            <Link href="https://api.whatsapp.com/send/?phone=56967666652&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
-            <Stack sx={{ 
+            <Link href="https://api.whatsapp.com/send/?phone=56962247432&text=Quiero+informacion+desde+energica.city&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+            <Stack sx={{
                 display:'flex',
                 flexDirection:'row',
                 justifyContent: 'flex-start',
@@ -278,7 +278,7 @@ const Footer = () => {
                 textAlign: 'left',
                 color: '#FFFFFF',
                 }} mt="8px">
-                +56 9 6766 6652
+                +56 9 6224 7432
               </Stack>
             </Link>
             <Link href="mailto:contacto@energica.city" target="_blank" rel="noopener noreferrer">

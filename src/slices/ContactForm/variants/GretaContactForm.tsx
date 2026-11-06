@@ -534,13 +534,13 @@ export const GretaContactForm: FC<ContactFormProps> = ({ slice }) => {
                                 
                                 <p></p>
                                     
-                                    <p>Si tienes alguna otra pregunta o necesitas un contacto más directo, <a href="https://api.whatsapp.com/send/?phone=56967666652&amp;text=Contacto+desde+el+formulario+energica.cl&amp;type=phone_number&amp;app_absent=0" style="color:#7e4996;font-family:Verdana,Geneva,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://api.whatsapp.com/send/?phone%3D56967666652%26text%3DContacto%2Bdesde%2Bel%2Bformulario%energica.cl%26type%3Dphone_number%26app_absent%3D0&amp;source=gmail&amp;ust=1766675954764000&amp;usg=AOvVaw3MBemm1LbQ-IfSg1XK-eIc">
+                                    <p>Si tienes alguna otra pregunta o necesitas un contacto más directo, <a href="https://api.whatsapp.com/send/?phone=56962247432&amp;text=Contacto+desde+el+formulario+energica.cl&amp;type=phone_number&amp;app_absent=0" style="color:#7e4996;font-family:Verdana,Geneva,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://api.whatsapp.com/send/?phone%3D56962247432%26text%3DContacto%2Bdesde%2Bel%2Bformulario%energica.cl%26type%3Dphone_number%26app_absent%3D0&amp;source=gmail&amp;ust=1766675954764000&amp;usg=AOvVaw3MBemm1LbQ-IfSg1XK-eIc">
                                      no dudes en escribirnos por WhatsApp.
                                     </a> Simplemente haz clic en el siguiente enlace:
                                     </p>
                                     
                                     <br>
-                                    <a href="https://api.whatsapp.com/send/?phone=56967666652&amp;text=Contacto+desde+el+formulario+energica.cl&amp;type=phone_number&amp;app_absent=0" style="color:#7e4996;font-family:Verdana,Geneva,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://api.whatsapp.com/send/?phone%3D56967666652%26text%3DContacto%2Bdesde%2Bel%2Bformulario%energica.cl%26type%3Dphone_number%26app_absent%3D0&amp;source=gmail&amp;ust=1766675954764000&amp;usg=AOvVaw3MBemm1LbQ-IfSg1XK-eIc">
+                                    <a href="https://api.whatsapp.com/send/?phone=56962247432&amp;text=Contacto+desde+el+formulario+energica.cl&amp;type=phone_number&amp;app_absent=0" style="color:#7e4996;font-family:Verdana,Geneva,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://api.whatsapp.com/send/?phone%3D56962247432%26text%3DContacto%2Bdesde%2Bel%2Bformulario%energica.cl%26type%3Dphone_number%26app_absent%3D0&amp;source=gmail&amp;ust=1766675954764000&amp;usg=AOvVaw3MBemm1LbQ-IfSg1XK-eIc">
                                      Hablemos por WhatsApp aquí
                                    </a>
   
@@ -604,7 +604,7 @@ export const GretaContactForm: FC<ContactFormProps> = ({ slice }) => {
           sentEmail: true,
           isFailure: true,
           title: "Error al enviar 😭",
-          text: "Hubo un problema al enviar el formulario. Por favor, intente nuevamente o contactenos vía whatsapp al +(56) 96766 6652",
+          text: "Hubo un problema al enviar el formulario. Por favor, intente nuevamente o contactenos vía whatsapp al +(56) 96224 7432",
         });
       }
     },

@@ -142,7 +142,7 @@ const content = `<div style='text-align: justify; font-family: inherit;'>
 <p>Para cualquier consulta respecto a esta Política de Cookies o al tratamiento de tus datos personales, puedes contactarnos en:</p>
 <ul>
   <li><strong>Correo electrónico:</strong> <a href='mailto:contacto@energica.city'>contacto@energica.city</a></li>
-  <li><strong>Teléfono:</strong> +569 6766 6652</li>
+  <li><strong>Teléfono:</strong> +569 6224 7432</li>
 </ul>
 
 <p>Para mayor información sobre el tratamiento de los datos personales del usuario, consulta nuestra <a href='/privacidad'>Política de Privacidad</a>.</p>

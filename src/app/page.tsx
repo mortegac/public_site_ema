@@ -97,7 +97,7 @@ export default async function Page() {
         "name": "Enérgica City",
         "description": "Empresa chilena especializada en instalación de cargadores eléctricos (EV) para casas, edificios y flotas empresariales. Técnicos certificados SEC. Gestionamos el trámite TE-6 incluido en el servicio.",
         "url": "https://www.energica.city",
-        "telephone": "+56967666652",
+        "telephone": "+56962247432",
         "email": "contacto@energica.city",
         "address": {
           "@type": "PostalAddress",

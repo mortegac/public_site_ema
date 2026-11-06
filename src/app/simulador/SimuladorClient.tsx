@@ -794,7 +794,7 @@ export default function SimuladorClient() {
           <Box sx={{ display: "flex", gap: 1.5, justifyContent: "center", flexWrap: "wrap" }}>
             <Button
               component="a"
-              href="https://api.whatsapp.com/send/?phone=56967666652&text=Hablar+experto+desde+simulador+electroterminal+energica.city&type=phone_number&app_absent=0"
+              href="https://api.whatsapp.com/send/?phone=56962247432&text=Hablar+experto+desde+simulador+electroterminal+energica.city&type=phone_number&app_absent=0"
               target="_blank"
               rel="noopener noreferrer"
               variant="contained"

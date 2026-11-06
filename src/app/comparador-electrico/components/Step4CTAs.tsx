@@ -12,7 +12,7 @@ const AC = '#00C47C';
 const BD = '#E2E8F0';
 const MU = '#64748B';
 
-const WHATSAPP_URL = 'https://api.whatsapp.com/send/?phone=56967666652&text=Hola!+Me+interesa+información+sobre+cambiarme+a+un+auto+eléctrico&type=phone_number&app_absent=0';
+const WHATSAPP_URL = 'https://api.whatsapp.com/send/?phone=56962247432&text=Hola!+Me+interesa+información+sobre+cambiarme+a+un+auto+eléctrico&type=phone_number&app_absent=0';
 
 interface CTACardProps {
   icon: string;
@@ -115,7 +115,7 @@ export default function Step4CTAs() {
             icon="💬"
             title="Escríbenos por WhatsApp"
             description="Habla con un asesor de electromovilidad ahora mismo"
-            cta="→ +56 9 6766 6652"
+            cta="→ +56 9 6224 7432"
             href={WHATSAPP_URL}
             variant="whatsapp"
           />

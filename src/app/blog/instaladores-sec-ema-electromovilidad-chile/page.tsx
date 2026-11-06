@@ -137,7 +137,7 @@ const faqSchema = {
       name: '¿Cómo puede un instalador certificado SEC postular para unirse a la red EMA?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Los instaladores certificados SEC y proveedores de infraestructura pueden completar el formulario de postulación disponible en la página del blog. El equipo de Enérgica City revisará la postulación y se contactará con los requisitos y el proceso de incorporación. También es posible consultar directamente por WhatsApp al +56 9 6766 6652.',
+        text: 'Los instaladores certificados SEC y proveedores de infraestructura pueden completar el formulario de postulación disponible en la página del blog. El equipo de Enérgica City revisará la postulación y se contactará con los requisitos y el proceso de incorporación. También es posible consultar directamente por WhatsApp al +56 9 6224 7432.',
       },
     },
   ],
@@ -503,8 +503,8 @@ export default function ArticlePage() {
             <Box sx={{ textAlign: 'center', mt: 4 }}>
               <Typography sx={{ color: '#64748B', fontSize: '0.95rem' }}>
                 ¿Preguntas? Escríbenos directamente a{' '}
-                <a href="https://wa.me/56967666652" style={{ color: TEAL, fontWeight: 600 }}>
-                  WhatsApp +56 9 6766 6652
+                <a href="https://wa.me/56962247432" style={{ color: TEAL, fontWeight: 600 }}>
+                  WhatsApp +56 9 6224 7432
                 </a>
               </Typography>
             </Box>

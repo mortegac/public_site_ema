@@ -51,7 +51,7 @@ const contactSchema = {
   "mainEntity": {
     "@type": "Organization",
     "name": "Energica City",
-    "telephone": "+56967666652",
+    "telephone": "+56962247432",
     "url": "https://www.energica.city"
   }
 }

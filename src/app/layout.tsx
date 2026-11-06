@@ -91,11 +91,11 @@ export default function RootLayout({
                 "caption": "Enérgica City — Instalación de Cargadores Eléctricos en Chile"
               },
               "image": { "@id": "https://www.energica.city/#/schema/logo/image/" },
-              "telephone": "+56967666652",
+              "telephone": "+56962247432",
               "email": "contacto@energica.city",
               "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+56967666652",
+                "telephone": "+56962247432",
                 "email": "contacto@energica.city",
                 "contactType": "customer service",
                 "areaServed": "CL",

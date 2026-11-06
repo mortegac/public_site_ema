@@ -27,7 +27,7 @@ const contactPageSchema = {
   "name": "Soporte Técnico en Cargadores EV",
   "url": "https://www.energica.city/soporte",
   "description": "Contáctate con nuestro equipo de soporte para resolver tus dudas o problemas con la instalación de cargadores eléctricos.",
-  "telephone": "+56967666652",
+  "telephone": "+56962247432",
 }
 
 const faqSchema = {
@@ -41,7 +41,7 @@ const faqSchema = {
       "name": "¿Cómo puedo contactar al soporte técnico de Energica City?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Puedes enviarnos un formulario de soporte en esta página con tu email, teléfono y descripción del problema. Un ejecutivo se contactará contigo a la brevedad. También puedes llamarnos al +56 9 6766 6652, disponible lunes a viernes de 09:00 a 18:00 horas."
+        "text": "Puedes enviarnos un formulario de soporte en esta página con tu email, teléfono y descripción del problema. Un ejecutivo se contactará contigo a la brevedad. También puedes llamarnos al +56 9 6224 7432, disponible lunes a viernes de 09:00 a 18:00 horas."
       }
     },
     {
@@ -57,7 +57,7 @@ const faqSchema = {
       "name": "¿Cuánto tiempo tarda en responder el equipo de soporte?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Respondemos en un plazo máximo de 24 horas hábiles. Para casos urgentes relacionados con seguridad eléctrica, llamar directamente al +56 9 6766 6652 durante el horario de atención."
+        "text": "Respondemos en un plazo máximo de 24 horas hábiles. Para casos urgentes relacionados con seguridad eléctrica, llamar directamente al +56 9 6224 7432 durante el horario de atención."
       }
     },
     {

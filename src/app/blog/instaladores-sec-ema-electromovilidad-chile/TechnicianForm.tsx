@@ -125,8 +125,8 @@ export default function TechnicianForm() {
         <Typography sx={{ color: '#475569', lineHeight: 1.7 }}>
           Te contactaremos en las próximas 48 horas con los requisitos de incorporación a la red EMA.
           Mientras tanto, puedes escribirnos por WhatsApp al{' '}
-          <a href="https://wa.me/56967666652" style={{ color: TEAL, fontWeight: 600 }}>
-            +56 9 6766 6652
+          <a href="https://wa.me/56962247432" style={{ color: TEAL, fontWeight: 600 }}>
+            +56 9 6224 7432
           </a>
           .
         </Typography>
@@ -152,8 +152,8 @@ export default function TechnicianForm() {
         </Typography>
         <Typography sx={{ color: '#475569' }}>
           Hubo un problema. Escríbenos directamente por WhatsApp al{' '}
-          <a href="https://wa.me/56967666652" style={{ color: TEAL, fontWeight: 600 }}>
-            +56 9 6766 6652
+          <a href="https://wa.me/56962247432" style={{ color: TEAL, fontWeight: 600 }}>
+            +56 9 6224 7432
           </a>
           .
         </Typography>

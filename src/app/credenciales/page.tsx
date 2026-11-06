@@ -48,7 +48,7 @@ export default function CredencialesPage() {
         "addressCountry": "CL"
       },
       "areaServed": { "@type": "Country", "name": "Chile" },
-      "telephone": "+56967666652",
+      "telephone": "+56962247432",
       "openingHours": "Mo-Fr 09:00-18:00",
       "award": [
         "Certificación TE1 — Superintendencia de Electricidad y Combustibles (SEC) Chile",

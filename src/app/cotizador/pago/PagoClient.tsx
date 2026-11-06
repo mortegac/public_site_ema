@@ -1023,7 +1023,7 @@ function PagoContent() {
                 {/* WhatsApp button */}
                 <Box
                   component="a"
-                  href={`https://wa.me/56967666652?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
+                  href={`https://wa.me/56962247432?text=${encodeURIComponent(`Hola, estoy viendo la cotización para mi cargador en ${state.address} (${state.dist}m, ${fmt(displayResult.total)}) y tengo una consulta.`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

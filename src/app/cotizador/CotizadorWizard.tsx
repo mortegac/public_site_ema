@@ -60,6 +60,9 @@ const INSTALL_BASE = {
 // COSTO-EXTRA-COTIZADOR: factor adicional por tipo de instalación (desactivado temporalmente)
 // const TIPO_FACTOR = { casa: 1.1, edificio: 1.15 }
 
+// COSTO-EXTRA-COTIZADOR: recargo 5% sobre costos de instalación (mat + inst), aplica a cálculo local y API
+const EXTRA_FACTOR = 1.05
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function dFactor(d: number): number {
   if (d <= 5) return 0.85
@@ -198,8 +201,8 @@ function calcResult(state: WizardState, chargers: typeof CHARGERS = CHARGERS): C
   const base = INSTALL_BASE[state.tipo]
   // COSTO-EXTRA-COTIZADOR: antes se multiplicaba también por TIPO_FACTOR[state.tipo] (1.1 casa / 1.15 edificio)
   const f = dFactor(state.dist)
-  const mat = Math.round(base.mat * f)
-  const inst = Math.round(base.inst * f)
+  const mat = Math.round(base.mat * f * EXTRA_FACTOR)
+  const inst = Math.round(base.inst * f * EXTRA_FACTOR)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : chargers.find(c => c.id === state.chargerId)
   // todos los precios en CHARGERS son bruto (IVA incluido)
@@ -681,11 +684,11 @@ export default function CotizadorWizard() {
             const chargerName = state.chargerId === 'own' ? 'Ya tiene cargador' : (charger?.name ?? '')
             // SEC ya está incluido en installationCost del backend — usar SECCost solo para display en email
             const secTramite = Number(est.SECCost ?? (isHouse ? INSTALL_BASE.casa.sec : INSTALL_BASE.edificio.sec))
-            const installNeto = Number(est.netPrice ?? 0)
+            const installNeto = Math.round(Number(est.netPrice ?? 0) * EXTRA_FACTOR)
             const totalNeto = installNeto + chargerPrice
             const totalIva = Math.round(totalNeto * 0.19)
-            const apiMat = Number(est.materialsCost ?? 0)
-            const apiInst = Number(est.installationCost ?? 0)
+            const apiMat = Math.round(Number(est.materialsCost ?? 0) * EXTRA_FACTOR)
+            const apiInst = Math.round(Number(est.installationCost ?? 0) * EXTRA_FACTOR)
             const installGross = Math.round((apiMat + apiInst) * 1.19)
             setTrackerIdentity({ formId })
             trackUnique('step_3_loaded', { formId, total: totalNeto + totalIva, typeOfResidence })

@@ -46,6 +46,9 @@ const INSTALL_BASE = {
 // COSTO-EXTRA-COTIZADOR: factor adicional por tipo de instalación (desactivado temporalmente)
 // const TIPO_FACTOR = { casa: 1.1, edificio: 1.15 }
 
+// COSTO-EXTRA-COTIZADOR: recargo 5% sobre costos de instalación — debe coincidir con CotizadorWizard
+const EXTRA_FACTOR = 1.05
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function dFactor(d: number): number {
   if (d <= 5) return 0.85
@@ -182,8 +185,8 @@ function calcResult(state: WizardState): CalcResult | null {
   const base = INSTALL_BASE[state.tipo]
   // COSTO-EXTRA-COTIZADOR: antes se multiplicaba también por TIPO_FACTOR[state.tipo] (1.1 casa / 1.15 edificio)
   const f = dFactor(state.dist)
-  const mat = Math.round(base.mat * f)
-  const inst = Math.round(base.inst * f)
+  const mat = Math.round(base.mat * f * EXTRA_FACTOR)
+  const inst = Math.round(base.inst * f * EXTRA_FACTOR)
   const sec = base.sec
   const charger = state.chargerId === 'own' ? null : CHARGERS.find(c => c.id === state.chargerId)
   const chargerPrice = charger ? Math.round(charger.precio / 1.19) : 0
@@ -297,23 +300,31 @@ function PagoContent() {
           addressValidated: !!(data.address),
           customerSaved: true,
           nextVisitDate: data.nextVisitDate ?? null,
-          // Only use DB amounts if JWT didn't carry them
-          ...(jwtHasAmounts ? {} : {
-            formId: data.formId,
-            tipo: data.tipo,
-            dist: data.dist,
-            apiResult: {
-              mat: data.mat,
-              inst: data.inst,
-              sec: data.sec,
-              chargerPrice: data.chargerPrice,
-              chargerName: data.chargerName,
-              neto: data.neto,
-              iva: data.iva,
-              total: data.total,
-              isOwn: data.isOwn,
-            },
-          }),
+          // Only use DB amounts if JWT didn't carry them.
+          // COSTO-EXTRA-COTIZADOR: la BD guarda montos sin el recargo — aplicarlo aquí
+          ...(jwtHasAmounts ? {} : (() => {
+            const mat = Math.round(Number(data.mat ?? 0) * EXTRA_FACTOR)
+            const inst = Math.round(Number(data.inst ?? 0) * EXTRA_FACTOR)
+            const extraNet = (mat - Number(data.mat ?? 0)) + (inst - Number(data.inst ?? 0))
+            const neto = Number(data.neto ?? 0) + extraNet
+            const iva = Math.round(neto * 0.19)
+            return {
+              formId: data.formId,
+              tipo: data.tipo,
+              dist: data.dist,
+              apiResult: {
+                mat,
+                inst,
+                sec: data.sec,
+                chargerPrice: data.chargerPrice,
+                chargerName: data.chargerName,
+                neto,
+                iva,
+                total: neto + iva,
+                isOwn: data.isOwn,
+              },
+            }
+          })()),
         })
         // Mark form as PENDING_PAYMENT when customer visits /cotizador/pago
         updateFormStep(data.formId ?? formId, '3')

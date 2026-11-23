@@ -9,6 +9,7 @@ import AuthorByline from '@/app/components/shared/AuthorByline';
 import SchemaMarkup from "@/app/components/shared/SchemaMarkup";
 import { getAuthor, getAuthorSchemaData } from "@/data/authors";
 import { asText } from "@prismicio/client";
+import DOMPurify from "isomorphic-dompurify";
 import { SliceZone } from "@prismicio/react";
 
 import { Box, Grid, Typography, Container, Stack, Button } from "@mui/material";
@@ -249,6 +250,31 @@ export default async function Page({ params }: { params: Promise<Params> }) {
             </Box>
           </Container>
         </Box>
+      )}
+      {page.data.htmlcontent && (
+        <Container maxWidth="md" sx={{ py: { xs: 4, md: 6 } }}>
+          <Typography
+            component="h1"
+            sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 700, lineHeight: 1.3, color: '#0F172A', mb: 3 }}
+          >
+            {asText(page.data.title)}
+          </Typography>
+          <Box
+            sx={{
+              color: '#0F172A',
+              fontSize: '1.05rem',
+              lineHeight: 1.8,
+              '& h2': { fontSize: '1.5rem', fontWeight: 600, mt: 4, mb: 2 },
+              '& p': { mb: 2 },
+              '& ul, & ol': { pl: 3, mb: 2 },
+              '& li': { mb: 1 },
+              '& a': { color: '#0898b9' },
+            }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(page.data.htmlcontent, { USE_PROFILES: { html: true } }),
+            }}
+          />
+        </Container>
       )}
       <Container
         id="container-page"

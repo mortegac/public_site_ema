@@ -11,9 +11,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { CHILE_REGIONS } from "@/data/chile-regions";
+import { CHILE_REGIONS, ChileRegion } from "@/data/chile-regions";
 
 interface Props {
+  /** Lista de regiones a ofrecer; por defecto la cobertura estándar (CHILE_REGIONS). */
+  regions?: ChileRegion[];
   onSelectAddress: (addressDetails: {
     StreetAddress: string | null;
     City: string | null;
@@ -32,6 +34,7 @@ interface Props {
 }
 
 const AddressInput: React.FC<Props> = ({
+  regions = CHILE_REGIONS,
   onSelectAddress,
   onValidationChange,
   onAddressChange,
@@ -42,7 +45,7 @@ const AddressInput: React.FC<Props> = ({
   const [comuna, setComuna] = useState("");
   const [street, setStreet] = useState("");
 
-  const selectedRegion = CHILE_REGIONS.find((r) => r.code === regionCode);
+  const selectedRegion = regions.find((r) => r.code === regionCode);
 
   const notify = (
     nextRegionCode: string,
@@ -96,7 +99,7 @@ const AddressInput: React.FC<Props> = ({
           label="Región"
           onChange={handleRegionChange}
         >
-          {CHILE_REGIONS.map((r) => (
+          {regions.map((r) => (
             <MenuItem key={r.code} value={r.code}>
               {r.name}
             </MenuItem>

@@ -45,6 +45,7 @@ import {
   CardContent,
   Divider,
   Chip,
+  Alert,
 } from "@mui/material";
 import { formatChileTime } from '@/utils/chile-tz';
 
@@ -61,6 +62,7 @@ import CustomTextField from './CustomTextField';
 import CustomFormLabel from './CustomFormLabel';
 
 import AddressInput from '@/app/components/AddressInput2';
+import { CHILE_REGIONS_FULL } from '@/data/chile-regions-full';
 
 // import { increment, setStep, decrement, selectClientForms, setDataForm, cleanData } from "@/store/ClientForms/slice";
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
@@ -421,7 +423,8 @@ export const Step02 = (props:any) => {
                      {/* Direccion */}
                      <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                       <CustomFormLabel>Dirección</CustomFormLabel>
-                      <AddressInput 
+                      <AddressInput
+                        regions={CHILE_REGIONS_FULL}
                         value={formik.values.address ?? ''}
                         onAddressChange={(value) => {
                           formik.setFieldValue('address', value);
@@ -458,6 +461,10 @@ export const Step02 = (props:any) => {
                       />
                     </Box>
                   </Box>
+
+                  <Alert severity="info" sx={{ borderRadius: '8px' }}>
+                    El envío del cargador es <strong>por pagar</strong>: el costo del despacho se cancela al recibir el producto y depende de la comuna de destino.
+                  </Alert>
                   
                   
                     
@@ -650,7 +657,7 @@ export const Step02 = (props:any) => {
                           </Typography>
                           {(shoppingCart.customer.City || shoppingCart.customer.State) && (
                             <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                              {[shoppingCart.customer.City, shoppingCart.customer.State].filter(Boolean).join(', ')}
+                              {[shoppingCart.customer.City, CHILE_REGIONS_FULL.find(r => r.code === shoppingCart.customer?.State)?.name ?? shoppingCart.customer.State].filter(Boolean).join(', ')}
                             </Typography>
                           )}
                         </>
